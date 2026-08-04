@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-white text-slate-700 dark:bg-slate-950 dark:text-slate-300;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    @apply bg-violet-500/30 text-inherit;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme(colors.slate.300) transparent;
+  }
+
+  .dark * {
+    scrollbar-color: theme(colors.slate.700) transparent;
+  }
+}
+
+@layer utilities {
+  .prose-doc h2 {
+    scroll-margin-top: 5.5rem;
+  }
+  .prose-doc h3 {
+    scroll-margin-top: 5.5rem;
+  }
+  .prose-doc p {
+    @apply mb-4 leading-relaxed text-slate-600 dark:text-slate-300;
+  }
+  .prose-doc ul,
+  .prose-doc ol {
+    @apply mb-4 ml-5 space-y-1.5 text-slate-600 dark:text-slate-300;
+  }
+  .prose-doc ul {
+    @apply list-disc;
+  }
+  .prose-doc ol {
+    @apply list-decimal;
+  }
+  .prose-doc a {
+    @apply text-violet-600 underline decoration-violet-300 underline-offset-2 hover:decoration-violet-500 dark:text-violet-400 dark:decoration-violet-700;
+  }
+  .prose-doc strong {
+    @apply font-semibold text-slate-800 dark:text-slate-100;
+  }
+  .prose-doc > :first-child {
+    margin-top: 0;
+  }
+}
