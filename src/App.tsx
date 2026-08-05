@@ -28,6 +28,7 @@ import { Seasons } from "./pages/Seasons";
 import { Fishing } from "./pages/Fishing";
 import { SackResourcePack } from "./pages/SackResourcePack";
 import { Ranching } from "./pages/Ranching";
+import { Workers } from "./pages/Workers";
 import { Commands } from "./pages/Commands";
 import { Permissions } from "./pages/Permissions";
 import { Configuration } from "./pages/Configuration";
@@ -99,6 +100,8 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <SackResourcePack onNavigate={onNavigate} />;
     case "ranching":
       return <Ranching onNavigate={onNavigate} />;
+    case "workers":
+      return <Workers onNavigate={onNavigate} />;
     case "comandos":
       return <Commands onNavigate={onNavigate} />;
     case "permisos":
