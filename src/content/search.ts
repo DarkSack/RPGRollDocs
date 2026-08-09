@@ -313,6 +313,26 @@ export const searchIndex: SearchEntry[] = [
   h("seasons", "Comandos", "comandos"),
   h("seasons", "Qué falta (próxima pasada)", "pendiente"),
 
+  // Economy
+  h("economy", "Requisitos", "requisitos"),
+  h("economy", "Monedas", "monedas"),
+  h("economy", "Wallets", "wallets"),
+  h("economy", "Bancos y préstamos", "bancos-prestamos"),
+  h("economy", "Mercado dinámico", "mercado-dinamico"),
+  h("economy", "Tiendas de jugador", "tiendas"),
+  h("economy", "Subastas", "subastas"),
+  h("economy", "Empresas", "empresas"),
+  h("economy", "Impuestos", "impuestos"),
+  h("economy", "Inflación", "inflacion"),
+  h("economy", "Libro mayor de transacciones", "libro-mayor"),
+  h("economy", "Ejemplos de archivo YAML", "formato-yaml"),
+  h("economy", "GUI: Economy Studio", "gui"),
+  h("economy", "API para addons — EconomyAPI", "api"),
+  h("economy", "Integración con Vault", "integracion-vault"),
+  h("economy", "Placeholders (PlaceholderAPI)", "placeholders"),
+  h("economy", "Comandos", "comandos"),
+  h("economy", "Qué falta (próxima pasada)", "pendiente"),
+
   // StatsCombat
   h("stats-combate", "Los 6 atributos", "atributos"),
   h("stats-combate", "CombatStats: el recurso de salud/maná", "combatstats"),
