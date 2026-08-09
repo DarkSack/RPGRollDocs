@@ -49,6 +49,7 @@ export const nav: NavSection[] = [
       { slug: "ranching", label: "Ranching" },
       { slug: "workers", label: "Workers" },
       { slug: "economy", label: "Economy" },
+      { slug: "crafting", label: "Crafting" },
     ],
   },
   {

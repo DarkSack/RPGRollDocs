@@ -30,6 +30,7 @@ import { SackResourcePack } from "./pages/SackResourcePack";
 import { Ranching } from "./pages/Ranching";
 import { Workers } from "./pages/Workers";
 import { Economy } from "./pages/Economy";
+import { Crafting } from "./pages/Crafting";
 import { Commands } from "./pages/Commands";
 import { Permissions } from "./pages/Permissions";
 import { Configuration } from "./pages/Configuration";
@@ -105,6 +106,8 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Workers onNavigate={onNavigate} />;
     case "economy":
       return <Economy onNavigate={onNavigate} />;
+    case "crafting":
+      return <Crafting onNavigate={onNavigate} />;
     case "comandos":
       return <Commands onNavigate={onNavigate} />;
     case "permisos":

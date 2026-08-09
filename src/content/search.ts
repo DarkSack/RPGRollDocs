@@ -333,6 +333,23 @@ export const searchIndex: SearchEntry[] = [
   h("economy", "Comandos", "comandos"),
   h("economy", "Qué falta (próxima pasada)", "pendiente"),
 
+  // Crafting
+  h("crafting", "Requisitos", "requisitos"),
+  h("crafting", "Identidad de ítem", "identidad-de-item"),
+  h("crafting", "Ingredientes", "ingredientes"),
+  h("crafting", "Condiciones", "condiciones"),
+  h("crafting", "Sistema de calidad", "calidad"),
+  h("crafting", "Estaciones personalizadas", "estaciones-personalizadas"),
+  h("crafting", "Recetas personalizadas", "recetas-personalizadas"),
+  h("crafting", "Puente con estaciones vanilla", "recetas-vanilla"),
+  h("crafting", "Yunque y fermentación", "yunque-y-fermentacion"),
+  h("crafting", "Descubrimiento de recetas", "descubrimiento"),
+  h("crafting", "Ejemplos de archivo YAML", "formato-yaml"),
+  h("crafting", "GUI: Crafting Studio", "gui"),
+  h("crafting", "API para addons — CraftingAPI + eventos", "api"),
+  h("crafting", "Comandos", "comandos"),
+  h("crafting", "Qué falta (próxima pasada)", "pendiente"),
+
   // StatsCombat
   h("stats-combate", "Los 6 atributos", "atributos"),
   h("stats-combate", "CombatStats: el recurso de salud/maná", "combatstats"),
