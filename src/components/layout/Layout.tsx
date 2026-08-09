@@ -20,6 +20,7 @@ export function Layout({ current, onNavigate, theme, onToggleTheme, children }: 
         onToggleTheme={onToggleTheme}
         onToggleMobileNav={() => setMobileNavOpen((v) => !v)}
         onNavigateHome={() => onNavigate("inicio")}
+        onNavigate={onNavigate}
       />
 
       <div className="mx-auto flex max-w-7xl">

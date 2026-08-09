@@ -339,6 +339,13 @@ export function Quests({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>quests/reference_full.yml</code> (incluido en el jar) usa los 9 tipos de objetivo, los 6 eventos
+        (<code>on-start</code>/<code>on-progress</code>/<code>on-complete</code>/<code>on-fail</code>/
+        <code>on-abandon</code>/<code>on-stage-change</code>), diálogo con opciones y todos los campos de
+        <code>requirements</code> y <code>rewards</code> en un solo archivo.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: Quest"
         description="Identidad, categoría/dificultad, cooldown, requisito de nivel y recompensas simples. Las etapas (stages) con objetivos/diálogo/ramas son demasiado anidadas para este formulario — usá uno de los ejemplos de arriba como base y editalo a mano, o construilas directamente en el editor in-game."

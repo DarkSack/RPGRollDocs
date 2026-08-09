@@ -143,6 +143,10 @@ export function Guilds({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <YamlBuilder title="Constructor visual: Guild Quest" folder="quests" fields={guildQuestFields} />
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>quests/reference_full.yml</code> (incluido en el jar) usa todos los campos de una misión de guild
+        (esta es una de las estructuras más simples del ecosistema — el formulario de arriba ya la cubre al 100%).
+      </Callout>
 
       <SectionHeading id="roles">Roles y permisos dentro de una guild</SectionHeading>
       <Table>

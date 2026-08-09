@@ -53,6 +53,12 @@ export function SackResourcePack({ onNavigate }: { onNavigate: (slug: string) =>
           <Tr><Td className="font-mono text-xs">optional</Td><Td>Ids opcionales. Si están presentes se ordenan antes; si no, se ignoran sin error.</Td></Tr>
         </tbody>
       </Table>
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>sackresourcepack/src/main/resources/content/reference_full_example/pack.yml</code> en el repositorio
+        usa todos los campos del manifiesto. A diferencia del resto de los addons, SackResourcePack no copia
+        contenido de ejemplo automáticamente a <code>content/</code> al primer arranque (no tiene ese mecanismo,
+        por ser standalone) — copiá esta carpeta manualmente si querés verla en un servidor real.
+      </Callout>
 
       <SectionHeading id="resolucion">Resolución de dependencias</SectionHeading>
       <p>

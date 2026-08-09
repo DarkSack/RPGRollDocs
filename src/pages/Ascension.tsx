@@ -338,6 +338,13 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
         de conservarlos al cambiar de rama.
       </Callout>
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>specializations/reference_full.yml</code> (incluido en el jar) agrega los campos que los dos ejemplos
+        de arriba no muestran: <code>requirements.prestige</code>, <code>requirements.completed-quests</code>,{" "}
+        <code>requirements.reputation</code>, <code>exclusive-equipment</code>, y un nodo con dos prerrequisitos y
+        recompensa de encantamiento.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: Class Specialization"
         description="Arma la identidad, requisitos, bono de stats, restricciones y equipo exclusivo. El árbol de talentos (talents:) es demasiado anidado para este formulario — copialo de un ejemplo de arriba y editalo a mano."

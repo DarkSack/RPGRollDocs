@@ -280,6 +280,11 @@ export function Ranching({ onNavigate }: { onNavigate: (slug: string) => void })
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>species/reference_full.yml</code> (incluido en el jar) usa todos los campos de una especie con una
+        camada múltiple (2 a 6 crías) — la vaca de ejemplo siempre tiene 1, así que no muestra ese caso.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: especie"
         description="Identidad, ciclo de vida y reproducción de una especie. 'base-production' (mapa clave=valor) se edita mejor copiando el ejemplo de arriba."

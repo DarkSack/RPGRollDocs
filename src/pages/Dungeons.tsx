@@ -249,6 +249,12 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>dungeons/reference_full.yml</code> (incluido en el jar) usa los 9 tipos de sala, los 10 tipos de
+        objetivo, oleadas, 3 dificultades con todos los modificadores, checkpoints/revive, los 5 tipos de loot con
+        sus 3 scopes, y los 12 triggers.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: Dungeon"
         description="Identidad, límites de tiempo/jugadores, lobby y bounds. Rooms, waves, difficulties, checkpoints, revive, loot y triggers son demasiado anidados para un formulario lineal — el editor in-game los separa en pantallas propias (RoomsEditorGUI, WavesEditorGUI, DifficultiesEditorGUI...); acá lo más práctico es copiar y adaptar uno de los ejemplos de arriba."

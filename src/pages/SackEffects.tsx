@@ -210,6 +210,13 @@ export function SackEffects({ onNavigate }: { onNavigate: (slug: string) => void
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>effects/reference_full.yml</code> (incluido en el jar) usa los 6 tipos de paso, las 8 formas de
+        partícula (incluyendo <code>LINE</code>, <code>HELIX</code>, <code>CONE</code> y{" "}
+        <code>CUBE_OUTLINE</code>, que los ejemplos de arriba no muestran) y los 4 targets, incluyendo{" "}
+        <code>TARGET</code>.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: identidad del efecto"
         description="id/nombre/descripción. La lista de steps es demasiado variada para un formulario lineal (cada tipo tiene sus propios params) — copiá y adaptá uno de los ejemplos de arriba, o usá /sackeffects browser para armarlo paso a paso desde el chat en el juego."

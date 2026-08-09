@@ -184,6 +184,12 @@ export function Crates({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>crates/reference_full.yml</code> (incluido en el jar) usa absolutamente todos los campos de una
+        crate y los 4 tipos de acción de recompensa (<code>GIVE_ITEM</code>, <code>COMMAND</code>,{" "}
+        <code>SOUND</code>, <code>MESSAGE</code>) en un solo archivo.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: Crate"
         description="Identidad, llave y holograma. Las recompensas (rewards) son una lista de objetos con sus propias acciones — copiá y adaptá las de un ejemplo de arriba, o usá /crate browser para agregarlas de a una."

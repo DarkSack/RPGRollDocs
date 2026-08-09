@@ -257,6 +257,11 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>professions/reference_full.yml</code> (incluido en el jar) usa las 10 condiciones y las 9 acciones de
+        IA — el ejemplo de arriba solo usa 4 de cada una.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: profesión"
         description="Identidad, horario y salario de una profesión. Las reglas de IA (ai-rules) son demasiado estructuradas para este formulario — copiá y adaptá el ejemplo de arriba para esas."

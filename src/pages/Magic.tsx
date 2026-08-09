@@ -277,6 +277,12 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>spells/reference_full.yml</code> (incluido en el jar) encadena los 26 tipos de componente del Spell
+        Engine, uno detrás del otro, junto con todos los campos de costo (maná, vida, XP, reactivo) y de árbol de
+        progresión.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: identidad, costo básico y progresión del hechizo"
         description="El pipeline de componentes es demasiado variado para un formulario lineal (cada tipo tiene sus propios params) — copiá y adaptá uno de los ejemplos de arriba, o usá /magicadmin browser para armarlo paso a paso desde el chat en el juego."

@@ -310,6 +310,13 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en dos archivos">
+        <code>npcs/reference_full.yml</code> y <code>menus/reference_full_menu.yml</code> (incluidos en el jar) usan
+        absolutamente todos los tipos de acción, todas las condiciones de <code>CONDITIONAL</code> (incluyendo{" "}
+        <code>&amp;&amp;</code>/<code>||</code>) y todos los campos de un ítem de menú — pensados para copiar/pegar,
+        no para dar en partidas reales tal cual.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: NPC Menu"
         description="Identidad de la GUI de tienda/menú. Los ítems del menú (slot/material/nombre/lore/acciones) se editan mejor con /npc menus, o copiando/adaptando uno de los ejemplos de arriba."

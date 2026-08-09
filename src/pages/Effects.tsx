@@ -300,6 +300,12 @@ export function Effects({ onNavigate }: { onNavigate: (slug: string) => void }) 
         del plugin.
       </p>
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>effects/reference_full.yml</code> (incluido en el jar) usa las 15 condiciones, los 13 tipos de
+        componente, los 14 triggers (incluidos los 4 sin listener todavía) y stacking <code>UPGRADE</code> — todo
+        en un solo archivo.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: identidad del efecto"
         description="Metadata, tags y conflictos. Conditions, components y stacking son demasiado variados para un formulario lineal — el editor in-game los separa en pantallas propias (EffectConditionsEditorGUI, EffectComponentsEditorGUI, EffectStackingEditorGUI); acá lo más práctico es copiar y adaptar uno de los ejemplos de arriba."

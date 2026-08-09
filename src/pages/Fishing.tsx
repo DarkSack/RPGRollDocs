@@ -262,6 +262,12 @@ export function Fishing({ onNavigate }: { onNavigate: (slug: string) => void }) 
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>species/reference_full.yml</code> (incluido en el jar) agrega <code>biomes</code>,{" "}
+        <code>allowed-times</code> y <code>attracted-by-bait-tags</code> — los tres campos que ninguno de los dos
+        ejemplos de arriba muestra, junto con todos los demás.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: especie de pez"
         description="Identidad, clasificación y condiciones básicas de captura. Campos de listas van separados por comas; dejalos vacíos para 'sin restricción'."

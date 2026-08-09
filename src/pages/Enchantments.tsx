@@ -229,6 +229,72 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
         arriba.
       </Callout>
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>enchantments/reference_full.yml</code> (incluido en el jar) usa absolutamente todos los campos
+        disponibles.
+      </Callout>
+      <CodeBlock
+        language="yaml"
+        filename="enchantments/reference_full.yml"
+        code={
+          "id: reference_full_example\n" +
+          'display-name: "&d&lEncantamiento de Referencia"\n' +
+          "rarity: DIVINE\n" +
+          "max-level: 5\n" +
+          "\n" +
+          "categories:\n" +
+          "  - WEAPON\n" +
+          "  - BOW\n" +
+          "\n" +
+          "allowed-items:\n" +
+          "  - NETHERITE_SWORD\n" +
+          "  - DIAMOND_SWORD\n" +
+          "  - BOW\n" +
+          "\n" +
+          "conflicts:\n" +
+          "  - lifesteal\n" +
+          "  - frost\n" +
+          "\n" +
+          "trigger:\n" +
+          "  - PLAYER_ATTACK\n" +
+          "  - ENTITY_KILL\n" +
+          "\n" +
+          "conditions:\n" +
+          '  - "sneaking"\n' +
+          '  - "health-below:50%"\n' +
+          "\n" +
+          "chance: 35%\n" +
+          "\n" +
+          "levels:\n" +
+          "  1:\n" +
+          "    damage: 2\n" +
+          "    duration-ticks: 40\n" +
+          "  5:\n" +
+          "    damage: 12\n" +
+          "    duration-ticks: 140\n" +
+          "\n" +
+          "effects:\n" +
+          "  - LIGHTNING\n" +
+          "  - type: DAMAGE\n" +
+          '    amount: "4"\n' +
+          "  - type: POTION\n" +
+          "    potion: WITHER\n" +
+          '    amplifier: "1"\n' +
+          '    duration: "60"\n' +
+          "  - type: FIRE\n" +
+          '    duration: "100"\n' +
+          "  - type: PARTICLE\n" +
+          "    particle: FLAME\n" +
+          '    count: "20"\n' +
+          "  - type: SOUND\n" +
+          "    sound: ENTITY_LIGHTNING_BOLT_THUNDER\n" +
+          "  - type: MESSAGE\n" +
+          '    value: "&d¡El Encantamiento de Referencia se activó!"\n' +
+          "  - type: COMMAND\n" +
+          '    command: "give %player% diamond 1"\n'
+        }
+      />
+
       <YamlBuilder
         title="Constructor visual: Custom Enchantment"
         description="Identidad, rareza, categorías, triggers y condiciones. Effects y levels quedan afuera del formulario — son listas de objetos anidados, copiá uno de los ejemplos de arriba y editalo a mano (es exactamente lo que hace el editor in-game también)."

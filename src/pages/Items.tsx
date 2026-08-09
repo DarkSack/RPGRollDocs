@@ -292,6 +292,127 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>items/example/reference_full.yml</code> (incluido en el jar) usa absolutamente todos los campos que
+        soporta un ítem — pensado para copiar/pegar secciones, no para dar in-game tal cual.
+      </Callout>
+      <CodeBlock
+        language="yaml"
+        filename="items/example/reference_full.yml"
+        code={
+          "id: reference_full_example\n" +
+          "category: example\n" +
+          "material: NETHERITE_SWORD\n" +
+          'display-name: "<gradient:#54daf4:#545eb6>Hoja de Referencia</gradient>"\n' +
+          "lore:\n" +
+          '  - "&7Un ítem de ejemplo que documenta cada campo disponible."\n' +
+          '  - "&7No está pensado para usarse en partidas reales."\n' +
+          "\n" +
+          "custom-model-data: 100001\n" +
+          "rarity: MYTHIC\n" +
+          "glow: true\n" +
+          "\n" +
+          "flags:\n" +
+          "  - HIDE_ENCHANTS\n" +
+          "  - HIDE_UNBREAKABLE\n" +
+          "  - HIDE_DYE\n" +
+          "  - HIDE_ARMOR_TRIM\n" +
+          "hide-attributes: false\n" +
+          "unbreakable: false\n" +
+          'color: "#8B0000"\n' +
+          'skull-texture: "MHF_Steve"\n' +
+          "\n" +
+          "trim:\n" +
+          "  material: REDSTONE\n" +
+          "  pattern: SPIRE\n" +
+          "\n" +
+          "stats:\n" +
+          "  damage: 25\n" +
+          "  critical_chance: 35\n" +
+          "  critical_damage: 120\n" +
+          "  magic_power: 15\n" +
+          "  luck: 10\n" +
+          "\n" +
+          "attributes:\n" +
+          "  GENERIC_MAX_HEALTH: 4\n" +
+          "  GENERIC_MOVEMENT_SPEED: 0.02\n" +
+          "\n" +
+          "requirements:\n" +
+          "  level: 40\n" +
+          "  race: elf\n" +
+          "  class: warrior\n" +
+          "  profession: blacksmith\n" +
+          "  skill: swordsmanship\n" +
+          "  trait: strong_arm\n" +
+          "  permission: rpgroll.items.mythic\n" +
+          "  money: 500\n" +
+          "  completed-quests: [dragon_hunt, ancient_trial]\n" +
+          "\n" +
+          "durability:\n" +
+          "  max: 1000\n" +
+          "  repairable: true\n" +
+          "  degrade-per-use: 1\n" +
+          "  auto-repair-per-minute: 0\n" +
+          "\n" +
+          "enchantments:\n" +
+          "  SHARPNESS: 5\n" +
+          "  UNBREAKING: 3\n" +
+          "custom-enchantments:\n" +
+          "  flaming_strike: 3\n" +
+          "\n" +
+          "effects:\n" +
+          "  - potion: FIRE_RESISTANCE\n" +
+          "    amplifier: 0\n" +
+          "    requires-held: true\n" +
+          "\n" +
+          "triggers:\n" +
+          "  ENTITY_KILL:\n" +
+          "    - type: MESSAGE\n" +
+          '      value: "&4¡Otro enemigo cae ante la Hoja de Referencia!"\n' +
+          "\n" +
+          "abilities:\n" +
+          "  - id: reference_dash\n" +
+          '    display-name: "&bEmbestida"\n' +
+          "    passive: false\n" +
+          "    trigger: RIGHT_CLICK\n" +
+          '    cooldown: "10s"\n' +
+          "    conditions: [sneaking]\n" +
+          "    actions:\n" +
+          "      - type: PARTICLE\n" +
+          "        particle: CLOUD\n" +
+          "        count: 20\n" +
+          "\n" +
+          "sockets:\n" +
+          "  - id: socket_1\n" +
+          "    accepted-types: [OFFENSIVE, UTILITY]\n" +
+          "\n" +
+          "skins:\n" +
+          "  - id: golden_finish\n" +
+          '    display-name: "&6Hoja de Referencia (Acabado Dorado)"\n' +
+          "    material: NETHERITE_SWORD\n" +
+          "    custom-model-data: 100002\n" +
+          "\n" +
+          'upgrades:\n' +
+          '  "1":\n' +
+          "    stats: { damage: 5 }\n" +
+          "    cost: 100\n" +
+          "    cost-material: DIAMOND\n" +
+          "    cost-amount: 2\n" +
+          "\n" +
+          "recipes:\n" +
+          "  - type: SHAPED\n" +
+          '    shape: [" D ", " D ", " S "]\n' +
+          "    key: { D: DIAMOND, S: STICK }\n" +
+          "\n" +
+          "economy:\n" +
+          "  sell: 5000\n" +
+          "  buy: 15000\n" +
+          "\n" +
+          "custom-data:\n" +
+          '  faction: "reference_order"\n'
+        }
+      />
+
       <YamlBuilder
         title="Constructor visual: Item"
         description="Identidad, lore, rareza, stats/atributos, requisitos, durabilidad y economía. Encantamientos, triggers, abilities, sockets, skins, upgrades y recipes son demasiado anidados para este formulario — usá /itemadmin editor o copiá uno de los ejemplos de arriba."

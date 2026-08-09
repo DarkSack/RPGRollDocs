@@ -236,6 +236,12 @@ export function Seasons({ onNavigate }: { onNavigate: (slug: string) => void }) 
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>seasons/reference_full.yml</code> (incluido en el jar) agrega <code>sub-seasons</code> y{" "}
+        <code>mob-modifiers</code>, los dos campos que ninguno de los dos ejemplos de arriba muestra, junto con
+        todos los demás.
+      </Callout>
+
       <YamlBuilder
         title="Constructor visual: identidad y duración de la estación"
         description="Clima, subestaciones, modificadores de bioma, vegetación y mobs de temporada son demasiado variados para un formulario lineal — todos viven en pantallas propias dentro del editor in-game. Copiá y adaptá uno de los ejemplos de arriba para esos campos."

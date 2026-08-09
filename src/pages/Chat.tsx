@@ -155,6 +155,11 @@ export function Chat({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </p>
 
       <YamlBuilder title="Constructor visual: Channel" folder="channels" fields={channelFields} />
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>channels/reference_full.yml</code> (incluido en el jar) usa <code>scope: PROXIMITY</code> con{" "}
+        <code>distance</code>, ambos permisos, cooldown, <code>join-sound</code> y <code>also-action-bar</code> —
+        los campos que los dos ejemplos de arriba dejan vacíos.
+      </Callout>
 
       <SectionHeading id="idiomas">Idiomas</SectionHeading>
       <p>

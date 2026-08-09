@@ -309,6 +309,12 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
+      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
+        <code>mobs/bosses/reference_full.yml</code> (incluido en el jar) usa absolutamente todos los campos de un
+        mob: modelo, stats, resistencias, debilidades, IA, skills, los 12 triggers, fases, los 5 tipos de loot,
+        bossbar, diálogos y reglas de spawn.
+      </Callout>
+
       <SectionHeading id="skills">Skills, triggers y condiciones</SectionHeading>
       <p>
         Una skill tiene <code>trigger</code> (o ninguno, si es pasiva), <code>cooldown</code>, <code>chance</code>{" "}
