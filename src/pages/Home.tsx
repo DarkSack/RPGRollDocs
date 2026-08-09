@@ -3,7 +3,6 @@ import {
   SectionHeading,
   Card,
   CardGrid,
-  CodeBlock,
   Callout,
   PrevNext,
 } from "../components/ui";
