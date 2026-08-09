@@ -23,6 +23,16 @@ export function Commands({ onNavigate }: { onNavigate: (slug: string) => void })
         no requiere ser un jugador en el mundo.
       </Callout>
 
+      <Callout tone="tip" title="Autocompletado real, no solo la lista de subcomandos">
+        Además de sugerir el subcomando, <code>/rpg</code> (y el de cada addon) sugiere desde el manager de
+        contenido real: <code>/rpg race &lt;Tab&gt;</code> lista razas de verdad, <code>/rpg setrace &lt;jugador&gt; &lt;Tab&gt;</code>{" "}
+        también, etc. Ver el detalle técnico en{" "}
+        <button className="underline" onClick={() => onNavigate("arquitectura")}>
+          Arquitectura → Tab-completion
+        </button>
+        .
+      </Callout>
+
       <p className="mt-6">
         Ver el árbol completo de permisos en{" "}
         <button className="underline" onClick={() => onNavigate("permisos")}>

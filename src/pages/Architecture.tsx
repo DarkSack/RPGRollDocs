@@ -1,4 +1,4 @@
-import { PageHeader, SectionHeading, Callout, CodeBlock, Card, PrevNext } from "../components/ui";
+import { PageHeader, SectionHeading, Callout, CodeBlock, Card, Table, Thead, Th, Tr, Td, PrevNext } from "../components/ui";
 
 export function Architecture({ onNavigate }: { onNavigate: (slug: string) => void }) {
   return (
@@ -131,6 +131,109 @@ export function Architecture({ onNavigate }: { onNavigate: (slug: string) => voi
         <code>npcs</code> tiene su propio <code>com.gradleup.shadow</code> configurado por separado del de{" "}
         <code>core</code>, porque necesita bundlear y reubicar sus propias dependencias externas (OkHttp, en su
         caso) sin tocar el jar principal del plugin.
+      </Callout>
+
+      <SectionHeading id="componentutils">Colores y formato de texto — ComponentUtils</SectionHeading>
+      <p>
+        Todo texto que viene de un YAML de contenido (nombres de ítems, mensajes de misión, diálogos de mob,
+        recompensas de crate, etc.) pasa por <code>com.sack.rpgroll.util.ComponentUtils#parse(String)</code> antes
+        de convertirse en un <code>Component</code> de Adventure. Es la única fuente de verdad para esto — ningún
+        addon debería instanciar su propio <code>LegacyComponentSerializer</code> suelto.
+      </p>
+      <Table>
+        <Thead>
+          <Th>Formato</Th>
+          <Th>Ejemplo</Th>
+          <Th>Motor</Th>
+        </Thead>
+        <tbody>
+          <Tr>
+            <Td>Legacy clásico</Td>
+            <Td className="font-mono text-xs">&amp;l&amp;bArquero</Td>
+            <Td>LegacyComponentSerializer</Td>
+          </Tr>
+          <Tr>
+            <Td>Hex por carácter</Td>
+            <Td className="font-mono text-xs">&amp;#54DAF4B&amp;#54C8EBi&amp;#54B7E2r...</Td>
+            <Td>LegacyComponentSerializer (.hexColors())</Td>
+          </Tr>
+          <Tr>
+            <Td>Hex estilo BungeeCord</Td>
+            <Td className="font-mono text-xs">&amp;x&amp;5&amp;4&amp;D&amp;A&amp;F&amp;4Birdflop</Td>
+            <Td>LegacyComponentSerializer (.hexColors())</Td>
+          </Tr>
+          <Tr>
+            <Td>MiniMessage / gradient</Td>
+            <Td className="font-mono text-xs">{"<gradient:#54daf4:#545eb6>Birdflop</gradient>"}</Td>
+            <Td>MiniMessage (autodetectado por la presencia de <code>{"<...>"}</code>)</Td>
+          </Tr>
+        </tbody>
+      </Table>
+      <Callout tone="warning" title="Antes solo soportaba códigos clásicos">
+        Hasta hace poco, la mayoría de los addons construían su propio{" "}
+        <code>LegacyComponentSerializer.legacyAmpersand()</code> local, que <strong>no</strong> entiende hex —
+        cualquier <code>&amp;#RRGGBB</code> o <code>&amp;x&amp;R&amp;R...</code> se mostraba como texto literal en
+        vez de color. Se corrigió centralizando todo en <code>ComponentUtils</code>, que arma el serializer con{" "}
+        <code>.hexColors()</code> — ese único flag ya habilita <strong>ambos</strong> formatos hex al deserializar
+        (el método <code>.useUnusualXRepeatedCharacterHexFormat()</code> solo afecta cómo se vuelve a serializar,
+        no qué se puede leer).
+      </Callout>
+      <p>
+        <strong>Excepciones deliberadas</strong>: <code>SackResourcePack</code> (standalone, sin dependencia de{" "}
+        <code>core</code>) tiene su propia copia local idéntica en <code>DistributionEngine</code>. El canal de
+        chat (<code>RPGRoll-Chat</code>) deja elegir <code>ChatTextFormat.LEGACY</code> vs{" "}
+        <code>ChatTextFormat.MINIMESSAGE</code> explícitamente por canal en su YAML — ahí no se usa la
+        auto-detección de <code>ComponentUtils</code>, porque la elección ya es explícita.
+      </p>
+
+      <SectionHeading id="tabcompleteutil">Tab-completion — TabCompleteUtil</SectionHeading>
+      <p>
+        Todos los comandos de todos los addons (y de <code>/rpg</code> en core) implementan{" "}
+        <code>TabCompleter</code> además de <code>CommandExecutor</code>, y sugieren desde el manager real de
+        contenido correspondiente en vez de texto fijo: ids de encantamientos, mobs, quests, efectos, especies,
+        profesiones, etc., más nombres de jugadores y mundos online donde corresponde. La lógica de filtrado
+        compartida (coincidencia de prefijo, sin importar mayúsculas) vive en{" "}
+        <code>com.sack.rpgroll.util.TabCompleteUtil</code>.
+      </p>
+      <CodeBlock
+        language="java"
+        filename="Patrón usado en cada XxxCommand.java"
+        code={
+          "public class MobAdminCommand implements CommandExecutor, TabCompleter {\n\n" +
+          "    @Override\n" +
+          "    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {\n" +
+          "        if (args.length == 1) {\n" +
+          "            return TabCompleteUtil.filter(args[0], SUBCOMMANDS);\n" +
+          "        }\n" +
+          "        if (args.length == 3 && \"create\".equalsIgnoreCase(args[0])) {\n" +
+          "            return TabCompleteUtil.spawnableEntityTypes(args[2]); // EntityType real, no una lista fija\n" +
+          "        }\n" +
+          "        // ...\n" +
+          "    }\n" +
+          "}\n"
+        }
+      />
+      <Callout tone="tip" title="SackResourcePack también, con una copia local">
+        Igual que con los colores: como es standalone, <code>SrpCommand</code> trae su propio filtro de
+        coincidencia de prefijo en vez de depender de <code>TabCompleteUtil</code>.
+      </Callout>
+
+      <SectionHeading id="gui-back-navigation">GUIs: volver al navegador anterior</SectionHeading>
+      <p>
+        Todas las GUIs de inventario extienden <code>com.sack.rpgroll.gui.InventoryGUI</code>. Abrir una nueva
+        (<code>open()</code>) hace tres cosas: reconstruye el inventario (<code>build()</code>), se registra como
+        la GUI activa del jugador en <code>GUIListener</code>, y se la muestra (
+        <code>player.openInventory(...)</code>). Un editor que vuelve a su navegador (botón "Volver") recibe un{" "}
+        <code>Runnable onBack</code> en el constructor — casi siempre <code>browserInstance::reopen</code>.
+      </p>
+      <Callout tone="warning" title="Bug corregido: reopen() necesita open(), no solo build()">
+        Durante bastante tiempo, el <code>reopen()</code> privado de cada navegador solo llamaba a{" "}
+        <code>build()</code> (redibuja el <code>Inventory</code> del navegador, pero ese objeto ya no es el que el
+        jugador está viendo — está viendo el del editor). El resultado: apretar "Volver" no hacía nada visible, y
+        además el click-listener seguía apuntando al editor. Se corrigió cambiando esos{" "}
+        <code>reopen()</code> para que llamen a <code>open()</code> en vez de <code>build()</code> — <code>open()</code>{" "}
+        sí redibuja, re-registra y vuelve a mostrar el inventario correcto. Esto se tocó en{" "}
+        <strong>59 archivos</strong> a lo largo de todo el ecosistema.
       </Callout>
 
       <PrevNext current="arquitectura" onNavigate={onNavigate} />
