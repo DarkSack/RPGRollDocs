@@ -291,11 +291,15 @@ export function Crafting({ onNavigate }: { onNavigate: (slug: string) => void })
 
       <SectionHeading id="gui">GUI: Crafting Studio</SectionHeading>
       <p>
-        <Kbd>/craftingadmin browser</Kbd> abre un hub que enlaza a 6 navegadores. Estaciones, recetas y combustibles
-        tienen editor completo campo a campo en inventario; recetas vanilla/yunque/fermentación son de solo
-        lectura + borrado en el navegador (sus listas de ingredientes/shape son demasiado ricas para un editor de
-        inventario) — se crean y editan directamente en su YAML, mismo criterio que usa RPGRoll-Items para sus
-        propias recetas vanilla. Del lado del jugador, <Kbd>/crafting book</Kbd> abre el Recipe Book.
+        <Kbd>/craftingadmin browser</Kbd> abre un hub que enlaza a 6 navegadores, y los 6 tienen crear + editar
+        completo en inventario — nada requiere tocar YAML a mano. Los campos escalares (nombre, ícono, tiempos,
+        costos, resultado...) se editan slot por slot; las listas (ingredientes de una receta, condiciones) abren
+        un sub-editor dedicado con sus propios slots de "agregar"/"quitar" (shift-click) y una mini-sintaxis por
+        chat para el ítem nuevo, ej. <code>MATERIAL IRON_INGOT 2</code> o <code>LEVEL_MIN 5</code>; <code>shape</code>
+        /<code>key</code>/<code>ingredients</code> de una receta vanilla se retipean enteros por chat (una lista tan
+        variable no entra en slots fijos). Editar o borrar una receta vanilla la vuelve a registrar en Bukkit al
+        instante — no hace falta reiniciar el servidor. Del lado del jugador, <Kbd>/crafting book</Kbd> abre el
+        Recipe Book.
       </p>
 
       <SectionHeading id="api">API para addons — CraftingAPI + eventos</SectionHeading>
