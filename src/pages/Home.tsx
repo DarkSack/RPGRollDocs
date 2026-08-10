@@ -54,10 +54,10 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <SectionHeading id="stack">Stack técnico</SectionHeading>
       <ul>
         <li>
-          Java 21, Gradle multi-módulo (<code>api</code>, <code>common</code>,{" "}
+          Java 25, Gradle multi-módulo (<code>api</code>, <code>common</code>,{" "}
           <code>core</code>)
         </li>
-        <li>Paper API 1.21.1 (Bukkit/Spigot compatible)</li>
+        <li>Paper API 26.1.1 (Bukkit/Spigot compatible)</li>
         <li>
           SQLite embebido (sqlite-jdbc) con migraciones versionadas propias
         </li>

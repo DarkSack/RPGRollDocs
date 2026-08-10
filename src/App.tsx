@@ -31,6 +31,8 @@ import { Ranching } from "./pages/Ranching";
 import { Workers } from "./pages/Workers";
 import { Economy } from "./pages/Economy";
 import { Crafting } from "./pages/Crafting";
+import { Tab } from "./pages/Tab";
+import { Extras } from "./pages/Extras";
 import { Commands } from "./pages/Commands";
 import { Permissions } from "./pages/Permissions";
 import { Configuration } from "./pages/Configuration";
@@ -108,6 +110,10 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Economy onNavigate={onNavigate} />;
     case "crafting":
       return <Crafting onNavigate={onNavigate} />;
+    case "tab":
+      return <Tab onNavigate={onNavigate} />;
+    case "extras":
+      return <Extras onNavigate={onNavigate} />;
     case "comandos":
       return <Commands onNavigate={onNavigate} />;
     case "permisos":
