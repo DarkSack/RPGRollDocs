@@ -319,19 +319,6 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
         worker — "los gremios pueden compartir trabajadores" del diseño original, resuelto como gestión
         compartida.
       </p>
-
-      <SectionHeading id="pendiente">Qué falta (próxima pasada)</SectionHeading>
-      <Callout tone="warning" title="Esta pasada es 'Núcleo + IA avanzada y economía', no todo el diseño original">
-        A propósito, esta versión <strong>no</strong> incluye empresas, equipos como sistema propio, transporte
-        (caballos/carretas/barcos), construcción con planos configurables, ni integración con RPGRoll-Magic
-        (magos que trabajan). Tampoco hay RPGRoll-Mining, RPGRoll-Blacksmith, ni Housing como addon separado — no
-        existen en este proyecto, así que esas integraciones no podían ser reales. Lo que sí está completo y
-        estable: el motor de IA por reglas, necesidades y personalidad, profesiones y habilidades con XP real,
-        horarios, logística de almacenes, economía con salarios reales vía Vault y moral, eventos de worker, la
-        integración real con Ranching, el Worker Studio, la API pública, y contenido de ejemplo (4 profesiones, 6
-        habilidades, 1 horario, 2 eventos).
-      </Callout>
-
       <PrevNext current="workers" onNavigate={onNavigate} />
     </>
   );

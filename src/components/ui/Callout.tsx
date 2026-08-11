@@ -1,48 +1,39 @@
 import type { ReactNode } from "react";
+import { InfoIcon, LightbulbIcon, AlertTriangleIcon, AlertOctagonIcon, CheckCircleIcon } from "../icons/Icon";
+import type { IconProps } from "../icons/Icon";
 
-type CalloutTone = "info" | "tip" | "warning" | "danger";
+type CalloutTone = "info" | "tip" | "warning" | "danger" | "success";
 
-const TONE_STYLES: Record<CalloutTone, { wrap: string; icon: ReactNode; label: string }> = {
+const TONE_STYLES: Record<CalloutTone, { wrap: string; iconWrap: string; icon: (p: IconProps) => ReactNode; label: string }> = {
   info: {
-    wrap: "border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-100",
+    wrap: "border-sky-200 bg-sky-50/70 text-sky-900 dark:border-sky-500/25 dark:bg-sky-500/[0.07] dark:text-sky-100",
+    iconWrap: "bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-300",
     label: "Nota",
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 16v-4M12 8h.01" />
-      </svg>
-    ),
+    icon: InfoIcon,
   },
   tip: {
-    wrap:
-      "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100",
+    wrap: "border-emerald-200 bg-emerald-50/70 text-emerald-900 dark:border-emerald-500/25 dark:bg-emerald-500/[0.07] dark:text-emerald-100",
+    iconWrap: "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-300",
     label: "Tip",
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.5c.6.5 1 1.3 1 2.1V15h6v-.4c0-.8.4-1.6 1-2.1A6 6 0 0 0 12 2Z" />
-      </svg>
-    ),
+    icon: LightbulbIcon,
+  },
+  success: {
+    wrap: "border-green-200 bg-green-50/70 text-green-900 dark:border-green-500/25 dark:bg-green-500/[0.07] dark:text-green-100",
+    iconWrap: "bg-green-100 text-green-600 dark:bg-green-500/15 dark:text-green-300",
+    label: "Listo",
+    icon: CheckCircleIcon,
   },
   warning: {
-    wrap:
-      "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100",
+    wrap: "border-amber-200 bg-amber-50/70 text-amber-900 dark:border-amber-500/25 dark:bg-amber-500/[0.07] dark:text-amber-100",
+    iconWrap: "bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-300",
     label: "Cuidado",
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
-        <path d="M12 9v4M12 17h.01" />
-      </svg>
-    ),
+    icon: AlertTriangleIcon,
   },
   danger: {
-    wrap: "border-red-200 bg-red-50 text-red-900 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-100",
+    wrap: "border-red-200 bg-red-50/70 text-red-900 dark:border-red-500/25 dark:bg-red-500/[0.07] dark:text-red-100",
+    iconWrap: "bg-red-100 text-red-600 dark:bg-red-500/15 dark:text-red-300",
     label: "Importante",
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M15 9l-6 6M9 9l6 6" />
-      </svg>
-    ),
+    icon: AlertOctagonIcon,
   },
 };
 
@@ -56,11 +47,14 @@ export function Callout({
   children: ReactNode;
 }) {
   const style = TONE_STYLES[tone];
+  const Icon = style.icon;
 
   return (
-    <div className={`flex gap-3 rounded-xl border px-4 py-3 text-sm ${style.wrap}`}>
-      <div className="mt-0.5 shrink-0">{style.icon}</div>
-      <div className="space-y-1">
+    <div className={`flex gap-3 rounded-xl border px-4 py-3.5 text-sm shadow-soft ${style.wrap}`} role="note">
+      <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${style.iconWrap}`}>
+        <Icon size={16} />
+      </div>
+      <div className="min-w-0 flex-1 space-y-1 pt-0.5">
         <p className="font-semibold">{title ?? style.label}</p>
         <div className="leading-relaxed [&_a]:underline [&_code]:rounded [&_code]:bg-black/5 [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.85em] dark:[&_code]:bg-white/10">
           {children}

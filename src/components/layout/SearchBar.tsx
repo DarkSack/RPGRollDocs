@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { searchDocs, type SearchEntry } from "../../content/search";
+import { addonMeta, DefaultNavIcon } from "../../content/addons";
+import { Kbd } from "../ui/Kbd";
+import { SearchIcon, HashIcon } from "../icons/Icon";
 
 interface SearchBarProps {
   onNavigate: (slug: string) => void;
@@ -14,21 +17,30 @@ export function SearchBar({ onNavigate }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   const results = searchDocs(query);
+
+  function close() {
+    setOpen(false);
+    triggerRef.current?.focus();
+  }
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setOpen(true);
-      } else if (e.key === "Escape") {
-        setOpen(false);
+      } else if (e.key === "Escape" && open) {
+        close();
       }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   useEffect(() => {
     if (open) {
@@ -41,6 +53,10 @@ export function SearchBar({ onNavigate }: SearchBarProps) {
   useEffect(() => {
     setActiveIndex(0);
   }, [query]);
+
+  useEffect(() => {
+    listRef.current?.querySelector<HTMLElement>('[data-active="true"]')?.scrollIntoView({ block: "nearest" });
+  }, [activeIndex]);
 
   function select(entry: SearchEntry) {
     onNavigate(entry.slug);
@@ -61,83 +77,126 @@ export function SearchBar({ onNavigate }: SearchBarProps) {
       e.preventDefault();
       const entry = results[activeIndex];
       if (entry) select(entry);
+    } else if (e.key === "Tab") {
+      // Diálogo con un único elemento enfocable (el input) — Tab no debe escapar al resto de la página.
+      e.preventDefault();
     }
   }
+
+  let lastPage: string | null = null;
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
-        className="flex w-full max-w-xs items-center gap-2 rounded-md border border-slate-200 px-3 py-1.5 text-left text-sm text-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-500 dark:hover:bg-slate-800"
+        className="flex w-full max-w-xs items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 text-left text-sm text-slate-400 transition-colors hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-500 dark:hover:border-slate-600 dark:hover:bg-slate-800"
       >
-        <SearchIcon />
-        <span className="hidden sm:inline">Buscar en la documentación…</span>
-        <span className="sm:hidden">Buscar…</span>
-        <Kbd className="ml-auto hidden sm:inline-flex" />
+        <SearchIcon size={16} className="shrink-0" />
+        <span className="hidden truncate sm:inline">Buscar en la documentación…</span>
+        <span className="truncate sm:hidden">Buscar…</span>
+        <span className="ml-auto hidden shrink-0 items-center gap-0.5 sm:inline-flex">
+          <Kbd>{isMac() ? "⌘" : "Ctrl"}</Kbd>
+          <Kbd>K</Kbd>
+        </span>
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 px-4 pt-24" onClick={() => setOpen(false)}>
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 px-4 pt-24 animate-fade-in"
+          onClick={close}
+        >
           <div
-            className="w-full max-w-xl overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900"
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Buscar en la documentación"
+            className="w-full max-w-xl overflow-hidden rounded-xl border border-slate-200 bg-white shadow-popover animate-scale-in dark:border-slate-700 dark:bg-slate-900"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-              <SearchIcon />
+              <SearchIcon size={16} className="shrink-0 text-slate-400" />
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDownInput}
                 placeholder="Buscar página, addon o sección…"
+                aria-label="Buscar"
+                aria-activedescendant={results[activeIndex] ? `search-result-${activeIndex}` : undefined}
+                role="combobox"
+                aria-expanded={results.length > 0}
+                aria-controls="search-results"
                 className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
-              <Kbd label="Esc" />
+              <button
+                type="button"
+                onClick={close}
+                className="rounded border border-slate-200 px-1.5 py-0.5 text-xs text-slate-400 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-500 dark:hover:bg-slate-800"
+              >
+                Esc
+              </button>
             </div>
 
-            <ul className="max-h-96 overflow-y-auto py-2">
+            <ul ref={listRef} id="search-results" role="listbox" className="max-h-96 overflow-y-auto py-2">
               {query.trim() === "" && (
                 <li className="px-4 py-6 text-center text-sm text-slate-400 dark:text-slate-500">
-                  Escribí para buscar en las {new Set(results.map((r) => r.slug)).size || 30}+ páginas y secciones de la
-                  documentación.
+                  Escribí para buscar en las páginas y secciones de la documentación.
                 </li>
               )}
 
               {query.trim() !== "" && results.length === 0 && (
                 <li className="px-4 py-6 text-center text-sm text-slate-400 dark:text-slate-500">
-                  Sin resultados para "{query}".
+                  Sin resultados para &ldquo;{query}&rdquo;.
                 </li>
               )}
 
-              {results.map((entry, i) => (
-                <li key={`${entry.slug}-${entry.heading ?? ""}`}>
-                  <button
-                    type="button"
-                    onMouseEnter={() => setActiveIndex(i)}
-                    onClick={() => select(entry)}
-                    className={
-                      "flex w-full flex-col items-start gap-0.5 px-4 py-2 text-left text-sm transition-colors " +
-                      (i === activeIndex
-                        ? "bg-violet-50 dark:bg-violet-500/10"
-                        : "hover:bg-slate-50 dark:hover:bg-slate-800")
-                    }
-                  >
-                    <span className="font-medium text-slate-900 dark:text-slate-100">
-                      {entry.heading ? entry.headingLabel : entry.pageTitle}
-                    </span>
-                    {entry.heading && (
-                      <span className="text-xs text-slate-400 dark:text-slate-500">en {entry.pageTitle}</span>
+              {results.map((entry, i) => {
+                const showDivider = entry.heading !== undefined && entry.pageTitle !== lastPage;
+                lastPage = entry.pageTitle;
+                const Icon = entry.heading ? HashIcon : addonMeta(entry.slug)?.icon ?? DefaultNavIcon;
+
+                return (
+                  <li key={`${entry.slug}-${entry.heading ?? ""}`}>
+                    {showDivider && (
+                      <p className="mt-1 px-4 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                        {entry.pageTitle}
+                      </p>
                     )}
-                  </button>
-                </li>
-              ))}
+                    <button
+                      id={`search-result-${i}`}
+                      role="option"
+                      aria-selected={i === activeIndex}
+                      data-active={i === activeIndex}
+                      type="button"
+                      onMouseEnter={() => setActiveIndex(i)}
+                      onClick={() => select(entry)}
+                      className={
+                        "flex w-full items-center gap-2.5 px-4 py-2 text-left text-sm transition-colors " +
+                        (i === activeIndex ? "bg-violet-50 dark:bg-violet-500/10" : "hover:bg-slate-50 dark:hover:bg-slate-800")
+                      }
+                    >
+                      <Icon size={15} className="shrink-0 text-slate-400 dark:text-slate-500" />
+                      <span className="min-w-0 flex-1 truncate">
+                        <span className="font-medium text-slate-900 dark:text-slate-100">
+                          {entry.heading ? entry.headingLabel : entry.pageTitle}
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
       )}
     </>
   );
+}
+
+function isMac(): boolean {
+  return typeof navigator !== "undefined" && navigator.platform.toLowerCase().includes("mac");
 }
 
 /**
@@ -153,32 +212,4 @@ function scrollToHeadingWhenReady(id: string, attemptsLeft = 60): void {
   }
   if (attemptsLeft <= 0) return;
   setTimeout(() => scrollToHeadingWhenReady(id, attemptsLeft - 1), 50);
-}
-
-function Kbd({ label, className = "" }: { label?: string; className?: string }) {
-  if (label) {
-    return (
-      <kbd className={"rounded border border-slate-200 px-1.5 py-0.5 text-xs text-slate-400 dark:border-slate-700 dark:text-slate-500 " + className}>
-        {label}
-      </kbd>
-    );
-  }
-  const isMac = typeof navigator !== "undefined" && navigator.platform.toLowerCase().includes("mac");
-  return (
-    <span className={"inline-flex items-center gap-0.5 " + className}>
-      <kbd className="rounded border border-slate-200 px-1.5 py-0.5 text-xs text-slate-400 dark:border-slate-700 dark:text-slate-500">
-        {isMac ? "⌘" : "Ctrl"}
-      </kbd>
-      <kbd className="rounded border border-slate-200 px-1.5 py-0.5 text-xs text-slate-400 dark:border-slate-700 dark:text-slate-500">K</kbd>
-    </span>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
-      <circle cx="11" cy="11" r="7" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
 }

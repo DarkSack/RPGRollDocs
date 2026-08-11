@@ -55,6 +55,10 @@ export const nav: NavSection[] = [
     ],
   },
   {
+    title: "Herramientas",
+    items: [{ slug: "room-designer", label: "Diseñador de Salas" }],
+  },
+  {
     title: "Referencia",
     items: [
       { slug: "comandos", label: "Comandos" },

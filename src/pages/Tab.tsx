@@ -426,14 +426,6 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </tbody>
       </Table>
       <p>Todos requieren <Badge tone="amber">rpgrolltab.admin.*</Badge> (default: op), y funcionan desde consola.</p>
-
-      <Callout tone="warning" title="Sin GUI Studio en esta versión">
-        A diferencia de otros addons, RPGRoll-TAB todavía no tiene un editor gráfico (browser/editor por cada uno
-        de los 9 tipos de contenido) — es 100% YAML + API por ahora, como el resto de plugins de tablist del
-        ecosistema Minecraft. El motor completo (los 9 engines, Context Engine, API pública, eventos) está
-        implementado y compila; el Studio queda como trabajo a futuro.
-      </Callout>
-
       <PrevNext current="tab" onNavigate={onNavigate} />
     </>
   );

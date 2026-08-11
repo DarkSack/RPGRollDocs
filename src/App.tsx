@@ -33,6 +33,7 @@ import { Economy } from "./pages/Economy";
 import { Crafting } from "./pages/Crafting";
 import { Tab } from "./pages/Tab";
 import { Extras } from "./pages/Extras";
+import { RoomDesigner } from "./pages/RoomDesigner";
 import { Commands } from "./pages/Commands";
 import { Permissions } from "./pages/Permissions";
 import { Configuration } from "./pages/Configuration";
@@ -114,6 +115,8 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Tab onNavigate={onNavigate} />;
     case "extras":
       return <Extras onNavigate={onNavigate} />;
+    case "room-designer":
+      return <RoomDesigner onNavigate={onNavigate} />;
     case "comandos":
       return <Commands onNavigate={onNavigate} />;
     case "permisos":

@@ -4,7 +4,53 @@
 
 @theme {
   --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+
+  --shadow-soft: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.06);
+  --shadow-card: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 8px 24px -8px rgb(15 23 42 / 0.10);
+  --shadow-popover: 0 12px 32px -8px rgb(15 23 42 / 0.22), 0 4px 12px -4px rgb(15 23 42 / 0.12);
+
+  --animate-fade-in: fade-in 0.15s ease-out;
+  --animate-scale-in: scale-in 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-in-left: slide-in-left 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-down: slide-down 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.97) translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  @keyframes slide-in-left {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 @layer base {
@@ -16,6 +62,8 @@
   body {
     @apply bg-white text-slate-700 dark:bg-slate-950 dark:text-slate-300;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
 
   ::selection {
@@ -30,9 +78,69 @@
   .dark * {
     scrollbar-color: theme(colors.slate.700) transparent;
   }
+
+  /* Tailwind v4 no fuerza cursor:pointer en controles nativos — lo restauramos
+     acá una sola vez en vez de agregar cursor-pointer a mano en ~90 botones
+     inline repartidos por todas las páginas. */
+  button:not(:disabled),
+  select:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  /* Foco visible consistente en toda la app — solo cuando se navega con teclado. */
+  :focus-visible {
+    outline: 2px solid theme(colors.violet.500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
 
 @layer utilities {
+  .skip-link {
+    @apply fixed left-3 top-3 z-[100] -translate-y-16 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white opacity-0 transition-all focus:translate-y-0 focus:opacity-100;
+  }
+
+  .checkerboard-air {
+    background-image:
+      linear-gradient(45deg, theme(colors.slate.300) 25%, transparent 25%, transparent 75%, theme(colors.slate.300) 75%),
+      linear-gradient(45deg, theme(colors.slate.300) 25%, transparent 25%, transparent 75%, theme(colors.slate.300) 75%);
+    background-size: 8px 8px;
+    background-position: 0 0, 4px 4px;
+  }
+  .dark .checkerboard-air {
+    background-image:
+      linear-gradient(45deg, theme(colors.slate.700) 25%, transparent 25%, transparent 75%, theme(colors.slate.700) 75%),
+      linear-gradient(45deg, theme(colors.slate.700) 25%, transparent 25%, transparent 75%, theme(colors.slate.700) 75%);
+    background-size: 8px 8px;
+    background-position: 0 0, 4px 4px;
+  }
+
+  .bg-grid-fade {
+    background-image:
+      linear-gradient(to bottom, transparent, white 85%),
+      radial-gradient(theme(colors.slate.300) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      22px 22px;
+  }
+  .dark .bg-grid-fade {
+    background-image:
+      linear-gradient(to bottom, transparent, theme(colors.slate.950) 85%),
+      radial-gradient(theme(colors.slate.700) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      22px 22px;
+  }
+
+  .text-gradient-brand {
+    @apply bg-gradient-to-br from-violet-600 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:via-violet-300 dark:to-fuchsia-400;
+  }
+
   .prose-doc h2 {
     scroll-margin-top: 5.5rem;
   }
@@ -47,10 +155,10 @@
     @apply mb-4 ml-5 space-y-1.5 text-slate-600 dark:text-slate-300;
   }
   .prose-doc ul {
-    @apply list-disc;
+    @apply list-disc marker:text-slate-300 dark:marker:text-slate-600;
   }
   .prose-doc ol {
-    @apply list-decimal;
+    @apply list-decimal marker:text-slate-400 dark:marker:text-slate-500;
   }
   .prose-doc a {
     @apply text-violet-600 underline decoration-violet-300 underline-offset-2 hover:decoration-violet-500 dark:text-violet-400 dark:decoration-violet-700;
@@ -60,5 +168,33 @@
   }
   .prose-doc > :first-child {
     margin-top: 0;
+  }
+  .prose-doc code:not(pre code) {
+    @apply rounded-md border border-slate-200 bg-slate-100 px-1.5 py-0.5 font-mono text-[0.85em] text-violet-700 dark:border-slate-700 dark:bg-slate-800 dark:text-violet-300;
+  }
+}
+
+.animate-fade-in {
+  animation: var(--animate-fade-in);
+}
+.animate-scale-in {
+  animation: var(--animate-scale-in);
+}
+.animate-slide-in-left {
+  animation: var(--animate-slide-in-left);
+}
+.animate-slide-down {
+  animation: var(--animate-slide-down);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }

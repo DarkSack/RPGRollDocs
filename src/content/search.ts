@@ -132,6 +132,10 @@ export const searchIndex: SearchEntry[] = [
   h("dungeons", "Una mazmorra es una lista de salas", "estructura"),
   h("dungeons", "Dificultades", "dificultades"),
   h("dungeons", "Checkpoints y revivir", "checkpoints"),
+  h("dungeons", "Estructuras físicas: la Biblioteca", "estructuras-fisicas"),
+  h("dungeons", "Importar un Structure Block", "importar-structure-block"),
+  h("dungeons", "Formato CUSTOM: paleta + capas", "formato-custom"),
+  h("dungeons", "Pegar una estructura", "pegar-estructura"),
   h("dungeons", "Ejemplos de archivo YAML", "formato-yaml"),
   h("dungeons", "GUI: navegador y editor con pantallas dedicadas", "gui"),
   h("dungeons", "Comandos de jugador — /dungeon", "comandos-jugador"),
@@ -364,6 +368,11 @@ export const searchIndex: SearchEntry[] = [
   h("habilidades-traits", "Usar una habilidad", "usar-skill"),
   h("habilidades-traits", "Ver tus habilidades", "listar-skills"),
   h("habilidades-traits", "Traits", "traits"),
+
+  // RoomDesigner
+  h("room-designer", "Cómo usarlo", "como-usar"),
+  h("room-designer", "La herramienta", "herramienta"),
+  h("room-designer", "Siguiente paso", "siguiente-paso"),
 
   // Workers
   h("workers", "Requisitos", "requisitos"),
