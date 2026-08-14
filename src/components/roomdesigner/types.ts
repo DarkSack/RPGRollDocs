@@ -29,4 +29,9 @@ export interface RoomDesign {
 export const AIR: Symbol = ".";
 
 export const MIN_DIMENSION = 1;
-export const MAX_DIMENSION = 16;
+/**
+ * Con culling de caras ocultas + orden pintor, esto sigue siendo fluido en
+ * el canvas 2D incluso para estructuras huecas grandes — 32 es también
+ * aproximadamente el techo práctico de un Structure Block vanilla por eje.
+ */
+export const MAX_DIMENSION = 32;

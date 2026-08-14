@@ -139,34 +139,42 @@ export function RoomDesignerTool() {
         usage={usage}
       />
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        <LayerGrid
-          width={design.width}
-          depth={design.depth}
-          height={design.height}
-          layer={layer}
-          onLayerChange={setLayer}
-          layerRows={design.grid[layer]}
-          palette={design.palette}
-          onPaint={paint}
-          anchor={design.anchor}
-          anchorMode={anchorMode}
-          onToggleAnchorMode={() => setAnchorMode((v) => !v)}
-          onSetAnchorXZ={setAnchorXZ}
-          onFillLayer={() => setDesign((d) => ({ ...d, grid: fillLayer(d.grid, layer, activeBrush) }))}
-          onClearLayer={() => setDesign((d) => ({ ...d, grid: clearLayer(d.grid, layer) }))}
-          onCopyLayerBelow={() => setDesign((d) => ({ ...d, grid: copyLayer(d.grid, layer - 1, layer) }))}
-        />
+      <div className="grid min-w-0 gap-5 lg:grid-cols-2">
+        {/* min-w-0 en cada hijo: sin esto, un grid item no se achica por debajo
+            del ancho intrínseco de su contenido (la grilla de pintura puede ser
+            bien ancha), y termina empujando todo el layout de la página hacia
+            los costados en vez de quedarse contenido con su propio scroll interno. */}
+        <div className="min-w-0">
+          <LayerGrid
+            width={design.width}
+            depth={design.depth}
+            height={design.height}
+            layer={layer}
+            onLayerChange={setLayer}
+            layerRows={design.grid[layer]}
+            palette={design.palette}
+            onPaint={paint}
+            anchor={design.anchor}
+            anchorMode={anchorMode}
+            onToggleAnchorMode={() => setAnchorMode((v) => !v)}
+            onSetAnchorXZ={setAnchorXZ}
+            onFillLayer={() => setDesign((d) => ({ ...d, grid: fillLayer(d.grid, layer, activeBrush) }))}
+            onClearLayer={() => setDesign((d) => ({ ...d, grid: clearLayer(d.grid, layer) }))}
+            onCopyLayerBelow={() => setDesign((d) => ({ ...d, grid: copyLayer(d.grid, layer - 1, layer) }))}
+          />
+        </div>
 
-        <VoxelPreview3D
-          grid={design.grid}
-          palette={design.palette}
-          width={design.width}
-          height={design.height}
-          depth={design.depth}
-          anchor={design.anchor}
-          currentLayer={layer}
-        />
+        <div className="min-w-0">
+          <VoxelPreview3D
+            grid={design.grid}
+            palette={design.palette}
+            width={design.width}
+            height={design.height}
+            depth={design.depth}
+            anchor={design.anchor}
+            currentLayer={layer}
+          />
+        </div>
       </div>
 
       <div>

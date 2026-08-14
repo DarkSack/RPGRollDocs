@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { CURATED_MATERIALS, colorForMaterial, isOrientationSafe, SYMBOL_POOL } from "./materials";
+import { useMemo, useState } from "react";
+import { CURATED_MATERIALS, MATERIAL_CATEGORIES, colorForMaterial, isOrientationSafe, SYMBOL_POOL } from "./materials";
 import type { Palette } from "./types";
 import { AIR } from "./types";
-import { PlusIcon, TrashIcon, EraserIcon } from "../icons/Icon";
+import { PlusIcon, TrashIcon, EraserIcon, SearchIcon } from "../icons/Icon";
 
 interface PaletteEditorProps {
   palette: Palette;
@@ -27,9 +27,18 @@ export function PaletteEditor({
   usage,
 }: PaletteEditorProps) {
   const [customMaterial, setCustomMaterial] = useState("");
+  const [search, setSearch] = useState("");
 
   const usedSymbols = new Set(Object.keys(palette));
   const nextSymbol = SYMBOL_POOL.find((s) => !usedSymbols.has(s));
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return CURATED_MATERIALS;
+    return CURATED_MATERIALS.filter(
+      (m) => m.label.toLowerCase().includes(q) || m.name.toLowerCase().includes(q),
+    );
+  }, [search]);
 
   function addCurated(material: string) {
     if (nextSymbol) onAddMaterial(material);
@@ -45,11 +54,12 @@ export function PaletteEditor({
 
   return (
     <div className="space-y-3">
-      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">Paleta</p>
+      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+        Paleta ({CURATED_MATERIALS.length} materiales curados + cualquier otro a mano)
+      </p>
 
       <div className="flex flex-wrap gap-1.5">
         <BrushSwatch
-          symbol={AIR}
           label="Aire (borrar)"
           color="transparent"
           active={activeBrush === AIR}
@@ -60,7 +70,6 @@ export function PaletteEditor({
         {Object.entries(palette).map(([symbol, material]) => (
           <BrushSwatch
             key={symbol}
-            symbol={symbol}
             label={material}
             color={colorForMaterial(material)}
             active={activeBrush === symbol}
@@ -77,25 +86,57 @@ export function PaletteEditor({
           + Agregar material a la paleta
         </summary>
         <div className="space-y-3 border-t border-slate-200 p-3 dark:border-slate-700/60">
-          <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-            {CURATED_MATERIALS.map((m) => (
-              <button
-                key={m.name}
-                type="button"
-                disabled={!nextSymbol}
-                onClick={() => addCurated(m.name)}
-                className="flex items-center gap-1.5 rounded-md border border-slate-200 px-2 py-1.5 text-left text-xs text-slate-600 transition-colors hover:border-violet-300 hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:text-slate-300 dark:hover:border-violet-500/40 dark:hover:bg-violet-500/10"
-              >
-                <span
-                  className="h-3.5 w-3.5 shrink-0 rounded-sm border border-black/10"
-                  style={{ backgroundColor: m.color }}
-                />
-                <span className="truncate">{m.label}</span>
-              </button>
-            ))}
+          <label className="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus-within:border-violet-400 focus-within:ring-1 focus-within:ring-violet-400 dark:border-slate-700 dark:bg-slate-950">
+            <SearchIcon size={13} className="shrink-0 text-slate-400" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar material curado (ej. cobre, vidrio, roble...)"
+              className="w-full bg-transparent text-slate-800 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500"
+            />
+          </label>
+
+          <div className="max-h-72 space-y-3 overflow-y-auto pr-1">
+            {MATERIAL_CATEGORIES.map((category) => {
+              const items = filtered.filter((m) => m.category === category);
+              if (items.length === 0) return null;
+
+              return (
+                <div key={category}>
+                  <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                    {category}
+                  </p>
+                  <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+                    {items.map((m) => (
+                      <button
+                        key={m.name}
+                        type="button"
+                        disabled={!nextSymbol}
+                        onClick={() => addCurated(m.name)}
+                        title={m.name}
+                        className="flex items-center gap-1.5 rounded-md border border-slate-200 px-2 py-1.5 text-left text-xs text-slate-600 transition-colors hover:border-violet-300 hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:text-slate-300 dark:hover:border-violet-500/40 dark:hover:bg-violet-500/10"
+                      >
+                        <span
+                          className="h-3.5 w-3.5 shrink-0 rounded-sm border border-black/10"
+                          style={{ backgroundColor: m.color }}
+                        />
+                        <span className="truncate">{m.label}</span>
+                        {!m.orientationSafe && <span className="shrink-0 text-[10px]">⚠</span>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+
+            {filtered.length === 0 && (
+              <p className="py-4 text-center text-xs text-slate-400 dark:text-slate-500">
+                Sin resultados para "{search}" — probá con otro nombre, o escribilo directo abajo.
+              </p>
+            )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 border-t border-slate-200 pt-3 dark:border-slate-700/60">
             <input
               value={customMaterial}
               onChange={(e) => setCustomMaterial(e.target.value)}
@@ -135,7 +176,6 @@ function BrushSwatch({
   icon,
   warn,
 }: {
-  symbol: string;
   label: string;
   color: string;
   active: boolean;

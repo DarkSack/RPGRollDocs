@@ -28,6 +28,12 @@ const CELL_PX = 26;
  * Editor 2D de la capa Y activa — un click (o arrastre) pinta con el pincel
  * seleccionado. Es la vista "de arriba" de esa altura, fila=Z, columna=X,
  * exactamente como layers[y][z][x] en el YAML final.
+ * <p>
+ * El arrastre se resuelve con Pointer Events + elementFromPoint en vez de
+ * mouseenter por celda — en touch, el navegador captura el puntero en el
+ * elemento donde empezó el gesto, así que mouseenter/pointerenter en las
+ * OTRAS celdas nunca dispara mientras arrastrás el dedo. Con
+ * elementFromPoint funciona igual para mouse y para touch.
  */
 export function LayerGrid({
   width,
@@ -48,13 +54,46 @@ export function LayerGrid({
 }: LayerGridProps) {
   const [painting, setPainting] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
+  const lastCell = useRef<string | null>(null);
 
   function handleCell(x: number, z: number) {
+    const key = `${x}-${z}`;
+    if (lastCell.current === key) return;
+    lastCell.current = key;
+
     if (anchorMode) {
       onSetAnchorXZ(x, z);
       return;
     }
     onPaint(x, z);
+  }
+
+  function cellAtPoint(clientX: number, clientY: number): { x: number; z: number } | null {
+    const el = document.elementFromPoint(clientX, clientY) as HTMLElement | null;
+    const target = el?.closest<HTMLElement>("[data-cell-x]");
+    if (!target) return null;
+
+    const x = Number(target.dataset.cellX);
+    const z = Number(target.dataset.cellZ);
+    return Number.isNaN(x) || Number.isNaN(z) ? null : { x, z };
+  }
+
+  function onPointerDown(e: React.PointerEvent) {
+    setPainting(true);
+    lastCell.current = null;
+    const cell = cellAtPoint(e.clientX, e.clientY);
+    if (cell) handleCell(cell.x, cell.z);
+  }
+
+  function onPointerMove(e: React.PointerEvent) {
+    if (!painting) return;
+    const cell = cellAtPoint(e.clientX, e.clientY);
+    if (cell) handleCell(cell.x, cell.z);
+  }
+
+  function stopPainting() {
+    setPainting(false);
+    lastCell.current = null;
   }
 
   return (
@@ -122,48 +161,50 @@ export function LayerGrid({
         </div>
       </div>
 
-      <div
-        ref={gridRef}
-        className="inline-grid select-none gap-px rounded-lg border border-slate-300 bg-slate-300 p-px dark:border-slate-700 dark:bg-slate-700"
-        style={{ gridTemplateColumns: `repeat(${width}, ${CELL_PX}px)` }}
-        onMouseLeave={() => setPainting(false)}
-        onMouseUp={() => setPainting(false)}
-      >
-        {layerRows.map((r, z) =>
-          r.map((symbol, x) => {
-            const isAnchorHere = anchor.y === layer && anchor.x === x && anchor.z === z;
-            const material = symbol === AIR ? null : palette[symbol];
-            const color = material ? colorForMaterial(material) : undefined;
+      <div className="max-h-[60vh] max-w-full overflow-auto rounded-lg border border-slate-300 bg-slate-100 p-2 dark:border-slate-700 dark:bg-slate-950/40">
+        <div
+          ref={gridRef}
+          className="inline-grid touch-none select-none gap-px bg-slate-300 p-px dark:bg-slate-700"
+          style={{ gridTemplateColumns: `repeat(${width}, ${CELL_PX}px)` }}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={stopPainting}
+          onPointerLeave={stopPainting}
+          onPointerCancel={stopPainting}
+        >
+          {layerRows.map((r, z) =>
+            r.map((symbol, x) => {
+              const isAnchorHere = anchor.y === layer && anchor.x === x && anchor.z === z;
+              const material = symbol === AIR ? null : palette[symbol];
+              const color = material ? colorForMaterial(material) : undefined;
 
-            return (
-              <button
-                key={`${x}-${z}`}
-                type="button"
-                onMouseDown={() => {
-                  setPainting(true);
-                  handleCell(x, z);
-                }}
-                onMouseEnter={() => painting && !anchorMode && onPaint(x, z)}
-                className={
-                  "relative flex items-center justify-center bg-white dark:bg-slate-900 " +
-                  (symbol === AIR ? "checkerboard-air" : "")
-                }
-                style={{ width: CELL_PX, height: CELL_PX, backgroundColor: color }}
-                title={`x=${x}, z=${z}` + (material ? ` — ${material}` : "")}
-              >
-                {isAnchorHere && (
-                  <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                    <span className="h-2.5 w-2.5 rounded-full border-2 border-amber-500 bg-amber-400/70" />
-                  </span>
-                )}
-              </button>
-            );
-          }),
-        )}
+              return (
+                <div
+                  key={`${x}-${z}`}
+                  data-cell-x={x}
+                  data-cell-z={z}
+                  className={
+                    "relative flex items-center justify-center bg-white dark:bg-slate-900 " +
+                    (symbol === AIR ? "checkerboard-air" : "")
+                  }
+                  style={{ width: CELL_PX, height: CELL_PX, backgroundColor: color }}
+                  title={`x=${x}, z=${z}` + (material ? ` — ${material}` : "")}
+                >
+                  {isAnchorHere && (
+                    <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                      <span className="h-2.5 w-2.5 rounded-full border-2 border-amber-500 bg-amber-400/70" />
+                    </span>
+                  )}
+                </div>
+              );
+            }),
+          )}
+        </div>
       </div>
 
       <p className="text-xs text-slate-400 dark:text-slate-500">
-        Click y arrastrá para pintar varias celdas · X →, Z ↓ · {width}×{depth} en esta capa
+        Tocá/click y arrastrá para pintar varias celdas · X →, Z ↓ · {width}×{depth} en esta capa
+        {(width > 12 || depth > 12) && " · desplazá con el dedo si no entra en pantalla"}
       </p>
     </div>
   );

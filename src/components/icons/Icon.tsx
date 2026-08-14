@@ -134,6 +134,7 @@ export const WrenchIcon = (p: IconProps) =>
 export const CubeIcon = (p: IconProps) =>
   base(p, <><path d="m21 8-9-5-9 5 9 5 9-5Z" /><path d="M3 8v8l9 5 9-5V8M12 13v8" /></>);
 export const PlusIcon = (p: IconProps) => base(p, <path d="M12 5v14M5 12h14" />);
+export const MinusIcon = (p: IconProps) => base(p, <path d="M5 12h14" />);
 export const TrashIcon = (p: IconProps) =>
   base(p, <><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6" /><path d="M10 11v6M14 11v6" /></>);
 export const EraserIcon = (p: IconProps) =>
