@@ -51,16 +51,6 @@ const mobFields: YamlField[] = [
       { key: "scale", label: "Escala", type: "number", default: "1.0" },
       { key: "glow", label: "Brillo", type: "boolean" },
       { key: "invisible", label: "Invisible", type: "boolean" },
-      {
-        key: "reskin",
-        label: "Reskin visual (opcional)",
-        type: "group",
-        fields: [
-          { key: "material", label: "Material base", type: "string", placeholder: "PAPER" },
-          { key: "custom-model-data", label: "Custom model data", type: "number", placeholder: "100001" },
-          { key: "scale", label: "Escala del display", type: "number", default: "1.0" },
-        ],
-      },
     ],
   },
   { key: "stats", label: "Stats", type: "map", placeholder: "health=30, damage=4, speed=105" },
@@ -135,8 +125,8 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         >
           SackResourcePack
         </button>
-        , el <a href="#reskin" onClick={(e) => e.preventDefault()}>reskin visual</a> de un mob simplemente no
-        aparece configurado como opción (no rompe nada — el mob se ve vanilla normal).
+        , las <a href="#reskin" onClick={(e) => e.preventDefault()}>skins visuales</a> de un mob simplemente no
+        aparecen configuradas como opción (no rompe nada — el mob se ve vanilla normal).
       </p>
 
       <SectionHeading id="filosofia">Un mob es una composición de sistemas independientes</SectionHeading>
@@ -191,7 +181,7 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         ahí <code>getHealth()</code> refleja la vida ya restada por Bukkit.
       </Callout>
 
-      <SectionHeading id="reskin">Reskin visual (sin ModelEngine/BetterModel)</SectionHeading>
+      <SectionHeading id="reskin">Skins visuales (sin ModelEngine/BetterModel)</SectionHeading>
       <p>
         Minecraft no tiene ningún equivalente a <code>CustomModelData</code> para entidades vivas — no hay forma de
         re-texturizar un mob vanilla solo con un resource pack. RPGRoll-Mobs implementa el mismo truco que usan
@@ -200,31 +190,47 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         como pasajero real, portando un ítem con <code>custom-model-data</code>. Combinado con{" "}
         <code>model.invisible: true</code>, el jugador solo ve el modelo custom, nunca la entidad vanilla debajo.
       </p>
+      <p>
+        <code>model.skins</code> es una <strong>lista</strong>, no un valor único: al spawnear el mob se sortea
+        una skin por peso (<code>weight</code>, mayor = más probable) y esa elección queda persistida en la
+        entidad — un reinicio del server o una recarga de chunk nunca le cambia la apariencia a un mob ya vivo
+        (no vuelve a sortear). Lista vacía (o sin la sección) = sin reskin, mob vanilla normal.
+      </p>
       <CodeBlock
         language="yaml"
         filename="mobs/bosses/reference_full.yml (fragmento)"
         code={
           "model:\n" +
           "  invisible: true\n" +
-          "  reskin:\n" +
-          "    material: PAPER\n" +
-          "    custom-model-data: 100001\n" +
-          "    scale: 2.5\n" +
-          "    y-offset: 0.0\n"
+          "  skins:\n" +
+          "    - id: molten\n" +
+          "      material: PAPER\n" +
+          "      custom-model-data: 100001\n" +
+          "      scale: 2.5\n" +
+          "      weight: 2.0\n" +
+          "    - id: obsidian\n" +
+          "      material: PAPER\n" +
+          "      custom-model-data: 100002\n" +
+          "      scale: 2.5\n" +
+          "      weight: 1.0\n"
         }
       />
       <p>
-        El material y el número de <code>custom-model-data</code> los define un resource pack real — el mismo
-        pipeline que ya usa RPGRoll-Items: poné el modelo/textura en{" "}
+        Con este ejemplo, un mob nuevo tiene 2/3 de chance de nacer "molten" y 1/3 "obsidian". El material y el
+        número de <code>custom-model-data</code> los define un resource pack real — el mismo pipeline que ya usa
+        RPGRoll-Items: poné el modelo/textura en{" "}
         <code>plugins/RPGRoll-Mobs/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code> y, si
-        SackResourcePack está instalado, se sincroniza solo al arrancar el plugin. Sin{" "}
-        <code>reskin.material</code> configurado, el mob se muestra igual que siempre (vanilla, o vanilla
-        invisible si activaste <code>invisible</code> sin reskin).
+        SackResourcePack está instalado, se sincroniza solo al arrancar el plugin.
+      </p>
+      <p>
+        Desde <Kbd>{"/mobadmin editor <id>"}</Kbd> → Modelo → Skins se administra la lista sin tocar el YAML a
+        mano: agregar pide <code>id material custom-model-data [peso]</code> por chat, shift-click sobre una
+        entrada existente la quita.
       </p>
       <Callout tone="warning" title="Solo verificado por compilación, no probado en juego">
-        Esta primera versión del reskin no fue probada visualmente contra un cliente real de Minecraft (sin
-        servidor Paper disponible en el entorno de desarrollo) — la lógica de montaje/transformación/limpieza está
-        completa, pero conviene probarla en un server de pruebas antes de usarla en producción.
+        Esta primera versión de las skins no fue probada visualmente contra un cliente real de Minecraft (sin
+        servidor Paper disponible en el entorno de desarrollo) — la lógica de sorteo/montaje/persistencia/limpieza
+        está completa, pero conviene probarla en un server de pruebas antes de usarla en producción.
       </Callout>
 
       <SectionHeading id="fases">Fases de jefe</SectionHeading>
@@ -398,7 +404,7 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <YamlBuilder
         title="Constructor visual: Mob"
-        description="Identidad, modelo, stats/resistencias e IA básica. Skills, triggers, phases, loot, bossbar, diálogos y spawn-rules son demasiado anidados para este formulario — usá /mobadmin editor o copiá uno de los ejemplos de arriba."
+        description="Identidad, modelo, stats/resistencias e IA básica. Skins, skills, triggers, phases, loot, bossbar, diálogos y spawn-rules son demasiado anidados para este formulario — usá /mobadmin editor o copiá uno de los ejemplos de arriba."
         folder="mobs"
         fields={mobFields}
       />
@@ -464,7 +470,7 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         Estos quedaron fuera del alcance de esta primera versión a propósito — el <code>base-entity-type</code>{" "}
         vanilla y el sistema de resistencias/loot ya son plenamente funcionales sin ellos:
         <ul className="mt-2 list-disc pl-5">
-          <li><strong>ModelEngine / BetterModel</strong> — <code>model.model-engine-id</code> ya existe como campo en el YAML, pero ningún código lee ese id para aplicar un modelo custom real todavía. Para reskin visual sin esas dependencias, usá <a href="#reskin" onClick={(e) => e.preventDefault()}>model.reskin</a>, que sí está implementado.</li>
+          <li><strong>ModelEngine / BetterModel</strong> — <code>model.model-engine-id</code> ya existe como campo en el YAML, pero ningún código lee ese id para aplicar un modelo custom real todavía. Para skins visuales sin esas dependencias, usá <a href="#reskin" onClick={(e) => e.preventDefault()}>model.skins</a>, que sí está implementado.</li>
           <li><strong>WorldGuard / WorldEdit</strong> — las "regiones" de este addon son cuboides propios (<code>MobRegion</code>), sin dependencia externa; no hay integración con las regiones de WorldGuard.</li>
           <li><strong>Eventos cinematográficos guionados</strong> (secuencias de jefe con cámaras, cutscenes) — no implementado.</li>
           <li><strong>Historial / versionado / import-export</strong> en el editor gráfico.</li>

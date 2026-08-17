@@ -207,7 +207,7 @@ export function Fishing({
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll]\nsoftdepend: [SackEffects, RPGRoll-Effects, RPGRoll-Seasons]"
+          "depend: [RPGRoll]\nsoftdepend: [SackEffects, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
         }
       />
       <p>
@@ -224,7 +224,17 @@ export function Fishing({
         temperatura aproximada propia en vez de la de Seasons. Sin
         SackEffects/RPGRoll-Effects, <code>catch-effect</code>/
         <code>catch-status-effect</code> no hacen nada — el resto de la captura
-        funciona igual.
+        funciona igual. Sin{" "}
+        <button
+          type="button"
+          onClick={() => onNavigate("sackresourcepack")}
+          className="text-violet-600 underline dark:text-violet-400"
+        >
+          SackResourcePack
+        </button>
+        , <code>custom-model-data</code> se guarda igual en la especie pero no
+        se sincroniza ninguna textura — el ítem se ve con el <code>icon</code>{" "}
+        vanilla normal, sin errores ni advertencias.
       </p>
 
       <SectionHeading id="especies">Especies de peces</SectionHeading>
@@ -237,6 +247,13 @@ export function Fishing({
         </strong>{" "}
         — un <code>water-types</code> vacío permite cualquier agua, no ninguna.
       </p>
+      <Callout tone="info" title="Texturas custom: la carpeta resourcepack/ se sincroniza sola">
+        <code>custom-model-data</code> solo define el número — el material/textura reales los pone un resource
+        pack. Dejá el modelo/textura en{" "}
+        <code>plugins/RPGRoll-Fishing/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code> y, si
+        SackResourcePack está instalado, se sincroniza solo al arrancar el plugin (mismo mecanismo que ya usa
+        RPGRoll-Items). Sin ese resource pack armado, el pez se ve con su <code>icon</code> vanilla normal.
+      </Callout>
       <Table>
         <Thead>
           <Th>Condición</Th>
