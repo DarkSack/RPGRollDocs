@@ -179,7 +179,7 @@ export function Ranching({
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll]\nsoftdepend: [SackEffects, RPGRoll-Effects, RPGRoll-Seasons]"
+          "depend: [RPGRoll]\nsoftdepend: [SackEffects, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
         }
       />
       <p>
@@ -195,7 +195,16 @@ export function Ranching({
         aplica (el resto funciona igual). Ni RPGRoll-Farming, RPGRoll-Cooking,
         RPGRoll-Alchemy ni RPGRoll-Workers existen todavía — esas integraciones
         del diseño original quedan como métodos genéricos en{" "}
-        <code>RanchingAPI</code>, listos para cuando esos addons existan.
+        <code>RanchingAPI</code>, listos para cuando esos addons existan. Sin{" "}
+        <button
+          type="button"
+          onClick={() => onNavigate("sackresourcepack")}
+          className="text-violet-600 underline dark:text-violet-400"
+        >
+          SackResourcePack
+        </button>
+        , el <a href="#reskin" onClick={(e) => e.preventDefault()}>reskin visual por raza</a> simplemente no
+        aparece configurado (el animal se ve vanilla normal, nada se rompe).
       </p>
 
       <SectionHeading id="genetica">
@@ -324,6 +333,39 @@ export function Ranching({
           </Tr>
         </tbody>
       </Table>
+
+      <SectionHeading id="reskin">Reskin visual por raza (sin ModelEngine/BetterModel)</SectionHeading>
+      <p>
+        Minecraft no tiene ningún <code>CustomModelData</code> para entidades vivas — no hay forma de
+        re-texturizar una vaca u oveja solo con un resource pack. Cada <code>Breed</code> puede declarar una
+        sección <code>reskin</code> opcional que usa el mismo mecanismo que RPGRoll-Mobs: la entidad vanilla real
+        sigue siendo la que camina/produce/se reproduce (comportamiento intacto), pero se le monta una entidad{" "}
+        <code>ItemDisplay</code> como pasajero real portando un ítem con <code>custom-model-data</code>.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="breeds/holstein.yml (con reskin activo)"
+        code={
+          "reskin:\n" +
+          "  material: PAPER\n" +
+          "  custom-model-data: 200001\n" +
+          "  scale: 1.0\n" +
+          "  y-offset: 0.0\n"
+        }
+      />
+      <p>
+        La escala del reskin se reduce automáticamente a la mitad mientras el animal está en etapa{" "}
+        <code>BABY</code>, igual que ya hace vanilla con el tamaño reducido nativo — no hace falta declarar nada
+        aparte para eso. Sin <code>reskin.material</code> configurado, el animal se ve exactamente igual que
+        antes: vanilla normal, sin ningún cambio. El material/textura los define un resource pack real — mismo
+        pipeline que RPGRoll-Items: archivos en{" "}
+        <code>plugins/RPGRoll-Ranching/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code>,
+        sincronizados solos hacia SackResourcePack (si está instalado) al arrancar el plugin.
+      </p>
+      <Callout tone="warning" title="Solo verificado por compilación, no probado en juego">
+        Igual que en RPGRoll-Mobs, esta primera versión del reskin no fue probada visualmente contra un cliente
+        real (sin servidor Paper disponible en el entorno de desarrollo).
+      </Callout>
 
       <SectionHeading id="reproduccion">Reproducción y embarazo</SectionHeading>
       <Callout
@@ -535,7 +577,13 @@ export function Ranching({
           "weight-multiplier: 1.1\n" +
           "fertility-multiplier: 1.0\n" +
           "resistance-multiplier: 0.9\n" +
-          'temperament: "Calmada"\n'
+          'temperament: "Calmada"\n' +
+          "\n" +
+          "# Reskin visual (opcional, ver sección más abajo) — comentado en el ejemplo real\n" +
+          "# reskin:\n" +
+          "#   material: PAPER\n" +
+          "#   custom-model-data: 200001\n" +
+          "#   scale: 1.0\n"
         }
       />
 

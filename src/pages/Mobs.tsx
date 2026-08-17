@@ -51,6 +51,16 @@ const mobFields: YamlField[] = [
       { key: "scale", label: "Escala", type: "number", default: "1.0" },
       { key: "glow", label: "Brillo", type: "boolean" },
       { key: "invisible", label: "Invisible", type: "boolean" },
+      {
+        key: "reskin",
+        label: "Reskin visual (opcional)",
+        type: "group",
+        fields: [
+          { key: "material", label: "Material base", type: "string", placeholder: "PAPER" },
+          { key: "custom-model-data", label: "Custom model data", type: "number", placeholder: "100001" },
+          { key: "scale", label: "Escala del display", type: "number", default: "1.0" },
+        ],
+      },
     ],
   },
   { key: "stats", label: "Stats", type: "map", placeholder: "health=30, damage=4, speed=105" },
@@ -110,11 +120,23 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </Callout>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-Items, RPGRoll-Quests, PlaceholderAPI]"} />
+      <CodeBlock
+        language="yaml"
+        code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-Items, RPGRoll-Quests, PlaceholderAPI, SackResourcePack]"}
+      />
       <p>
         Sin RPGRoll-Items ni RPGRoll-Quests instalados, todo sigue funcionando: el equipo de un mob cae a{" "}
         <code>Material</code> vanilla directo, el loot de tipo <code>ITEM</code> también, y el loot de tipo{" "}
-        <code>QUEST</code> simplemente no hace nada.
+        <code>QUEST</code> simplemente no hace nada. Sin{" "}
+        <button
+          type="button"
+          onClick={() => onNavigate("sackresourcepack")}
+          className="text-violet-600 underline dark:text-violet-400"
+        >
+          SackResourcePack
+        </button>
+        , el <a href="#reskin" onClick={(e) => e.preventDefault()}>reskin visual</a> de un mob simplemente no
+        aparece configurado como opción (no rompe nada — el mob se ve vanilla normal).
       </p>
 
       <SectionHeading id="filosofia">Un mob es una composición de sistemas independientes</SectionHeading>
@@ -167,6 +189,42 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         Cuando un mob recibe daño, el listener ajusta el daño del evento en el momento (esquive/resistencias), pero
         el chequeo de transición de fase y el trigger <code>DAMAGED</code> se agendan para el próximo tick — recién
         ahí <code>getHealth()</code> refleja la vida ya restada por Bukkit.
+      </Callout>
+
+      <SectionHeading id="reskin">Reskin visual (sin ModelEngine/BetterModel)</SectionHeading>
+      <p>
+        Minecraft no tiene ningún equivalente a <code>CustomModelData</code> para entidades vivas — no hay forma de
+        re-texturizar un mob vanilla solo con un resource pack. RPGRoll-Mobs implementa el mismo truco que usan
+        plugins como ModelEngine, pero desde cero y sin esa dependencia: la entidad vanilla real sigue siendo la
+        que pelea/camina (hitbox, IA, pathfinding intactos), pero se le monta una entidad <code>ItemDisplay</code>{" "}
+        como pasajero real, portando un ítem con <code>custom-model-data</code>. Combinado con{" "}
+        <code>model.invisible: true</code>, el jugador solo ve el modelo custom, nunca la entidad vanilla debajo.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="mobs/bosses/reference_full.yml (fragmento)"
+        code={
+          "model:\n" +
+          "  invisible: true\n" +
+          "  reskin:\n" +
+          "    material: PAPER\n" +
+          "    custom-model-data: 100001\n" +
+          "    scale: 2.5\n" +
+          "    y-offset: 0.0\n"
+        }
+      />
+      <p>
+        El material y el número de <code>custom-model-data</code> los define un resource pack real — el mismo
+        pipeline que ya usa RPGRoll-Items: poné el modelo/textura en{" "}
+        <code>plugins/RPGRoll-Mobs/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code> y, si
+        SackResourcePack está instalado, se sincroniza solo al arrancar el plugin. Sin{" "}
+        <code>reskin.material</code> configurado, el mob se muestra igual que siempre (vanilla, o vanilla
+        invisible si activaste <code>invisible</code> sin reskin).
+      </p>
+      <Callout tone="warning" title="Solo verificado por compilación, no probado en juego">
+        Esta primera versión del reskin no fue probada visualmente contra un cliente real de Minecraft (sin
+        servidor Paper disponible en el entorno de desarrollo) — la lógica de montaje/transformación/limpieza está
+        completa, pero conviene probarla en un server de pruebas antes de usarla en producción.
       </Callout>
 
       <SectionHeading id="fases">Fases de jefe</SectionHeading>
@@ -406,7 +464,7 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         Estos quedaron fuera del alcance de esta primera versión a propósito — el <code>base-entity-type</code>{" "}
         vanilla y el sistema de resistencias/loot ya son plenamente funcionales sin ellos:
         <ul className="mt-2 list-disc pl-5">
-          <li><strong>ModelEngine / BetterModel</strong> — <code>model.model-engine-id</code> ya existe como campo en el YAML, pero ningún código lee ese id para aplicar un modelo custom real todavía.</li>
+          <li><strong>ModelEngine / BetterModel</strong> — <code>model.model-engine-id</code> ya existe como campo en el YAML, pero ningún código lee ese id para aplicar un modelo custom real todavía. Para reskin visual sin esas dependencias, usá <a href="#reskin" onClick={(e) => e.preventDefault()}>model.reskin</a>, que sí está implementado.</li>
           <li><strong>WorldGuard / WorldEdit</strong> — las "regiones" de este addon son cuboides propios (<code>MobRegion</code>), sin dependencia externa; no hay integración con las regiones de WorldGuard.</li>
           <li><strong>Eventos cinematográficos guionados</strong> (secuencias de jefe con cámaras, cutscenes) — no implementado.</li>
           <li><strong>Historial / versionado / import-export</strong> en el editor gráfico.</li>
