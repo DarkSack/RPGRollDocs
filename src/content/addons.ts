@@ -23,6 +23,7 @@ import {
   TableListIcon,
   WrenchIcon,
   CubeIcon,
+  AlertTriangleIcon,
 } from "../components/icons/Icon";
 
 export interface AddonMeta {
@@ -35,7 +36,7 @@ export interface AddonMeta {
 }
 
 /**
- * Metadata visual (ícono, blurb, tono) para los 22 addons oficiales — separado
+ * Metadata visual (ícono, blurb, tono) para los 23 addons oficiales — separado
  * de content/nav.ts a propósito para no tocar la forma de NavItem/NavSection
  * que ya consumen Sidebar/PrevNext/search.ts. Sidebar y Home leen de acá.
  */
@@ -50,7 +51,7 @@ export const addons: AddonMeta[] = [
   { slug: "guilds", icon: ShieldIcon, blurb: "Guilds y teams con roles, permisos y misiones grupales.", tone: "blue" },
   { slug: "crates", icon: BoxesIcon, blurb: "Cajas con recompensas ponderadas y ruleta animada.", tone: "amber" },
   { slug: "dungeons", icon: CompassIcon, blurb: "Mazmorras por salas, dificultades y checkpoints.", tone: "red" },
-  { slug: "sackeffects", icon: SparklesIcon, blurb: "Librería de partículas y sonido reusable por otros addons.", tone: "violet" },
+  { slug: "rpgroll-particles", icon: SparklesIcon, blurb: "Librería de partículas y sonido reusable por otros addons.", tone: "violet" },
   { slug: "rpgroll-effects", icon: HeartPulseIcon, blurb: "Motor de efectos de estado: stacking, inmunidades y componentes.", tone: "red" },
   { slug: "magic", icon: WandIcon, blurb: "Hechizos por pipeline de componentes, runas y grimorios.", tone: "violet" },
   { slug: "seasons", icon: LeafIcon, blurb: "Calendario, clima, temperatura y vegetación dinámica.", tone: "green" },
@@ -62,6 +63,7 @@ export const addons: AddonMeta[] = [
   { slug: "crafting", icon: HammerIcon, blurb: "Recetas y estaciones custom + puente con estaciones vanilla.", tone: "violet" },
   { slug: "tab", icon: TableListIcon, blurb: "TabList, scoreboard, nametags y bossbars por placeholders.", tone: "blue" },
   { slug: "extras", icon: WrenchIcon, blurb: "Sed, stamina, temperatura y condiciones de supervivencia.", tone: "green" },
+  { slug: "traps", icon: AlertTriangleIcon, blurb: "Trampas, torretas y mecanismos configurables: triggers, condiciones, cadenas y bloques protegidos.", tone: "red" },
 ];
 
 export function addonMeta(slug: string): AddonMeta | undefined {

@@ -73,7 +73,7 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
       <p>
         Cada definición puede restringir en qué ítems es válida vía <code>categories</code> (una o más de{" "}
         <code>WEAPON, ARMOR, HELMET, CHESTPLATE, LEGGINGS, BOOTS, TOOLS, BOW, CROSSBOW, TRIDENT, FISHING_ROD, ANY</code>
-        , cada una con su propia lógica de qué <code>Material</code> matchea) o, si necesitás algo más específico,
+        , cada una con su propia lógica de qué <code>Material</code> matchea) o, si necesitas algo más específico,
         una lista explícita de <code>allowed-items</code> que tiene prioridad sobre las categorías.
       </p>
 
@@ -297,7 +297,7 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
 
       <YamlBuilder
         title="Constructor visual: Custom Enchantment"
-        description="Identidad, rareza, categorías, triggers y condiciones. Effects y levels quedan afuera del formulario — son listas de objetos anidados, copiá uno de los ejemplos de arriba y editalo a mano (es exactamente lo que hace el editor in-game también)."
+        description="Identidad, rareza, categorías, triggers y condiciones. Effects y levels quedan afuera del formulario — son listas de objetos anidados, copia uno de los ejemplos de arriba y editalo a mano (es exactamente lo que hace el editor in-game también)."
         folder="enchantments"
         fields={enchantmentFields}
       />

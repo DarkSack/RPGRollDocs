@@ -191,7 +191,7 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </ul>
 
       <Callout tone="tip" title="¿Por dónde sigo?">
-        Si administrás un servidor, andá directo a{" "}
+        Si administras un servidor, andá directo a{" "}
         <button className="underline" onClick={() => onNavigate("configuracion")}>
           Configuración
         </button>{" "}
@@ -232,7 +232,7 @@ function iconWrapClass(tone: "violet" | "green" | "amber" | "red" | "blue" | "ne
 function addonLabel(slug: string): string {
   const OVERRIDES: Record<string, string> = {
     "rpgroll-effects": "RPGRoll-Effects",
-    sackeffects: "SackEffects",
+    "rpgroll-particles": "RPGRoll-Particles",
     sackresourcepack: "SackResourcePack",
     tab: "RPGRoll-TAB",
   };

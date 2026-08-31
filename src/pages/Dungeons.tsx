@@ -138,7 +138,7 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
         veces que quieras, en vez de reconstruir cada sala a mano.
       </p>
       <p>
-        Cada entrada de <code>structures/*.yml</code> tiene una de estas dos fuentes:
+        Cada entrada de <code>structures/*.yml</code> tiene una de estas tres fuentes:
       </p>
       <Table>
         <Thead>
@@ -154,8 +154,13 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
           </Tr>
           <Tr>
             <Td><Badge tone="blue">NATIVE</Badge></Td>
-            <Td>Un Structure Block vanilla real: parás en el lugar, lo ponés en modo Guardar, le ponés un nombre, y listo — cero curva de aprendizaje para un admin que ya construye en survival.</Td>
+            <Td>Un Structure Block vanilla real: paras en el lugar, lo pones en modo Guardar, le pones un nombre, y listo — cero curva de aprendizaje para un admin que ya construye en survival.</Td>
             <Td>API nativa de Paper (<code>Bukkit#getStructureManager()</code>, el mismo sistema que usan los Structure Blocks) — resuelve rotación, espejo y entidades por su cuenta.</Td>
+          </Tr>
+          <Tr>
+            <Td><Badge tone="green">SCHEMATIC</Badge></Td>
+            <Td>Un archivo <code>.schem</code> de WorldEdit/FAWE, importado desde su carpeta <code>schematics/</code>. Requiere WorldEdit instalado en el servidor (soft-dependency, no obligatorio para el resto del addon).</Td>
+            <Td>API de WorldEdit (<code>ClipboardHolder</code> + <code>EditSession</code>) — resuelve rotación y espejo con su propio motor de transformaciones.</Td>
           </Tr>
         </tbody>
       </Table>
@@ -169,15 +174,36 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
 
       <SectionHeading id="importar-structure-block" level={3}>Importar un Structure Block</SectionHeading>
       <p>
-        El flujo completo para un admin que ya construye a mano: construís la sala en survival, ponés un{" "}
-        <em>Structure Block</em> vanilla, modo <strong>Save</strong>, le ponés un nombre (ej.{" "}
-        <code>rpgroll:sala_trasgos</code> — si no le ponés namespace, Minecraft usa <code>minecraft:</code> por
-        defecto), y guardás. Después, en el juego:
+        El flujo completo para un admin que ya construye a mano: construyes la sala en survival, pones un{" "}
+        <em>Structure Block</em> vanilla, modo <strong>Save</strong>, le pones un nombre (ej.{" "}
+        <code>rpgroll:sala_trasgos</code> — si no le pones namespace, Minecraft usa <code>minecraft:</code> por
+        defecto), y guardas. Después, en el juego:
       </p>
       <CodeBlock language="bash" code={"/dungeonadmin structure import rpgroll:sala_trasgos sala_trasgos \"Sala de los Trasgos\""} />
       <p>
         Eso copia el <code>.nbt</code> real a <code>structures/sala_trasgos.nbt</code> y escribe el YAML de
         metadata (<code>source: NATIVE</code>) — ya queda en la Biblioteca, pegable como cualquier otra.
+      </p>
+
+      <SectionHeading id="importar-schematic" level={3}>Importar un schematic de WorldEdit</SectionHeading>
+      <p>
+        Un tercer origen, <code>SCHEMATIC</code>, para quien ya construye con WorldEdit/FastAsyncWorldEdit en vez
+        de Structure Blocks vanilla. Requiere <strong>WorldEdit instalado en el servidor</strong> — es un
+        soft-dependency, no obligatorio para el resto del addon; sin él, este flujo específico devuelve un error
+        claro y el resto de Dungeons sigue funcionando igual. Flujo: seleccioná la región con WorldEdit y guardala
+        con <Kbd>//schematic save miroom</Kbd> (queda en{" "}
+        <code>plugins/WorldEdit/schematics/miroom.schem</code>), y después:
+      </p>
+      <CodeBlock
+        language="bash"
+        code={"/dungeonadmin structure importschem miroom sala_wizard \"Torre del Mago\""}
+      />
+      <p>
+        Copia ese <code>.schem</code> a <code>structures/sala_wizard.schem</code> (independiente de la carpeta de
+        WorldEdit — si borras el original después, sigue funcionando) y escribe el YAML de metadata (
+        <code>source: SCHEMATIC</code>). Se pega igual que cualquier otra estructura de la Biblioteca (
+        <Kbd>/dungeonadmin structure paste</Kbd> o el browser), rotación y espejo incluidos — WorldEdit resuelve
+        la geometría, RPGRoll solo orquesta cuándo y dónde.
       </p>
 
       <SectionHeading id="formato-custom" level={3}>Formato CUSTOM: paleta + capas</SectionHeading>
@@ -207,8 +233,8 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
         }
       />
       <p>
-        <code>anchor</code> es el punto de la grilla que coincide con donde pegás — poner el centro ahí (como en
-        el ejemplo) es justamente lo que permite "parate donde querés el centro de la sala y pegá", en vez de
+        <code>anchor</code> es el punto de la grilla que coincide con donde pegas — poner el centro ahí (como en
+        el ejemplo) es justamente lo que permite "parate donde quieres el centro de la sala y pega", en vez de
         tener que calcular esquinas. Las capas se pegan de abajo hacia arriba (y=0 primero), así que un bloque que
         necesite apoyo (como una antorcha en pie) ya tiene su soporte puesto cuando le toca su turno.
       </p>
@@ -221,8 +247,8 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
 
       <SectionHeading id="pegar-estructura" level={3}>Pegar una estructura</SectionHeading>
       <p>
-        <Kbd>/dungeonadmin structure browser</Kbd> abre la Biblioteca en una GUI: elegís una, opcionalmente
-        rotás/espejás, y "Pegar en mi posición" la pega centrada donde estás parado. Para coordenadas exactas (o
+        <Kbd>/dungeonadmin structure browser</Kbd> abre la Biblioteca en una GUI: eliges una, opcionalmente
+        rotas/espejas, y "Pegar en mi posición" la pega centrada donde estás parado. Para coordenadas exactas (o
         desde consola) existe el comando equivalente:
       </p>
       <CodeBlock
@@ -231,7 +257,7 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
       />
       <YamlBuilder
         title="Constructor visual: Structure (metadata)"
-        description="Identidad y fuente de una estructura. anchor/palette/layers (CUSTOM) son demasiado anidados para este formulario — copiá y adaptá uno de los 4 ejemplos incluidos. Para NATIVE ni siquiera hace falta escribir YAML: usá /dungeonadmin structure import."
+        description="Identidad y fuente de una estructura. anchor/palette/layers (CUSTOM) son demasiado anidados para este formulario — copia y adaptá uno de los 4 ejemplos incluidos. Para NATIVE ni siquiera hace falta escribir YAML: usá /dungeonadmin structure import."
         folder="structures"
         fields={structureFields}
       />
@@ -402,8 +428,8 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
           <Tr><Td className="font-mono text-xs">/dungeon leaveparty</Td><Td>Sale del grupo previo a entrar.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/dungeon enter <id> [dificultad]"}</Td><Td>Entra a la mazmorra con tu grupo actual.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/dungeon leave</Td><Td>Abandona la mazmorra en curso.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/dungeon revive</Td><Td>Intenta revivir según la política de revive de la mazmorra actual.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeon ranking <id>"}</Td><Td>Mejores tiempos registrados para esa mazmorra.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeon revive <jugador>"}</Td><Td>Intenta revivir a ese jugador según la política de revive de la mazmorra actual.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeon ranking <id> [daily|weekly|monthly|global]"}</Td><Td>Mejores tiempos registrados para esa mazmorra (por defecto: global).</Td></Tr>
         </tbody>
       </Table>
 
@@ -423,6 +449,7 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
           <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure info <id>"}</Td><Td>Detalle: fuente, tamaño real, descripción.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure paste <id> [mundo x y z] [rotación]"}</Td><Td>Pega una estructura — sin coordenadas, en tu posición actual.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure import <nombreVanilla> <id> [nombre...]"}</Td><Td>Trae una estructura guardada con Structure Block a la Biblioteca.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure importschem <archivo.schem> <id> [nombre...]"}</Td><Td>Trae un schematic de WorldEdit a la Biblioteca (requiere WorldEdit instalado).</Td></Tr>
           <Tr><Td className="font-mono text-xs">/dungeonadmin structure browser</Td><Td>Abre la Biblioteca en una GUI (elegir + rotar + pegar).</Td></Tr>
         </tbody>
       </Table>

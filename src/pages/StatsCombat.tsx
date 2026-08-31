@@ -71,7 +71,7 @@ export function StatsCombat({ onNavigate }: { onNavigate: (slug: string) => void
       <SectionHeading id="combate-real">Consecuencias reales en combate</SectionHeading>
       <p><code>CombatEffectsListener</code> conecta estos números con el combate de verdad:</p>
       <ol>
-        <li><strong>Evasión</strong> se tira primero — si esquivás, el evento de daño se cancela por completo.</li>
+        <li><strong>Evasión</strong> se tira primero — si esquivas, el evento de daño se cancela por completo.</li>
         <li>
           <strong>Armadura</strong> reduce el daño real con una fórmula de retornos decrecientes:{" "}
           <code>reducción = armorRating / (armorRating + 50)</code>.
@@ -81,15 +81,15 @@ export function StatsCombat({ onNavigate }: { onNavigate: (slug: string) => void
           antes de que se aplique la armadura del defensor.
         </li>
         <li>
-          El daño final (post-armadura) se descuenta de tu <code>currentHealth</code> RPG. Si llega a 0: recibís
-          Lentitud + Debilidad por 5 segundos y te recuperás al 25% de tu máximo — un estado "derribado" propio,
+          El daño final (post-armadura) se descuenta de tu <code>currentHealth</code> RPG. Si llega a 0: recibes
+          Lentitud + Debilidad por 5 segundos y te recuperas al 25% de tu máximo — un estado "derribado" propio,
           no la muerte vanilla (esa sigue funcionando en paralelo, gobernada por tus corazones reales).
         </li>
       </ol>
       <Callout tone="danger" title="Esto es daño duplicado, en dos sistemas distintos">
         La vida vanilla (corazones) sigue existiendo y sigue causando muerte normal a 0 HP. La salud RPG es un
         segundo contador independiente. Un jugador puede llegar a 0 salud RPG (y quedar debilitado) sin estar
-        cerca de morir de verdad, o viceversa. Si querés unificarlos, es la próxima decisión de diseño grande a
+        cerca de morir de verdad, o viceversa. Si quieres unificarlos, es la próxima decisión de diseño grande a
         tomar.
       </Callout>
 

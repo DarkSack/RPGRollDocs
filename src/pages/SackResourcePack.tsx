@@ -39,10 +39,10 @@ export function SackResourcePack({
         <strong>cualquier</strong> ecosistema de plugins, del mismo modo que{" "}
         <button
           type="button"
-          onClick={() => onNavigate("sackeffects")}
+          onClick={() => onNavigate("rpgroll-particles")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          SackEffects
+          RPGRoll-Particles
         </button>{" "}
         es una librería de partículas/sonido standalone.
       </Callout>
@@ -111,8 +111,8 @@ export function SackResourcePack({
         en el repositorio usa todos los campos del manifiesto. A diferencia del
         resto de los addons, SackResourcePack no copia contenido de ejemplo
         automáticamente a <code>content/</code> al primer arranque (no tiene ese
-        mecanismo, por ser standalone) — copiá esta carpeta manualmente si
-        querés verla en un servidor real.
+        mecanismo, por ser standalone) — copia esta carpeta manualmente si
+        quieres verla en un servidor real.
       </Callout>
 
       <SectionHeading id="resolucion">
@@ -352,7 +352,7 @@ export function SackResourcePack({
         <code>http.public-url</code> (config) es la URL efectiva que se le manda
         al jugador, sea que la sirva el host embebido o un CDN/proxy externo
         completamente distinto — dejalo vacío para usar el host embebido
-        directo, o completalo si tenés el pack hosteado en otro lado.
+        directo, o completalo si tienes el pack hosteado en otro lado.
       </p>
 
       <SectionHeading id="datapack">Datapack (data/)</SectionHeading>
@@ -586,6 +586,14 @@ export function SackResourcePack({
             <Td>
               Llama a <code>Server#reloadData()</code> para aplicar el datapack
               ya copiado.
+            </Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">/srp gui</Td>
+            <Td>
+              Igual que <code>/srp</code> sin argumentos: abre el Dashboard
+              (equivalente explícito, útil cuando hay más argumentos después
+              en un alias).
             </Td>
           </Tr>
         </tbody>

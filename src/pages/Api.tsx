@@ -96,7 +96,7 @@ export function Api({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "    public void onJoinJob(PlayerJoinJobEvent event) {\n" +
           "        if (event.getRpgPlayer().getLevel() < 10) {\n" +
           "            event.setCancelled(true);\n" +
-          '            event.getPlayer().sendMessage("Necesitás nivel 10 para este trabajo.");\n' +
+          '            event.getPlayer().sendMessage("Necesitas nivel 10 para este trabajo.");\n' +
           "        }\n" +
           "    }\n\n" +
           "    @EventHandler\n" +

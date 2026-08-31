@@ -142,7 +142,7 @@ export function SearchBar({ onNavigate }: SearchBarProps) {
             <ul ref={listRef} id="search-results" role="listbox" className="max-h-96 overflow-y-auto py-2">
               {query.trim() === "" && (
                 <li className="px-4 py-6 text-center text-sm text-slate-400 dark:text-slate-500">
-                  Escribí para buscar en las páginas y secciones de la documentación.
+                  Escribe para buscar en las páginas y secciones de la documentación.
                 </li>
               )}
 

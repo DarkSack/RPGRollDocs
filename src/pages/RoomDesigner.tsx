@@ -16,7 +16,7 @@ export function RoomDesigner({ onNavigate }: { onNavigate: (slug: string) => voi
 
       <Callout tone="info" title="100% en el navegador">
         Esta herramienta corre entera acá en la página — no habla con ningún servidor. Lo que produce es texto
-        YAML: lo copiás o descargás, y lo pegás en <code>plugins/RPGRoll-Dungeons/structures/</code> en tu
+        YAML: lo copias o descargas, y lo pegas en <code>plugins/RPGRoll-Dungeons/structures/</code> en tu
         servidor. Es el mismo formato CUSTOM que ya lee <code>StructureParser.java</code>, así que no hace falta
         cambiar nada del lado del plugin.
       </Callout>
@@ -24,7 +24,7 @@ export function RoomDesigner({ onNavigate }: { onNavigate: (slug: string) => voi
       <SectionHeading id="como-usar">Cómo usarlo</SectionHeading>
       <ol>
         <li>
-          Elegí el tamaño (ancho/alto/profundidad) — podés cambiarlo después, se preserva lo que ya pintaste
+          Elegí el tamaño (ancho/alto/profundidad) — puedes cambiarlo después, se preserva lo que ya pintaste
           donde entra.
         </li>
         <li>
@@ -32,20 +32,20 @@ export function RoomDesigner({ onNavigate }: { onNavigate: (slug: string) => voi
           elegí uno como pincel activo.
         </li>
         <li>
-          Pintá capa por capa: subís/bajás con las flechas, click y arrastrás para pintar varias celdas de una.
+          Pintá capa por capa: subes/bajas con las flechas, click y arrastras para pintar varias celdas de una.
           El piso es la capa y=0.
         </li>
         <li>
           Marcá el punto de pegado ("Fijar ancla") — normalmente el centro del piso, así al pegar en el juego te
-          parás donde querés el centro de la sala.
+          paras donde quieres el centro de la sala.
         </li>
-        <li>Mirá el resultado en 3D (arrastrar rota, la rueda hace zoom) y copiá o descargá el YAML de abajo.</li>
+        <li>Mira el resultado en 3D (arrastrar rota, la rueda hace zoom) y copia o descargá el YAML de abajo.</li>
       </ol>
 
       <Callout tone="warning" title="Sin orientación de bloques">
         El motor de pegado CUSTOM hace <code>setType()</code> plano — puertas, escaleras, antorchas de pared y
         camas quedan con una orientación por defecto, no la que "deberían" tener. El selector de materiales avisa
-        con ⚠ cuando un material curado tiene este problema; si escribís uno a mano, el aviso no puede detectarlo
+        con ⚠ cuando un material curado tiene este problema; si escribes uno a mano, el aviso no puede detectarlo
         automáticamente.
       </Callout>
 

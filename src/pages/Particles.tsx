@@ -21,10 +21,10 @@ const sackEffectFields: YamlField[] = [
   { key: "description", label: "Descripción", type: "string" },
 ];
 
-export function SackEffects({ onNavigate }: { onNavigate: (slug: string) => void }) {
+export function Particles({ onNavigate }: { onNavigate: (slug: string) => void }) {
   return (
     <>
-      <PageHeader title="SackEffects">
+      <PageHeader title="RPGRoll-Particles">
         Librería de efectos audiovisuales reusable — formas de partículas, sonidos, títulos/actionbar/bossbar y
         efectos de poción, todo secuenciable con delays. Independiente de RPGRollAPI a propósito, similar en
         espíritu a SCore de Ssomar: pensada para que cualquier addon (de RPGRoll o no) la use como su motor de
@@ -32,12 +32,12 @@ export function SackEffects({ onNavigate }: { onNavigate: (slug: string) => void
       </PageHeader>
 
       <Callout tone="info" title="No confundir con RPGRoll-Effects">
-        SackEffects es la capa de <strong>renderizado</strong> (partículas/sonidos/pantalla) — no tiene noción de
+        RPGRoll-Particles es la capa de <strong>renderizado</strong> (partículas/sonidos/pantalla) — no tiene noción de
         duración, stacking, condiciones ni buffs/debuffs. Para eso está{" "}
         <button type="button" onClick={() => onNavigate("rpgroll-effects")} className="text-violet-600 underline dark:text-violet-400">
           RPGRoll-Effects
         </button>
-        , el motor de efectos de estado, que de hecho usa SackEffects por debajo para sus componentes visuales y
+        , el motor de efectos de estado, que de hecho usa RPGRoll-Particles por debajo para sus componentes visuales y
         de sonido.
       </Callout>
 
@@ -118,7 +118,7 @@ export function SackEffects({ onNavigate }: { onNavigate: (slug: string) => void
       <SectionHeading id="formato-yaml">Ejemplos de archivo YAML</SectionHeading>
       <CodeBlock
         language="yaml"
-        filename="effects/level_up.yml (plugins/SackEffects/effects/)"
+        filename="effects/level_up.yml (plugins/Particles/effects/)"
         code={
           "id: level_up\n" +
           'display-name: "&6¡Subida de nivel!"\n' +
@@ -219,26 +219,26 @@ export function SackEffects({ onNavigate }: { onNavigate: (slug: string) => void
 
       <YamlBuilder
         title="Constructor visual: identidad del efecto"
-        description="id/nombre/descripción. La lista de steps es demasiado variada para un formulario lineal (cada tipo tiene sus propios params) — copiá y adaptá uno de los ejemplos de arriba, o usá /sackeffects browser para armarlo paso a paso desde el chat en el juego."
+        description="id/nombre/descripción. La lista de steps es demasiado variada para un formulario lineal (cada tipo tiene sus propios params) — copia y adaptá uno de los ejemplos de arriba, o usá /rpgparticles browser para armarlo paso a paso desde el chat en el juego."
         folder="effects"
         fields={sackEffectFields}
       />
 
-      <SectionHeading id="gui">GUI: Effect Studio de SackEffects</SectionHeading>
+      <SectionHeading id="gui">GUI: Effect Studio de RPGRoll-Particles</SectionHeading>
       <p>
-        <Kbd>/sackeffects browser</Kbd> abre un navegador con botón "Crear nueva". El editor muestra la lista de
+        <Kbd>/rpgparticles browser</Kbd> abre un navegador con botón "Crear nueva". El editor muestra la lista de
         steps (tipo, delay, params resumidos) con soporte para quitarlos (shift-click) y agregar nuevos escribiendo
         en el chat con la sintaxis <code>{"TIPO delay clave=valor,clave2=valor2"}</code>, por ejemplo:
       </p>
       <CodeBlock language="text" code={"PARTICLE 0 particle=FLAME,shape=SPHERE,radius=1.5,points=40\nSOUND 5 sound=ENTITY_BLAZE_SHOOT,volume=1,pitch=1.2"} />
       <p>
-        El botón "▶ Probar" dispara el efecto completo sobre vos mismo, ahí mismo, para ver/escuchar el resultado
+        El botón "▶ Probar" dispara el efecto completo sobre ti mismo, ahí mismo, para ver/escuchar el resultado
         sin salir de la GUI.
       </p>
 
       <SectionHeading id="api">API para addons — EffectsAPI y EffectBuilder</SectionHeading>
       <p>
-        Cualquier addon que declare <Kbd>softdepend: [SackEffects]</Kbd> puede disparar un efecto ya definido por
+        Cualquier addon que declare <Kbd>softdepend: [Particles]</Kbd> puede disparar un efecto ya definido por
         su id:
       </p>
       <CodeBlock
@@ -271,14 +271,14 @@ export function SackEffects({ onNavigate }: { onNavigate: (slug: string) => void
           <Th>Qué hace</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">/sackeffects browser</Td><Td>Abre el navegador gráfico.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/sackeffects reload</Td><Td>Recarga las definiciones desde disco.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/sackeffects test <id> [jugador]"}</Td><Td>Dispara un efecto sobre vos mismo o sobre otro jugador.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/rpgparticles browser</Td><Td>Abre el navegador gráfico.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/rpgparticles reload</Td><Td>Recarga las definiciones desde disco.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/rpgparticles test <id> [jugador]"}</Td><Td>Dispara un efecto sobre ti mismo o sobre otro jugador.</Td></Tr>
         </tbody>
       </Table>
-      <p>Todos requieren <Badge tone="amber">sackeffects.admin.*</Badge> (default: op).</p>
+      <p>Todos requieren <Badge tone="amber">rpgrollparticles.admin.*</Badge> (default: op).</p>
 
-      <PrevNext current="sackeffects" onNavigate={onNavigate} />
+      <PrevNext current="rpgroll-particles" onNavigate={onNavigate} />
     </>
   );
 }

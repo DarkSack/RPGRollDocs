@@ -33,7 +33,7 @@ export function Jobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <p>
         <Kbd>/rpg jobs</Kbd> abre una GUI con el catálogo completo y tu estado en cada uno. Click en uno inactivo
         te une; click en uno activo lo abandona. El límite es <strong>3 trabajos activos</strong> — si ya estás en
-        el máximo e intentás unirte a otro, se abre una GUI para elegir cuál abandonar primero.
+        el máximo e intentas unirte a otro, se abre una GUI para elegir cuál abandonar primero.
       </p>
       <Callout tone="warning" title="El límite de 3 está fijo en código, no en config">
         <code>gameplay.yml</code> tiene <code>professions.max_per_player: 2</code>, pero el sistema real de Jobs

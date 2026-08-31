@@ -106,16 +106,16 @@ export function Effects({
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll]\nsoftdepend: [SackEffects, RPGRoll-Guilds]"}
+        code={"depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Guilds]"}
       />
       <p>
         Sin{" "}
         <button
           type="button"
-          onClick={() => onNavigate("sackeffects")}
+          onClick={() => onNavigate("rpgroll-particles")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          SackEffects
+          RPGRoll-Particles
         </button>{" "}
         instalado, los componentes <code>VISUAL</code> simplemente no hacen nada
         (el resto del efecto funciona igual). Sin RPGRoll-Guilds, las
@@ -252,14 +252,14 @@ export function Effects({
           <Tr>
             <Td className="font-mono text-xs">VISUAL</Td>
             <Td>
-              Dispara un efecto de SackEffects por id
+              Dispara un efecto de RPGRoll-Particles por id
               (partículas/sonido/título/bossbar) — solo funciona sobre
               jugadores.
             </Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">SOUND</Td>
-            <Td>Un sonido vanilla suelto, sin necesitar SackEffects.</Td>
+            <Td>Un sonido vanilla suelto, sin necesitar RPGRoll-Particles.</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">MESSAGE</Td>
@@ -357,17 +357,10 @@ export function Effects({
           </Tr>
         </tbody>
       </Table>
-      <Callout
-        tone="warning"
-        title="REGION_ENTER, REGION_EXIT, COMBAT_START y SPELL_CAST todavía no tienen listener"
-      >
-        Existen en el enum para que YAML y otros addons ya puedan escribirlos,
-        pero no hay ningún evento propio de este módulo que los dispare — Quests
-        (regiones) y un futuro addon de magia (hechizos) no exponen todavía una
-        API pública estable para engancharse. Cualquier addon puede dispararlos
-        igual a mano vía{" "}
-        <code>EffectsAPI.get().fireTrigger(tipo, entidad)</code> — quedan para
-        una próxima pasada de integración.
+      <Callout tone="info" title="REGION_ENTER, REGION_EXIT, COMBAT_START y SPELL_CAST se disparan manualmente">
+        Existen en el enum para que YAML y otros addons puedan escribirlos, pero ningún
+        listener de este módulo los dispara por sí solo. Cualquier addon puede dispararlos
+        a mano vía <code>EffectsAPI.get().fireTrigger(tipo, entidad)</code>.
       </Callout>
 
       <SectionHeading id="condiciones">
@@ -634,7 +627,7 @@ export function Effects({
         </tbody>
       </Table>
       <p>
-        El botón "▶ Probar en vos mismo" del hub aplica el efecto directamente,{" "}
+        El botón "▶ Probar en ti mismo" del hub aplica el efecto directamente,{" "}
         <strong>ignorando las condiciones</strong> — es una previsualización, no
         un uso real.
       </p>
@@ -652,7 +645,7 @@ export function Effects({
           "\n" +
           "// Consultas de estado — útil desde un futuro addon de hechizos.\n" +
           "if (EffectsAPI.get().isSilenced(caster)) {\n" +
-          '    caster.sendMessage("No podés lanzar hechizos, estás silenciado.");\n' +
+          '    caster.sendMessage("No puedes lanzar hechizos, estás silenciado.");\n' +
           "    return;\n" +
           "}\n" +
           "\n" +

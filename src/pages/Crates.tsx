@@ -192,7 +192,7 @@ export function Crates({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <YamlBuilder
         title="Constructor visual: Crate"
-        description="Identidad, llave y holograma. Las recompensas (rewards) son una lista de objetos con sus propias acciones — copiá y adaptá las de un ejemplo de arriba, o usá /crate browser para agregarlas de a una."
+        description="Identidad, llave y holograma. Las recompensas (rewards) son una lista de objetos con sus propias acciones — copia y adaptá las de un ejemplo de arriba, o usá /crate browser para agregarlas de a una."
         folder="crates"
         fields={crateFields}
       />

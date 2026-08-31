@@ -271,12 +271,12 @@ export function Chat({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr><Td className="font-mono text-xs">{"/channel <join|leave|list|switch|info> [canal]"}</Td><Td>Gestiona tus canales (alias <Kbd>/ch</Kbd>).</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/w <jugador> <mensaje>"}</Td><Td>Whisper privado.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/r <mensaje>"}</Td><Td>Responde al último whisper recibido.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/ignore <player|guild|channel> <add|remove|list> [nombre]"}</Td><Td>Ignora jugadores, guilds enteras, o silencia un canal para vos.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/ignore <player|guild|channel> <add|remove|list> [nombre]"}</Td><Td>Ignora jugadores, guilds enteras, o silencia un canal para ti.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/me <acción>"}</Td><Td>Acción narrativa en tercera persona.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/do <descripción>"}</Td><Td>Descripción fuera de personaje (OOC).</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/emote <nombre> [jugador]"}</Td><Td>Ejecuta una emote definida en YAML.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/react <emoji>"}</Td><Td>Reacciona al último mensaje visto en un canal.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/language <list|learn|speak> [idioma]"}</Td><Td>Lista, aprende, o cambia el idioma en el que hablás.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/language <list|learn|speak> [idioma]"}</Td><Td>Lista, aprende, o cambia el idioma en el que hablas.</Td></Tr>
         </tbody>
       </Table>
 

@@ -32,7 +32,7 @@ const CELL_PX = 26;
  * El arrastre se resuelve con Pointer Events + elementFromPoint en vez de
  * mouseenter por celda — en touch, el navegador captura el puntero en el
  * elemento donde empezó el gesto, así que mouseenter/pointerenter en las
- * OTRAS celdas nunca dispara mientras arrastrás el dedo. Con
+ * OTRAS celdas nunca dispara mientras arrastras el dedo. Con
  * elementFromPoint funciona igual para mouse y para touch.
  */
 export function LayerGrid({

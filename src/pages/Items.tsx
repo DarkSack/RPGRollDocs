@@ -192,7 +192,7 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <p>Un ítem puede pedir nivel, raza, clase, profesión, skill, trait, permiso, o dinero mínimo.</p>
       <Callout tone="warning" title="Son informativos, no bloquean nada">
         <code>ItemRequirementChecker</code> solo devuelve la lista de razones incumplidas — el equipo real avisa
-        por chat al equipar un ítem que no cumplís, pero <strong>no impide equiparlo ni usarlo</strong>. El campo{" "}
+        por chat al equipar un ítem que no cumples, pero <strong>no impide equiparlo ni usarlo</strong>. El campo{" "}
         <code>completed-quests</code> ni siquiera se evalúa todavía (se parsea del YAML pero ningún código lo
         consulta).
       </Callout>
@@ -415,7 +415,7 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <YamlBuilder
         title="Constructor visual: Item"
-        description="Identidad, lore, rareza, stats/atributos, requisitos, durabilidad y economía. Encantamientos, triggers, abilities, sockets, skins, upgrades y recipes son demasiado anidados para este formulario — usá /itemadmin editor o copiá uno de los ejemplos de arriba."
+        description="Identidad, lore, rareza, stats/atributos, requisitos, durabilidad y economía. Encantamientos, triggers, abilities, sockets, skins, upgrades y recipes son demasiado anidados para este formulario — usá /itemadmin editor o copia uno de los ejemplos de arriba."
         folder="items"
         fields={itemFields}
       />
@@ -428,9 +428,9 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </Thead>
         <tbody>
           <Tr><Td className="font-mono text-xs">{"/itemadmin give <jugador> <id> [cantidad]"}</Td><Td>Entrega un ítem, con overflow al piso.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/itemadmin list</Td><Td>Lista todos los ítems con su categoría y rareza.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/itemadmin list</Td><Td>Lista todos los ítems con su pack y rareza.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/itemadmin reload</Td><Td>Recarga todas las definiciones.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/itemadmin create <id> [categoría]"}</Td><Td>Crea un ítem base y abre el editor directo.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/itemadmin create <id> [pack]"}</Td><Td>Crea un ítem base y abre el editor directo (sin [pack], eliges/creas uno desde un menú).</Td></Tr>
           <Tr><Td className="font-mono text-xs">/itemadmin browser</Td><Td>Abre el navegador gráfico.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/itemadmin editor <id>"}</Td><Td>Abre el editor gráfico directo.</Td></Tr>
         </tbody>
@@ -442,8 +442,8 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Th>Qué hace</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">/item info</Td><Td>Nombre, categoría, rareza, nivel de mejora y durabilidad del ítem en tu mano.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/item upgrade</Td><Td>Sube un nivel de mejora si podés pagarlo.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/item info</Td><Td>Nombre, pack, rareza, nivel de mejora y durabilidad del ítem en tu mano.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/item upgrade</Td><Td>Sube un nivel de mejora si puedes pagarlo.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/item skin</Td><Td>Cicla su skin.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/item socket <id>"}</Td><Td>Inserta la gema de tu offhand en esa ranura.</Td></Tr>
         </tbody>

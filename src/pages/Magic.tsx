@@ -50,23 +50,23 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <PageHeader title="Magic (RPGRoll-Magic)">
         Framework de magia modular — escuelas con afinidades, hechizos construidos por componentes (nunca
         "programados"), maná/vida/experiencia/reactivos como costo, catalizadores, grimorios, runas y árboles de
-        progresión. Profundamente integrado con SackEffects (visuales) y RPGRoll-Effects (aplicar maldiciones/
+        progresión. Profundamente integrado con RPGRoll-Particles (visuales) y RPGRoll-Effects (aplicar maldiciones/
         curses reales).
       </PageHeader>
 
       <Callout tone="info" title="No existen hechizos programados">
         Todos los hechizos, sin excepción, se arman encadenando los mismos ~23 tipos de componente en el orden que
         quieras — igual que <code>EffectComponent</code> en RPGRoll-Effects o <code>EffectStep</code> en
-        SackEffects. No hay ninguna clase Java especial para "Fireball" o "Meteoro": ambos son la misma{" "}
+        RPGRoll-Particles. No hay ninguna clase Java especial para "Fireball" o "Meteoro": ambos son la misma{" "}
         <code>Spell</code>, solo con distintos componentes.
       </Callout>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [SackEffects, RPGRoll-Effects]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Effects]"} />
       <p>
         Sin{" "}
-        <button type="button" onClick={() => onNavigate("sackeffects")} className="text-violet-600 underline dark:text-violet-400">
-          SackEffects
+        <button type="button" onClick={() => onNavigate("rpgroll-particles")} className="text-violet-600 underline dark:text-violet-400">
+          RPGRoll-Particles
         </button>
         , los componentes <code>VISUAL</code> no hacen nada. Sin{" "}
         <button type="button" onClick={() => onNavigate("rpgroll-effects")} className="text-violet-600 underline dark:text-violet-400">
@@ -123,12 +123,12 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
         <tbody>
           <Tr><Td className="font-mono text-xs">LEFT_CLICK</Td><Td>Click izquierdo con el catalizador en mano.</Td></Tr>
           <Tr><Td className="font-mono text-xs">RIGHT_CLICK</Td><Td>Click derecho — instantáneo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">HOLD</Td><Td>Canaliza <code>cast-time</code> ticks quieto y sin recibir daño tras el click derecho — se cancela si te movés o te golpean.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">HOLD</Td><Td>Canaliza <code>cast-time</code> ticks quieto y sin recibir daño tras el click derecho — se cancela si te mueves o te golpean.</Td></Tr>
         </tbody>
       </Table>
       <Callout tone="warning" title="HOLD es una simulación, no un click-sostenido real">
-        Bukkit no expone un evento de "seguís apretando click derecho" sin escuchar paquetes de cliente — en vez de
-        eso, al iniciarse la canalización tenés <code>cast-time</code> ticks para completarla quieto y sin recibir
+        Bukkit no expone un evento de "sigues apretando click derecho" sin escuchar paquetes de cliente — en vez de
+        eso, al iniciarse la canalización tienes <code>cast-time</code> ticks para completarla quieto y sin recibir
         daño. Es la misma simplificación que usan la mayoría de los plugins de RPG/magia sobre Bukkit puro.
       </Callout>
 
@@ -146,7 +146,7 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
         <tbody>
           <Tr><Td>Movimiento</Td><Td className="font-mono text-xs">PROJECTILE, DASH, TELEPORT, LEAP, ORBIT</Td></Tr>
           <Tr><Td>Daño</Td><Td className="font-mono text-xs">DAMAGE_DIRECT, DAMAGE_AREA, DAMAGE_LINE, DAMAGE_CHAIN, DAMAGE_CONE</Td></Tr>
-          <Tr><Td>Visual</Td><Td className="font-mono text-xs">PARTICLE, SOUND, VISUAL (delega en SackEffects)</Td></Tr>
+          <Tr><Td>Visual</Td><Td className="font-mono text-xs">PARTICLE, SOUND, VISUAL (delega en Particles)</Td></Tr>
           <Tr><Td>Mundo</Td><Td className="font-mono text-xs">BREAK_BLOCK, PLACE_BLOCK, IGNITE, FREEZE_WATER</Td></Tr>
           <Tr><Td>Entidades</Td><Td className="font-mono text-xs">SUMMON, HEAL, APPLY_EFFECT, REMOVE_EFFECT, PUSH, PULL</Td></Tr>
           <Tr><Td>Control</Td><Td className="font-mono text-xs">DELAY, MESSAGE, COMMAND</Td></Tr>
@@ -157,8 +157,7 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
         partícula de estela, se detiene al chocar con un bloque sólido o la primera entidad viva (salvo que una
         runa <code>PIERCING</code> esté activa), y deja el punto/entidad golpeada en el contexto para que el
         siguiente componente (típicamente <code>DAMAGE_DIRECT</code>) lo use. <code>SUMMON</code> invoca un mob{" "}
-        <strong>vanilla</strong> por <code>EntityType</code> — la integración con RPGRoll-Mobs para invocaciones
-        reales queda pendiente.
+        <strong>vanilla</strong> por <code>EntityType</code>.
       </p>
 
       <SectionHeading id="runas">Runas</SectionHeading>
@@ -285,7 +284,7 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <YamlBuilder
         title="Constructor visual: identidad, costo básico y progresión del hechizo"
-        description="El pipeline de componentes es demasiado variado para un formulario lineal (cada tipo tiene sus propios params) — copiá y adaptá uno de los ejemplos de arriba, o usá /magicadmin browser para armarlo paso a paso desde el chat en el juego."
+        description="El pipeline de componentes es demasiado variado para un formulario lineal (cada tipo tiene sus propios params) — copia y adaptá uno de los ejemplos de arriba, o usá /magicadmin browser para armarlo paso a paso desde el chat en el juego."
         folder="spells"
         fields={spellFields}
       />
@@ -340,15 +339,11 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
         op); <code>/magic</code> requiere <Badge tone="blue">rpgrollmagic.use</Badge> (default: true).
       </p>
 
-      <SectionHeading id="pendiente">Qué falta (próxima pasada)</SectionHeading>
-      <Callout tone="warning" title="Esta pasada es 'Núcleo + progresión', no todo el diseño original">
-        A propósito, esta versión <strong>no</strong> incluye rituales multi-jugador, combos encadenados
-        (ej. Freeze → Ice Spear → Shatter), sinergias elementales (Water + Lightning → Electrified Water), un
-        sistema de sobrecarga/fatiga de maná, ni invocaciones integradas con RPGRoll-Mobs (<code>SUMMON</code>{" "}
-        hoy invoca un mob vanilla por <code>EntityType</code>, no una definición de Mobs). Lo que sí está completo
-        y estable: el motor de componentes, escuelas/afinidades, maná/costos/cooldowns, catalizadores, grimorios,
-        runas, árboles de progresión, la API pública, el Magic Studio, y contenido de ejemplo listo para usar o
-        copiar (2 escuelas, 5 hechizos, 1 grimorio, 3 runas, 2 catalizadores).
+      <SectionHeading id="alcance">Alcance: núcleo y progresión</SectionHeading>
+      <Callout tone="info" title="Completo y estable">
+        El motor de componentes, escuelas/afinidades, maná/costos/cooldowns, catalizadores, grimorios, runas,
+        árboles de progresión, la API pública, el Magic Studio, y contenido de ejemplo listo para usar o copiar
+        (2 escuelas, 5 hechizos, 1 grimorio, 3 runas, 2 catalizadores).
       </Callout>
 
       <PrevNext current="magic" onNavigate={onNavigate} />

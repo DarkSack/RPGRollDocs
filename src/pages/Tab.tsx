@@ -171,7 +171,7 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
       <YamlBuilder
         title="Constructor visual: Context"
-        description="Las condiciones (conditions) no están en este formulario simplificado — copiá y adaptá el ejemplo de arriba, o usá /tabadmin browser."
+        description="Las condiciones (conditions) no están en este formulario simplificado — copia y adaptá el ejemplo de arriba, o usá el Diseñador de TAB de abajo."
         folder="contexts"
         fields={contextFields}
       />
@@ -426,6 +426,18 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </tbody>
       </Table>
       <p>Todos requieren <Badge tone="amber">rpgrolltab.admin.*</Badge> (default: op), y funcionan desde consola.</p>
+
+      <Callout tone="info" title="Armá todo esto visualmente: Diseñador de TAB">
+        En vez de escribir a mano los 10 tipos de archivo de arriba, usá el{" "}
+        <button type="button" className="underline" onClick={() => onNavigate("tab-designer")}>
+          Diseñador de TAB
+        </button>{" "}
+        — una herramienta en el navegador que arma perfiles, contextos, scoreboards, tablists, nametags, belowname,
+        bossbars, sorting, teams y animaciones con formularios, y te da el YAML exacto que lee cada{" "}
+        <code>*Parser.java</code> listo para copiar o descargar. No reemplaza ningún editor in-game (no existe uno
+        para TAB) — es la forma recomendada de armar el contenido sin memorizar el schema de cada archivo.
+      </Callout>
+
       <PrevNext current="tab" onNavigate={onNavigate} />
     </>
   );

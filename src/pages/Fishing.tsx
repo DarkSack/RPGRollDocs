@@ -107,7 +107,7 @@ const speciesFields: YamlField[] = [
   },
   {
     key: "catch-effect",
-    label: "Efecto SackEffects al capturar",
+    label: "Efecto RPGRoll-Particles al capturar",
     type: "string",
   },
   {
@@ -207,7 +207,7 @@ export function Fishing({
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll]\nsoftdepend: [SackEffects, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
+          "depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
         }
       />
       <p>
@@ -222,7 +222,7 @@ export function Fishing({
         , el campo <code>allowed-seasons</code> de una especie simplemente no
         filtra nada (siempre elegible por estación) y el clima usa una tabla de
         temperatura aproximada propia en vez de la de Seasons. Sin
-        SackEffects/RPGRoll-Effects, <code>catch-effect</code>/
+        Particles/RPGRoll-Effects, <code>catch-effect</code>/
         <code>catch-status-effect</code> no hacen nada — el resto de la captura
         funciona igual. Sin{" "}
         <button

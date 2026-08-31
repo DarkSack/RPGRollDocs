@@ -26,6 +26,16 @@ const professionFields: YamlField[] = [
   { key: "wage-amount", label: "Salario", type: "number", default: "0" },
   { key: "wage-type", label: "Tipo de pago", type: "select", options: ["HOURLY", "PER_TASK"], default: "PER_TASK" },
   { key: "tool-material", label: "Herramienta requerida (vacío = ninguna)", type: "string" },
+  {
+    key: "reskin",
+    label: "Reskin visual (opcional)",
+    type: "group",
+    fields: [
+      { key: "material", label: "Material base", type: "string", placeholder: "PAPER" },
+      { key: "custom-model-data", label: "Custom model data", type: "number", placeholder: "100001" },
+      { key: "scale", label: "Escala del display", type: "number", default: "1.0" },
+    ],
+  },
 ];
 
 export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) {
@@ -47,7 +57,7 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll]\nsoftdepend: [SackEffects, RPGRoll-Effects, RPGRoll-Seasons, RPGRoll-Ranching, RPGRoll-Fishing, RPGRoll-Guilds, Vault]"}
+        code={"depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Effects, RPGRoll-Seasons, RPGRoll-Ranching, RPGRoll-Fishing, RPGRoll-Guilds, Vault, SackResourcePack]"}
       />
       <p>
         De todos los addons que el diseño original nombraba como integración (Ranching/Fishing/Mining/Blacksmith/
@@ -57,8 +67,44 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
         </button>
         , RPGRoll-Fishing, RPGRoll-Seasons, RPGRoll-Quests, RPGRoll-Guilds y RPGRoll-Magic existen en este proyecto
         — RPGRoll-Mining, RPGRoll-Blacksmith y "Housing" como addon separado no existen. Sin Vault + un plugin de
-        economía real, los salarios simplemente no se cobran (el resto de la simulación sigue igual).
+        economía real, los salarios simplemente no se cobran (el resto de la simulación sigue igual). Sin{" "}
+        <button type="button" onClick={() => onNavigate("sackresourcepack")} className="text-violet-600 underline dark:text-violet-400">
+          SackResourcePack
+        </button>
+        , el <a href="#reskin" onClick={(e) => e.preventDefault()}>reskin visual</a> de una profesión simplemente
+        no aparece configurado (no rompe nada — el worker se ve con su <code>entity-type</code> vanilla normal).
       </p>
+
+      <SectionHeading id="reskin">Reskin visual por profesión (sin ModelEngine/BetterModel)</SectionHeading>
+      <p>
+        Minecraft no tiene ningún equivalente a <code>CustomModelData</code> para entidades vivas — no hay forma
+        de re-texturizar un worker vanilla solo con un resource pack. RPGRoll-Workers usa el mismo mecanismo que
+        RPGRoll-Ranching (y, con listas, RPGRoll-Mobs): la entidad vanilla real sigue siendo la que trabaja/camina
+        (comportamiento intacto), pero se le monta una entidad <code>ItemDisplay</code> como pasajero real,
+        portando un ítem con <code>custom-model-data</code>.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="professions/reference_full.yml (fragmento)"
+        code={
+          "reskin:\n" +
+          "  material: PAPER\n" +
+          "  custom-model-data: 100001\n" +
+          "  scale: 1.0\n" +
+          "  y-offset: 0.0\n"
+        }
+      />
+      <p>
+        Es un único reskin fijo por profesión (no una lista sorteada, a diferencia de Mobs). El material y el
+        número de <code>custom-model-data</code> los define un resource pack real — el mismo pipeline que ya usa
+        RPGRoll-Items: pon el modelo/textura en{" "}
+        <code>plugins/RPGRoll-Workers/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code> y, si
+        SackResourcePack está instalado, se sincroniza solo al arrancar el plugin.
+      </p>
+      <Callout tone="warning" title="Solo verificado por compilación, no probado en juego">
+        Igual que en Mobs/Ranching, esta primera versión del reskin no fue probada visualmente contra un cliente
+        real de Minecraft (sin servidor Paper disponible en el entorno de desarrollo).
+      </Callout>
 
       <SectionHeading id="ia">IA por reglas</SectionHeading>
       <Table>
@@ -264,7 +310,7 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
 
       <YamlBuilder
         title="Constructor visual: profesión"
-        description="Identidad, horario y salario de una profesión. Las reglas de IA (ai-rules) son demasiado estructuradas para este formulario — copiá y adaptá el ejemplo de arriba para esas."
+        description="Identidad, horario y salario de una profesión. Las reglas de IA (ai-rules) son demasiado estructuradas para este formulario — copia y adaptá el ejemplo de arriba para esas."
         folder="professions"
         fields={professionFields}
       />

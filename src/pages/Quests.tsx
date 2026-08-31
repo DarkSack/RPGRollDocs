@@ -362,7 +362,7 @@ export function Quests({ onNavigate }: { onNavigate: (slug: string) => void }) {
         <tbody>
           <Tr><Td className="font-mono text-xs">/quest list</Td><Td>Lista todas las misiones definidas.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/quest info <id>"}</Td><Td>Categoría, dificultad, cantidad de etapas, si es repetible.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/quest start <id>"}</Td><Td>La inicia si cumplís requisitos, no está en cooldown y no la tenés activa.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/quest start <id>"}</Td><Td>La inicia si cumples requisitos, no está en cooldown y no la tienes activa.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/quest abandon <id>"}</Td><Td>La abandona (sin penalidad ni recompensa).</Td></Tr>
           <Tr><Td className="font-mono text-xs">/quest active</Td><Td>Lista tus misiones activas y en qué etapa vas.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/quest completed</Td><Td>Cuántas y cuáles completaste.</Td></Tr>

@@ -111,7 +111,7 @@ export function Guilds({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </p>
       <Callout tone="warning" title="WIN_WAR no tiene motor de guerra">
         El tipo <code>WIN_WAR</code> existe en el enum pero no hay ningún sistema de guerra entre guilds
-        implementado que dispare su progreso — quedaría sin completarse nunca si la activás.
+        implementado que dispare su progreso — quedaría sin completarse nunca si la activas.
       </Callout>
       <CodeBlock
         language="yaml"
@@ -185,12 +185,11 @@ export function Guilds({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Th>Qué hace</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/team create"}</Td><Td>Crea un equipo temporal.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/team invite <jugador>"}</Td><Td>Invita a un jugador.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/team invite <jugador>"}</Td><Td>Invita a un jugador (crea el equipo si todavía no existe).</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/team accept | decline"}</Td><Td>Acepta o rechaza la invitación pendiente.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/team leave | kick <jugador>"}</Td><Td>Sale del equipo, o expulsa a alguien.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/team promote | demote <jugador>"}</Td><Td>Cambia el rol de un miembro.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/team buff | ping | waypoint | chat | queue"}</Td><Td>Buffs de equipo, pings de mapa, waypoints compartidos, chat de equipo, cola de matchmaking.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/team info | gui | config | buff"}</Td><Td>Abren el hub del equipo (miembros, buffs, configuración).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/team ping | waypoint | chat | queue"}</Td><Td>Pings de mapa, waypoints compartidos, chat de equipo, cola de matchmaking.</Td></Tr>
         </tbody>
       </Table>
 
@@ -201,10 +200,11 @@ export function Guilds({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Th>Qué hace</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/guild create <nombre>"}</Td><Td>Crea una guild si cumplís los requisitos de <code>guild-creation</code>.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/guild create <nombre>"}</Td><Td>Crea una guild si cumples los requisitos de <code>guild-creation</code>.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/guild disband</Td><Td>Disuelve tu guild (solo LEADER).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/guild invite | accept | decline | leave | kick | promote | demote"}</Td><Td>Gestión de membresía y roles.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/guild info | vault | territory | upgrade | diplomacy | quest | achievements | calendar | ranking | chat | customize"}</Td><Td>Abren cada sub-sistema (la mayoría como GUI).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/guild accept <id-de-guild> | decline | leave"}</Td><Td>Gestión de membresía (unirte a una invitación, salir).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/guild info | vault | territory | upgrade | diplomacy | quest | achievements | calendar | members | ranking | chat | customize"}</Td><Td>Abren cada sub-sistema (la mayoría como GUI).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/guild browser"}</Td><Td>Abre el navegador de guilds reales (mismo GUI que <code>/guildadmin browser guilds</code>).</Td></Tr>
         </tbody>
       </Table>
 

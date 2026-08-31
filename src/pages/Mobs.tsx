@@ -102,11 +102,10 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </PageHeader>
 
       <Callout tone="info" title="Alcance de esta primera versión: núcleo PvE a fondo">
-        RPGRoll-Mobs se pensó originalmente con un alcance enorme (integración con ModelEngine/BetterModel,
-        WorldGuard/WorldEdit, eventos cinematográficos guionados). Esta primera pasada prioriza profundidad real en
-        definición de mob, motor de combate, comportamiento y fases de jefe — el resto queda documentado como
-        punto de extensión, no implementado (ver <a href="#extension" onClick={(e) => e.preventDefault()}>al
-        final de esta página</a>).
+        RPGRoll-Mobs prioriza profundidad real en definición de mob, motor de combate, comportamiento y
+        fases de jefe. No integra con ModelEngine/BetterModel ni WorldGuard/WorldEdit — para skins visuales
+        sin esas dependencias, usa <a href="#reskin" onClick={(e) => e.preventDefault()}>model.skins</a>,
+        que sí está implementado.
       </Callout>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
@@ -218,7 +217,7 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <p>
         Con este ejemplo, un mob nuevo tiene 2/3 de chance de nacer "molten" y 1/3 "obsidian". El material y el
         número de <code>custom-model-data</code> los define un resource pack real — el mismo pipeline que ya usa
-        RPGRoll-Items: poné el modelo/textura en{" "}
+        RPGRoll-Items: pon el modelo/textura en{" "}
         <code>plugins/RPGRoll-Mobs/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code> y, si
         SackResourcePack está instalado, se sincroniza solo al arrancar el plugin.
       </p>
@@ -404,7 +403,7 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <YamlBuilder
         title="Constructor visual: Mob"
-        description="Identidad, modelo, stats/resistencias e IA básica. Skins, skills, triggers, phases, loot, bossbar, diálogos y spawn-rules son demasiado anidados para este formulario — usá /mobadmin editor o copiá uno de los ejemplos de arriba."
+        description="Identidad, modelo, stats/resistencias e IA básica. Skins, skills, triggers, phases, loot, bossbar, diálogos y spawn-rules son demasiado anidados para este formulario — usá /mobadmin editor o copia uno de los ejemplos de arriba."
         folder="mobs"
         fields={mobFields}
       />
@@ -424,8 +423,8 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         el goal <code>GUARD_REGION</code> y como filtro de <code>spawn-rules.regions</code>.
       </p>
       <Callout tone="info">
-        Todavía no se distribuye ningún archivo de ejemplo en <code>mobs/src/main/resources/regions/</code> — la
-        carpeta se crea recién cuando guardás la primera región desde el constructor de abajo o por código.
+        <code>mobs/src/main/resources/regions/</code> incluye archivos de ejemplo (<code>boss_arena.yml</code>,{" "}
+        <code>forest_camp.yml</code>) listos para usar o copiar como base.
       </Callout>
       <YamlBuilder title="Constructor visual: Mob Region" folder="regions" fields={mobRegionFields} />
 
@@ -464,18 +463,6 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </tbody>
       </Table>
       <p>Todos requieren <Badge tone="amber">rpgrollmobs.admin.*</Badge> (default: op).</p>
-
-      <SectionHeading id="extension">Puntos de extensión documentados, no implementados</SectionHeading>
-      <Callout tone="info">
-        Estos quedaron fuera del alcance de esta primera versión a propósito — el <code>base-entity-type</code>{" "}
-        vanilla y el sistema de resistencias/loot ya son plenamente funcionales sin ellos:
-        <ul className="mt-2 list-disc pl-5">
-          <li><strong>ModelEngine / BetterModel</strong> — <code>model.model-engine-id</code> ya existe como campo en el YAML, pero ningún código lee ese id para aplicar un modelo custom real todavía. Para skins visuales sin esas dependencias, usá <a href="#reskin" onClick={(e) => e.preventDefault()}>model.skins</a>, que sí está implementado.</li>
-          <li><strong>WorldGuard / WorldEdit</strong> — las "regiones" de este addon son cuboides propios (<code>MobRegion</code>), sin dependencia externa; no hay integración con las regiones de WorldGuard.</li>
-          <li><strong>Eventos cinematográficos guionados</strong> (secuencias de jefe con cámaras, cutscenes) — no implementado.</li>
-          <li><strong>Historial / versionado / import-export</strong> en el editor gráfico.</li>
-        </ul>
-      </Callout>
 
       <SectionHeading id="placeholders">Placeholders (PlaceholderAPI)</SectionHeading>
       <p>

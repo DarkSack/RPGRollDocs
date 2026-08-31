@@ -86,7 +86,7 @@ export function Seasons({
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll]\nsoftdepend: [SackEffects, RPGRoll-Effects, RPGRoll-Mobs]"
+          "depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Effects, RPGRoll-Mobs]"
         }
       />
       <p>
@@ -231,7 +231,7 @@ export function Seasons({
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">PARTICLE / SOUND / VISUAL</Td>
-            <Td>Por jugador (VISUAL delega en SackEffects).</Td>
+            <Td>Por jugador (VISUAL delega en Particles).</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">APPLY_EFFECT</Td>
@@ -365,7 +365,7 @@ export function Seasons({
 
       <YamlBuilder
         title="Constructor visual: identidad y duración de la estación"
-        description="Clima, subestaciones, modificadores de bioma, vegetación y mobs de temporada son demasiado variados para un formulario lineal — todos viven en pantallas propias dentro del editor in-game. Copiá y adaptá uno de los ejemplos de arriba para esos campos."
+        description="Clima, subestaciones, modificadores de bioma, vegetación y mobs de temporada son demasiado variados para un formulario lineal — todos viven en pantallas propias dentro del editor in-game. Copia y adaptá uno de los ejemplos de arriba para esos campos."
         folder="seasons"
         fields={seasonFields}
       />

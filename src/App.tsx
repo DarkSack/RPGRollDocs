@@ -21,7 +21,8 @@ import { Chat } from "./pages/Chat";
 import { Guilds } from "./pages/Guilds";
 import { Crates } from "./pages/Crates";
 import { Dungeons } from "./pages/Dungeons";
-import { SackEffects } from "./pages/SackEffects";
+import { Traps } from "./pages/Traps";
+import { Particles } from "./pages/Particles";
 import { Effects } from "./pages/Effects";
 import { Magic } from "./pages/Magic";
 import { Seasons } from "./pages/Seasons";
@@ -34,6 +35,7 @@ import { Crafting } from "./pages/Crafting";
 import { Tab } from "./pages/Tab";
 import { Extras } from "./pages/Extras";
 import { RoomDesigner } from "./pages/RoomDesigner";
+import { TabDesigner } from "./pages/TabDesigner";
 import { Commands } from "./pages/Commands";
 import { Permissions } from "./pages/Permissions";
 import { Configuration } from "./pages/Configuration";
@@ -91,8 +93,10 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Crates onNavigate={onNavigate} />;
     case "dungeons":
       return <Dungeons onNavigate={onNavigate} />;
-    case "sackeffects":
-      return <SackEffects onNavigate={onNavigate} />;
+    case "traps":
+      return <Traps onNavigate={onNavigate} />;
+    case "rpgroll-particles":
+      return <Particles onNavigate={onNavigate} />;
     case "rpgroll-effects":
       return <Effects onNavigate={onNavigate} />;
     case "magic":
@@ -117,6 +121,8 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Extras onNavigate={onNavigate} />;
     case "room-designer":
       return <RoomDesigner onNavigate={onNavigate} />;
+    case "tab-designer":
+      return <TabDesigner onNavigate={onNavigate} />;
     case "comandos":
       return <Commands onNavigate={onNavigate} />;
     case "permisos":

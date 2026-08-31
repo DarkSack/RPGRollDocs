@@ -46,7 +46,7 @@ export function Database({ onNavigate }: { onNavigate: (slug: string) => void })
       </Table>
 
       <Callout tone="tip">
-        Para agregar tu propia migración: creá <code>V10__descripcion.sql</code> en{" "}
+        Para agregar tu propia migración: crea <code>V10__descripcion.sql</code> en{" "}
         <code>core/src/main/resources/database/migrations/</code>, y registrala en{" "}
         <code>MigrationRegistry.registerMigrations()</code> con <code>register(10, "V10__descripcion.sql")</code>.
         Las migraciones se ejecutan en orden y nunca se re-corren una vez aplicadas.

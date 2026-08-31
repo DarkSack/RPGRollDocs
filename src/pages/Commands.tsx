@@ -18,15 +18,19 @@ export function Commands({ onNavigate }: { onNavigate: (slug: string) => void })
       <SectionHeading id="admin">Comandos de administrador</SectionHeading>
       <CommandsTable rows={adminCommands} />
 
-      <Callout tone="info" title="Todos requieren ser jugador, con una excepción">
-        <code>/rpg reload</code> puede ejecutarse también desde la consola del servidor — es el único comando que
-        no requiere ser un jugador en el mundo.
+      <Callout tone="info" title="La mayoría requiere ser jugador, salvo los comandos que reciben un jugador objetivo">
+        <code>/rpg reload</code>, <code>/rpg addxp</code>, <code>/rpg job</code>, <code>/rpg resetstats</code>,{" "}
+        <code>/rpg setrace</code> y <code>/rpg setclass</code> pueden ejecutarse también desde la consola del
+        servidor — el resto de comandos de administrador (<code>/rpg admincontent</code>, <code>/rpg admingui</code>,{" "}
+        <code>/rpg levelup</code>) y todos los de jugador exigen ser un jugador en el mundo.
       </Callout>
 
       <Callout tone="tip" title="Autocompletado real, no solo la lista de subcomandos">
         Además de sugerir el subcomando, <code>/rpg</code> (y el de cada addon) sugiere desde el manager de
-        contenido real: <code>/rpg race &lt;Tab&gt;</code> lista razas de verdad, <code>/rpg setrace &lt;jugador&gt; &lt;Tab&gt;</code>{" "}
-        también, etc. Ver el detalle técnico en{" "}
+        contenido real en varios subcomandos: <code>/rpg setrace &lt;jugador&gt; &lt;Tab&gt;</code> lista razas de
+        verdad desde el <code>RaceManager</code>, <code>/rpg job give &lt;jugador&gt; &lt;Tab&gt;</code> lista
+        trabajos reales, etc. (<code>/rpg race &lt;Tab&gt;</code> y <code>/rpg class &lt;Tab&gt;</code> siguen
+        usando una lista placeholder, no el manager real). Ver el detalle técnico en{" "}
         <button className="underline" onClick={() => onNavigate("arquitectura")}>
           Arquitectura → Tab-completion
         </button>

@@ -120,12 +120,12 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         <li><Kbd>{"/npc create <id>"}</Kbd> — usa tu ubicación y posición actuales, abre el editor.</li>
         <li>Click en <strong>Nombre</strong> → te pide el nombre por chat.</li>
         <li>
-          Click en <strong>Skin</strong> → pegás un link o ID de{" "}
+          Click en <strong>Skin</strong> → pegas un link o ID de{" "}
           <a href="#" onClick={(e) => e.preventDefault()}>mineskin.org</a> por chat; el addon consulta la API de
           MineSkin y resuelve el <code>value</code>/<code>signature</code> reales automáticamente (no hace falta
           pegar el texto largo de la textura a mano).
         </li>
-        <li>Click en <strong>Pose</strong> → elegís entre STANDING, SITTING, SNEAKING, SWIMMING, SLEEPING.</li>
+        <li>Click en <strong>Pose</strong> → eliges entre STANDING, SITTING, SNEAKING, SWIMMING, SLEEPING.</li>
         <li>Click en <strong>Posición</strong> → reasigna la ubicación a donde estés parado.</li>
         <li>Click en <strong>Acciones</strong> → agregá/quitá acciones (formato <code>TIPO|valor</code> por chat).</li>
         <li>Guardar (deshabilitado hasta tener nombre y posición).</li>
@@ -204,7 +204,8 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </Thead>
         <tbody>
           <Tr><Td className="font-mono text-xs">MESSAGE</Td><Td className="font-mono text-xs">texto libre</Td><Td>Envía un mensaje al jugador (soporta color legacy <code>&amp;</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">COMMAND</Td><Td className="font-mono text-xs">comando</Td><Td>Ejecuta el comando como consola (<code>Bukkit.dispatchCommand</code>).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">COMMAND</Td><Td className="font-mono text-xs">comando</Td><Td>Ejecuta el comando como <strong>consola</strong> — para comandos tipo <code>/give</code> o LuckPerms que no necesitan que el sender sea el jugador.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">COMMAND_AS_PLAYER</Td><Td className="font-mono text-xs">comando</Td><Td>Ejecuta el comando <strong>como el jugador que clickeó</strong> — necesario para comandos propios de RPGRoll (ej. <code>quest start x</code>), que exigen <code>sender instanceof Player</code> y fallan en silencio si se disparan por consola.</Td></Tr>
           <Tr><Td className="font-mono text-xs">GIVE_ITEM</Td><Td className="font-mono text-xs">MATERIAL[,cantidad]</Td><Td>Da un ítem; lo que no entra en el inventario se dropea a los pies.</Td></Tr>
           <Tr><Td className="font-mono text-xs">TAKE_ITEM</Td><Td className="font-mono text-xs">MATERIAL[,cantidad]</Td><Td>Quita un ítem del inventario (sin volver a chequear si hay suficiente — pensado para usarse junto a un CONDITIONAL con HAS_ITEM).</Td></Tr>
           <Tr><Td className="font-mono text-xs">SOUND</Td><Td className="font-mono text-xs">SONIDO[,volumen[,pitch]]</Td><Td>Reproduce un sonido en la ubicación del jugador.</Td></Tr>

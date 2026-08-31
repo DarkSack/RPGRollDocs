@@ -40,7 +40,7 @@ export const nav: NavSection[] = [
       { slug: "guilds", label: "Guilds" },
       { slug: "crates", label: "Crates" },
       { slug: "dungeons", label: "Dungeons" },
-      { slug: "sackeffects", label: "SackEffects" },
+      { slug: "rpgroll-particles", label: "RPGRoll-Particles" },
       { slug: "rpgroll-effects", label: "Effects" },
       { slug: "magic", label: "Magic" },
       { slug: "seasons", label: "Seasons" },
@@ -52,11 +52,15 @@ export const nav: NavSection[] = [
       { slug: "crafting", label: "Crafting" },
       { slug: "tab", label: "TAB" },
       { slug: "extras", label: "Extras" },
+      { slug: "traps", label: "Traps & Defenses" },
     ],
   },
   {
     title: "Herramientas",
-    items: [{ slug: "room-designer", label: "Diseñador de Salas" }],
+    items: [
+      { slug: "room-designer", label: "Diseñador de Salas" },
+      { slug: "tab-designer", label: "Diseñador de TAB" },
+    ],
   },
   {
     title: "Referencia",

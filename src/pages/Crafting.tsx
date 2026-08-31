@@ -964,7 +964,7 @@ export function Crafting({
             <Td className="font-mono text-xs">
               {"/craftingadmin villager bind <id1,id2,...>"}
             </Td>
-            <Td>Vincula el aldeano al que mirás a esos comercios.</Td>
+            <Td>Vincula el aldeano al que miras a esos comercios.</Td>
             <Td>
               <Badge tone="violet">rpgrollcrafting.admin.*</Badge>
             </Td>
@@ -973,7 +973,7 @@ export function Crafting({
             <Td className="font-mono text-xs">
               /craftingadmin villager unbind
             </Td>
-            <Td>Desvincula el aldeano al que mirás.</Td>
+            <Td>Desvincula el aldeano al que miras.</Td>
             <Td>
               <Badge tone="violet">rpgrollcrafting.admin.*</Badge>
             </Td>
@@ -994,7 +994,7 @@ export function Crafting({
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">/crafting upgrade</Td>
-            <Td>Sube de nivel la estación que tenés abierta.</Td>
+            <Td>Sube de nivel la estación que tienes abierta.</Td>
             <Td>
               <Badge>rpgrollcrafting.use</Badge>
             </Td>
@@ -1002,7 +1002,7 @@ export function Crafting({
           <Tr>
             <Td className="font-mono text-xs">/crafting experiment</Td>
             <Td>
-              Intenta descubrir una receta por lo que tenés puesto (estación con{" "}
+              Intenta descubrir una receta por lo que tienes puesto (estación con{" "}
               <code>allow-experimentation</code>).
             </Td>
             <Td>

@@ -118,6 +118,7 @@ export const commands: CommandInfo[] = [
     permission: "rpgroll.admin.addxp",
     aliases: ["dxp"],
     category: "admin",
+    consoleAllowed: true,
   },
   {
     name: "levelup",
@@ -136,6 +137,14 @@ export const commands: CommandInfo[] = [
     category: "admin",
   },
   {
+    name: "admincontent",
+    usage: "/rpg admincontent <race|class|job|skill|trait>",
+    description: "Editor visual con GUI para crear y editar razas, clases, trabajos, skills y traits.",
+    permission: "rpgroll.admin.content",
+    aliases: ["acontent"],
+    category: "admin",
+  },
+  {
     name: "setrace",
     usage: "/rpg setrace <jugador> <razaId> [--recalc]",
     description:
@@ -143,6 +152,7 @@ export const commands: CommandInfo[] = [
     permission: "rpgroll.admin.setrace",
     aliases: [],
     category: "admin",
+    consoleAllowed: true,
   },
   {
     name: "setclass",
@@ -151,6 +161,7 @@ export const commands: CommandInfo[] = [
     permission: "rpgroll.admin.setclass",
     aliases: [],
     category: "admin",
+    consoleAllowed: true,
   },
   {
     name: "resetstats",
@@ -160,6 +171,7 @@ export const commands: CommandInfo[] = [
     permission: "rpgroll.admin.resetstats",
     aliases: [],
     category: "admin",
+    consoleAllowed: true,
   },
   {
     name: "job",
@@ -168,5 +180,6 @@ export const commands: CommandInfo[] = [
     permission: "rpgroll.admin.job",
     aliases: [],
     category: "admin",
+    consoleAllowed: true,
   },
 ];

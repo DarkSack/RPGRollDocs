@@ -4,7 +4,7 @@ export function Progression({ onNavigate }: { onNavigate: (slug: string) => void
   return (
     <>
       <PageHeader title="Progresión y nivel">
-        Cómo se gana experiencia, la fórmula de nivel, y qué pasa exactamente cuando subís de nivel.
+        Cómo se gana experiencia, la fórmula de nivel, y qué pasa exactamente cuando subes de nivel.
       </PageHeader>
 
       <SectionHeading id="ganar-xp">Ganar experiencia</SectionHeading>
@@ -53,8 +53,8 @@ export function Progression({ onNavigate }: { onNavigate: (slug: string) => void
         y <code>meteor_strike</code>, y traits como <code>warriors_resolve</code>/<code>arcane_master</code>/
         <code>legend_of_old</code> — ninguno tiene un archivo YAML real en <code>skills/</code>/<code>traits/</code>{" "}
         todavía. El jugador "aprende" el ID igual, pero <code>/rpg use</code> fallará con "no existe la
-        habilidad" porque <code>SkillManager</code> no la tiene registrada. Si agregás niveles con contenido
-        nuevo, creá también el YAML correspondiente.
+        habilidad" porque <code>SkillManager</code> no la tiene registrada. Si agregas niveles con contenido
+        nuevo, crea también el YAML correspondiente.
       </Callout>
 
       <SectionHeading id="tabla-rewards">Recompensas configuradas por defecto</SectionHeading>
@@ -88,7 +88,7 @@ export function Progression({ onNavigate }: { onNavigate: (slug: string) => void
       <ul>
         <li><Kbd>/rpg level</Kbd> — nivel y experiencia actuales.</li>
         <li><Kbd>{"/rpg addxp <jugador> <cantidad>"}</Kbd> — admin, agrega XP.</li>
-        <li><Kbd>/rpg levelup</Kbd> — admin/debug, fuerza un intento de subir de nivel sobre vos mismo.</li>
+        <li><Kbd>/rpg levelup</Kbd> — admin/debug, fuerza un intento de subir de nivel sobre ti mismo.</li>
       </ul>
 
       <PrevNext current="progresion" onNavigate={onNavigate} />

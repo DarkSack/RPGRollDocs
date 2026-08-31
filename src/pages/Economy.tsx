@@ -82,28 +82,23 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           <Tr><Td>RPGRoll (core)</Td><Td><Badge tone="violet">depend</Badge></Td><Td>Framework de GUIs y utilidades compartidas.</Td></Tr>
           <Tr><Td>Vault</Td><Td><Badge>softdepend</Badge></Td><Td>RPGRoll-Economy se registra como <strong>proveedor</strong> del servicio Economy — no lo consume, lo implementa.</Td></Tr>
           <Tr><Td>PlaceholderAPI</Td><Td><Badge>softdepend</Badge></Td><Td>Placeholders <code>%rpgeconomy_...%</code>.</Td></Tr>
-          <Tr><Td>RPGRoll-Guilds</Td><Td><Badge>softdepend</Badge></Td><Td>Compile-time solamente hoy — pensado para que una guild pueda tener su propia cuenta bancaria en una próxima pasada.</Td></Tr>
-          <Tr><Td>RPGRoll-Seasons</Td><Td><Badge>softdepend</Badge></Td><Td>Compile-time solamente hoy — pensado para que estaciones/eventos muevan precios de mercado en una próxima pasada.</Td></Tr>
+          <Tr><Td>RPGRoll-Guilds</Td><Td><Badge>softdepend</Badge></Td><Td>Integración activa: impuesto territorial periódico por guild (ver "Integración activa" más abajo).</Td></Tr>
+          <Tr><Td>RPGRoll-Seasons</Td><Td><Badge>softdepend</Badge></Td><Td>Integración activa: modificadores de precio de mercado por estación (ver "Economías regionales" más abajo).</Td></Tr>
         </tbody>
       </Table>
-      <Callout tone="warning" title="Guilds y Seasons son dependencias de compilación, no integraciones activas todavía">
-        El <code>build.gradle.kts</code> del addon ya las declara <code>compileOnly</code> para dejar el terreno
-        preparado, pero ningún código de este addon llama todavía a <code>GuildsAPI</code> ni a{" "}
-        <code>SeasonsAPI</code> — ver <a href="#pendiente" onClick={(e) => { e.preventDefault(); document.getElementById("pendiente")?.scrollIntoView(); }}>Qué falta</a>.
-      </Callout>
 
       <SectionHeading id="monedas">Monedas</SectionHeading>
       <p>
         El servidor puede tener varias monedas (oro, plata, tokens de evento...) — cada una es un{" "}
         <code>Currency</code> con su propio símbolo, decimales, ícono/color para las GUIs, límites de balance,
         permiso opcional para poder tenerla, y una tasa de cambio hacia la moneda marcada <code>is-base</code>{" "}
-        (solo informativa hoy, no hay un comando de conversión automática todavía). Exactamente una moneda debería
+        (solo informativa; no hay un comando de conversión automática). Exactamente una moneda debería
         ser <code>is-base: true</code>: es la que usa el puente de Vault (ver <code>default-currency</code> en{" "}
         <code>config.yml</code>).
       </p>
-      <Callout tone="warning" title="El campo 'permission' todavía no se aplica solo">
+      <Callout tone="warning" title="El campo 'permission' no se aplica solo">
         Está en el schema y se puede leer desde otro addon, pero <code>WalletService</code> no lo chequea por sí
-        mismo antes de depositar/retirar — es un gancho para que vos (u otro sistema) lo hagas cumplir.
+        mismo antes de depositar/retirar — es un gancho para que tú (u otro sistema) lo hagas cumplir.
       </Callout>
 
       <SectionHeading id="wallets">Wallets</SectionHeading>
@@ -131,7 +126,7 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         <tbody>
           <Tr><Td className="font-mono text-xs">PERSONAL</Td><Td>Ahorros propios de un jugador, además de su wallet de uso diario.</Td></Tr>
           <Tr><Td className="font-mono text-xs">COMPANY</Td><Td>La tesorería de una empresa — se crea sola al fundarla.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">GUILD</Td><Td>Pensada para la tesorería de una guild (ver Callout de integraciones pendientes).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">GUILD</Td><Td>Una etiqueta de tipo de cuenta más — no está vinculada al <code>GuildVault</code> real de RPGRoll-Guilds, que es un balance propio separado (ver "Integración activa" más abajo).</Td></Tr>
           <Tr><Td className="font-mono text-xs">SHARED</Td><Td>Cuenta con una lista explícita de co-titulares autorizados.</Td></Tr>
         </tbody>
       </Table>
@@ -158,6 +153,88 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
       <Callout tone="tip" title="El precio nunca se guarda directamente">
         Se recalcula siempre a partir del estado de oferta/demanda acumulado (persistido en{" "}
         <code>market/_state.yml</code>) + la definición del producto — así nunca puede desincronizarse.
+      </Callout>
+
+      <SectionHeading id="economias-regionales">Economías regionales</SectionHeading>
+      <p>
+        Además del multiplicador de oferta/demanda (global, por producto), <code>MarketEngine.price(producto,
+        ubicación)</code> aplica dos multiplicadores más si le pasas una <code>Location</code> — el precio de
+        oferta/demanda ya calculado se multiplica por cada uno, en cadena:
+      </p>
+      <Table>
+        <Thead>
+          <Th>Multiplicador</Th>
+          <Th>De dónde sale</Th>
+        </Thead>
+        <tbody>
+          <Tr>
+            <Td>Región (<code>MarketRegion</code>)</Td>
+            <Td>
+              Una caja (AABB, sin WorldGuard — mismo estilo que <code>SeasonRegion</code>/
+              <code>FishingRegion</code>) con <code>category-modifiers</code>/<code>product-modifiers</code> propios.
+              Sin ninguna región definida, o fuera de todas, el multiplicador es 1.0 (sin efecto) — el precio es
+              el global de siempre.
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>Estación (<code>season-modifiers</code> del producto)</Td>
+            <Td>
+              Si RPGRoll-Seasons está instalado, se busca la <code>Season</code> activa en esa ubicación y se
+              multiplica por el modificador de CADA tag de esa estación que el producto tenga definido (ej.{" "}
+              <code>harvest: 0.8</code>). Sin Seasons instalado, este paso se salta sin error.
+            </Td>
+          </Tr>
+        </tbody>
+      </Table>
+      <p>
+        El método de un solo argumento (<code>price(producto)</code>, usado por tiendas/subastas hoy) sigue
+        devolviendo exactamente lo mismo que antes — regiones y estaciones son puramente opcionales, activadas
+        solo cuando quien llama pasa una ubicación.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="market-regions/reference_full.yml (fragmento)"
+        code={
+          "id: reference_full_example\n" +
+          "world: world\n" +
+          "bounds: { min-x: -200, min-y: 0, min-z: -200, max-x: 200, max-y: 255, max-z: 200 }\n" +
+          "category-modifiers:\n" +
+          "  mineral: 0.7   # más barato en esta región (ej. ciudad minera)\n" +
+          "  luxury: 1.4    # más caro\n" +
+          "product-modifiers:\n" +
+          "  DIAMOND: 0.6   # tiene prioridad sobre category-modifiers si ambos aplican\n"
+        }
+      />
+      <Callout tone="warning" title="Solo verificado por compilación">
+        Igual que otras integraciones agregadas recientemente, esto se verificó compilando y con el motor de
+        precio ejercitado por lógica, no probado en juego contra un servidor Paper real.
+      </Callout>
+
+      <SectionHeading id="integracion-activa">Integración activa: Guilds y Seasons</SectionHeading>
+      <p>
+        Hasta hace poco, las dependencias de Economy con RPGRoll-Guilds y RPGRoll-Seasons eran solo de
+        compilación (<code>compileOnly</code> en <code>build.gradle.kts</code>) — el softdepend estaba
+        declarado pero nada en runtime las usaba de verdad. Ahora hay comportamiento real:
+      </p>
+      <ul>
+        <li>
+          <strong>Seasons</strong> — ver "Economías regionales" arriba: el precio de un producto puede variar
+          según la estación activa donde se cotiza, vía <code>season-modifiers</code>.
+        </li>
+        <li>
+          <strong>Guilds</strong> — una tarea periódica (<code>guild-territory-tax-interval-ticks</code> en{" "}
+          <code>config.yml</code>, cada 24000 ticks/1 día por defecto) recorre todas las guilds vía{" "}
+          <code>GuildsAPI</code> y les cobra un impuesto <code>PROPERTY</code> por cada <code>GuildTerritory</code>{" "}
+          que tengan reclamada, descontado directo de su <code>GuildVault</code>. El monto real depende de que
+          exista una <code>TaxRule</code> tipo <code>PROPERTY</code> con <code>applies-to: [guild-territory]</code>{" "}
+          (o vacío) — sin esa regla el impuesto es 0 y la tarea no hace nada. Viene un ejemplo{" "}
+          <code>tax/guild_territory_tax.yml</code> con <code>enabled: false</code> por defecto.
+        </li>
+      </ul>
+      <Callout tone="info" title="Softdepend real, no solo declarado">
+        Ambas integraciones están guardadas con el mismo patrón que el resto del ecosistema (
+        <code>Bukkit.getPluginManager().getPlugin("...") != null &amp;&amp; XApi.isReady()</code>) — sin Guilds o
+        sin Seasons instalados, Economy funciona exactamente igual que antes, sin errores ni advertencias.
       </Callout>
 
       <SectionHeading id="tiendas">Tiendas de jugador</SectionHeading>
@@ -199,7 +276,8 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         </Thead>
         <tbody>
           <Tr><Td className="font-mono text-xs">SALE</Td><Td>Sí — tiendas de jugador, subastas y cualquier venta al mercado.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">INCOME / COMPANY / PROPERTY / COMMERCIAL / LUXURY</Td><Td>No — completamente modeladas y aplicables a mano vía <code>TaxEngine#apply</code> desde otro addon, pero ningún punto de este addon las dispara todavía.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PROPERTY</Td><Td>Sí, si hay una regla con <code>applies-to: [guild-territory]</code> — la tarea de impuesto territorial de guilds (ver "Integración activa" arriba) la dispara periódicamente.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">INCOME / COMPANY / COMMERCIAL / LUXURY</Td><Td>No — completamente modeladas y aplicables a mano vía <code>TaxEngine#apply</code> desde otro addon, pero ningún punto de este addon las dispara todavía.</Td></Tr>
         </tbody>
       </Table>
 
@@ -290,13 +368,14 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
       <SectionHeading id="api">API para addons — EconomyAPI</SectionHeading>
       <p>
         <code>EconomyAPI.isReady()</code> / <code>EconomyAPI.get()</code>, mismo patrón que el resto del
-        ecosistema. Expone los 3 managers de contenido (<code>currencies()</code>, <code>market()</code>,{" "}
-        <code>taxRules()</code>) y los servicios de runtime: <code>wallet()</code>, <code>bank()</code>,{" "}
-        <code>loans()</code>, <code>tax()</code>, <code>marketEngine()</code>, <code>shops()</code>,{" "}
-        <code>auctions()</code>, <code>companies()</code>/<code>companyService()</code>, <code>ledger()</code> e{" "}
-        <code>inflation()</code>. Un futuro RPGRoll-Farming/Mining/Crafting típicamente entra por{" "}
-        <code>market().get(id)</code> + <code>marketEngine().price(producto)</code> para cotizar su producción, y
-        por <code>wallet()</code> para acreditarle al jugador.
+        ecosistema. Expone los 4 managers de contenido (<code>currencies()</code>, <code>market()</code>,{" "}
+        <code>marketRegions()</code>, <code>taxRules()</code>) y los servicios de runtime: <code>wallet()</code>,{" "}
+        <code>bank()</code>, <code>loans()</code>, <code>tax()</code>, <code>marketEngine()</code>,{" "}
+        <code>shops()</code>, <code>auctions()</code>, <code>companies()</code>/<code>companyService()</code>,{" "}
+        <code>ledger()</code> e <code>inflation()</code>. Un futuro RPGRoll-Farming/Mining/Crafting típicamente
+        entra por <code>market().get(id)</code> + <code>marketEngine().price(producto, ubicación)</code> para
+        cotizar su producción (con soporte regional/estacional si pasa la ubicación), y por{" "}
+        <code>wallet()</code> para acreditarle al jugador.
       </p>
 
       <SectionHeading id="integracion-vault">Integración con Vault</SectionHeading>
@@ -308,7 +387,7 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         soporte de "bancos" de Vault (es un concepto distinto al banco propio de este addon) — esos métodos
         devuelven <code>NOT_IMPLEMENTED</code>.
       </p>
-      <Callout tone="warning" title="Si tenés otro plugin de economía (EssentialsX, CMI) instalado">
+      <Callout tone="warning" title="Si tienes otro plugin de economía (EssentialsX, CMI) instalado">
         Vault deja el registro de mayor prioridad activo — con la misma prioridad, gana el que se registró
         último. Para que RPGRoll-Economy sea el que manda, desinstalá el otro plugin de economía o subile la
         prioridad acá si hace falta convivir con ambos.
@@ -353,19 +432,6 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           <Tr><Td className="font-mono text-xs">/economy company</Td><Td>Ver/fundar/administrar tus empresas.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
         </tbody>
       </Table>
-
-      <SectionHeading id="pendiente">Qué falta (próxima pasada)</SectionHeading>
-      <ul className="list-disc space-y-1 pl-6">
-        <li>Acciones/bolsa de valores para empresas (comprar/vender <code>shares</code>).</li>
-        <li>Contratos estructurados entre jugadores (publicar un pedido, otro lo acepta y entrega).</li>
-        <li>NPC Merchants con IA de mercado real (detectar escasez, buscar proveedor, ajustar precios propios).</li>
-        <li>Economías regionales independientes (un mismo producto con precio distinto por reino/ciudad).</li>
-        <li>Eventos económicos disparados por el servidor (sequía, guerra, festival, descubrimiento minero).</li>
-        <li>Integración activa con RPGRoll-Guilds (cuenta bancaria de guild) y RPGRoll-Seasons (estaciones moviendo precios) — hoy son solo dependencias de compilación.</li>
-        <li>Sistema de crédito/reputación financiera por jugador (más allá de préstamos activos/vencidos).</li>
-        <li><code>/economy trade</code> directo entre dos jugadores online (hoy existe indirectamente vía tiendas/subastas, no una GUI de intercambio cara a cara).</li>
-        <li>Tipos de impuesto <code>INCOME</code>/<code>COMPANY</code>/<code>PROPERTY</code>/<code>COMMERCIAL</code>/<code>LUXURY</code> disparados automáticamente (hoy solo <code>SALE</code> lo está).</li>
-      </ul>
 
       <PrevNext current="economy" onNavigate={onNavigate} />
     </>

@@ -32,7 +32,7 @@ function initialDesign(): RoomDesign {
 }
 
 /**
- * Diseñador de salas: pintás capa por capa en una grilla 2D, ves el
+ * Diseñador de salas: pintas capa por capa en una grilla 2D, ves el
  * resultado en 3D en vivo, y del otro lado sale el YAML de
  * structures/<id>.yml listo para copiar/descargar — el mismo formato
  * CUSTOM que lee StructureParser.java, sin que haga falta tocar Java.

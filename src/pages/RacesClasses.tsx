@@ -92,7 +92,7 @@ export function RacesClasses({ onNavigate }: { onNavigate: (slug: string) => voi
       <Callout tone="warning" title="passive-traits no se aplica solo">
         El campo <code>passive-traits</code> se parsea y queda disponible en el objeto <code>Race</code>/
         <code>PlayerClass</code>, pero nada en el código actual llama automáticamente a{" "}
-        <code>rpgPlayer.acquireTrait(...)</code> con esos IDs al crear personaje. Si lo necesitás, es la primera
+        <code>rpgPlayer.acquireTrait(...)</code> con esos IDs al crear personaje. Si lo necesitas, es la primera
         extensión natural de <code>CharacterCreationFlow.saveCharacter()</code>.
       </Callout>
 

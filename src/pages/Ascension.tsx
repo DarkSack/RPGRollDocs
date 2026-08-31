@@ -135,7 +135,7 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
       <Callout tone="info" title="4 pilares con mecánica real + 6 sistemas de datos">
         Race Evolution, Class Specialization (+talentos), Prestigio y Afinidades tienen efecto real en el
         jugador. Job Evolutions, Secretos, Facciones, Logros y Títulos son deliberadamente capas de{" "}
-        <em>datos y consulta</em> — la mecánica automática que los aplique queda para otro addon (o para vos).
+        <em>datos y consulta</em> — la mecánica automática que los aplique queda para otro addon (o para ti).
         Legado es la excepción: vive junto a los sistemas de datos pero sí tiene un reset real.
       </Callout>
 
@@ -211,7 +211,7 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
           "  - minero\n"
         }
       />
-      <p><Kbd>{"/ascend race <id>"}</Kbd> falla si la evolución no corresponde a tu raza base, o si no cumplís sus <code>requirements</code>.</p>
+      <p><Kbd>{"/ascend race <id>"}</Kbd> falla si la evolución no corresponde a tu raza base, o si no cumples sus <code>requirements</code>.</p>
 
       <YamlBuilder
         title="Constructor visual: Race Evolution"
@@ -330,8 +330,8 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
         Cada nodo (<code>TalentNode</code>) tiene un <code>cost</code> en puntos de talento, requisitos de nodos
         previos (<code>requires</code>), un bono de stats aditivo, y opcionalmente otorga una skill, un trait o un
         encantamiento (uno solo, en general) al desbloquearse. <Kbd>{"/ascend talent <id>"}</Kbd> valida en este
-        orden: tenés especialización activa → el nodo existe → no lo desbloqueaste ya → tenés todos sus
-        prerrequisitos → tenés puntos suficientes.
+        orden: tienes especialización activa → el nodo existe → no lo desbloqueaste ya → tienes todos sus
+        prerrequisitos → tienes puntos suficientes.
       </p>
       <Callout tone="warning" title="Cambiar de especialización borra el árbol de talentos">
         <code>{"/ascend specialize <id>"}</code> limpia por completo los talentos ya desbloqueados — no hay forma
@@ -458,9 +458,9 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
           <Th>Cómo se otorga/activa</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">Achievements</Td><Td>Logro a nivel de personaje, con una descripción del bono que <em>debería</em> dar (aplicarlo queda pendiente).</Td><Td><Kbd>{"/ascendadmin achievement grant <j> <id>"}</Kbd></Td></Tr>
+          <Tr><Td className="font-mono text-xs">Achievements</Td><Td>Logro a nivel de personaje, con una descripción narrativa del bono que otorga (no se aplica automáticamente a las stats).</Td><Td><Kbd>{"/ascendadmin achievement grant <j> <id>"}</Kbd></Td></Tr>
           <Tr><Td className="font-mono text-xs">Titles</Td><Td>Título cosmético.</Td><Td>Otorgado por admin, activado por el jugador con <Kbd>{"/ascend title <id|clear>"}</Kbd></Td></Tr>
-          <Tr><Td className="font-mono text-xs">Factions</Td><Td>Facción/reino con la que acumulás reputación.</Td><Td><Kbd>{"/ascendadmin reputation add <j> <facción> <cant>"}</Kbd> (no valida que la facción exista)</Td></Tr>
+          <Tr><Td className="font-mono text-xs">Factions</Td><Td>Facción/reino con la que acumulas reputación.</Td><Td><Kbd>{"/ascendadmin reputation add <j> <facción> <cant>"}</Kbd> (valida que la facción exista)</Td></Tr>
           <Tr><Td className="font-mono text-xs">Job Evolutions</Td><Td>Rango evolutivo de un trabajo (ej. Minero → Master Miner) que desbloquea recetas/herramientas/quests.</Td><Td>Solo consulta vía API — sin comando ni mecánica que lo active.</Td></Tr>
           <Tr><Td className="font-mono text-xs">Secret Unlocks</Td><Td>Requisitos para desbloquear una raza/clase/trait "secreta" que ya vive en el core.</Td><Td>Solo consulta vía <code>find(tipo, id)</code> — nada en el código actual lo dispara.</Td></Tr>
         </tbody>
@@ -610,14 +610,14 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
           <Th>Qué hace</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/ascend race <id>"}</Td><Td>Evoluciona tu raza si cumplís los requisitos.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/ascend race <id>"}</Td><Td>Evoluciona tu raza si cumples los requisitos.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/ascend specialize <id>"}</Td><Td>Elegí una especialización de tu clase (borra talentos previos).</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/ascend talent <id>"}</Td><Td>Desbloquea un nodo del árbol de talentos de tu especialización.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/ascend prestige</Td><Td>Reinicia tu nivel a cambio de bono de exp acumulativo.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/ascend affinity</Td><Td>Lista tu experiencia y nivel en cada afinidad.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/ascend reputation</Td><Td>Lista tu reputación con cada facción.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/ascend title <id|clear>"}</Td><Td>Activa un título ya desbloqueado, o lo quita.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/ascend legacy</Td><Td>Reset total a cambio de bono permanente (si alcanzás el prestigio mínimo).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/ascend legacy</Td><Td>Reset total a cambio de bono permanente (si alcanzas el prestigio mínimo).</Td></Tr>
           <Tr><Td className="font-mono text-xs">/ascend info</Td><Td>Resumen de tu evolución, especialización, talentos, prestigio, legado y bono de exp total.</Td></Tr>
         </tbody>
       </Table>
@@ -631,7 +631,7 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
         <tbody>
           <Tr><Td className="font-mono text-xs">{"/ascendadmin achievement grant <j> <id>"}</Td><Td>Otorga un logro.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/ascendadmin title grant <j> <id>"}</Td><Td>Otorga un título.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/ascendadmin reputation add <j> <facción> <cant>"}</Td><Td>Suma reputación (acepta cualquier id de facción).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/ascendadmin reputation add <j> <facción> <cant>"}</Td><Td>Suma reputación (valida que la facción exista).</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/ascendadmin browser [tipo]"}</Td><Td>Abre el navegador gráfico de uno de los 10 tipos de contenido (ver sección GUI arriba).</Td></Tr>
           <Tr><Td className="font-mono text-xs">/ascendadmin reload</Td><Td>Recarga los 10 tipos de contenido: evoluciones, especializaciones, prestigio, legado, logros, títulos, afinidades, job evolutions, secretos y facciones.</Td></Tr>
         </tbody>

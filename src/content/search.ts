@@ -14,7 +14,7 @@ export interface SearchEntry {
 /**
  * Índice de búsqueda estático: una entrada por página (title) y una entrada por
  * cada SectionHeading dentro de esa página. Se genera a mano a partir de los
- * `id`s reales usados en cada página bajo src/pages — si agregás una
+ * `id`s reales usados en cada página bajo src/pages — si agregas una
  * SectionHeading nueva, agregá su entrada acá para que sea buscable.
  */
 export const searchIndex: SearchEntry[] = [
@@ -80,7 +80,6 @@ export const searchIndex: SearchEntry[] = [
   h("rpgroll-effects", "GUI: Effect Studio", "gui"),
   h("rpgroll-effects", "API para addons — EffectsAPI", "api"),
   h("rpgroll-effects", "Comandos", "comandos"),
-  h("rpgroll-effects", "Qué falta (próxima pasada de integración)", "integraciones-pendientes"),
 
   // API
   h("api", "Configurar tu addon", "setup"),
@@ -125,7 +124,6 @@ export const searchIndex: SearchEntry[] = [
   h("fishing", "GUI: Fishing Studio", "gui"),
   h("fishing", "API para addons — FishingAPI", "api"),
   h("fishing", "Comandos", "comandos"),
-  h("fishing", "Qué falta (próxima pasada)", "pendiente"),
 
   // Dungeons
   h("dungeons", "Requisitos", "requisitos"),
@@ -193,7 +191,6 @@ export const searchIndex: SearchEntry[] = [
   h("mobs", "Regiones de mob (MobRegion)", "regiones"),
   h("mobs", "GUI: navegador y editor", "gui"),
   h("mobs", "Comandos", "comandos"),
-  h("mobs", "Puntos de extensión documentados, no implementados", "extension"),
   h("mobs", "Placeholders (PlaceholderAPI)", "placeholders"),
 
   // Magic
@@ -209,7 +206,7 @@ export const searchIndex: SearchEntry[] = [
   h("magic", "GUI: Magic Studio", "gui"),
   h("magic", "API para addons — MagicAPI", "api"),
   h("magic", "Comandos", "comandos"),
-  h("magic", "Qué falta (próxima pasada)", "pendiente"),
+  h("magic", "Alcance: núcleo y progresión", "alcance"),
 
   // NPCs
   h("npcs", "Requisitos", "requisitos"),
@@ -274,18 +271,17 @@ export const searchIndex: SearchEntry[] = [
   h("ranching", "GUI: Ranch Studio", "gui"),
   h("ranching", "API para addons — RanchingAPI", "api"),
   h("ranching", "Comandos", "comandos"),
-  h("ranching", "Qué falta (próxima pasada)", "pendiente"),
 
-  // SackEffects
-  h("sackeffects", "Requisitos", "requisitos"),
-  h("sackeffects", "Un efecto es una secuencia de pasos", "modelo"),
-  h("sackeffects", "Tipos de paso", "tipos-de-paso"),
-  h("sackeffects", "Formas de partícula", "formas"),
-  h("sackeffects", "A quién/dónde apunta cada paso", "targets"),
-  h("sackeffects", "Ejemplos de archivo YAML", "formato-yaml"),
-  h("sackeffects", "GUI: Effect Studio de SackEffects", "gui"),
-  h("sackeffects", "API para addons — EffectsAPI y EffectBuilder", "api"),
-  h("sackeffects", "Comandos", "comandos"),
+  // RPGRoll-Particles
+  h("rpgroll-particles", "Requisitos", "requisitos"),
+  h("rpgroll-particles", "Un efecto es una secuencia de pasos", "modelo"),
+  h("rpgroll-particles", "Tipos de paso", "tipos-de-paso"),
+  h("rpgroll-particles", "Formas de partícula", "formas"),
+  h("rpgroll-particles", "A quién/dónde apunta cada paso", "targets"),
+  h("rpgroll-particles", "Ejemplos de archivo YAML", "formato-yaml"),
+  h("rpgroll-particles", "GUI: Effect Studio de RPGRoll-Particles", "gui"),
+  h("rpgroll-particles", "API para addons — EffectsAPI y EffectBuilder", "api"),
+  h("rpgroll-particles", "Comandos", "comandos"),
 
   // SackResourcePack
   h("sackresourcepack", "Módulos de contenido", "modulos-de-contenido"),
@@ -300,7 +296,6 @@ export const searchIndex: SearchEntry[] = [
   h("sackresourcepack", "API para addons — AssetsAPI", "assets-api"),
   h("sackresourcepack", "GUI: Dashboard y Explorador de Assets", "gui"),
   h("sackresourcepack", "Comandos", "comandos"),
-  h("sackresourcepack", "Qué falta", "pendiente"),
 
   // Seasons
   h("seasons", "Requisitos", "requisitos"),
@@ -315,7 +310,6 @@ export const searchIndex: SearchEntry[] = [
   h("seasons", "GUI: Season Studio", "gui"),
   h("seasons", "API para addons — SeasonsAPI", "api"),
   h("seasons", "Comandos", "comandos"),
-  h("seasons", "Qué falta (próxima pasada)", "pendiente"),
 
   // Economy
   h("economy", "Requisitos", "requisitos"),
@@ -335,7 +329,6 @@ export const searchIndex: SearchEntry[] = [
   h("economy", "Integración con Vault", "integracion-vault"),
   h("economy", "Placeholders (PlaceholderAPI)", "placeholders"),
   h("economy", "Comandos", "comandos"),
-  h("economy", "Qué falta (próxima pasada)", "pendiente"),
 
   // Crafting
   h("crafting", "Requisitos", "requisitos"),
@@ -382,6 +375,11 @@ export const searchIndex: SearchEntry[] = [
   h("room-designer", "La herramienta", "herramienta"),
   h("room-designer", "Siguiente paso", "siguiente-paso"),
 
+  // TabDesigner
+  h("tab-designer", "Cómo usarlo", "como-usar"),
+  h("tab-designer", "La herramienta", "herramienta"),
+  h("tab-designer", "Siguiente paso", "siguiente-paso"),
+
   // Workers
   h("workers", "Requisitos", "requisitos"),
   h("workers", "IA por reglas", "ia"),
@@ -395,7 +393,19 @@ export const searchIndex: SearchEntry[] = [
   h("workers", "GUI: Worker Studio", "gui"),
   h("workers", "API para addons — WorkersAPI", "api"),
   h("workers", "Comandos", "comandos"),
-  h("workers", "Qué falta (próxima pasada)", "pendiente"),
+
+  // Traps & Defenses
+  h("traps", "Requisitos", "requisitos"),
+  h("traps", "Definición vs. instancia colocada", "modelo"),
+  h("traps", "Triggers", "triggers"),
+  h("traps", "Acciones", "acciones"),
+  h("traps", "Condiciones", "condiciones"),
+  h("traps", "Bloques protegidos y llaves", "bloques-protegidos"),
+  h("traps", "Cadenas de mecanismos", "cadenas"),
+  h("traps", "Estados (state machine)", "estados"),
+  h("traps", "Torretas", "torretas"),
+  h("traps", "Ejemplos de archivo YAML", "ejemplos"),
+  h("traps", "Comandos — /trapadmin", "comandos"),
 ];
 
 function h(slug: string, headingLabel: string, heading: string): SearchEntry {

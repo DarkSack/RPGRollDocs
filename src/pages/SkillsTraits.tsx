@@ -75,10 +75,10 @@ export function SkillsTraits({ onNavigate }: { onNavigate: (slug: string) => voi
           <Tr><Td className="font-mono text-xs">damageBonus / defenseBonus</Td><Td>Multiplicadores de combate</Td></Tr>
         </tbody>
       </Table>
-      <Callout tone="warning" title="TraitEffect existe, pero no se aplica automáticamente todavía">
+      <Callout tone="warning" title="TraitEffect existe, pero no se aplica automáticamente">
         La estructura de datos está completa y se parsea desde YAML, pero ningún listener suma estos bonos a las
         stats reales del jugador cuando adquiere el trait — <code>PlayerTraits.acquire()</code> solo registra que
-        el jugador "tiene" el trait. Aplicar el efecto es la extensión natural pendiente.
+        el jugador "tiene" el trait.
       </Callout>
       <p><Kbd>/rpg traits</Kbd> lista los traits adquiridos.</p>
 

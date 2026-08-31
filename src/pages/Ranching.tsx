@@ -179,7 +179,7 @@ export function Ranching({
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll]\nsoftdepend: [SackEffects, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
+          "depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
         }
       />
       <p>
@@ -192,10 +192,10 @@ export function Ranching({
           RPGRoll-Seasons
         </button>
         , el factor climático de bienestar/fertilidad/producción simplemente no
-        aplica (el resto funciona igual). Ni RPGRoll-Farming, RPGRoll-Cooking,
-        RPGRoll-Alchemy ni RPGRoll-Workers existen todavía — esas integraciones
-        del diseño original quedan como métodos genéricos en{" "}
-        <code>RanchingAPI</code>, listos para cuando esos addons existan. Sin{" "}
+        aplica (el resto funciona igual). RPGRoll-Farming, RPGRoll-Cooking y
+        RPGRoll-Alchemy no existen, así que Ranching no se integra con ellos —
+        esas integraciones del diseño original quedan sin usar como métodos genéricos en{" "}
+        <code>RanchingAPI</code>. Sin{" "}
         <button
           type="button"
           onClick={() => onNavigate("sackresourcepack")}

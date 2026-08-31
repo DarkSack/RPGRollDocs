@@ -185,7 +185,7 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "        amplifier: 0\n" +
           "    actions:\n" +
           "      - type: MESSAGE\n" +
-          '        value: "&cTenés sed."\n' +
+          '        value: "&cTienes sed."\n' +
           '  - condition: "<=0"\n' +
           "    apply-conditions:\n" +
           "      - dehydration\n"
@@ -193,7 +193,7 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
       <YamlBuilder
         title="Constructor visual: stat"
-        description="Identidad y límites de un stat. decay/regeneration/consumption/thresholds son demasiado anidados para este formulario — copiá y adaptá el ejemplo de arriba para esos bloques."
+        description="Identidad y límites de un stat. decay/regeneration/consumption/thresholds son demasiado anidados para este formulario — copia y adaptá el ejemplo de arriba para esos bloques."
         folder="stats"
         fields={statFields}
       />
@@ -261,7 +261,7 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
       <YamlBuilder
         title="Constructor visual: condition"
-        description="Duración, daño y potion effects de un estado. on-apply/on-tick/on-expire (acciones) son demasiado anidados para este formulario — copiá y adaptá el ejemplo de arriba."
+        description="Duración, daño y potion effects de un estado. on-apply/on-tick/on-expire (acciones) son demasiado anidados para este formulario — copia y adaptá el ejemplo de arriba."
         folder="conditions"
         fields={conditionFields}
       />
@@ -365,7 +365,7 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
       <YamlBuilder
         title="Constructor visual: modifier"
-        description="Id y tipo de fuente. Las claves de 'values' (ej. stamina_max, thirst_rate) son libres — copiá y adaptá el ejemplo de arriba."
+        description="Id y tipo de fuente. Las claves de 'values' (ej. stamina_max, thirst_rate) son libres — copia y adaptá el ejemplo de arriba."
         folder="modifiers"
         fields={modifierFields}
       />
