@@ -272,14 +272,14 @@ export const searchIndex: SearchEntry[] = [
   h("ranching", "API para addons — RanchingAPI", "api"),
   h("ranching", "Comandos", "comandos"),
 
-  // RPGRoll-Particles
+  // RPGRoll-FX
   h("rpgroll-particles", "Requisitos", "requisitos"),
   h("rpgroll-particles", "Un efecto es una secuencia de pasos", "modelo"),
   h("rpgroll-particles", "Tipos de paso", "tipos-de-paso"),
   h("rpgroll-particles", "Formas de partícula", "formas"),
   h("rpgroll-particles", "A quién/dónde apunta cada paso", "targets"),
   h("rpgroll-particles", "Ejemplos de archivo YAML", "formato-yaml"),
-  h("rpgroll-particles", "GUI: Effect Studio de RPGRoll-Particles", "gui"),
+  h("rpgroll-particles", "GUI: Effect Studio de RPGRoll-FX", "gui"),
   h("rpgroll-particles", "API para addons — EffectsAPI y EffectBuilder", "api"),
   h("rpgroll-particles", "Comandos", "comandos"),
 

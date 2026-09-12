@@ -107,7 +107,7 @@ const speciesFields: YamlField[] = [
   },
   {
     key: "catch-effect",
-    label: "Efecto RPGRoll-Particles al capturar",
+    label: "Efecto RPGRoll-FX al capturar",
     type: "string",
   },
   {

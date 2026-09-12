@@ -42,7 +42,7 @@ export function SackResourcePack({
           onClick={() => onNavigate("rpgroll-particles")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          RPGRoll-Particles
+          RPGRoll-FX
         </button>{" "}
         es una librería de partículas/sonido standalone.
       </Callout>

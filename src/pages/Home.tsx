@@ -232,7 +232,7 @@ function iconWrapClass(tone: "violet" | "green" | "amber" | "red" | "blue" | "ne
 function addonLabel(slug: string): string {
   const OVERRIDES: Record<string, string> = {
     "rpgroll-effects": "RPGRoll-Effects",
-    "rpgroll-particles": "RPGRoll-Particles",
+    "rpgroll-particles": "RPGRoll-FX",
     sackresourcepack: "SackResourcePack",
     tab: "RPGRoll-TAB",
   };

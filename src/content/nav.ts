@@ -40,7 +40,7 @@ export const nav: NavSection[] = [
       { slug: "guilds", label: "Guilds" },
       { slug: "crates", label: "Crates" },
       { slug: "dungeons", label: "Dungeons" },
-      { slug: "rpgroll-particles", label: "RPGRoll-Particles" },
+      { slug: "rpgroll-particles", label: "RPGRoll-FX" },
       { slug: "rpgroll-effects", label: "Effects" },
       { slug: "magic", label: "Magic" },
       { slug: "seasons", label: "Seasons" },
