@@ -2,6 +2,8 @@ export { LocaleProvider } from "./LocaleProvider";
 export { useI18n } from "./useI18n";
 export { fill } from "./fill";
 export { localizedBlurb } from "./data/addonBlurbs";
+export { localizedCommand } from "./data/commands";
+export { localizedPermission } from "./data/permissions";
 export { TRANSLATED_PAGES } from "./translated";
 export type { LocaleContextValue } from "./context";
 export { LOCALES, LOCALE_META, STRINGS } from "./strings";

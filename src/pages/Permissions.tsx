@@ -1,5 +1,8 @@
 import { PageHeader, SectionHeading, Callout, Badge, Table, Thead, Th, Tr, Td, PrevNext } from "../components/ui";
 import { permissions } from "../content/permissions";
+import { pageTitle } from "../content/nav";
+import { useI18n, fill, localizedPermission, localizedPageLabel } from "../i18n";
+import { REFERENCE_COPY } from "./copy/reference";
 
 const TONE_BY_DEFAULT = {
   true: "green",
@@ -8,34 +11,44 @@ const TONE_BY_DEFAULT = {
 } as const;
 
 export function Permissions({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = REFERENCE_COPY[locale].permissions;
+
   const wildcards = permissions.filter((p) => p.node.endsWith(".*"));
   const leaves = permissions.filter((p) => !p.node.endsWith(".*"));
 
   return (
     <>
-      <PageHeader title="Permisos">
-        Árbol completo de permisos declarado en <code>plugin.yml</code>.
+      <PageHeader title={c.title} slug="permisos">
+        {fill(c.intro, { file: <code>plugin.yml</code> })}
       </PageHeader>
 
-      <SectionHeading id="wildcards">Nodos generales</SectionHeading>
+      <SectionHeading id="wildcards">{c.wildcardTitle}</SectionHeading>
       <p>
-        <code>rpgroll.*</code> agrupa todo. <code>rpgroll.player.*</code> (default: todos) agrupa los comandos de
-        jugador. <code>rpgroll.admin.*</code> (default: op) agrupa los comandos de administración.
+        {fill(c.wildcardLead, {
+          all: <code>rpgroll.*</code>,
+          player: <code>rpgroll.player.*</code>,
+          admin: <code>rpgroll.admin.*</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Nodo</Th>
-          <Th>Default</Th>
-          <Th>Incluye</Th>
+          <Th>{c.thNode}</Th>
+          <Th>{c.thDefault}</Th>
+          <Th>{c.thIncludes}</Th>
         </Thead>
         <tbody>
           {wildcards.map((p) => (
             <Tr key={p.node}>
               <Td className="font-mono text-xs">{p.node}</Td>
-              <Td><Badge tone={TONE_BY_DEFAULT[p.default]}>{p.default}</Badge></Td>
+              <Td>
+                <Badge tone={TONE_BY_DEFAULT[p.default]}>{p.default}</Badge>
+              </Td>
               <Td className="font-mono text-xs">
-                {p.children?.map((c) => (
-                  <span key={c} className="mr-2 mb-1 inline-block">{c}</span>
+                {p.children?.map((child) => (
+                  <span key={child} className="mb-1 mr-2 inline-block">
+                    {child}
+                  </span>
                 ))}
               </Td>
             </Tr>
@@ -43,33 +56,34 @@ export function Permissions({ onNavigate }: { onNavigate: (slug: string) => void
         </tbody>
       </Table>
 
-      <SectionHeading id="individuales">Permisos individuales</SectionHeading>
+      <SectionHeading id="individuales">{c.leavesTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Nodo</Th>
-          <Th>Default</Th>
-          <Th>Descripción</Th>
+          <Th>{c.thNode}</Th>
+          <Th>{c.thDefault}</Th>
+          <Th>{c.thDescription}</Th>
         </Thead>
         <tbody>
           {leaves.map((p) => (
             <Tr key={p.node}>
-              <Td className="font-mono text-xs whitespace-nowrap">{p.node}</Td>
-              <Td><Badge tone={TONE_BY_DEFAULT[p.default]}>{p.default}</Badge></Td>
-              <Td>{p.description}</Td>
+              <Td className="whitespace-nowrap font-mono text-xs">{p.node}</Td>
+              <Td>
+                <Badge tone={TONE_BY_DEFAULT[p.default]}>{p.default}</Badge>
+              </Td>
+              <Td>{localizedPermission(p.node, p.description, locale)}</Td>
             </Tr>
           ))}
         </tbody>
       </Table>
 
-      <Callout tone="info" title="Leyenda">
-        <Badge tone="green">true</Badge> = todos los jugadores lo tienen por defecto. <Badge tone="amber">op</Badge>{" "}
-        = solo operadores del servidor.
+      <Callout tone="info" title={c.legendTitle}>
+        <Badge tone="green">true</Badge> {c.legendTrue} <Badge tone="amber">op</Badge> {c.legendOp}
       </Callout>
 
       <p className="mt-6">
-        Ver qué comando corresponde a cada permiso en{" "}
-        <button className="underline" onClick={() => onNavigate("comandos")}>
-          Comandos
+        {c.seeCommands}{" "}
+        <button type="button" className="underline" onClick={() => onNavigate("comandos")}>
+          {localizedPageLabel("comandos", pageTitle("comandos"), locale)}
         </button>
         .
       </p>

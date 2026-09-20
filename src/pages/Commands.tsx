@@ -1,46 +1,63 @@
 import { PageHeader, SectionHeading, Callout, Badge, Table, Thead, Th, Tr, Td, PrevNext } from "../components/ui";
 import { commands } from "../content/commands";
+import { pageTitle } from "../content/nav";
+import { useI18n, fill, localizedCommand, localizedPageLabel, type Locale } from "../i18n";
+import { REFERENCE_COPY, type ReferenceCopy } from "./copy/reference";
 
 export function Commands({ onNavigate }: { onNavigate: (slug: string) => void }) {
-  const playerCommands = commands.filter((c) => c.category === "jugador");
-  const adminCommands = commands.filter((c) => c.category === "admin");
+  const { locale } = useI18n();
+  const c = REFERENCE_COPY[locale].commands;
+
+  const playerCommands = commands.filter((cmd) => cmd.category === "jugador");
+  const adminCommands = commands.filter((cmd) => cmd.category === "admin");
 
   return (
     <>
-      <PageHeader title="Comandos">
-        Todo pasa por un único comando raíz: <code>/rpg</code> (alias <code>/rpgroll</code>, <code>/dnd</code>).
-        Sin argumentos muestra la ayuda con los comandos que el que ejecuta tiene permiso de ver.
+      <PageHeader title={c.title} slug="comandos">
+        {fill(c.intro, { root: <code>/rpg</code>, a1: <code>/rpgroll</code>, a2: <code>/dnd</code> })}
       </PageHeader>
 
-      <SectionHeading id="jugador">Comandos de jugador</SectionHeading>
-      <CommandsTable rows={playerCommands} />
+      <SectionHeading id="jugador">{c.playerTitle}</SectionHeading>
+      <CommandsTable rows={playerCommands} c={c} locale={locale} />
 
-      <SectionHeading id="admin">Comandos de administrador</SectionHeading>
-      <CommandsTable rows={adminCommands} />
+      <SectionHeading id="admin">{c.adminTitle}</SectionHeading>
+      <CommandsTable rows={adminCommands} c={c} locale={locale} />
 
-      <Callout tone="info" title="La mayoría requiere ser jugador, salvo los comandos que reciben un jugador objetivo">
-        <code>/rpg reload</code>, <code>/rpg addxp</code>, <code>/rpg job</code>, <code>/rpg resetstats</code>,{" "}
-        <code>/rpg setrace</code> y <code>/rpg setclass</code> pueden ejecutarse también desde la consola del
-        servidor — el resto de comandos de administrador (<code>/rpg admincontent</code>, <code>/rpg admingui</code>,{" "}
-        <code>/rpg levelup</code>) y todos los de jugador exigen ser un jugador en el mundo.
+      <Callout tone="info" title={c.consoleTitle}>
+        {fill(c.consoleBody, {
+          list: (
+            <>
+              <code>/rpg reload</code>, <code>/rpg addxp</code>, <code>/rpg job</code>,{" "}
+              <code>/rpg resetstats</code>, <code>/rpg setrace</code> &amp; <code>/rpg setclass</code>
+            </>
+          ),
+          rest: (
+            <>
+              <code>/rpg admincontent</code>, <code>/rpg admingui</code>, <code>/rpg levelup</code>
+            </>
+          ),
+        })}
       </Callout>
 
-      <Callout tone="tip" title="Autocompletado real, no solo la lista de subcomandos">
-        Además de sugerir el subcomando, <code>/rpg</code> (y el de cada addon) sugiere desde el manager de
-        contenido real en varios subcomandos: <code>/rpg setrace &lt;jugador&gt; &lt;Tab&gt;</code> lista razas de
-        verdad desde el <code>RaceManager</code>, <code>/rpg job give &lt;jugador&gt; &lt;Tab&gt;</code> lista
-        trabajos reales, etc. (<code>/rpg race &lt;Tab&gt;</code> y <code>/rpg class &lt;Tab&gt;</code> siguen
-        usando una lista placeholder, no el manager real). Ver el detalle técnico en{" "}
-        <button className="underline" onClick={() => onNavigate("arquitectura")}>
-          Arquitectura → Tab-completion
+      <Callout tone="tip" title={c.tabTitle}>
+        {fill(c.tabBody, {
+          root: <code>/rpg</code>,
+          manager: <code>RaceManager</code>,
+          ex1: <code>/rpg setrace &lt;jugador&gt; &lt;Tab&gt;</code>,
+          ex2: <code>/rpg job give &lt;jugador&gt; &lt;Tab&gt;</code>,
+          ex3: <code>/rpg race &lt;Tab&gt;</code>,
+          ex4: <code>/rpg class &lt;Tab&gt;</code>,
+        })}{" "}
+        <button type="button" className="underline" onClick={() => onNavigate("arquitectura")}>
+          {c.tabLink}
         </button>
         .
       </Callout>
 
       <p className="mt-6">
-        Ver el árbol completo de permisos en{" "}
-        <button className="underline" onClick={() => onNavigate("permisos")}>
-          Permisos
+        {c.seePerms}{" "}
+        <button type="button" className="underline" onClick={() => onNavigate("permisos")}>
+          {localizedPageLabel("permisos", pageTitle("permisos"), locale)}
         </button>
         .
       </p>
@@ -50,29 +67,39 @@ export function Commands({ onNavigate }: { onNavigate: (slug: string) => void })
   );
 }
 
-function CommandsTable({ rows }: { rows: typeof commands }) {
+function CommandsTable({
+  rows,
+  c,
+  locale,
+}: {
+  rows: typeof commands;
+  c: ReferenceCopy["commands"];
+  locale: Locale;
+}) {
   return (
     <Table>
       <Thead>
-        <Th>Comando</Th>
-        <Th>Alias</Th>
-        <Th>Permiso</Th>
-        <Th>Descripción</Th>
+        <Th>{c.thCommand}</Th>
+        <Th>{c.thAliases}</Th>
+        <Th>{c.thPermission}</Th>
+        <Th>{c.thDescription}</Th>
       </Thead>
       <tbody>
         {rows.map((cmd) => (
           <Tr key={cmd.name}>
-            <Td className="font-mono text-xs whitespace-nowrap text-slate-800 dark:text-slate-100">{cmd.usage}</Td>
+            <Td className="whitespace-nowrap font-mono text-xs text-slate-800 dark:text-slate-100">{cmd.usage}</Td>
             <Td className="text-xs">
               {cmd.aliases.length > 0 ? cmd.aliases.map((a) => `/rpg ${a}`).join(", ") : "—"}
             </Td>
             <Td className="text-xs">
-              {cmd.permission ? <Badge tone="violet">{cmd.permission}</Badge> : <Badge>ninguno</Badge>}
+              {cmd.permission ? <Badge tone="violet">{cmd.permission}</Badge> : <Badge>{c.none}</Badge>}
             </Td>
             <Td>
-              {cmd.description}
+              {localizedCommand(cmd.name, cmd.description, locale)}
               {cmd.consoleAllowed && (
-                <span className="mt-1 block text-xs text-slate-400">Ejecutable desde consola.</span>
+                <span className="mt-1 block text-xs" style={{ color: "var(--text-faint)" }}>
+                  {c.fromConsole}
+                </span>
               )}
             </Td>
           </Tr>
