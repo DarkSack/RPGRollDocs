@@ -292,9 +292,9 @@ function Step({
   last?: boolean;
 }) {
   return (
-    <div className="relative pl-12 sm:pl-14">
+    <div className="relative pl-9 sm:pl-14">
       <span
-        className="absolute left-0 top-9 flex h-7 w-7 items-center justify-center rounded-sm border font-mono text-[11px] font-semibold"
+        className="absolute left-0 top-9 flex h-6 w-6 items-center justify-center rounded-sm border font-mono text-[10px] font-semibold sm:h-7 sm:w-7 sm:text-[11px]"
         style={{ borderColor: "var(--line-strong)", backgroundColor: "var(--surface)", color: "var(--ruby)" }}
         aria-hidden="true"
       >
@@ -302,7 +302,7 @@ function Step({
       </span>
       {!last && (
         <span
-          className="absolute bottom-0 left-[13px] top-[68px] w-px"
+          className="absolute bottom-0 left-[11px] top-[64px] w-px sm:left-[13px] sm:top-[68px]"
           style={{ backgroundColor: "var(--line)" }}
           aria-hidden="true"
         />

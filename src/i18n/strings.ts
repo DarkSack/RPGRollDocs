@@ -32,6 +32,7 @@ const es = {
     filter: "Filtrar navegación…",
     noMatches: "Sin coincidencias",
     breadcrumb: "Ruta de navegación",
+    pagination: "Páginas anterior y siguiente",
   },
   search: {
     trigger: "Buscar en la documentación…",
@@ -140,6 +141,7 @@ const en: Strings = {
     filter: "Filter navigation…",
     noMatches: "No matches",
     breadcrumb: "Breadcrumb",
+    pagination: "Previous and next pages",
   },
   search: {
     trigger: "Search documentation…",
@@ -240,6 +242,7 @@ const pt: Strings = {
     filter: "Filtrar navegação…",
     noMatches: "Sem correspondências",
     breadcrumb: "Trilha de navegação",
+    pagination: "Páginas anterior e próxima",
   },
   search: {
     trigger: "Buscar na documentação…",

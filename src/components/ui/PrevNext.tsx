@@ -11,7 +11,7 @@ export function PrevNext({ current, onNavigate }: { current: string; onNavigate:
   if (!prev && !next) return null;
 
   return (
-    <nav className="mt-14 grid grid-cols-2 gap-3 border-t pt-5" style={{ borderColor: "var(--line)" }}>
+    <nav aria-label={t.nav.pagination} className="mt-14 grid grid-cols-2 gap-3 border-t pt-5" style={{ borderColor: "var(--line)" }}>
       {prev ? (
         <PrevNextLink
           slug={prev}

@@ -38,13 +38,44 @@ export function Layout({
   useEffect(() => {
     if (!mobileNavOpen) return;
 
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") closeMobileNav();
+    /**
+     * El drawer declara `aria-modal="true"`, que le promete a un lector de
+     * pantalla que el resto de la página está inerte. Sin esta trampa la
+     * promesa es falsa: al tabular más allá del último ítem el foco se iba al
+     * contenido de atrás, que sigue visible y scrolleable.
+     */
+    function focusables(): HTMLElement[] {
+      const nodes = drawerRef.current?.querySelectorAll<HTMLElement>(
+        'input, button, a[href], select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      return [...(nodes ?? [])].filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
     }
-    window.addEventListener("keydown", onKeyDown);
 
-    const first = drawerRef.current?.querySelector<HTMLElement>("input, button, a[href]");
-    first?.focus();
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        closeMobileNav();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const items = focusables();
+      if (items.length === 0) return;
+
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+
+      if (e.shiftKey && (active === first || !drawerRef.current?.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    focusables()[0]?.focus();
 
     return () => window.removeEventListener("keydown", onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps

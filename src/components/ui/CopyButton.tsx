@@ -29,7 +29,8 @@ export function CopyButton({ text, className = "" }: { text: string; className?:
       onClick={handleCopy}
       aria-label={t.actions.copyAria}
       className={
-        "inline-flex items-center gap-1.5 rounded-sm border px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider transition-colors " +
+        // min-h-6 = 24px: el minimo de area tactil que pide WCAG 2.5.8 (AA).
+        "inline-flex min-h-6 items-center gap-1.5 rounded-sm border px-2 py-1 font-mono text-[10px] uppercase tracking-wider transition-colors " +
         className
       }
       style={{
