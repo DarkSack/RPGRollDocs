@@ -23,6 +23,7 @@ type PartialLabels = Partial<Record<Locale, string>>;
 export const PAGE_LABELS: Record<string, PartialLabels> = {
   inicio: { en: "Introduction", pt: "Introdução" },
   arquitectura: { en: "Architecture", pt: "Arquitetura" },
+  requisitos: { en: "Requirements", pt: "Requisitos" },
 
   jugadores: { en: "Players", pt: "Jogadores" },
   "razas-clases": { en: "Races & classes", pt: "Raças e classes" },
@@ -45,6 +46,9 @@ export const PAGE_LABELS: Record<string, PartialLabels> = {
   permisos: { en: "Permissions", pt: "Permissões" },
   configuracion: { es: "Configuración", en: "Configuration", pt: "Configuração" },
   "base-de-datos": { es: "Base de datos", en: "Database", pt: "Banco de dados" },
+  placeholders: { en: "Placeholders", pt: "Placeholders" },
+  integraciones: { en: "Integrations", pt: "Integrações" },
+  troubleshooting: { en: "Troubleshooting", pt: "Solução de problemas" },
 
   api: { es: "API para addons", en: "Addon API", pt: "API para addons" },
 };

@@ -177,3 +177,17 @@ export const ChevronUpDownIcon = (p: IconProps) =>
 
 export const CircleDotIcon = (p: IconProps) =>
   base(p, <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" /></>);
+
+/* Páginas de referencia consolidadas ------------------------------------ */
+
+export const ServerIcon = (p: IconProps) =>
+  base(p, <><rect x="3" y="4" width="18" height="7" rx="1.5" /><rect x="3" y="13" width="18" height="7" rx="1.5" /><path d="M7 7.5h.01M7 16.5h.01" /></>);
+
+export const PlugIcon = (p: IconProps) =>
+  base(p, <><path d="M9 3v6M15 3v6" /><path d="M5 9h14v2a7 7 0 0 1-7 7 7 7 0 0 1-7-7Z" /><path d="M12 18v3" /></>);
+
+export const BracesIcon = (p: IconProps) =>
+  base(p, <><path d="M8 3c-2 0-3 1-3 3v2c0 1.5-.7 2.5-2 3 1.3.5 2 1.5 2 3v2c0 2 1 3 3 3" /><path d="M16 3c2 0 3 1 3 3v2c0 1.5.7 2.5 2 3-1.3.5-2 1.5-2 3v2c0 2-1 3-3 3" /></>);
+
+export const LifeBuoyIcon = (p: IconProps) =>
+  base(p, <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3.5" /><path d="m5.7 5.7 3.8 3.8M14.5 14.5l3.8 3.8M18.3 5.7l-3.8 3.8M9.5 14.5l-3.8 3.8" /></>);

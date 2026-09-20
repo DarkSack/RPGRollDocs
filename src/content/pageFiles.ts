@@ -43,6 +43,10 @@ export const PAGE_FILES: Record<string, string> = {
   "configuracion": "Configuration.tsx",
   "base-de-datos": "Database.tsx",
   "api": "Api.tsx",
+  "requisitos": "Requirements.tsx",
+  "integraciones": "Integrations.tsx",
+  "placeholders": "Placeholders.tsx",
+  "troubleshooting": "Troubleshooting.tsx",
 };
 
 export function pageFile(slug: string): string | undefined {

@@ -31,6 +31,29 @@ export const searchIndex: SearchEntry[] = [
   h("arquitectura", "Tab-completion — TabCompleteUtil", "tabcompleteutil"),
   h("arquitectura", "GUIs: volver al navegador anterior", "gui-back-navigation"),
 
+  // Requisitos
+  h("requisitos", "Núcleo", "core"),
+  h("requisitos", "Plataforma", "plataforma"),
+  h("requisitos", "Qué se instala", "instalacion"),
+  h("requisitos", "Dependencias duras de terceros", "dependencias-duras"),
+  h("requisitos", "Persistencia", "persistencia"),
+
+  // Integraciones
+  h("integraciones", "PlaceholderAPI", "placeholderapi"),
+  h("integraciones", "Vault", "vault"),
+  h("integraciones", "ProtocolLib", "protocollib"),
+  h("integraciones", "WorldEdit / FastAsyncWorldEdit", "worldedit"),
+  h("integraciones", "DecentHolograms", "decentholograms"),
+  h("integraciones", "Lo que NO integra", "no-integrado"),
+  h("integraciones", "Grafo de dependencias entre addons", "grafo"),
+
+  // Placeholders
+  h("placeholders", "Buscar", "buscar"),
+
+  // Troubleshooting
+  h("troubleshooting", "Diagnóstico por síntoma", "sintomas"),
+  h("troubleshooting", "Comportamientos documentados", "comportamientos"),
+
   // Comandos
   h("comandos", "Comandos de jugador", "jugador"),
   h("comandos", "Comandos de administrador", "admin"),

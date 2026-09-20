@@ -43,6 +43,10 @@ import { Permissions } from "./pages/Permissions";
 import { Configuration } from "./pages/Configuration";
 import { Database } from "./pages/Database";
 import { Api } from "./pages/Api";
+import { Requirements } from "./pages/Requirements";
+import { Integrations } from "./pages/Integrations";
+import { Placeholders } from "./pages/Placeholders";
+import { Troubleshooting } from "./pages/Troubleshooting";
 
 function App() {
   return (
@@ -153,6 +157,14 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Database onNavigate={onNavigate} />;
     case "api":
       return <Api onNavigate={onNavigate} />;
+    case "requisitos":
+      return <Requirements onNavigate={onNavigate} />;
+    case "integraciones":
+      return <Integrations onNavigate={onNavigate} />;
+    case "placeholders":
+      return <Placeholders onNavigate={onNavigate} />;
+    case "troubleshooting":
+      return <Troubleshooting onNavigate={onNavigate} />;
     default:
       return <Home onNavigate={onNavigate} />;
   }
