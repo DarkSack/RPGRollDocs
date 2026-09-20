@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
-import type { IconProps } from "../icons/Icon";
+import { AlertTriangleIcon, type IconProps } from "../icons/Icon";
 import { useI18n } from "../../i18n";
 import { sectionOf } from "../../content/nav";
 import { localizedSectionLabel } from "../../i18n";
 import { statusColor } from "./status";
+import { pageStatus, untestedInGame } from "../../content/maturity";
 import type { ReleaseStatus } from "../../content/site";
 
 interface PageHeaderProps {
@@ -45,6 +46,10 @@ export function PageHeader({
   const contextLabel =
     eyebrow ?? (section ? localizedSectionLabel(section.id, section.title, locale) : undefined);
 
+  // El `status` explícito gana; si no, se toma el declarado en content/maturity.ts.
+  const resolvedStatus = status ?? (slug ? pageStatus[slug] : undefined);
+  const untested = slug ? untestedInGame.has(slug) : false;
+
   return (
     <header className="mb-10 border-b pb-6" style={{ borderColor: "var(--line)" }}>
       {contextLabel && <p className="fui-label mb-2.5">{contextLabel}</p>}
@@ -62,14 +67,14 @@ export function PageHeader({
           {title}
         </h1>
 
-        {status && (
+        {resolvedStatus && (
           <span className="mt-2 flex shrink-0 items-center gap-1.5">
             <span
               className="h-1.5 w-1.5 rounded-full"
-              style={{ backgroundColor: statusColor(status) }}
+              style={{ backgroundColor: statusColor(resolvedStatus) }}
               aria-hidden="true"
             />
-            <span className="fui-value">{t.status[status]}</span>
+            <span className="fui-value">{t.status[resolvedStatus]}</span>
           </span>
         )}
       </div>
@@ -77,6 +82,20 @@ export function PageHeader({
       {children && (
         <p className="mt-3 max-w-2xl text-[15px] leading-relaxed" style={{ color: "var(--text-dim)" }}>
           {children}
+        </p>
+      )}
+
+      {untested && (
+        <p
+          className="mt-4 flex items-start gap-2 border border-l-2 px-3 py-2 text-[13px]"
+          style={{
+            borderColor: "var(--line)",
+            borderLeftColor: "var(--gold)",
+            color: "var(--text-dim)",
+          }}
+        >
+          <AlertTriangleIcon size={13} className="mt-0.5 shrink-0" style={{ color: "var(--gold)" }} />
+          {t.meta.untested}
         </p>
       )}
 

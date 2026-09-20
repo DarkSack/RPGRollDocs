@@ -41,7 +41,7 @@ const professionFields: YamlField[] = [
 export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) {
   return (
     <>
-      <PageHeader title="Workers (RPGRoll-Workers)">
+      <PageHeader title="Workers (RPGRoll-Workers)" slug="workers">
         Trabajadores autónomos con profesión, habilidades, inventario, necesidades, personalidad, horario y una
         IA por reglas configurable — habitantes del mundo que trabajan incluso cuando ningún jugador los está
         mirando, no minions que generan recursos por arte de magia.

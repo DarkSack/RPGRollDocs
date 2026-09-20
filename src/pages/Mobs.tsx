@@ -96,7 +96,7 @@ const mobRegionFields: YamlField[] = [
 export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
   return (
     <>
-      <PageHeader title="Mobs y jefes (RPGRoll-Mobs)">
+      <PageHeader title="Mobs y jefes (RPGRoll-Mobs)" slug="mobs">
         Motor de criaturas personalizadas: mobs normales, mini-jefes y jefes con fases, IA propia, resistencias,
         loot con probabilidad y bossbar/diálogos — todo definido en YAML, con editor gráfico incluido.
       </PageHeader>

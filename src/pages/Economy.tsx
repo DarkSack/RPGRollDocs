@@ -62,7 +62,7 @@ const taxRuleFields: YamlField[] = [
 export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) {
   return (
     <>
-      <PageHeader title="RPGRoll-Economy">
+      <PageHeader title="RPGRoll-Economy" slug="economy">
         El sistema económico avanzado del ecosistema: monedas múltiples, wallets, bancos y préstamos, un{" "}
         <strong>mercado dinámico</strong> con oferta/demanda real, tiendas de jugador, subastas, empresas,
         impuestos, un libro mayor de transacciones y un tracker de inflación. También es el{" "}

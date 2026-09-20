@@ -106,6 +106,8 @@ const es = {
     dependencies: "Dependencias",
     required: "Requerido",
     optional: "Opcional",
+    untested:
+      "Este addon incluye funciones que su documentación declara verificadas solo por compilación, sin probar contra un servidor real. Probalas en un entorno de pruebas antes de usarlas en producción.",
   },
   status: {
     stable: "Estable",
@@ -215,6 +217,8 @@ const en: Strings = {
     dependencies: "Dependencies",
     required: "Required",
     optional: "Optional",
+    untested:
+      "This addon includes features its documentation marks as verified by compilation only, never tested against a real server. Try them on a staging server before production.",
   },
   status: {
     stable: "Stable",
@@ -316,6 +320,8 @@ const pt: Strings = {
     dependencies: "Dependências",
     required: "Obrigatório",
     optional: "Opcional",
+    untested:
+      "Este addon inclui funções que a sua documentação declara verificadas apenas por compilação, sem teste contra um servidor real. Teste-as num ambiente de testes antes de usar em produção.",
   },
   status: {
     stable: "Estável",

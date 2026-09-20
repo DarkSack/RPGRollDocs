@@ -156,7 +156,7 @@ export function Ranching({
 }) {
   return (
     <>
-      <PageHeader title="Ranching (RPGRoll-Ranching)">
+      <PageHeader title="Ranching (RPGRoll-Ranching)" slug="ranching">
         Ganadería como simulación viva — cada animal tiene su propio ADN, con
         genes heredables, dominancia real, mutaciones raras y un linaje
         congelado que persigue la endogamia. Criar no es acumular: es
