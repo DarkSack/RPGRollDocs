@@ -7,13 +7,15 @@ interface CardProps {
   onClick?: () => void;
 }
 
+/**
+ * Contenedor plano. Sin sombra, sin elevación al hover y sin esquinas
+ * redondeadas grandes: en una consola una card es una celda delimitada, no un
+ * objeto flotante. El hover solo sube el contraste del borde.
+ */
 export function Card({ children, className = "", onClick }: CardProps) {
   const classes =
-    "rounded-xl border border-slate-200 bg-white p-5 shadow-soft transition-all " +
-    "dark:border-slate-800 dark:bg-slate-900/40 " +
-    (onClick
-      ? "text-left hover:-translate-y-0.5 hover:border-violet-300 hover:shadow-card dark:hover:border-violet-500/40 "
-      : "") +
+    "border p-4 transition-colors border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/40 " +
+    (onClick ? "text-left hover:border-violet-400 dark:hover:border-violet-500/60 " : "") +
     className;
 
   if (onClick) {
@@ -28,6 +30,7 @@ export function Card({ children, className = "", onClick }: CardProps) {
 }
 
 export function CardGrid({ children, cols = 2 }: { children: ReactNode; cols?: 2 | 3 | 4 }) {
-  const colsClass = cols === 4 ? "sm:grid-cols-2 xl:grid-cols-4" : cols === 3 ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2";
-  return <div className={`grid grid-cols-1 gap-4 ${colsClass}`}>{children}</div>;
+  const colsClass =
+    cols === 4 ? "sm:grid-cols-2 xl:grid-cols-4" : cols === 3 ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2";
+  return <div className={`my-5 grid grid-cols-1 gap-3 ${colsClass}`}>{children}</div>;
 }

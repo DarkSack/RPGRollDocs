@@ -4,12 +4,15 @@ export interface NavItem {
 }
 
 export interface NavSection {
+  /** Id estable para traducir el título y para clasificar la página (ver `sectionOf`). */
+  id: string;
   title: string;
   items: NavItem[];
 }
 
 export const nav: NavSection[] = [
   {
+    id: "getting-started",
     title: "Empezando",
     items: [
       { slug: "inicio", label: "Introducción" },
@@ -17,6 +20,7 @@ export const nav: NavSection[] = [
     ],
   },
   {
+    id: "core",
     title: "Sistemas de juego",
     items: [
       { slug: "jugadores", label: "Jugadores" },
@@ -28,6 +32,7 @@ export const nav: NavSection[] = [
     ],
   },
   {
+    id: "addons",
     title: "Addons oficiales",
     items: [
       { slug: "npcs", label: "NPCs" },
@@ -56,6 +61,7 @@ export const nav: NavSection[] = [
     ],
   },
   {
+    id: "tools",
     title: "Herramientas",
     items: [
       { slug: "room-designer", label: "Diseñador de Salas" },
@@ -63,6 +69,7 @@ export const nav: NavSection[] = [
     ],
   },
   {
+    id: "reference",
     title: "Referencia",
     items: [
       { slug: "comandos", label: "Comandos" },
@@ -72,6 +79,7 @@ export const nav: NavSection[] = [
     ],
   },
   {
+    id: "developers",
     title: "Para desarrolladores",
     items: [{ slug: "api", label: "API para addons" }],
   },
@@ -85,4 +93,9 @@ export function pageTitle(slug: string): string {
     if (item) return item.label;
   }
   return "RPGRoll";
+}
+
+/** Sección a la que pertenece un slug — la usa el HUD para clasificar la página. */
+export function sectionOf(slug: string): NavSection | undefined {
+  return nav.find((section) => section.items.some((item) => item.slug === slug));
 }

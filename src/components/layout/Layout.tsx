@@ -2,17 +2,30 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Topbar } from "./Topbar";
 import { Sidebar } from "./Sidebar";
 import { TableOfContents } from "../ui/TableOfContents";
-import { CloseIcon } from "../icons/Icon";
+import { PageFooter } from "../ui/PageFooter";
+import { useI18n } from "../../i18n";
+import { CloseIcon, InfoIcon } from "../icons/Icon";
 
 interface LayoutProps {
   current: string;
   onNavigate: (slug: string) => void;
   theme: "light" | "dark";
   onToggleTheme: () => void;
+  version: string;
+  onVersionChange: (id: string) => void;
   children: ReactNode;
 }
 
-export function Layout({ current, onNavigate, theme, onToggleTheme, children }: LayoutProps) {
+export function Layout({
+  current,
+  onNavigate,
+  theme,
+  onToggleTheme,
+  version,
+  onVersionChange,
+  children,
+}: LayoutProps) {
+  const { t, locale } = useI18n();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -30,7 +43,7 @@ export function Layout({ current, onNavigate, theme, onToggleTheme, children }: 
     }
     window.addEventListener("keydown", onKeyDown);
 
-    const first = drawerRef.current?.querySelector<HTMLElement>("button, a[href]");
+    const first = drawerRef.current?.querySelector<HTMLElement>("input, button, a[href]");
     first?.focus();
 
     return () => window.removeEventListener("keydown", onKeyDown);
@@ -40,7 +53,7 @@ export function Layout({ current, onNavigate, theme, onToggleTheme, children }: 
   return (
     <div className="min-h-screen">
       <a href="#main-content" className="skip-link">
-        Saltar al contenido
+        {t.nav.skipToContent}
       </a>
 
       <Topbar
@@ -50,18 +63,24 @@ export function Layout({ current, onNavigate, theme, onToggleTheme, children }: 
         onNavigateHome={() => onNavigate("inicio")}
         onNavigate={onNavigate}
         current={current}
+        version={version}
+        onVersionChange={onVersionChange}
         menuButtonRef={menuButtonRef}
       />
 
-      <div className="mx-auto flex max-w-[100rem]">
-        <aside className="sticky top-14 hidden h-[calc(100svh-3.5rem)] w-64 shrink-0 overflow-y-auto border-r border-slate-200 dark:border-slate-800 lg:block">
+      <div className="mx-auto flex w-full max-w-[110rem]">
+        <aside
+          className="sticky top-[76px] hidden h-[calc(100svh-76px)] w-[16.5rem] shrink-0 overflow-y-auto border-r lg:block"
+          style={{ borderColor: "var(--line)" }}
+        >
           <Sidebar current={current} onNavigate={onNavigate} />
         </aside>
 
         {mobileNavOpen && (
           <div className="fixed inset-0 z-40 lg:hidden">
             <div
-              className="absolute inset-0 animate-fade-in bg-black/40"
+              className="absolute inset-0 animate-fade-in"
+              style={{ backgroundColor: "rgb(8 10 13 / 0.6)" }}
               onClick={closeMobileNav}
               aria-hidden="true"
             />
@@ -69,17 +88,23 @@ export function Layout({ current, onNavigate, theme, onToggleTheme, children }: 
               ref={drawerRef}
               role="dialog"
               aria-modal="true"
-              aria-label="Navegación"
-              className="absolute inset-y-0 left-0 flex w-72 animate-slide-in-left flex-col overflow-y-auto bg-white shadow-2xl dark:bg-slate-950"
+              aria-label={t.nav.main}
+              className="absolute inset-y-0 left-0 flex w-[17rem] animate-slide-in-left flex-col overflow-y-auto border-r shadow-popover"
+              style={{ borderColor: "var(--line)", backgroundColor: "var(--bg)" }}
             >
-              <div className="flex items-center justify-end p-2">
+              <div
+                className="flex h-12 shrink-0 items-center justify-between border-b px-3"
+                style={{ borderColor: "var(--line)" }}
+              >
+                <span className="fui-label">{t.nav.main}</span>
                 <button
                   type="button"
                   onClick={closeMobileNav}
-                  aria-label="Cerrar navegación"
-                  className="rounded-md p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+                  aria-label={t.nav.closeMenu}
+                  className="rounded-sm p-1.5"
+                  style={{ color: "var(--text-dim)" }}
                 >
-                  <CloseIcon size={18} />
+                  <CloseIcon size={16} />
                 </button>
               </div>
               <Sidebar current={current} onNavigate={onNavigate} onLinkClick={closeMobileNav} />
@@ -87,10 +112,31 @@ export function Layout({ current, onNavigate, theme, onToggleTheme, children }: 
           </div>
         )}
 
-        <main id="main-content" className="min-w-0 flex-1 px-6 py-10 sm:px-10">
-          <div className="mx-auto flex max-w-6xl gap-10">
-            <div className="prose-doc min-w-0 max-w-3xl flex-1">{children}</div>
-            <aside className="sticky top-20 hidden h-fit w-56 shrink-0 xl:block">
+        <main id="main-content" className="min-w-0 flex-1">
+          <div className="mx-auto flex w-full max-w-[86rem] gap-10 px-5 py-8 sm:px-8">
+            <div className="prose-doc min-w-0 flex-1">
+              {locale !== "es" && (
+                <p
+                  className="mb-8 flex items-start gap-2.5 rounded-sm border px-3 py-2.5 text-[13px]"
+                  style={{
+                    borderColor: "var(--line)",
+                    backgroundColor: "var(--surface-2)",
+                    color: "var(--text-faint)",
+                  }}
+                >
+                  <InfoIcon size={14} className="mt-0.5 shrink-0" />
+                  {t.page.untranslated}
+                </p>
+              )}
+
+              <TableOfContents route={current} variant="collapsible" />
+
+              {children}
+
+              <PageFooter slug={current} />
+            </div>
+
+            <aside className="sticky top-[92px] hidden h-fit w-56 shrink-0 xl:block">
               <TableOfContents route={current} />
             </aside>
           </div>

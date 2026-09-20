@@ -8,6 +8,8 @@ export { PageHeader } from "./PageHeader";
 export { SectionHeading } from "./SectionHeading";
 export { Table, Thead, Th, Tr, Td } from "./Table";
 export { PrevNext } from "./PrevNext";
+export { PageFooter } from "./PageFooter";
+export { statusColor } from "./status";
 export { TableOfContents } from "./TableOfContents";
 export { YamlBuilder } from "./YamlBuilder";
 export type { YamlField, YamlFieldType } from "./YamlBuilder";

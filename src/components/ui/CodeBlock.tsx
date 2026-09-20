@@ -34,24 +34,25 @@ export function CodeBlock({ code, language = "text", filename, className = "", s
 
   return (
     <div
-      className={
-        "group/code overflow-hidden rounded-xl border border-slate-200 bg-slate-50 shadow-soft " +
-        "dark:border-slate-800 dark:bg-slate-900/60 " +
-        className
-      }
+      className={"group/code my-5 overflow-hidden border border-slate-200 dark:border-slate-800 " + className}
+      style={{ backgroundColor: "var(--surface)" }}
     >
-      <div className="flex items-center justify-between border-b border-slate-200 bg-slate-100/80 px-4 py-2 dark:border-slate-800 dark:bg-slate-900">
-        <div className="flex items-center gap-2">
-          <span className="flex gap-1.5" aria-hidden="true">
-            <span className="h-2.5 w-2.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-            <span className="h-2.5 w-2.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-            <span className="h-2.5 w-2.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-          </span>
-          <span className="font-mono text-xs text-slate-500 dark:text-slate-400">
+      <div
+        className="flex items-center justify-between gap-3 border-b px-3 py-1.5"
+        style={{ borderColor: "var(--line)", backgroundColor: "var(--surface-2)" }}
+      >
+        <div className="flex min-w-0 items-center gap-2">
+          {/* Una barra ruby marca el bloque como "archivo": es el único adorno
+              que se permite acá, y sirve de ancla visual al escanear. */}
+          <span className="h-3 w-0.5 shrink-0" style={{ backgroundColor: "var(--ruby)" }} aria-hidden="true" />
+          <span className="truncate font-mono text-[11px]" style={{ color: "var(--text-dim)" }}>
             {filename ?? LANGUAGE_LABELS[language] ?? language}
           </span>
           {filename && (
-            <span className="rounded border border-slate-200 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-slate-400 dark:border-slate-700 dark:text-slate-500">
+            <span
+              className="shrink-0 rounded-sm border px-1 py-px font-mono text-[9px] uppercase tracking-wider"
+              style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
+            >
               {LANGUAGE_LABELS[language] ?? language}
             </span>
           )}
@@ -63,7 +64,7 @@ export function CodeBlock({ code, language = "text", filename, className = "", s
           {lines.map((line, i) => (
             <span key={i} className="table-row">
               {withNumbers && (
-                <span className="table-cell select-none pr-4 text-right text-slate-300 dark:text-slate-600">
+                <span className="table-cell select-none pr-4 text-right text-slate-300 tabular-nums dark:text-slate-700">
                   {i + 1}
                 </span>
               )}
@@ -109,7 +110,7 @@ const CLASS: Record<string, string> = {
   comment: "text-slate-400 italic dark:text-slate-500",
   key: "text-violet-600 dark:text-violet-400",
   string: "text-emerald-600 dark:text-emerald-400",
-  number: "text-amber-600 dark:text-amber-400",
+  number: "text-sky-600 dark:text-sky-400",
   boolean: "text-sky-600 dark:text-sky-400",
   keyword: "text-violet-600 font-medium dark:text-violet-400",
   type: "text-sky-600 dark:text-sky-400",

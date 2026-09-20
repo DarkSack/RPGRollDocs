@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { ListIcon } from "../icons/Icon";
+import { useI18n } from "../../i18n";
+import { ChevronDownIcon, ArrowUpIcon } from "../icons/Icon";
 
 interface Heading {
   id: string;
@@ -12,8 +13,12 @@ interface Heading {
  * headings a mano: los lee directo del DOM (h2/h3 con id dentro de
  * .prose-doc, que es exactamente lo que SectionHeading ya genera) después de
  * cada cambio de ruta, y resalta la sección visible con IntersectionObserver.
+ *
+ * `variant="collapsible"` es la versión para pantallas angostas: mismo índice,
+ * plegado dentro de un <details> arriba del contenido.
  */
-export function TableOfContents({ route }: { route: string }) {
+export function TableOfContents({ route, variant = "rail" }: { route: string; variant?: "rail" | "collapsible" }) {
+  const { t } = useI18n();
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
 
@@ -37,12 +42,12 @@ export function TableOfContents({ route }: { route: string }) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) {
-          setActiveId(visible[0].target.id);
-        }
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActiveId(visible[0].target.id);
       },
-      { rootMargin: "-96px 0px -70% 0px", threshold: 0 },
+      { rootMargin: "-140px 0px -70% 0px", threshold: 0 },
     );
 
     headings.forEach((h) => {
@@ -55,34 +60,60 @@ export function TableOfContents({ route }: { route: string }) {
 
   if (headings.length < 2) return null;
 
+  const list = (
+    <ul style={{ borderLeft: "1px solid var(--line)" }}>
+      {headings.map((h) => {
+        const active = h.id === activeId;
+        return (
+          <li key={h.id}>
+            <a
+              href={`#${h.id}`}
+              aria-current={active ? "location" : undefined}
+              className={
+                "no-prose -ml-px block border-l-2 py-1 leading-snug no-underline transition-colors " +
+                (h.level === 3 ? "pl-6 text-[12px]" : "pl-3 text-[13px]")
+              }
+              style={{
+                borderLeftColor: active ? "var(--ruby)" : "transparent",
+                color: active ? "var(--ruby)" : "var(--text-faint)",
+                fontWeight: active ? 500 : 400,
+              }}
+            >
+              {h.text}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  );
+
+  if (variant === "collapsible") {
+    return (
+      <details className="mb-8 rounded-sm border xl:hidden" style={{ borderColor: "var(--line)" }}>
+        <summary className="flex cursor-pointer list-none items-center gap-2 px-3 py-2">
+          <ChevronDownIcon size={13} style={{ color: "var(--text-faint)" }} />
+          <span className="fui-label">{t.toc.title}</span>
+          <span className="fui-label ml-auto opacity-50">{String(headings.length).padStart(2, "0")}</span>
+        </summary>
+        <nav aria-label={t.toc.label} className="px-3 pb-3 pl-4">
+          {list}
+        </nav>
+      </details>
+    );
+  }
+
   return (
-    <nav aria-label="En esta página" className="space-y-3 text-sm">
-      <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-        <ListIcon size={14} />
-        En esta página
-      </p>
-      <ul className="space-y-0.5 border-l border-slate-200 dark:border-slate-800">
-        {headings.map((h) => {
-          const active = h.id === activeId;
-          return (
-            <li key={h.id}>
-              <a
-                href={`#${h.id}`}
-                className={
-                  "-ml-px block border-l-2 py-1 leading-snug transition-colors " +
-                  (h.level === 3 ? "pl-7 text-[13px]" : "pl-4") +
-                  " " +
-                  (active
-                    ? "border-violet-500 font-medium text-violet-600 dark:text-violet-400"
-                    : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200")
-                }
-              >
-                {h.text}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+    <nav aria-label={t.toc.label} className="space-y-2">
+      <p className="fui-label pl-3">{t.toc.title}</p>
+      {list}
+      <button
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="flex items-center gap-1.5 pl-3 pt-2 fui-label transition-colors hover:opacity-100"
+      >
+        <ArrowUpIcon size={11} />
+        {t.toc.top}
+      </button>
     </nav>
   );
 }

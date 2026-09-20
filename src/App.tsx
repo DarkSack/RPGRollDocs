@@ -1,6 +1,8 @@
 import { useHashRoute } from "./hooks/useHashRoute";
 import { useTheme } from "./hooks/useTheme";
+import { useDocVersion } from "./hooks/useDocVersion";
 import { Layout } from "./components/layout/Layout";
+import { LocaleProvider, useI18n, localizedPageLabel } from "./i18n";
 import { pageTitle } from "./content/nav";
 
 import { Home } from "./pages/Home";
@@ -43,13 +45,31 @@ import { Database } from "./pages/Database";
 import { Api } from "./pages/Api";
 
 function App() {
+  return (
+    <LocaleProvider>
+      <Console />
+    </LocaleProvider>
+  );
+}
+
+function Console() {
   const [route, navigate] = useHashRoute();
   const [theme, toggleTheme] = useTheme();
+  const [version, setVersion] = useDocVersion();
+  const { locale } = useI18n();
 
-  document.title = route === "inicio" ? "RPGRoll — Documentación" : `${pageTitle(route)} — RPGRoll`;
+  const title = localizedPageLabel(route, pageTitle(route), locale);
+  document.title = route === "inicio" ? "RPGRoll — Docs" : `${title} — RPGRoll Docs`;
 
   return (
-    <Layout current={route} onNavigate={navigate} theme={theme} onToggleTheme={toggleTheme}>
+    <Layout
+      current={route}
+      onNavigate={navigate}
+      theme={theme}
+      onToggleTheme={toggleTheme}
+      version={version}
+      onVersionChange={setVersion}
+    >
       <Page route={route} onNavigate={navigate} />
     </Layout>
   );
