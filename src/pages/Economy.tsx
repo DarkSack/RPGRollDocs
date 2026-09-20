@@ -394,6 +394,9 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
       </Callout>
 
       <SectionHeading id="placeholders">Placeholders (PlaceholderAPI)</SectionHeading>
+      <p>
+        Expansión <Badge tone="violet">rpgeconomy</Badge>.
+      </p>
       <Table>
         <Thead>
           <Th>Placeholder</Th>

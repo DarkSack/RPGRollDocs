@@ -145,3 +145,49 @@ export const GridIcon = (p: IconProps) =>
   base(p, <><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></>);
 export const TargetIcon = (p: IconProps) =>
   base(p, <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" /><circle cx="12" cy="12" r="0.7" fill="currentColor" stroke="none" /></>);
+
+/* Consola / chrome de la documentación ---------------------------------- */
+
+export const TerminalIcon = (p: IconProps) =>
+  base(p, <><path d="m4 17 6-5-6-5" /><path d="M12 19h8" /></>);
+
+export const KeyIcon = (p: IconProps) =>
+  base(p, <><circle cx="7.5" cy="15.5" r="3.5" /><path d="m10 13 9-9" /><path d="m16.5 6.5 2 2" /><path d="m13.5 9.5 2 2" /></>);
+
+export const SlidersIcon = (p: IconProps) =>
+  base(p, <><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h10M18 18h2" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="16" cy="18" r="2" /></>);
+
+export const LanguagesIcon = (p: IconProps) =>
+  base(p, <><path d="M3 5h10" /><path d="M8 3v2" /><path d="M11 5c0 4.5-2.5 8-7 9" /><path d="M5 10c1.5 2.5 4 4 7 5" /><path d="m13 21 4.5-10L22 21" /><path d="M14.8 17.5h5.4" /></>);
+
+export const PencilIcon = (p: IconProps) =>
+  base(p, <><path d="M17 3.5a2.1 2.1 0 0 1 3 3L8 18.5l-4 1 1-4Z" /></>);
+
+export const ThumbsUpIcon = (p: IconProps) =>
+  base(p, <><path d="M7 21V10l5-7 1 1v5h6a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.8 20H7Z" /><path d="M7 10H3v11h4" /></>);
+
+export const ThumbsDownIcon = (p: IconProps) =>
+  base(p, <><path d="M17 3v11l-5 7-1-1v-5H5a2 2 0 0 1-2-2.3l1.2-7A2 2 0 0 1 6.2 4H17Z" /><path d="M17 14h4V3h-4" /></>);
+
+export const ArrowUpIcon = (p: IconProps) =>
+  base(p, <><path d="M12 19V5" /><path d="m5 12 7-7 7 7" /></>);
+
+export const ChevronUpDownIcon = (p: IconProps) =>
+  base(p, <><path d="m8 9 4-4 4 4" /><path d="m16 15-4 4-4-4" /></>);
+
+export const CircleDotIcon = (p: IconProps) =>
+  base(p, <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" /></>);
+
+/* Páginas de referencia consolidadas ------------------------------------ */
+
+export const ServerIcon = (p: IconProps) =>
+  base(p, <><rect x="3" y="4" width="18" height="7" rx="1.5" /><rect x="3" y="13" width="18" height="7" rx="1.5" /><path d="M7 7.5h.01M7 16.5h.01" /></>);
+
+export const PlugIcon = (p: IconProps) =>
+  base(p, <><path d="M9 3v6M15 3v6" /><path d="M5 9h14v2a7 7 0 0 1-7 7 7 7 0 0 1-7-7Z" /><path d="M12 18v3" /></>);
+
+export const BracesIcon = (p: IconProps) =>
+  base(p, <><path d="M8 3c-2 0-3 1-3 3v2c0 1.5-.7 2.5-2 3 1.3.5 2 1.5 2 3v2c0 2 1 3 3 3" /><path d="M16 3c2 0 3 1 3 3v2c0 1.5.7 2.5 2 3-1.3.5-2 1.5-2 3v2c0 2-1 3-3 3" /></>);
+
+export const LifeBuoyIcon = (p: IconProps) =>
+  base(p, <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3.5" /><path d="m5.7 5.7 3.8 3.8M14.5 14.5l3.8 3.8M18.3 5.7l-3.8 3.8M9.5 14.5l-3.8 3.8" /></>);

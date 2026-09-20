@@ -2,18 +2,146 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ==========================================================================
+   RPGRoll Developer Console — capa de diseño
+   --------------------------------------------------------------------------
+   Las 40 páginas de contenido bajo src/pages usan las escalas de Tailwind
+   (slate / violet / amber / sky / emerald / red / fuchsia) escritas a mano en
+   el JSX. En vez de reescribir ~700 clases una por una, acá se redefinen esas
+   escalas con la identidad de la consola: `slate` pasa a ser el grafito frío
+   del sistema, `violet` el ruby de marca, `amber` el gold, `emerald` el
+   success teal, `sky` el acero informativo y `red` la alerta (más cálida que
+   el ruby para que "peligro" nunca se confunda con "marca").
+   Cambiar la identidad = tocar este bloque, no las páginas.
+   ========================================================================== */
+
 @theme {
-  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", "SF Mono", Consolas, monospace;
 
-  --shadow-soft: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.06);
-  --shadow-card: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 8px 24px -8px rgb(15 23 42 / 0.10);
-  --shadow-popover: 0 12px 32px -8px rgb(15 23 42 / 0.22), 0 4px 12px -4px rgb(15 23 42 / 0.12);
+  /* --- Grafito: superficie, texto y líneas del sistema ------------------ */
+  --color-slate-50: #f7f8fa;
+  --color-slate-100: #f3f4f6;
+  --color-slate-200: #e3e6eb;
+  --color-slate-300: #c9ced6;
+  --color-slate-400: #9299a4;
+  --color-slate-500: #6e7581;
+  --color-slate-600: #545b66;
+  --color-slate-700: #3a424c;
+  --color-slate-800: #1e242c;
+  --color-slate-900: #10141a;
+  --color-slate-950: #080a0d;
 
-  --animate-fade-in: fade-in 0.15s ease-out;
-  --animate-scale-in: scale-in 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-slide-in-left: slide-in-left 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-slide-down: slide-down 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  /* --- Ruby: acento de marca ------------------------------------------- */
+  --color-violet-50: #fdf3f4;
+  --color-violet-100: #fae2e5;
+  --color-violet-200: #f2c4ca;
+  --color-violet-300: #e39aa3;
+  --color-violet-400: #d4707d;
+  --color-violet-500: #c83a4b;
+  --color-violet-600: #b02d3d;
+  --color-violet-700: #93242f;
+  --color-violet-800: #741d26;
+  --color-violet-900: #55161c;
+  --color-violet-950: #300c10;
+
+  /* --- Gold: elementos especiales, placeholders, destacados ------------- */
+  --color-amber-50: #fbf6e9;
+  --color-amber-100: #f6ebcc;
+  --color-amber-200: #eed89e;
+  --color-amber-300: #e5c578;
+  --color-amber-400: #dcb35f;
+  --color-amber-500: #d5a84b;
+  --color-amber-600: #9c7629;
+  --color-amber-700: #886728;
+  --color-amber-800: #634b1d;
+  --color-amber-900: #423213;
+  --color-amber-950: #251c0a;
+
+  /* `fuchsia` solo aparecía en el degradado de marca y en los placeholders:
+     se alinea con el gold para que el par ruby→gold sea el único degradado. */
+  --color-fuchsia-50: #fbf6e9;
+  --color-fuchsia-100: #f6ebcc;
+  --color-fuchsia-200: #eed89e;
+  --color-fuchsia-300: #e5c578;
+  --color-fuchsia-400: #dcb35f;
+  --color-fuchsia-500: #d5a84b;
+  --color-fuchsia-600: #9c7629;
+  --color-fuchsia-700: #886728;
+  --color-fuchsia-800: #634b1d;
+  --color-fuchsia-900: #423213;
+  --color-fuchsia-950: #251c0a;
+
+  /* --- Success teal ----------------------------------------------------- */
+  --color-emerald-50: #eff7f5;
+  --color-emerald-100: #d8ede8;
+  --color-emerald-200: #b0dbd1;
+  --color-emerald-300: #86c6b9;
+  --color-emerald-400: #5fb3a2;
+  --color-emerald-500: #45988a;
+  --color-emerald-600: #2f7f70;
+  --color-emerald-700: #266459;
+  --color-emerald-800: #1d4b43;
+  --color-emerald-900: #14332e;
+  --color-emerald-950: #0b1c19;
+
+  --color-green-50: #eff7f5;
+  --color-green-100: #d8ede8;
+  --color-green-200: #b0dbd1;
+  --color-green-300: #86c6b9;
+  --color-green-400: #5fb3a2;
+  --color-green-500: #45988a;
+  --color-green-600: #2f7f70;
+  --color-green-700: #266459;
+  --color-green-800: #1d4b43;
+  --color-green-900: #14332e;
+  --color-green-950: #0b1c19;
+
+  /* --- Acero: información neutra, tipos, booleanos ---------------------- */
+  --color-sky-50: #eff5fa;
+  --color-sky-100: #dce9f4;
+  --color-sky-200: #b7d2e8;
+  --color-sky-300: #8cb6d8;
+  --color-sky-400: #679bc6;
+  --color-sky-500: #4a81b3;
+  --color-sky-600: #38699a;
+  --color-sky-700: #2c5278;
+  --color-sky-800: #213d59;
+  --color-sky-900: #17293b;
+  --color-sky-950: #0d1722;
+
+  /* --- Alerta: deliberadamente más cálida que el ruby ------------------- */
+  --color-red-50: #fdf2f0;
+  --color-red-100: #fadfdb;
+  --color-red-200: #f4bdb6;
+  --color-red-300: #eb948a;
+  --color-red-400: #e06b5e;
+  --color-red-500: #d24e3f;
+  --color-red-600: #b83a2c;
+  --color-red-700: #942e23;
+  --color-red-800: #6f231b;
+  --color-red-900: #4c1813;
+  --color-red-950: #2a0d0a;
+
+  /* --- Geometría: esquinas casi rectas, no "tarjetas de tienda" --------- */
+  --radius-xs: 1px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 5px;
+  --radius-2xl: 6px;
+  --radius-3xl: 8px;
+  --radius-4xl: 10px;
+
+  /* --- Elevación: hairlines, no sombras de marketing -------------------- */
+  --shadow-soft: 0 1px 0 0 rgb(8 10 13 / 0.03);
+  --shadow-card: 0 1px 2px 0 rgb(8 10 13 / 0.06);
+  --shadow-popover: 0 16px 48px -12px rgb(8 10 13 / 0.45), 0 0 0 1px rgb(8 10 13 / 0.06);
+
+  --animate-fade-in: fade-in 0.1s ease-out;
+  --animate-scale-in: scale-in 0.1s ease-out;
+  --animate-slide-in-left: slide-in-left 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-down: slide-down 0.12s ease-out;
 
   @keyframes fade-in {
     from {
@@ -26,11 +154,11 @@
   @keyframes scale-in {
     from {
       opacity: 0;
-      transform: scale(0.97) translateY(-4px);
+      transform: translateY(-2px);
     }
     to {
       opacity: 1;
-      transform: scale(1) translateY(0);
+      transform: translateY(0);
     }
   }
   @keyframes slide-in-left {
@@ -44,7 +172,7 @@
   @keyframes slide-down {
     from {
       opacity: 0;
-      transform: translateY(-6px);
+      transform: translateY(-4px);
     }
     to {
       opacity: 1;
@@ -53,30 +181,69 @@
   }
 }
 
+/* ==========================================================================
+   Tokens semánticos — el chrome (layout, sidebar, palette, HUD) se pinta con
+   estos, no con las escalas de arriba. El tema claro se deriva del oscuro:
+   mismos matices, luminancias invertidas y acentos oscurecidos para que el
+   contraste sobre blanco siga cumpliendo AA.
+   ========================================================================== */
+
 @layer base {
+  :root {
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --surface-2: #f1f3f6;
+    --line: #e3e6eb;
+    --line-strong: #cfd5dd;
+    --text: #12161c;
+    --text-dim: #5b626d;
+    --text-faint: #8b929d;
+    --ruby: #b02d3d;
+    --ruby-soft: #fae2e5;
+    --gold: #9c7629;
+    --gold-soft: #f6ebcc;
+    --success: #2f7f70;
+    --grid-line: rgb(18 22 28 / 0.045);
+  }
+
+  .dark {
+    --bg: #080a0d;
+    --surface: #10141a;
+    --surface-2: #151a21;
+    --line: #1e242c;
+    --line-strong: #2c343e;
+    --text: #f3f4f6;
+    --text-dim: #9299a4;
+    --text-faint: #6e7581;
+    --ruby: #c83a4b;
+    --ruby-soft: rgb(200 58 75 / 0.14);
+    --gold: #d5a84b;
+    --gold-soft: rgb(213 168 75 / 0.14);
+    --success: #5fb3a2;
+    --grid-line: rgb(243 244 246 / 0.035);
+  }
+
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
+    scroll-padding-top: 7rem;
   }
 
   body {
-    @apply bg-white text-slate-700 dark:bg-slate-950 dark:text-slate-300;
+    background-color: var(--bg);
+    color: var(--text-dim);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
 
   ::selection {
-    @apply bg-violet-500/30 text-inherit;
+    background-color: var(--ruby-soft);
+    color: inherit;
   }
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: theme(colors.slate.300) transparent;
-  }
-
-  .dark * {
-    scrollbar-color: theme(colors.slate.700) transparent;
+    scrollbar-color: var(--line-strong) transparent;
   }
 
   /* Tailwind v4 no fuerza cursor:pointer en controles nativos — lo restauramos
@@ -94,83 +261,170 @@
 
   /* Foco visible consistente en toda la app — solo cuando se navega con teclado. */
   :focus-visible {
-    outline: 2px solid theme(colors.violet.500);
+    outline: 2px solid var(--ruby);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 2px;
   }
 }
 
 @layer utilities {
+  /* --- Superficies y líneas del sistema -------------------------------- */
+  .surface {
+    background-color: var(--surface);
+  }
+  .surface-2 {
+    background-color: var(--surface-2);
+  }
+  .hairline {
+    border-color: var(--line);
+  }
+  .hairline-strong {
+    border-color: var(--line-strong);
+  }
+  .text-sys {
+    color: var(--text);
+  }
+  .text-dim {
+    color: var(--text-dim);
+  }
+  .text-faint {
+    color: var(--text-faint);
+  }
+  .text-ruby {
+    color: var(--ruby);
+  }
+  .text-gold {
+    color: var(--gold);
+  }
+  .bg-ruby {
+    background-color: var(--ruby);
+  }
+  .bg-ruby-soft {
+    background-color: var(--ruby-soft);
+  }
+  .bg-gold-soft {
+    background-color: var(--gold-soft);
+  }
+
+  /* --- FUI: etiquetas de metadata --------------------------------------
+     `SYSTEM // RPGROLL`, `EN ESTA PÁGINA`, `VERSION //`. Monospace, chicas,
+     con tracking amplio. Son metadata: nunca contenido. */
+  .fui-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .fui-value {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* Grilla técnica de fondo — dos degradados repetidos, sin imágenes. */
+  .bg-blueprint {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
   .skip-link {
-    @apply fixed left-3 top-3 z-[100] -translate-y-16 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white opacity-0 transition-all focus:translate-y-0 focus:opacity-100;
+    @apply fixed left-3 top-3 z-[100] -translate-y-16 rounded-sm px-4 py-2 text-sm font-medium opacity-0 transition-all focus:translate-y-0 focus:opacity-100;
+    background-color: var(--ruby);
+    color: #fff;
   }
 
   .checkerboard-air {
     background-image:
-      linear-gradient(45deg, theme(colors.slate.300) 25%, transparent 25%, transparent 75%, theme(colors.slate.300) 75%),
-      linear-gradient(45deg, theme(colors.slate.300) 25%, transparent 25%, transparent 75%, theme(colors.slate.300) 75%);
+      linear-gradient(45deg, var(--line-strong) 25%, transparent 25%, transparent 75%, var(--line-strong) 75%),
+      linear-gradient(45deg, var(--line-strong) 25%, transparent 25%, transparent 75%, var(--line-strong) 75%);
     background-size: 8px 8px;
-    background-position: 0 0, 4px 4px;
-  }
-  .dark .checkerboard-air {
-    background-image:
-      linear-gradient(45deg, theme(colors.slate.700) 25%, transparent 25%, transparent 75%, theme(colors.slate.700) 75%),
-      linear-gradient(45deg, theme(colors.slate.700) 25%, transparent 25%, transparent 75%, theme(colors.slate.700) 75%);
-    background-size: 8px 8px;
-    background-position: 0 0, 4px 4px;
+    background-position:
+      0 0,
+      4px 4px;
   }
 
+  /* Mantiene el nombre que ya usa Home.tsx, con el tratamiento nuevo: grilla
+     técnica que se desvanece, sin degradados de color. */
   .bg-grid-fade {
     background-image:
-      linear-gradient(to bottom, transparent, white 85%),
-      radial-gradient(theme(colors.slate.300) 1px, transparent 1px);
+      linear-gradient(to bottom, transparent 40%, var(--bg) 100%),
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
     background-size:
       100% 100%,
-      22px 22px;
-  }
-  .dark .bg-grid-fade {
-    background-image:
-      linear-gradient(to bottom, transparent, theme(colors.slate.950) 85%),
-      radial-gradient(theme(colors.slate.700) 1px, transparent 1px);
-    background-size:
-      100% 100%,
-      22px 22px;
+      32px 32px,
+      32px 32px;
   }
 
   .text-gradient-brand {
-    @apply bg-gradient-to-br from-violet-600 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:via-violet-300 dark:to-fuchsia-400;
+    background-image: linear-gradient(100deg, var(--ruby) 0%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
+  /* ---------------------------------------------------------------------
+     Tipografía del contenido. Prioridad: leer cómodo y escanear rápido.
+     Medida ~72ch, interlineado 1.7, jerarquía por peso y línea divisoria en
+     vez de tamaños gigantes.
+     --------------------------------------------------------------------- */
+  .prose-doc {
+    font-size: 15px;
+    line-height: 1.7;
+  }
   .prose-doc h2 {
-    scroll-margin-top: 5.5rem;
+    scroll-margin-top: 7rem;
   }
   .prose-doc h3 {
-    scroll-margin-top: 5.5rem;
+    scroll-margin-top: 7rem;
   }
   .prose-doc p {
-    @apply mb-4 leading-relaxed text-slate-600 dark:text-slate-300;
+    @apply mb-4;
+    color: var(--text-dim);
+    max-width: 74ch;
   }
   .prose-doc ul,
   .prose-doc ol {
-    @apply mb-4 ml-5 space-y-1.5 text-slate-600 dark:text-slate-300;
+    @apply mb-4 ml-5 space-y-1.5;
+    color: var(--text-dim);
+    max-width: 74ch;
   }
   .prose-doc ul {
-    @apply list-disc marker:text-slate-300 dark:marker:text-slate-600;
+    @apply list-disc marker:text-slate-300 dark:marker:text-slate-700;
   }
   .prose-doc ol {
-    @apply list-decimal marker:text-slate-400 dark:marker:text-slate-500;
+    @apply list-decimal marker:font-mono marker:text-xs marker:text-slate-400 dark:marker:text-slate-500;
   }
-  .prose-doc a {
-    @apply text-violet-600 underline decoration-violet-300 underline-offset-2 hover:decoration-violet-500 dark:text-violet-400 dark:decoration-violet-700;
+  .prose-doc a:not(.no-prose) {
+    color: var(--ruby);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    text-decoration-color: color-mix(in srgb, var(--ruby) 40%, transparent);
+  }
+  .prose-doc a:not(.no-prose):hover {
+    text-decoration-color: var(--ruby);
   }
   .prose-doc strong {
-    @apply font-semibold text-slate-800 dark:text-slate-100;
+    @apply font-semibold;
+    color: var(--text);
   }
   .prose-doc > :first-child {
     margin-top: 0;
   }
+  /* Código inline: se tiene que distinguir del texto de un vistazo. */
   .prose-doc code:not(pre code) {
-    @apply rounded-md border border-slate-200 bg-slate-100 px-1.5 py-0.5 font-mono text-[0.85em] text-violet-700 dark:border-slate-700 dark:bg-slate-800 dark:text-violet-300;
+    @apply rounded-sm border px-1.5 py-0.5 font-mono text-[0.85em];
+    border-color: var(--line);
+    background-color: var(--surface-2);
+    color: var(--ruby);
   }
 }
 

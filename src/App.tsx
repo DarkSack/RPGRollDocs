@@ -1,6 +1,8 @@
 import { useHashRoute } from "./hooks/useHashRoute";
 import { useTheme } from "./hooks/useTheme";
+import { useDocVersion } from "./hooks/useDocVersion";
 import { Layout } from "./components/layout/Layout";
+import { LocaleProvider, useI18n, localizedPageLabel } from "./i18n";
 import { pageTitle } from "./content/nav";
 
 import { Home } from "./pages/Home";
@@ -41,15 +43,37 @@ import { Permissions } from "./pages/Permissions";
 import { Configuration } from "./pages/Configuration";
 import { Database } from "./pages/Database";
 import { Api } from "./pages/Api";
+import { Requirements } from "./pages/Requirements";
+import { Integrations } from "./pages/Integrations";
+import { Placeholders } from "./pages/Placeholders";
+import { Troubleshooting } from "./pages/Troubleshooting";
 
 function App() {
+  return (
+    <LocaleProvider>
+      <Console />
+    </LocaleProvider>
+  );
+}
+
+function Console() {
   const [route, navigate] = useHashRoute();
   const [theme, toggleTheme] = useTheme();
+  const [version, setVersion] = useDocVersion();
+  const { locale } = useI18n();
 
-  document.title = route === "inicio" ? "RPGRoll — Documentación" : `${pageTitle(route)} — RPGRoll`;
+  const title = localizedPageLabel(route, pageTitle(route), locale);
+  document.title = route === "inicio" ? "RPGRoll — Docs" : `${title} — RPGRoll Docs`;
 
   return (
-    <Layout current={route} onNavigate={navigate} theme={theme} onToggleTheme={toggleTheme}>
+    <Layout
+      current={route}
+      onNavigate={navigate}
+      theme={theme}
+      onToggleTheme={toggleTheme}
+      version={version}
+      onVersionChange={setVersion}
+    >
       <Page route={route} onNavigate={navigate} />
     </Layout>
   );
@@ -133,6 +157,14 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Database onNavigate={onNavigate} />;
     case "api":
       return <Api onNavigate={onNavigate} />;
+    case "requisitos":
+      return <Requirements onNavigate={onNavigate} />;
+    case "integraciones":
+      return <Integrations onNavigate={onNavigate} />;
+    case "placeholders":
+      return <Placeholders onNavigate={onNavigate} />;
+    case "troubleshooting":
+      return <Troubleshooting onNavigate={onNavigate} />;
     default:
       return <Home onNavigate={onNavigate} />;
   }

@@ -107,7 +107,7 @@ const speciesFields: YamlField[] = [
   },
   {
     key: "catch-effect",
-    label: "Efecto RPGRoll-Particles al capturar",
+    label: "Efecto RPGRoll-FX al capturar",
     type: "string",
   },
   {
@@ -207,7 +207,7 @@ export function Fishing({
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
+          "depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
         }
       />
       <p>

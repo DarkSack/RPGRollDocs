@@ -57,7 +57,7 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Effects, RPGRoll-Seasons, RPGRoll-Ranching, RPGRoll-Fishing, RPGRoll-Guilds, Vault, SackResourcePack]"}
+        code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Effects, RPGRoll-Seasons, RPGRoll-Ranching, RPGRoll-Fishing, RPGRoll-Guilds, Vault, SackResourcePack]"}
       />
       <p>
         De todos los addons que el diseño original nombraba como integración (Ranching/Fishing/Mining/Blacksmith/

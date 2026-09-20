@@ -64,6 +64,41 @@ La navegación por hash es asincrónica (depende del evento `hashchange` del nav
 sección elegida usa un poll con reintentos (`scrollToHeadingWhenReady`) en vez de un solo `setTimeout` — la
 sección puede no existir todavía en el DOM en el instante en que se hace click en un resultado.
 
+## Verificación de dependencias (`npm run check:deps`)
+
+Los ejemplos de `plugin.yml` que muestran las páginas de los addons están
+escritos a mano en el JSX, así que se desincronizan del proyecto Java sin que
+nada lo note. El síntoma es silencioso: Bukkit ignora sin avisar un
+`softdepend` que apunta a un plugin inexistente, de modo que un ejemplo con el
+nombre equivocado se copia, parece funcionar, y rompe el orden de carga de
+forma intermitente más adelante.
+
+```bash
+npm run check:deps
+```
+
+`scripts/check-plugin-deps.mjs` descarga los `plugin.yml` reales de
+`DarkSack/RPGRollSack` y los compara contra dos lugares:
+
+1. La tabla `addonDependencies` de `src/content/integrations.ts`, que alimenta
+   la página de Integraciones.
+2. El bloque `depend:`/`softdepend:` embebido en la página de cada addon.
+
+Compara como conjuntos (reordenar una línea del `plugin.yml` no es un error) y
+sale con código 1 si algo difiere, o 2 si no pudo consultar el repositorio. No
+necesita dependencias ni token: el repo del proyecto Java es público y el
+script importa los `.ts` con el type stripping nativo de Node.
+
+**La fuente de verdad es el `plugin.yml` del proyecto Java.** Si el check
+falla, lo que hay que corregir es la documentación.
+
+Corre en CI (`.github/workflows/ci.yml`) en cada PR y también una vez por
+semana, porque la documentación puede quedar desactualizada sin que este repo
+cambie — lo que se mueve es el otro.
+
+Si agregás un addon nuevo, sumá su carpeta de módulo al mapa `MODULES` del
+script.
+
 ## Actualizar contenido
 
 La mayoría de los datos "tabulares" (comandos, permisos, claves de configuración) viven en `src/content/*.ts`

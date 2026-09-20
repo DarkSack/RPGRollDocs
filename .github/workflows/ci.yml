@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # La documentación puede quedar desactualizada sin que este repo cambie: lo
+  # que se mueve es el proyecto Java. Una corrida semanal detecta esa deriva
+  # aunque nadie toque estas páginas.
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Typecheck y build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run build
+
+  plugin-deps:
+    name: Dependencias vs. plugin.yml reales
+    runs-on: ubuntu-latest
+    # Job aparte a propósito: consulta un repositorio externo, así que un
+    # problema de red no debe confundirse con un build roto.
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      # El script no necesita dependencias: usa fetch e importa los .ts
+      # directamente con el type stripping nativo de Node.
+      - name: Comparar con DarkSack/RPGRollSack
+        run: node scripts/check-plugin-deps.mjs

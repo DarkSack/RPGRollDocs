@@ -106,7 +106,7 @@ export function Effects({
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Guilds]"}
+        code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Guilds]"}
       />
       <p>
         Sin{" "}
@@ -115,7 +115,7 @@ export function Effects({
           onClick={() => onNavigate("rpgroll-particles")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          RPGRoll-Particles
+          RPGRoll-FX
         </button>{" "}
         instalado, los componentes <code>VISUAL</code> simplemente no hacen nada
         (el resto del efecto funciona igual). Sin RPGRoll-Guilds, las
@@ -252,14 +252,14 @@ export function Effects({
           <Tr>
             <Td className="font-mono text-xs">VISUAL</Td>
             <Td>
-              Dispara un efecto de RPGRoll-Particles por id
+              Dispara un efecto de RPGRoll-FX por id
               (partículas/sonido/título/bossbar) — solo funciona sobre
               jugadores.
             </Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">SOUND</Td>
-            <Td>Un sonido vanilla suelto, sin necesitar RPGRoll-Particles.</Td>
+            <Td>Un sonido vanilla suelto, sin necesitar RPGRoll-FX.</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">MESSAGE</Td>

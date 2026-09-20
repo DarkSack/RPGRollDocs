@@ -86,7 +86,7 @@ export function Seasons({
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Effects, RPGRoll-Mobs]"
+          "depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Effects, RPGRoll-Mobs]"
         }
       />
       <p>

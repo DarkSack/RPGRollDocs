@@ -1,5 +1,6 @@
 import { SectionHeading, Card, CardGrid, Callout, PrevNext, Badge, CodeBlock } from "../components/ui";
 import { addons } from "../content/addons";
+import { REPO_URL } from "../content/site";
 import {
   UsersIcon,
   WrenchIcon,
@@ -21,49 +22,67 @@ const STATS = [
 export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
   return (
     <>
-      <section className="-mt-2 mb-14 rounded-2xl border border-slate-200 bg-grid-fade px-6 py-14 text-center dark:border-slate-800 sm:px-10">
-        <span className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-500 text-white shadow-card">
-          <DiceIcon size={28} />
-        </span>
-        <h1 className="mx-auto max-w-2xl text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-100">
-          Un framework RPG completo para <span className="text-gradient-brand">Paper/Minecraft</span>
-        </h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-slate-500 dark:text-slate-400">
+      {/* Cabecera de la consola. A propósito NO es un hero: una línea de
+          contexto, el título, la bajada y la metadata del sistema — el primer
+          contenido útil tiene que entrar en la primera pantalla. */}
+      <section className="-mt-1 mb-12 border-b pb-6" style={{ borderColor: "var(--line)" }}>
+        <p className="fui-label mb-3">Sistema // RPGRoll</p>
+
+        <div className="flex items-start gap-3">
+          <span
+            className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border"
+            style={{ borderColor: "var(--line-strong)", backgroundColor: "var(--ruby-soft)", color: "var(--ruby)" }}
+          >
+            <DiceIcon size={19} />
+          </span>
+          <h1 className="text-[30px] font-bold leading-tight tracking-tight" style={{ color: "var(--text)" }}>
+            Un framework RPG completo para Paper/Minecraft
+          </h1>
+        </div>
+
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed" style={{ color: "var(--text-dim)" }}>
           Razas, clases, atributos, salud y maná, habilidades, trabajos y progresión por niveles — con {addons.length}{" "}
           addons oficiales que agregan desde mazmorras hasta una economía dinámica completa.
         </p>
-        <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+
+        <div className="mt-5 flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => onNavigate("configuracion")}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white shadow-soft transition-colors hover:bg-violet-700"
+            className="inline-flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-[13px] font-medium text-white transition-opacity hover:opacity-90"
+            style={{ backgroundColor: "var(--ruby)" }}
           >
             Empezar a configurar
-            <ArrowRightIcon size={16} />
+            <ArrowRightIcon size={14} />
           </button>
           <button
             type="button"
             onClick={() => onNavigate("arquitectura")}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            className="inline-flex items-center gap-1.5 rounded-sm border px-3 py-1.5 text-[13px] font-medium transition-colors"
+            style={{ borderColor: "var(--line)", color: "var(--text-dim)" }}
           >
             Ver arquitectura
           </button>
           <a
-            href="https://github.com/DarkSack/RPGRollSack"
+            href={REPO_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            className="no-prose inline-flex items-center gap-1.5 rounded-sm border px-3 py-1.5 text-[13px] font-medium no-underline transition-colors"
+            style={{ borderColor: "var(--line)", color: "var(--text-dim)" }}
           >
-            <GithubIcon size={16} />
+            <GithubIcon size={14} />
             GitHub
           </a>
         </div>
 
-        <dl className="mx-auto mt-10 grid max-w-xl grid-cols-2 gap-4 sm:grid-cols-4">
+        {/* Metadata del sistema: una fila de datos, no tarjetas. */}
+        <dl className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 border-t pt-4" style={{ borderColor: "var(--line)" }}>
           {STATS.map((s) => (
-            <div key={s.label} className="rounded-xl border border-slate-200/70 bg-white/60 py-3 dark:border-slate-800/70 dark:bg-slate-900/40">
-              <dt className="text-xs text-slate-400 dark:text-slate-500">{s.label}</dt>
-              <dd className="text-xl font-bold text-slate-800 dark:text-slate-100">{s.value}</dd>
+            <div key={s.label}>
+              <dt className="fui-label">{s.label}</dt>
+              <dd className="mt-0.5 font-mono text-[15px] font-semibold" style={{ color: "var(--text)" }}>
+                {s.value}
+              </dd>
             </div>
           ))}
         </dl>
@@ -232,7 +251,7 @@ function iconWrapClass(tone: "violet" | "green" | "amber" | "red" | "blue" | "ne
 function addonLabel(slug: string): string {
   const OVERRIDES: Record<string, string> = {
     "rpgroll-effects": "RPGRoll-Effects",
-    "rpgroll-particles": "RPGRoll-Particles",
+    "rpgroll-particles": "RPGRoll-FX",
     sackresourcepack: "SackResourcePack",
     tab: "RPGRoll-TAB",
   };

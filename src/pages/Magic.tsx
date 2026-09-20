@@ -50,23 +50,23 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <PageHeader title="Magic (RPGRoll-Magic)">
         Framework de magia modular — escuelas con afinidades, hechizos construidos por componentes (nunca
         "programados"), maná/vida/experiencia/reactivos como costo, catalizadores, grimorios, runas y árboles de
-        progresión. Profundamente integrado con RPGRoll-Particles (visuales) y RPGRoll-Effects (aplicar maldiciones/
+        progresión. Profundamente integrado con RPGRoll-FX (visuales) y RPGRoll-Effects (aplicar maldiciones/
         curses reales).
       </PageHeader>
 
       <Callout tone="info" title="No existen hechizos programados">
         Todos los hechizos, sin excepción, se arman encadenando los mismos ~23 tipos de componente en el orden que
         quieras — igual que <code>EffectComponent</code> en RPGRoll-Effects o <code>EffectStep</code> en
-        RPGRoll-Particles. No hay ninguna clase Java especial para "Fireball" o "Meteoro": ambos son la misma{" "}
+        RPGRoll-FX. No hay ninguna clase Java especial para "Fireball" o "Meteoro": ambos son la misma{" "}
         <code>Spell</code>, solo con distintos componentes.
       </Callout>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Effects]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Effects]"} />
       <p>
         Sin{" "}
         <button type="button" onClick={() => onNavigate("rpgroll-particles")} className="text-violet-600 underline dark:text-violet-400">
-          RPGRoll-Particles
+          RPGRoll-FX
         </button>
         , los componentes <code>VISUAL</code> no hacen nada. Sin{" "}
         <button type="button" onClick={() => onNavigate("rpgroll-effects")} className="text-violet-600 underline dark:text-violet-400">
