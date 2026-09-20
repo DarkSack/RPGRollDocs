@@ -1,58 +1,70 @@
 import { PageHeader, SectionHeading, Callout, CodeBlock, Table, Thead, Th, Tr, Td, PrevNext } from "../components/ui";
+import { pageTitle } from "../content/nav";
+import { useI18n, fill, localizedPageLabel } from "../i18n";
+import { CONFIG_DB_COPY, type ConfigDatabaseCopy } from "./copy/configDatabase";
 
-const migrations = [
-  { version: "V1", file: "create_players.sql", desc: "Tabla players: identidad, raza, clase, nivel, experiencia." },
-  { version: "V2", file: "create_player_stats.sql", desc: "Tabla player_stats: los 6 atributos D&D." },
-  { version: "V3", file: "create_player_skills.sql", desc: "Tabla player_skills: habilidades aprendidas y su nivel." },
-  { version: "V4", file: "create_player_traits.sql", desc: "Tabla player_traits: traits adquiridos." },
-  { version: "V5", file: "create_player_jobs.sql", desc: "Tabla player_jobs: trabajos activos, nivel y experiencia." },
-  { version: "V6", file: "create_placed_blocks.sql", desc: "Tabla placed_blocks: anti-farm del Minero." },
-  { version: "V7", file: "create_explorer_progress.sql", desc: "Tabla explorer_progress: biomas visitados y distancia recorrida." },
-  { version: "V8", file: "add_placed_at_to_placed_blocks.sql", desc: "Agrega timestamp a placed_blocks (para la limpieza periódica)." },
-  { version: "V9", file: "add_stat_points_and_resources.sql", desc: "Agrega unspent_stat_points a players, y max/current health/mana a player_stats." },
+type MigrationKey = keyof ConfigDatabaseCopy["database"];
+
+const migrations: { version: string; file: string; key: MigrationKey }[] = [
+  { version: "V1", file: "create_players.sql", key: "m1" },
+  { version: "V2", file: "create_player_stats.sql", key: "m2" },
+  { version: "V3", file: "create_player_skills.sql", key: "m3" },
+  { version: "V4", file: "create_player_traits.sql", key: "m4" },
+  { version: "V5", file: "create_player_jobs.sql", key: "m5" },
+  { version: "V6", file: "create_placed_blocks.sql", key: "m6" },
+  { version: "V7", file: "create_explorer_progress.sql", key: "m7" },
+  { version: "V8", file: "add_placed_at_to_placed_blocks.sql", key: "m8" },
+  { version: "V9", file: "add_stat_points_and_resources.sql", key: "m9" },
 ];
 
 export function Database({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = CONFIG_DB_COPY[locale].database;
+
   return (
     <>
-      <PageHeader title="Base de datos">
-        SQLite embebido (sin servidor externo), con un sistema de migraciones versionadas propio.
+      <PageHeader title={c.title} slug="base-de-datos">
+        {c.intro}
       </PageHeader>
 
-      <SectionHeading id="migraciones">Sistema de migraciones</SectionHeading>
+      <SectionHeading id="migraciones">{c.migrationsTitle}</SectionHeading>
       <p>
-        Cada migración es un archivo <code>.sql</code> plano dentro del jar (
-        <code>database/migrations/</code>), registrado manualmente en{" "}
-        <code>MigrationRegistry</code> con un número de versión. <code>SchemaVersionTracker</code> guarda qué
-        versiones ya se aplicaron; <code>DatabaseMigrator</code> corre las pendientes en orden, cada una dentro de
-        su propia transacción (rollback automático si falla).
+        {fill(c.migrationsBody, {
+          sql: <code>.sql</code>,
+          dir: <code>database/migrations/</code>,
+          registry: <code>MigrationRegistry</code>,
+          tracker: <code>SchemaVersionTracker</code>,
+          migrator: <code>DatabaseMigrator</code>,
+        })}
       </p>
 
       <Table>
         <Thead>
-          <Th>Versión</Th>
-          <Th>Archivo</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thVersion}</Th>
+          <Th>{c.thFile}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
           {migrations.map((m) => (
             <Tr key={m.version}>
               <Td className="font-mono text-xs">{m.version}</Td>
-              <Td className="font-mono text-xs whitespace-nowrap">{m.file}</Td>
-              <Td>{m.desc}</Td>
+              <Td className="whitespace-nowrap font-mono text-xs">{m.file}</Td>
+              <Td>{c[m.key] as string}</Td>
             </Tr>
           ))}
         </tbody>
       </Table>
 
       <Callout tone="tip">
-        Para agregar tu propia migración: crea <code>V10__descripcion.sql</code> en{" "}
-        <code>core/src/main/resources/database/migrations/</code>, y registrala en{" "}
-        <code>MigrationRegistry.registerMigrations()</code> con <code>register(10, "V10__descripcion.sql")</code>.
-        Las migraciones se ejecutan en orden y nunca se re-corren una vez aplicadas.
+        {fill(c.tipBody, {
+          file: <code>V10__descripcion.sql</code>,
+          dir: <code>core/src/main/resources/database/migrations/</code>,
+          call: <code>MigrationRegistry.registerMigrations()</code>,
+          register: <code>register(10, "V10__descripcion.sql")</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="esquema">Esquema actual (tablas principales)</SectionHeading>
+      <SectionHeading id="esquema">{c.schemaTitle}</SectionHeading>
       <CodeBlock
         language="text"
         code={
@@ -71,18 +83,18 @@ export function Database({ onNavigate }: { onNavigate: (slug: string) => void })
           "player_skills        (uuid, skill_id, skill_level)\n" +
           "player_traits        (uuid, trait_id)\n" +
           "player_jobs          (uuid, job_id, level, experience)\n" +
-          "placed_blocks        (anti-farm del Minero, con placed_at)\n" +
-          "explorer_progress    (biomas visitados, distancia acumulada)\n"
+          "placed_blocks        (anti-farm, placed_at)\n" +
+          "explorer_progress    (biomes, distance)\n"
         }
       />
 
-      <SectionHeading id="conexion">Configuración de conexión</SectionHeading>
+      <SectionHeading id="conexion">{c.connTitle}</SectionHeading>
       <p>
-        Ver <code>database.yml</code> en{" "}
-        <button className="underline" onClick={() => onNavigate("configuracion")}>
-          Configuración
+        {fill(c.connBody, { file: <code>database.yml</code> })}{" "}
+        <button type="button" className="underline" onClick={() => onNavigate("configuracion")}>
+          {localizedPageLabel("configuracion", pageTitle("configuracion"), locale)}
         </button>{" "}
-        — modo WAL activado por defecto para mejor concurrencia lectura/escritura.
+        {c.connAfter}
       </p>
 
       <PrevNext current="base-de-datos" onNavigate={onNavigate} />

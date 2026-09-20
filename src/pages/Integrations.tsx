@@ -1,12 +1,21 @@
 import { PageHeader, SectionHeading, Table, Thead, Th, Tr, Td, Badge, Callout, PrevNext } from "../components/ui";
 import { integrations, nonIntegrations, addonDependencies, type Requirement } from "../content/integrations";
 import { pageTitle } from "../content/nav";
+import {
+  useI18n,
+  fill,
+  localizedPageLabel,
+  localizedIntegrationSummary,
+  localizedIntegrationNote,
+  localizedNonIntegration,
+} from "../i18n";
+import { PH_INT_COPY } from "./copy/placeholdersIntegrations";
 import { PlugIcon } from "../components/icons/Icon";
 
-const REQUIREMENT_BADGE: Record<Requirement, { tone: "violet" | "neutral" | "green"; label: string }> = {
-  required: { tone: "violet", label: "requerido" },
-  optional: { tone: "neutral", label: "opcional" },
-  provided: { tone: "green", label: "lo provee" },
+const REQUIREMENT_TONE: Record<Requirement, "violet" | "neutral" | "green"> = {
+  required: "violet",
+  optional: "neutral",
+  provided: "green",
 };
 
 /**
@@ -16,56 +25,60 @@ const REQUIREMENT_BADGE: Record<Requirement, { tone: "violet" | "neutral" | "gre
  * addon, así que responder "¿necesito Vault?" obligaba a abrir 23 páginas.
  */
 export function Integrations({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = PH_INT_COPY[locale].integrations;
+
+  const reqLabel: Record<Requirement, string> = {
+    required: c.reqRequired,
+    optional: c.reqOptional,
+    provided: c.reqProvided,
+  };
+
+  const label = (slug: string) => localizedPageLabel(slug, pageTitle(slug), locale);
+
   return (
     <>
       <PageHeader
-        title="Integraciones"
+        title={c.title}
         slug="integraciones"
         icon={PlugIcon}
         meta={[
-          { label: "Integraciones", value: String(integrations.length) },
-          { label: "Dep. duras de terceros", value: "1" },
+          { label: c.metaIntegrations, value: String(integrations.length) },
+          { label: c.metaHard, value: "1" },
         ]}
       >
-        Qué plugins de terceros usa el ecosistema, cuáles son obligatorios, y qué deja de funcionar exactamente si
-        no están instalados.
+        {c.intro}
       </PageHeader>
 
-      <Callout tone="info" title="Casi todo es opcional">
-        Salvo <strong>ProtocolLib en RPGRoll-NPCs</strong>, todas las dependencias de terceros son{" "}
-        <code>softdepend</code>: el addon carga igual y solo se apaga la función concreta que necesitaba ese plugin.
-        Ningún addon obliga a instalar Vault ni PlaceholderAPI.
+      <Callout tone="info" title={c.optionalTitle}>
+        {fill(c.optionalBody, { protocol: <strong>{c.protocolStrong}</strong>, soft: <code>softdepend</code> })}
       </Callout>
 
       {integrations.map((integration) => (
         <div key={integration.id}>
           <SectionHeading id={integration.id}>{integration.name}</SectionHeading>
           <p className="flex flex-wrap items-center gap-2">
-            <Badge tone={REQUIREMENT_BADGE[integration.requirement].tone}>
-              {REQUIREMENT_BADGE[integration.requirement].label}
-            </Badge>
+            <Badge tone={REQUIREMENT_TONE[integration.requirement]}>{reqLabel[integration.requirement]}</Badge>
           </p>
-          <p>{integration.summary}</p>
+          <p>{localizedIntegrationSummary(integration.id, integration.summary, locale)}</p>
           <Table>
             <Thead>
-              <Th>Addon</Th>
-              <Th>Tipo</Th>
-              <Th>Qué aporta</Th>
+              <Th>{c.thAddon}</Th>
+              <Th>{c.thType}</Th>
+              <Th>{c.thProvides}</Th>
             </Thead>
             <tbody>
               {integration.usedBy.map((use) => (
                 <Tr key={use.slug}>
                   <Td>
                     <button type="button" className="underline" onClick={() => onNavigate(use.slug)}>
-                      {pageTitle(use.slug)}
+                      {label(use.slug)}
                     </button>
                   </Td>
                   <Td>
-                    <Badge tone={REQUIREMENT_BADGE[use.requirement].tone}>
-                      {REQUIREMENT_BADGE[use.requirement].label}
-                    </Badge>
+                    <Badge tone={REQUIREMENT_TONE[use.requirement]}>{reqLabel[use.requirement]}</Badge>
                   </Td>
-                  <Td>{use.note}</Td>
+                  <Td>{localizedIntegrationNote(integration.id, use.slug, use.note, locale)}</Td>
                 </Tr>
               ))}
             </tbody>
@@ -73,34 +86,32 @@ export function Integrations({ onNavigate }: { onNavigate: (slug: string) => voi
         </div>
       ))}
 
-      <SectionHeading id="no-integrado">Lo que NO integra</SectionHeading>
+      <SectionHeading id="no-integrado">{c.notTitle}</SectionHeading>
       <p>
-        Estos plugins se dan por supuestos con frecuencia. El ecosistema implementa esa funcionalidad por su cuenta,
-        así que <strong>no hace falta instalarlos y tampoco van a interoperar</strong>.
+        {fill(c.notLead, { strong: <strong>{c.notStrong}</strong> })}
       </p>
       <Table>
         <Thead>
-          <Th>Plugin</Th>
-          <Th>Por qué no</Th>
+          <Th>{c.thPlugin}</Th>
+          <Th>{c.thWhyNot}</Th>
         </Thead>
         <tbody>
           {nonIntegrations.map((item) => (
             <Tr key={item.name}>
               <Td className="font-medium">{item.name}</Td>
-              <Td>{item.reason}</Td>
+              <Td>{localizedNonIntegration(item.name, item.reason, locale)}</Td>
             </Tr>
           ))}
         </tbody>
       </Table>
 
-      <SectionHeading id="grafo">Grafo de dependencias entre addons</SectionHeading>
+      <SectionHeading id="grafo">{c.graphTitle}</SectionHeading>
       <p>
-        Transcripción del <code>plugin.yml</code> de cada addon. <code>depend</code> bloquea la carga si falta;{" "}
-        <code>softdepend</code> solo habilita funciones. <code>Particles</code> es el nombre de plugin de RPGRoll-FX.
+        {fill(c.graphLead, { file: <code>plugin.yml</code>, depend: <code>depend</code>, soft: <code>softdepend</code> })}
       </p>
       <Table>
         <Thead>
-          <Th>Addon</Th>
+          <Th>{c.thAddon}</Th>
           <Th>depend</Th>
           <Th>softdepend</Th>
         </Thead>
@@ -109,7 +120,7 @@ export function Integrations({ onNavigate }: { onNavigate: (slug: string) => voi
             <Tr key={addon.slug}>
               <Td>
                 <button type="button" className="underline" onClick={() => onNavigate(addon.slug)}>
-                  {pageTitle(addon.slug)}
+                  {label(addon.slug)}
                 </button>
               </Td>
               <Td className="font-mono text-xs">{addon.hard.length > 0 ? addon.hard.join(", ") : "—"}</Td>

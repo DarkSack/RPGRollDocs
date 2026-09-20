@@ -4,6 +4,13 @@ export { fill } from "./fill";
 export { localizedBlurb } from "./data/addonBlurbs";
 export { localizedCommand } from "./data/commands";
 export { localizedPermission } from "./data/permissions";
+export { localizedConfigFile, localizedConfigKey } from "./data/config";
+export { localizedPlaceholder } from "./data/placeholders";
+export {
+  localizedIntegrationSummary,
+  localizedIntegrationNote,
+  localizedNonIntegration,
+} from "./data/integrations";
 export { TRANSLATED_PAGES } from "./translated";
 export type { LocaleContextValue } from "./context";
 export { LOCALES, LOCALE_META, STRINGS } from "./strings";

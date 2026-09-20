@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { PageHeader, SectionHeading, Table, Thead, Th, Tr, Td, Callout, CopyButton, PrevNext } from "../components/ui";
 import { placeholders, placeholderExpansions } from "../content/placeholders";
 import { pageTitle } from "../content/nav";
+import { useI18n, fill, localizedPlaceholder, localizedPageLabel } from "../i18n";
+import { PH_INT_COPY } from "./copy/placeholdersIntegrations";
 import { BracesIcon, SearchIcon } from "../components/icons/Icon";
 
 function normalize(text: string): string {
@@ -20,6 +22,8 @@ function normalize(text: string): string {
  * placeholder casi siempre se va a pegar en otro plugin.
  */
 export function Placeholders({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = PH_INT_COPY[locale].placeholders;
   const [query, setQuery] = useState("");
 
   const groups = useMemo(() => {
@@ -41,28 +45,25 @@ export function Placeholders({ onNavigate }: { onNavigate: (slug: string) => voi
   return (
     <>
       <PageHeader
-        title="Placeholders"
+        title={c.title}
         slug="placeholders"
         icon={BracesIcon}
         meta={[
-          { label: "Placeholders", value: String(placeholders.length) },
-          { label: "Expansiones", value: String(placeholderExpansions.length) },
-          { label: "Requiere", value: "PlaceholderAPI" },
+          { label: c.metaPlaceholders, value: String(placeholders.length) },
+          { label: c.metaExpansions, value: String(placeholderExpansions.length) },
+          { label: c.metaRequires, value: "PlaceholderAPI" },
         ]}
       >
-        Todos los placeholders que registra el ecosistema, con la expansión que los expone y el addon que hay que
-        tener instalado.
+        {c.intro}
       </PageHeader>
 
-      <Callout tone="info" title="PlaceholderAPI es opcional">
-        Ningún addon lo exige. Sin PlaceholderAPI instalado todo sigue funcionando: simplemente no se registra
-        ninguna expansión y los tokens se muestran literales en los plugins que los usen. Cada expansión la registra
-        su addon, así que <code>%rpgrollguilds_…%</code> solo existe si RPGRoll-Guilds está instalado.
+      <Callout tone="info" title={c.calloutTitle}>
+        {fill(c.calloutBody, { example: <code>%rpgrollguilds_…%</code> })}
       </Callout>
 
-      <SectionHeading id="buscar">Buscar</SectionHeading>
+      <SectionHeading id="buscar">{c.searchTitle}</SectionHeading>
       <label className="relative mb-4 block max-w-md">
-        <span className="sr-only">Filtrar placeholders</span>
+        <span className="sr-only">{c.searchLabel}</span>
         <SearchIcon
           size={14}
           className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2"
@@ -71,7 +72,7 @@ export function Placeholders({ onNavigate }: { onNavigate: (slug: string) => voi
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="nivel, guild, balance, helditem…"
+          placeholder={c.searchPlaceholder}
           className="w-full rounded-sm border py-2 pl-8 pr-3 text-[13px] outline-none"
           style={{ borderColor: "var(--line)", backgroundColor: "var(--surface-2)", color: "var(--text)" }}
         />
@@ -82,7 +83,7 @@ export function Placeholders({ onNavigate }: { onNavigate: (slug: string) => voi
 
       {groups.length === 0 && (
         <p className="py-10 text-center text-sm" style={{ color: "var(--text-faint)" }}>
-          Sin coincidencias para &ldquo;{query}&rdquo;.
+          {c.noResults} &ldquo;{query}&rdquo;.
         </p>
       )}
 
@@ -94,25 +95,25 @@ export function Placeholders({ onNavigate }: { onNavigate: (slug: string) => voi
               {group.expansion}
             </SectionHeading>
             <p>
-              La registra{" "}
+              {c.registeredBy}{" "}
               <button type="button" className="underline" onClick={() => onNavigate(slug)}>
-                {pageTitle(slug)}
+                {localizedPageLabel(slug, pageTitle(slug), locale)}
               </button>
               .
             </p>
             <Table>
               <Thead>
-                <Th>Placeholder</Th>
-                <Th>Devuelve</Th>
+                <Th>{c.thPlaceholder}</Th>
+                <Th>{c.thReturns}</Th>
                 <Th className="w-16">
-                  <span className="sr-only">Copiar</span>
+                  <span className="sr-only">{c.thCopy}</span>
                 </Th>
               </Thead>
               <tbody>
                 {group.rows.map((row) => (
                   <Tr key={row.name}>
                     <Td className="font-mono text-xs">{row.name}</Td>
-                    <Td>{row.description}</Td>
+                    <Td>{localizedPlaceholder(row.name, row.description, locale)}</Td>
                     <Td>
                       <CopyButton text={row.name} />
                     </Td>
@@ -124,10 +125,11 @@ export function Placeholders({ onNavigate }: { onNavigate: (slug: string) => voi
         );
       })}
 
-      <Callout tone="tip" title="Los argumentos entre <> se reemplazan">
-        Un token como <code>{"%rpgroll_job_<id>_level%"}</code> espera el id del contenido en esa posición:{" "}
-        <code>%rpgroll_job_minero_level%</code>. El botón de copiar entrega el token con el argumento tal cual, para
-        que lo sustituyas.
+      <Callout tone="tip" title={c.argsTitle}>
+        {fill(c.argsBody, {
+          token: <code>{"%rpgroll_job_<id>_level%"}</code>,
+          example: <code>%rpgroll_job_minero_level%</code>,
+        })}
       </Callout>
 
       <PrevNext current="placeholders" onNavigate={onNavigate} />
