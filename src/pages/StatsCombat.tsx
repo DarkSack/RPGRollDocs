@@ -1,112 +1,156 @@
 import { PageHeader, SectionHeading, Callout, CodeBlock, Table, Thead, Th, Tr, Td, Kbd, PrevNext } from "../components/ui";
+import { useI18n, fill, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
+import { CORE_COPY } from "./copy/core";
+
+const MAX_TITLE = "maxHealth/maxMana NO se recalculan en cada carga";
+const MAX_BODY =
+  "A propósito: si se recalcularan desde la fórmula en cada login se perdería el crecimiento acumulado por nivel. En cambio se persisten en la BD tal cual, y solo crecen explícitamente vía CombatStats.growHealth()/growMana() (level up, o al invertir un punto en Constitución/Inteligencia). armorRating/evasionChance/criticalChance sí se recalculan libremente, porque no tienen historial propio que perder.";
+
+const DUP_TITLE = "Esto es daño duplicado, en dos sistemas distintos";
+const DUP_BODY =
+  "La vida vanilla (corazones) sigue existiendo y sigue causando muerte normal a 0 HP. La salud RPG es un segundo contador independiente. Un jugador puede llegar a 0 salud RPG (y quedar debilitado) sin estar cerca de morir de verdad, o viceversa. Si quieres unificarlos, es la próxima decisión de diseño grande a tomar.";
 
 export function StatsCombat({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = CORE_COPY[locale].stats;
+
   return (
     <>
-      <PageHeader title="Stats, salud y maná">
-        Los 6 atributos D&D, y un sistema de salud/maná propio de RPGRoll — independiente de los corazones de
-        Minecraft.
+      <PageHeader title={c.title} slug="stats-combate">
+        {c.intro}
       </PageHeader>
 
-      <SectionHeading id="atributos">Los 6 atributos</SectionHeading>
+      <SectionHeading id="atributos">{c.attrTitle}</SectionHeading>
       <p>
-        <code>PlayerStats</code> guarda Fuerza, Destreza, Constitución, Inteligencia, Sabiduría y Carisma, cada uno
-        entre 1 y 20 (10 por defecto). El modificador estilo D&D se calcula como <code>(valor - 10) / 2</code>{" "}
-        (división entera) y es lo que realmente afecta salud, maná, armadura, evasión y crítico — no el valor
-        crudo.
+        {fill(c.attrBody, {
+          playerStats: <code>PlayerStats</code>,
+          formula: <code>(valor - 10) / 2</code>,
+        })}
       </p>
 
-      <SectionHeading id="combatstats">CombatStats: el recurso de salud/maná</SectionHeading>
-      <Callout tone="info" title="No es la barra de corazones">
-        RPGRoll trackea <code>currentHealth</code>/<code>maxHealth</code> y <code>currentMana</code>/
-        <code>maxMana</code> como un recurso propio (escala base 100, no 20), separado de la vida vanilla de
-        Minecraft. Es una decisión de diseño deliberada: evita reescribir el sistema de muerte/respawn de Bukkit,
-        pero significa que la salud "RPG" no es literalmente lo mismo que las vidas del jugador.
+      <SectionHeading id="combatstats">{c.combatTitle}</SectionHeading>
+      <Callout tone="info" title={c.notHeartsTitle}>
+        {fill(c.notHeartsBody, {
+          health: (
+            <>
+              <code>currentHealth</code>/<code>maxHealth</code>
+            </>
+          ),
+          mana: (
+            <>
+              <code>currentMana</code>/<code>maxMana</code>
+            </>
+          ),
+        })}
       </Callout>
 
       <Table>
         <Thead>
-          <Th>Campo</Th>
-          <Th>Se deriva de</Th>
+          <Th>{c.thField}</Th>
+          <Th>{c.thDerived}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">maxHealth</Td><Td>100 + (modificador de Constitución × 5), + bonos acumulados de level up</Td></Tr>
-          <Tr><Td className="font-mono text-xs">maxMana</Td><Td>100 + (modificador de Inteligencia × 5), + bonos acumulados de level up</Td></Tr>
-          <Tr><Td className="font-mono text-xs">armorRating</Td><Td>5.0 + (nivel × 0.5) — se recalcula siempre, no acumula</Td></Tr>
-          <Tr><Td className="font-mono text-xs">evasionChance</Td><Td>0.10 + (modificador de Destreza × 0.02)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">criticalChance</Td><Td>0.05 + (modificador de Destreza × 0.01)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">criticalMultiplier</Td><Td>1.5 (fijo)</Td></Tr>
+          <Tr>
+            <Td className="font-mono text-xs">maxHealth</Td>
+            <Td>{c.dMaxHealth}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">maxMana</Td>
+            <Td>{c.dMaxMana}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">armorRating</Td>
+            <Td>{c.dArmor}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">evasionChance</Td>
+            <Td>{c.dEvasion}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">criticalChance</Td>
+            <Td>{c.dCrit}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">criticalMultiplier</Td>
+            <Td>{c.dCritMult}</Td>
+          </Tr>
         </tbody>
       </Table>
 
-      <Callout tone="warning" title="maxHealth/maxMana NO se recalculan en cada carga">
-        A propósito: si se recalcularan desde la fórmula en cada login se perdería el crecimiento acumulado por
-        nivel. En cambio se persisten en la BD tal cual, y solo crecen explícitamente vía{" "}
-        <code>CombatStats.growHealth()</code>/<code>growMana()</code> (level up, o al invertir un punto en
-        Constitución/Inteligencia). armorRating/evasionChance/criticalChance sí se recalculan libremente, porque
-        no tienen historial propio que perder.
+      <Callout tone="warning" title={localizedCaveatTitle("stats-combate", MAX_TITLE, locale)}>
+        {localizedCaveatBody("stats-combate", MAX_TITLE, MAX_BODY, locale)}
       </Callout>
 
-      <SectionHeading id="puntos-de-stat">Puntos de estadística</SectionHeading>
+      <SectionHeading id="puntos-de-stat">{c.pointsTitle}</SectionHeading>
       <p>
-        Cada nivel otorga puntos de estadística (configurable en <code>levelup-rewards.yml</code>, 2 por defecto)
-        que quedan guardados como <code>unspentStatPoints</code> en <code>PlayerProgression</code> hasta que el
-        jugador los gasta con:
+        {fill(c.pointsBody, {
+          file: <code>levelup-rewards.yml</code>,
+          field: <code>unspentStatPoints</code>,
+          progression: <code>PlayerProgression</code>,
+        })}
       </p>
-      <CodeBlock language="text" code={"/rpg allocate <fuerza|destreza|constitucion|inteligencia|sabiduria|carisma> <cantidad>"} />
+      <CodeBlock
+        language="text"
+        code={"/rpg allocate <fuerza|destreza|constitucion|inteligencia|sabiduria|carisma> <cantidad>"}
+      />
       <p>
-        Internamente usa <code>StatPointAllocator</code> para validar (puntos suficientes, no pasarse de 20), y si
-        el punto sube el modificador de Constitución o Inteligencia, ajusta <code>maxHealth</code>/
-        <code>maxMana</code> en el momento; si sube Destreza, refresca evasión/crítico.
+        {fill(c.pointsAfter, {
+          allocator: <code>StatPointAllocator</code>,
+          health: (
+            <>
+              <code>maxHealth</code>/<code>maxMana</code>
+            </>
+          ),
+        })}
       </p>
 
-      <SectionHeading id="respec">Reiniciar atributos (admin)</SectionHeading>
-      <p>
-        <Kbd>{"/rpg resetstats <jugador>"}</Kbd> vuelve los 6 atributos a su valor base (10) y le devuelve al
-        jugador, como puntos sin gastar, la suma de todo lo que debería haber ganado según su nivel actual — un
-        respec completo. No toca salud/maná máximos acumulados, porque esos crecen con el nivel, no con los
-        puntos de atributo invertidos.
-      </p>
+      <SectionHeading id="respec">{c.respecTitle}</SectionHeading>
+      <p>{fill(c.respecBody, { command: <Kbd>{"/rpg resetstats <jugador>"}</Kbd> })}</p>
 
-      <SectionHeading id="combate-real">Consecuencias reales en combate</SectionHeading>
-      <p><code>CombatEffectsListener</code> conecta estos números con el combate de verdad:</p>
+      <SectionHeading id="combate-real">{c.realTitle}</SectionHeading>
+      <p>{fill(c.realLead, { listener: <code>CombatEffectsListener</code> })}</p>
       <ol>
-        <li><strong>Evasión</strong> se tira primero — si esquivas, el evento de daño se cancela por completo.</li>
+        <li>{fill(c.r1, { strong: <strong>{c.r1s}</strong> })}</li>
         <li>
-          <strong>Armadura</strong> reduce el daño real con una fórmula de retornos decrecientes:{" "}
-          <code>reducción = armorRating / (armorRating + 50)</code>.
+          {fill(c.r2, {
+            strong: <strong>{c.r2s}</strong>,
+            formula: <code>reducción = armorRating / (armorRating + 50)</code>,
+          })}
         </li>
         <li>
-          <strong>Crítico</strong> (si sos el atacante) multiplica tu daño por <code>criticalMultiplier</code>{" "}
-          antes de que se aplique la armadura del defensor.
+          {fill(c.r3, {
+            strong: <strong>{c.r3s}</strong>,
+            mult: <code>criticalMultiplier</code>,
+          })}
         </li>
-        <li>
-          El daño final (post-armadura) se descuenta de tu <code>currentHealth</code> RPG. Si llega a 0: recibes
-          Lentitud + Debilidad por 5 segundos y te recuperas al 25% de tu máximo — un estado "derribado" propio,
-          no la muerte vanilla (esa sigue funcionando en paralelo, gobernada por tus corazones reales).
-        </li>
+        <li>{fill(c.r4, { health: <code>currentHealth</code> })}</li>
       </ol>
-      <Callout tone="danger" title="Esto es daño duplicado, en dos sistemas distintos">
-        La vida vanilla (corazones) sigue existiendo y sigue causando muerte normal a 0 HP. La salud RPG es un
-        segundo contador independiente. Un jugador puede llegar a 0 salud RPG (y quedar debilitado) sin estar
-        cerca de morir de verdad, o viceversa. Si quieres unificarlos, es la próxima decisión de diseño grande a
-        tomar.
+      <Callout tone="danger" title={localizedCaveatTitle("stats-combate", DUP_TITLE, locale)}>
+        {localizedCaveatBody("stats-combate", DUP_TITLE, DUP_BODY, locale)}
       </Callout>
 
-      <SectionHeading id="regeneracion">Regeneración pasiva</SectionHeading>
+      <SectionHeading id="regeneracion">{c.regenTitle}</SectionHeading>
       <p>
-        <code>ResourceRegenTask</code> corre cada <code>combat.regen_interval_seconds</code> (config, 5s por
-        defecto) y suma un % del máximo a salud/maná (<code>health_regen_percent</code>/
-        <code>mana_regen_percent</code>). Si <code>combat.natural_regen_in_combat</code> es <code>false</code>{" "}
-        (default), no regenera mientras el jugador esté en combate reciente (ventana definida por{" "}
-        <code>combat.combat_duration</code>).
+        {fill(c.regenBody, {
+          task: <code>ResourceRegenTask</code>,
+          interval: <code>combat.regen_interval_seconds</code>,
+          percents: (
+            <>
+              <code>health_regen_percent</code>/<code>mana_regen_percent</code>
+            </>
+          ),
+          flag: <code>combat.natural_regen_in_combat</code>,
+          false: <code>false</code>,
+          duration: <code>combat.combat_duration</code>,
+        })}
       </p>
 
-      <SectionHeading id="hud">Indicador en pantalla</SectionHeading>
+      <SectionHeading id="hud">{c.hudTitle}</SectionHeading>
       <p>
-        <code>PlayerResourceBar</code> muestra un boss bar persistente: la barra de progreso refleja el % de
-        salud, y el maná se muestra como texto en el título (<code>❤ 80/100   ✦ 45/100</code>). Se actualiza en
-        cada golpe, cada uso de habilidad, y cada tick de regeneración.
+        {fill(c.hudBody, {
+          bar: <code>PlayerResourceBar</code>,
+          example: <code>❤ 80/100   ✦ 45/100</code>,
+        })}
       </p>
 
       <PrevNext current="stats-combate" onNavigate={onNavigate} />

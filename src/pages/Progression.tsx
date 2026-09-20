@@ -1,16 +1,41 @@
 import { PageHeader, SectionHeading, Callout, CodeBlock, Table, Thead, Th, Tr, Td, Kbd, PrevNext } from "../components/ui";
+import { pageTitle } from "../content/nav";
+import { useI18n, fill, localizedPageLabel, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
+import { CORE_COPY } from "./copy/core";
+
+const CAVEAT_TITLE = "unlocked_skills/unlocked_traits no valida que el contenido exista";
+const CAVEAT_BODY =
+  "El levelup-rewards.yml de ejemplo referencia skills como power_strike, whirlwind y meteor_strike, y traits como warriors_resolve/arcane_master/ legend_of_old — ninguno tiene un archivo YAML real en skills//traits/ todavía. El jugador “aprende” el ID igual, pero /rpg use fallará con “no existe la habilidad” porque SkillManager no la tiene registrada. Si agregas niveles con contenido nuevo, crea también el YAML correspondiente.";
+
+const REWARDS = [
+  { level: 2, xp: "150", pts: 2, hp: 10, mp: 6, unlock: "—" },
+  { level: 3, xp: "325", pts: 2, hp: 15, mp: 9, unlock: "—" },
+  { level: 5, xp: "1,000", pts: 3, hp: 25, mp: 15, unlock: "skill: power_strike" },
+  { level: 10, xp: "5,000", pts: 3, hp: 50, mp: 30, unlock: "skills: whirlwind, fireball" },
+  { level: 15, xp: "15,000", pts: 4, hp: 75, mp: 45, unlock: "trait: warriors_resolve" },
+  { level: 20, xp: "35,000", pts: 4, hp: 100, mp: 60, unlock: "skill: meteor_strike" },
+  { level: 25, xp: "65,000", pts: 5, hp: 125, mp: 75, unlock: "trait: arcane_master" },
+  { level: 30, xp: "110,000", pts: 5, hp: 150, mp: 90, unlock: "—" },
+  { level: 50, xp: "700,000", pts: 6, hp: 250, mp: 150, unlock: "—" },
+  { level: 100, xp: "10,000,000", pts: 8, hp: 500, mp: 300, unlock: "trait: legend_of_old" },
+];
 
 export function Progression({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = CORE_COPY[locale].progression;
+
   return (
     <>
-      <PageHeader title="Progresión y nivel">
-        Cómo se gana experiencia, la fórmula de nivel, y qué pasa exactamente cuando subes de nivel.
+      <PageHeader title={c.title} slug="progresion">
+        {c.intro}
       </PageHeader>
 
-      <SectionHeading id="ganar-xp">Ganar experiencia</SectionHeading>
+      <SectionHeading id="ganar-xp">{c.gainTitle}</SectionHeading>
       <p>
-        <code>MobKillListener</code> otorga XP al matar un mob, con montos configurables por tipo de entidad en{" "}
-        <code>gameplay.yml → experience.mob_exp</code> (10 por defecto si el tipo no está listado explícitamente).
+        {fill(c.gainBody, {
+          listener: <code>MobKillListener</code>,
+          key: <code>gameplay.yml → experience.mob_exp</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -25,70 +50,95 @@ export function Progression({ onNavigate }: { onNavigate: (slug: string) => void
           "    boss: 500\n"
         }
       />
-      <p>Nivel máximo: 100 (<code>gameplay.yml → experience.max_level</code>).</p>
+      <p>{fill(c.maxLevel, { key: <code>gameplay.yml → experience.max_level</code> })}</p>
 
-      <SectionHeading id="formula">Fórmula de experiencia requerida</SectionHeading>
-      <CodeBlock language="text" code={"XP requerida para nivel N = base_exp × N ^ exp_multiplier   (100 × N^1.5 por defecto)"} />
+      <SectionHeading id="formula">{c.formulaTitle}</SectionHeading>
+      <CodeBlock language="text" code={c.formula} />
 
-      <SectionHeading id="que-pasa">Qué se aplica exactamente al subir de nivel</SectionHeading>
+      <SectionHeading id="que-pasa">{c.whatTitle}</SectionHeading>
       <p>
-        Cada nivel puede definir recompensas en <code>levelup-rewards.yml</code>; si un nivel no tiene entrada
-        explícita, se usan los valores de <code>defaults</code>. <code>PlayerLevelUpHandler</code> aplica, en
-        orden:
+        {fill(c.whatLead, {
+          file: <code>levelup-rewards.yml</code>,
+          defaults: <code>defaults</code>,
+          handler: <code>PlayerLevelUpHandler</code>,
+        })}
       </p>
       <ol>
-        <li>Incrementa el nivel del jugador.</li>
-        <li><code>stat_points</code> se suman a su pool de puntos sin gastar (ver <button className="underline" onClick={() => onNavigate("stats-combate")}>Stats, salud y maná</button>).</li>
-        <li><code>health_bonus</code>/<code>mana_bonus</code> aumentan su salud/maná máximos (y curan/restauran esa misma cantidad).</li>
+        <li>{c.p1}</li>
         <li>
-          <code>unlocked_skills</code>/<code>unlocked_traits</code> se aprenden/adquieren automáticamente — sin
-          pisar el nivel de una skill que el jugador ya hubiera subido manualmente.
+          {fill(c.p2, {
+            key: <code>stat_points</code>,
+            link: (
+              <button type="button" className="underline" onClick={() => onNavigate("stats-combate")}>
+                {localizedPageLabel("stats-combate", pageTitle("stats-combate"), locale)}
+              </button>
+            ),
+          })}
         </li>
-        <li>Se dispara el evento <code>LevelUpEvent</code> (para que otros plugins/listeners puedan reaccionar).</li>
-        <li>Se guarda el jugador y se le muestra un mensaje resumen.</li>
+        <li>
+          {fill(c.p3, {
+            key: (
+              <>
+                <code>health_bonus</code>/<code>mana_bonus</code>
+              </>
+            ),
+          })}
+        </li>
+        <li>
+          {fill(c.p4, {
+            key: (
+              <>
+                <code>unlocked_skills</code>/<code>unlocked_traits</code>
+              </>
+            ),
+          })}
+        </li>
+        <li>{fill(c.p5, { event: <code>LevelUpEvent</code> })}</li>
+        <li>{c.p6}</li>
       </ol>
 
-      <Callout tone="warning" title="unlocked_skills/unlocked_traits no valida que el contenido exista">
-        El levelup-rewards.yml de ejemplo referencia skills como <code>power_strike</code>, <code>whirlwind</code>{" "}
-        y <code>meteor_strike</code>, y traits como <code>warriors_resolve</code>/<code>arcane_master</code>/
-        <code>legend_of_old</code> — ninguno tiene un archivo YAML real en <code>skills/</code>/<code>traits/</code>{" "}
-        todavía. El jugador "aprende" el ID igual, pero <code>/rpg use</code> fallará con "no existe la
-        habilidad" porque <code>SkillManager</code> no la tiene registrada. Si agregas niveles con contenido
-        nuevo, crea también el YAML correspondiente.
+      <Callout tone="warning" title={localizedCaveatTitle("progresion", CAVEAT_TITLE, locale)}>
+        {localizedCaveatBody("progresion", CAVEAT_TITLE, CAVEAT_BODY, locale)}
       </Callout>
 
-      <SectionHeading id="tabla-rewards">Recompensas configuradas por defecto</SectionHeading>
+      <SectionHeading id="tabla-rewards">{c.tableTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Nivel</Th>
-          <Th>XP requerida</Th>
-          <Th>Puntos stat</Th>
-          <Th>+Salud</Th>
-          <Th>+Maná</Th>
-          <Th>Desbloquea</Th>
+          <Th>{c.thLevel}</Th>
+          <Th>{c.thXp}</Th>
+          <Th>{c.thPoints}</Th>
+          <Th>{c.thHealth}</Th>
+          <Th>{c.thMana}</Th>
+          <Th>{c.thUnlocks}</Th>
         </Thead>
         <tbody>
-          <Tr><Td>2</Td><Td>150</Td><Td>2</Td><Td>10</Td><Td>6</Td><Td>—</Td></Tr>
-          <Tr><Td>3</Td><Td>325</Td><Td>2</Td><Td>15</Td><Td>9</Td><Td>—</Td></Tr>
-          <Tr><Td>5</Td><Td>1,000</Td><Td>3</Td><Td>25</Td><Td>15</Td><Td>skill: power_strike</Td></Tr>
-          <Tr><Td>10</Td><Td>5,000</Td><Td>3</Td><Td>50</Td><Td>30</Td><Td>skills: whirlwind, fireball</Td></Tr>
-          <Tr><Td>15</Td><Td>15,000</Td><Td>4</Td><Td>75</Td><Td>45</Td><Td>trait: warriors_resolve</Td></Tr>
-          <Tr><Td>20</Td><Td>35,000</Td><Td>4</Td><Td>100</Td><Td>60</Td><Td>skill: meteor_strike</Td></Tr>
-          <Tr><Td>25</Td><Td>65,000</Td><Td>5</Td><Td>125</Td><Td>75</Td><Td>trait: arcane_master</Td></Tr>
-          <Tr><Td>30</Td><Td>110,000</Td><Td>5</Td><Td>150</Td><Td>90</Td><Td>—</Td></Tr>
-          <Tr><Td>50</Td><Td>700,000</Td><Td>6</Td><Td>250</Td><Td>150</Td><Td>—</Td></Tr>
-          <Tr><Td>100</Td><Td>10,000,000</Td><Td>8</Td><Td>500</Td><Td>300</Td><Td>trait: legend_of_old</Td></Tr>
+          {REWARDS.map((r) => (
+            <Tr key={r.level}>
+              <Td>{r.level}</Td>
+              <Td>{r.xp}</Td>
+              <Td>{r.pts}</Td>
+              <Td>{r.hp}</Td>
+              <Td>{r.mp}</Td>
+              <Td>{r.unlock}</Td>
+            </Tr>
+          ))}
         </tbody>
       </Table>
-      <p className="text-sm text-slate-400">
-        Cualquier otro nivel usa los <code>defaults</code>: 2 puntos de stat, +5 salud/nivel, +3 maná/nivel.
+      <p className="text-sm" style={{ color: "var(--text-faint)" }}>
+        {fill(c.tableNote, { defaults: <code>defaults</code> })}
       </p>
 
-      <SectionHeading id="comandos-relacionados">Comandos relacionados</SectionHeading>
+      <SectionHeading id="comandos-relacionados">{c.cmdTitle}</SectionHeading>
       <ul>
-        <li><Kbd>/rpg level</Kbd> — nivel y experiencia actuales.</li>
-        <li><Kbd>{"/rpg addxp <jugador> <cantidad>"}</Kbd> — admin, agrega XP.</li>
-        <li><Kbd>/rpg levelup</Kbd> — admin/debug, fuerza un intento de subir de nivel sobre ti mismo.</li>
+        <li>
+          <Kbd>/rpg level</Kbd> — {c.c1}
+        </li>
+        <li>
+          <Kbd>{"/rpg addxp <jugador> <cantidad>"}</Kbd> — {c.c2}
+        </li>
+        <li>
+          <Kbd>/rpg levelup</Kbd> — {c.c3}
+        </li>
       </ul>
 
       <PrevNext current="progresion" onNavigate={onNavigate} />

@@ -1,76 +1,88 @@
 import { PageHeader, SectionHeading, Callout, CodeBlock, Table, Thead, Th, Tr, Td, Kbd, PrevNext } from "../components/ui";
+import { useI18n, fill, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
+import { CORE_COPY } from "./copy/core";
+
+const CAVEAT_TITLE = "El límite de 3 está fijo en código, no en config";
+const CAVEAT_BODY =
+  "gameplay.yml tiene professions.max_per_player: 2, pero el sistema real de Jobs usa la constante PlayerJobs.MAX_ACTIVE_JOBS = 3 y nunca lee esa clave de config. Son dos sistemas de “profesiones” que no terminaron de unificarse — la config es efectivamente un residuo de un diseño anterior.";
 
 export function Jobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = CORE_COPY[locale].jobs;
+
+  const rows = [
+    { id: "minero", name: c.nMiner, anti: c.aMiner },
+    { id: "pescador", name: c.nFisher, anti: "—" },
+    { id: "cazador", name: c.nHunter, anti: c.aHunter },
+    { id: "granjero", name: c.nFarmer, anti: c.aFarmer },
+    { id: "alquimista", name: c.nAlchemist, anti: "—" },
+    { id: "explorador", name: c.nExplorer, anti: c.aExplorer },
+  ];
+
   return (
     <>
-      <PageHeader title="Trabajos (Jobs)">
-        Un sistema paralelo de progresión: hasta 3 trabajos activos por jugador, cada uno con su propio nivel y XP.
+      <PageHeader title={c.title} slug="trabajos">
+        {c.intro}
       </PageHeader>
 
-      <SectionHeading id="trabajos-disponibles">Los 6 trabajos</SectionHeading>
+      <SectionHeading id="trabajos-disponibles">{c.listTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>ID</Th>
-          <Th>Nombre</Th>
-          <Th>Protección anti-farm</Th>
+          <Th>{c.thId}</Th>
+          <Th>{c.thName}</Th>
+          <Th>{c.thAntiFarm}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">minero</Td><Td>Minero</Td><Td>No paga por bloques colocados por el propio jugador</Td></Tr>
-          <Tr><Td className="font-mono text-xs">pescador</Td><Td>Pescador</Td><Td>—</Td></Tr>
-          <Tr><Td className="font-mono text-xs">cazador</Td><Td>Cazador</Td><Td>No paga por mobs nacidos de spawner</Td></Tr>
-          <Tr><Td className="font-mono text-xs">granjero</Td><Td>Granjero</Td><Td>Comparte la marca "de spawner" con Cazador para granjas automáticas de animales</Td></Tr>
-          <Tr><Td className="font-mono text-xs">alquimista</Td><Td>Alquimista</Td><Td>—</Td></Tr>
-          <Tr><Td className="font-mono text-xs">explorador</Td><Td>Explorador</Td><Td>Recompensa por bioma nuevo visitado y distancia recorrida, no por acciones repetibles</Td></Tr>
+          {rows.map((r) => (
+            <Tr key={r.id}>
+              <Td className="font-mono text-xs">{r.id}</Td>
+              <Td>{r.name}</Td>
+              <Td>{r.anti}</Td>
+            </Tr>
+          ))}
         </tbody>
       </Table>
       <p>
-        Se cargan desde <code>plugins/RPGRoll/jobs/*.yml</code>, cada uno con recompensas por <em>target</em>{" "}
-        (nombre de <code>Material</code> o <code>EntityType</code>) y, para Explorador, recompensas especiales por
-        distancia/bioma.
+        {fill(c.listAfter, {
+          dir: <code>plugins/RPGRoll/jobs/*.yml</code>,
+          target: <em>target</em>,
+          material: <code>Material</code>,
+          entity: <code>EntityType</code>,
+        })}
       </p>
 
-      <SectionHeading id="unirse-abandonar">Unirse y abandonar</SectionHeading>
+      <SectionHeading id="unirse-abandonar">{c.joinTitle}</SectionHeading>
       <p>
-        <Kbd>/rpg jobs</Kbd> abre una GUI con el catálogo completo y tu estado en cada uno. Click en uno inactivo
-        te une; click en uno activo lo abandona. El límite es <strong>3 trabajos activos</strong> — si ya estás en
-        el máximo e intentas unirte a otro, se abre una GUI para elegir cuál abandonar primero.
+        {fill(c.joinBody, {
+          cmd: <Kbd>/rpg jobs</Kbd>,
+          strong: <strong>{c.joinStrong}</strong>,
+        })}
       </p>
-      <Callout tone="warning" title="El límite de 3 está fijo en código, no en config">
-        <code>gameplay.yml</code> tiene <code>professions.max_per_player: 2</code>, pero el sistema real de Jobs
-        usa la constante <code>PlayerJobs.MAX_ACTIVE_JOBS = 3</code> y nunca lee esa clave de config. Son dos
-        sistemas de "profesiones" que no terminaron de unificarse — la config es efectivamente un residuo de un
-        diseño anterior.
+      <Callout tone="warning" title={localizedCaveatTitle("trabajos", CAVEAT_TITLE, locale)}>
+        {localizedCaveatBody("trabajos", CAVEAT_TITLE, CAVEAT_BODY, locale)}
       </Callout>
 
-      <SectionHeading id="recompensas">Cómo funciona una recompensa</SectionHeading>
-      <p>
-        Todos los listeners de trabajo (uno por trabajo) delegan en <code>JobRewardService.reward(player, jobId,
-        target)</code>, que centraliza:
-      </p>
+      <SectionHeading id="recompensas">{c.rewardTitle}</SectionHeading>
+      <p>{fill(c.rewardLead, { service: <code>JobRewardService.reward(player, jobId, target)</code> })}</p>
       <ol>
-        <li>Verifica que el jugador tenga ese trabajo activo.</li>
-        <li>Busca la recompensa configurada para ese target — si no hay, no pasa nada.</li>
-        <li>Paga dinero vía Vault, si hay economía activa y la recompensa incluye monto.</li>
-        <li>Suma experiencia <em>del trabajo</em> (independiente de tu XP de personaje) y sube de nivel si corresponde.</li>
-        <li>Muestra feedback en la action bar (XP y dinero ganado).</li>
+        <li>{c.w1}</li>
+        <li>{c.w2}</li>
+        <li>{c.w3}</li>
+        <li>{fill(c.w4, { em: <em>{c.w4em}</em> })}</li>
+        <li>{c.w5}</li>
       </ol>
-      <CodeBlock
-        language="text"
-        code={"Curva de nivel de trabajo: expBase × (nivel - 1) ^ expMultiplier   (igual patrón que el XP de personaje)"}
-      />
+      <CodeBlock language="text" code={c.curve} />
 
-      <SectionHeading id="explorador">Explorador: un caso especial</SectionHeading>
+      <SectionHeading id="explorador">{c.explorerTitle}</SectionHeading>
       <p>
-        No se dispara por romper/matar algo, sino por moverse: paga por cada bioma nuevo visitado y por tramos de
-        distancia recorrida. Su progreso (biomas ya visitados, distancia acumulada) se guarda en su propia tabla (
-        <code>explorer_progress</code>), separado de <code>player_jobs</code>.
+        {fill(c.explorerBody, {
+          table: <code>explorer_progress</code>,
+          other: <code>player_jobs</code>,
+        })}
       </p>
 
-      <SectionHeading id="admin">Administración</SectionHeading>
-      <p>
-        <Kbd>{"/rpg job <give|remove|setlevel> <jugador> <jobId> [nivel]"}</Kbd> — asignar, quitar, o fijar el
-        nivel de un trabajo de cualquier jugador conectado.
-      </p>
+      <SectionHeading id="admin">{c.adminTitle}</SectionHeading>
+      <p>{fill(c.adminBody, { cmd: <Kbd>{"/rpg job <give|remove|setlevel> <jugador> <jobId> [nivel]"}</Kbd> })}</p>
 
       <PrevNext current="trabajos" onNavigate={onNavigate} />
     </>
