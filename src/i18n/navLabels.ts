@@ -23,6 +23,7 @@ type PartialLabels = Partial<Record<Locale, string>>;
 export const PAGE_LABELS: Record<string, PartialLabels> = {
   inicio: { en: "Introduction", pt: "Introdução" },
   arquitectura: { en: "Architecture", pt: "Arquitetura" },
+  "primeros-pasos": { en: "Quick start", pt: "Primeiros passos" },
   requisitos: { en: "Requirements", pt: "Requisitos" },
 
   jugadores: { en: "Players", pt: "Jogadores" },

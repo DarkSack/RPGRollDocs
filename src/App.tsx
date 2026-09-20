@@ -43,6 +43,7 @@ import { Permissions } from "./pages/Permissions";
 import { Configuration } from "./pages/Configuration";
 import { Database } from "./pages/Database";
 import { Api } from "./pages/Api";
+import { QuickStart } from "./pages/QuickStart";
 import { Requirements } from "./pages/Requirements";
 import { Integrations } from "./pages/Integrations";
 import { Placeholders } from "./pages/Placeholders";
@@ -157,6 +158,8 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Database onNavigate={onNavigate} />;
     case "api":
       return <Api onNavigate={onNavigate} />;
+    case "primeros-pasos":
+      return <QuickStart onNavigate={onNavigate} />;
     case "requisitos":
       return <Requirements onNavigate={onNavigate} />;
     case "integraciones":

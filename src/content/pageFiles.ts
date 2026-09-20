@@ -43,6 +43,7 @@ export const PAGE_FILES: Record<string, string> = {
   "configuracion": "Configuration.tsx",
   "base-de-datos": "Database.tsx",
   "api": "Api.tsx",
+  "primeros-pasos": "QuickStart.tsx",
   "requisitos": "Requirements.tsx",
   "integraciones": "Integrations.tsx",
   "placeholders": "Placeholders.tsx",

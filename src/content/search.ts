@@ -31,6 +31,14 @@ export const searchIndex: SearchEntry[] = [
   h("arquitectura", "Tab-completion — TabCompleteUtil", "tabcompleteutil"),
   h("arquitectura", "GUIs: volver al navegador anterior", "gui-back-navigation"),
 
+  // Primeros pasos
+  h("primeros-pasos", "Confirmá los requisitos", "requisitos"),
+  h("primeros-pasos", "Instalá el núcleo", "instalacion"),
+  h("primeros-pasos", "Arrancá el servidor y verificá", "primer-arranque"),
+  h("primeros-pasos", "Ajustá la configuración", "configuracion"),
+  h("primeros-pasos", "Creá tu primer personaje", "primer-personaje"),
+  h("primeros-pasos", "Próximos pasos", "siguientes-pasos"),
+
   // Requisitos
   h("requisitos", "Núcleo", "core"),
   h("requisitos", "Plataforma", "plataforma"),

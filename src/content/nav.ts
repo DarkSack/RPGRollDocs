@@ -16,6 +16,7 @@ export const nav: NavSection[] = [
     title: "Empezando",
     items: [
       { slug: "inicio", label: "Introducción" },
+      { slug: "primeros-pasos", label: "Primeros pasos" },
       { slug: "requisitos", label: "Requisitos" },
       { slug: "arquitectura", label: "Arquitectura" },
     ],
