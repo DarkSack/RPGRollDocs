@@ -1,27 +1,52 @@
 import { PageHeader, SectionHeading, Callout, CodeBlock, Table, Thead, Th, Tr, Td, PrevNext } from "../components/ui";
+import { pageTitle } from "../content/nav";
+import { useI18n, fill, localizedPageLabel, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
+import { DEV_COPY } from "./copy/developers";
+
+const CAVEAT_TITLE = "get() lanza una excepción si RPGRoll no está listo";
+const CAVEAT_BODY =
+  "RPGRollAPI.get() lanza IllegalStateException si se llama antes de que RPGRoll termine de arrancar. Si tu addon quiere integrarse de forma opcional (sin depend obligatorio), usá RPGRollAPI.isReady() para chequear en runtime antes de llamar a get().";
 
 export function Api({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = DEV_COPY[locale].api;
+
+  const methods: [string, React.ReactNode][] = [
+    ["getPlayer(UUID uuid)", "Optional<RPGPlayer>"],
+    ["hasCompletedCharacter(UUID uuid)", c.rShortcut],
+    ["getPlayerManager()", "PlayerManager"],
+    ["getRaceManager()", `RaceManager (${c.rPublicIface})`],
+    ["getClassManager()", `ClassManager (${c.rPublicIface})`],
+    ["getSkillManager()", "SkillManager"],
+    ["getTraitManager()", "TraitManager"],
+    ["getJobManager()", "JobManager"],
+    ["getEconomyProvider()", "VaultEconomyProvider"],
+    ["getVersion()", c.rVersion],
+  ];
+
   return (
     <>
-      <PageHeader title="API para addons">
-        Punto de entrada único: <code>RPGRollAPI.get()</code>. Superficie estable: paquete{" "}
-        <code>com.sack.rpgroll.api</code> y <code>com.sack.rpgroll.api.event</code>.
+      <PageHeader title={c.title} slug="api">
+        {fill(c.intro, {
+          get: <code>RPGRollAPI.get()</code>,
+          pkg1: <code>com.sack.rpgroll.api</code>,
+          pkg2: <code>com.sack.rpgroll.api.event</code>,
+        })}
       </PageHeader>
 
-      <SectionHeading id="setup">Configurar tu addon</SectionHeading>
+      <SectionHeading id="setup">{c.setupTitle}</SectionHeading>
       <ol>
         <li>
-          Declará <code>depend: [RPGRoll]</code> en tu <code>plugin.yml</code>, para garantizar que RPGRoll cargue
-          antes que tu addon.
+          {fill(c.s1, { depend: <code>depend: [RPGRoll]</code>, pluginYml: <code>plugin.yml</code> })}
         </li>
         <li>
-          Agregá RPGRoll como dependencia <code>compileOnly</code> (vía <code>./gradlew publishToMavenLocal</code>{" "}
-          desde el proyecto de RPGRoll, o referenciando el jar compilado directamente).
+          {fill(c.s2, {
+            compileOnly: <code>compileOnly</code>,
+            gradle: <code>./gradlew publishToMavenLocal</code>,
+          })}
         </li>
         <li>
-          Llamá <code>RPGRollAPI.get()</code> únicamente desde <code>onEnable()</code> en adelante — nunca desde el
-          constructor de tu plugin ni desde inicializadores estáticos, porque RPGRoll podría no estar listo
-          todavía.
+          {fill(c.s3, { get: <code>RPGRollAPI.get()</code>, onEnable: <code>onEnable()</code> })}
         </li>
       </ol>
 
@@ -39,57 +64,84 @@ export function Api({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <Callout tone="warning" title="get() lanza una excepción si RPGRoll no está listo">
-        <code>RPGRollAPI.get()</code> lanza <code>IllegalStateException</code> si se llama antes de que RPGRoll
-        termine de arrancar. Si tu addon quiere integrarse de forma opcional (sin <code>depend</code> obligatorio),
-        usá <code>RPGRollAPI.isReady()</code> para chequear en runtime antes de llamar a <code>get()</code>.
+      <Callout tone="warning" title={localizedCaveatTitle("api", CAVEAT_TITLE, locale)}>
+        {localizedCaveatBody("api", CAVEAT_TITLE, CAVEAT_BODY, locale)}
       </Callout>
 
-      <SectionHeading id="metodos">Métodos disponibles</SectionHeading>
+      <SectionHeading id="metodos">{c.methodsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Método</Th>
-          <Th>Devuelve</Th>
+          <Th>{c.thMethod}</Th>
+          <Th>{c.thReturns}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">getPlayer(UUID uuid)</Td><Td>Optional&lt;RPGPlayer&gt;</Td></Tr>
-          <Tr><Td className="font-mono text-xs">hasCompletedCharacter(UUID uuid)</Td><Td>boolean — atajo sobre getPlayer().isCharacterComplete()</Td></Tr>
-          <Tr><Td className="font-mono text-xs">getPlayerManager()</Td><Td>PlayerManager</Td></Tr>
-          <Tr><Td className="font-mono text-xs">getRaceManager()</Td><Td>RaceManager (interfaz pública, módulo api)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">getClassManager()</Td><Td>ClassManager (interfaz pública, módulo api)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">getSkillManager()</Td><Td>SkillManager</Td></Tr>
-          <Tr><Td className="font-mono text-xs">getTraitManager()</Td><Td>TraitManager</Td></Tr>
-          <Tr><Td className="font-mono text-xs">getJobManager()</Td><Td>JobManager</Td></Tr>
-          <Tr><Td className="font-mono text-xs">getEconomyProvider()</Td><Td>VaultEconomyProvider</Td></Tr>
-          <Tr><Td className="font-mono text-xs">getVersion()</Td><Td>String — versión del plugin</Td></Tr>
+          {methods.map(([name, ret]) => (
+            <Tr key={name}>
+              <Td className="font-mono text-xs">{name}</Td>
+              <Td>{ret}</Td>
+            </Tr>
+          ))}
         </tbody>
       </Table>
       <Callout tone="info">
-        <code>RPGPlayer</code>, <code>PlayerManager</code>, <code>JobManager</code>, <code>SkillManager</code> y{" "}
-        <code>TraitManager</code> son clases concretas del módulo <code>core</code> (no tienen todavía una interfaz
-        propia en <code>api</code>, a diferencia de <code>RaceManager</code>/<code>ClassManager</code>). Tu addon
-        va a necesitar depender del jar completo de RPGRoll para usarlas, no solo del módulo <code>api</code>.
+        {fill(c.concreteNote, {
+          classes: (
+            <>
+              <code>RPGPlayer</code>, <code>PlayerManager</code>, <code>JobManager</code>,{" "}
+              <code>SkillManager</code> &amp; <code>TraitManager</code>
+            </>
+          ),
+          core: <code>core</code>,
+          api: <code>api</code>,
+          ifaces: (
+            <>
+              <code>RaceManager</code>/<code>ClassManager</code>
+            </>
+          ),
+        })}
       </Callout>
 
-      <SectionHeading id="eventos">Eventos</SectionHeading>
+      <SectionHeading id="eventos">{c.eventsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Evento</Th>
-          <Th>Cancelable</Th>
-          <Th>Se dispara cuando…</Th>
+          <Th>{c.thEvent}</Th>
+          <Th>{c.thCancellable}</Th>
+          <Th>{c.thWhen}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">CharacterCreatedEvent</Td><Td>No</Td><Td>Un jugador termina la creación de personaje (raza + clase elegidas y guardadas).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PlayerLevelUpEvent</Td><Td>No</Td><Td>Un jugador sube de nivel de personaje. Expone el <code>RPGPlayer</code> completo ya actualizado.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PlayerJobLevelUpEvent</Td><Td>No</Td><Td>Un jugador sube de nivel en un trabajo específico.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PlayerJoinJobEvent</Td><Td><strong>Sí</strong></Td><Td>Un jugador intenta unirse a un trabajo — un addon puede cancelarlo (ej. requisito extra que RPGRoll no conoce).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PlayerLeaveJobEvent</Td><Td>No</Td><Td>Un jugador abandona un trabajo.</Td></Tr>
+          <Tr>
+            <Td className="font-mono text-xs">CharacterCreatedEvent</Td>
+            <Td>{c.no}</Td>
+            <Td>{c.evCreated}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">PlayerLevelUpEvent</Td>
+            <Td>{c.no}</Td>
+            <Td>{fill(c.evLevelUp, { rpgPlayer: <code>RPGPlayer</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">PlayerJobLevelUpEvent</Td>
+            <Td>{c.no}</Td>
+            <Td>{c.evJobLevelUp}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">PlayerJoinJobEvent</Td>
+            <Td>
+              <strong>{c.yes}</strong>
+            </Td>
+            <Td>{c.evJoinJob}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">PlayerLeaveJobEvent</Td>
+            <Td>{c.no}</Td>
+            <Td>{c.evLeaveJob}</Td>
+          </Tr>
         </tbody>
       </Table>
 
       <CodeBlock
         language="java"
-        filename="MiListener.java — ejemplo cancelando un join a trabajo"
+        filename={c.exampleFile}
         code={
           "public class MiListener implements Listener {\n\n" +
           "    @EventHandler\n" +
@@ -107,16 +159,28 @@ export function Api({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <SectionHeading id="donde-viven">Dónde viven estos archivos, físicamente</SectionHeading>
+      <SectionHeading id="donde-viven">{c.whereTitle}</SectionHeading>
       <p>
-        <code>Race</code>, <code>PlayerClass</code>, <code>RaceManager</code>, <code>ClassManager</code>,{" "}
-        <code>StatType</code> y dos de los eventos (<code>CharacterCreatedEvent</code>,{" "}
-        <code>PlayerJobLevelUpEvent</code>) viven en el módulo <code>api</code>, sin ninguna dependencia de{" "}
-        <code>core</code>. <code>RPGRollAPI</code> y los 3 eventos que exponen <code>RPGPlayer</code> viven
-        físicamente en <code>core</code> (para poder usar sus clases concretas), pero conservan el paquete{" "}
-        <code>com.sack.rpgroll.api</code> para que el código de tu addon no note la diferencia. Más detalle en{" "}
-        <button className="underline" onClick={() => onNavigate("arquitectura")}>
-          Arquitectura
+        {fill(c.whereBody, {
+          apiTypes: (
+            <>
+              <code>Race</code>, <code>PlayerClass</code>, <code>RaceManager</code>, <code>ClassManager</code>{" "}
+              &amp; <code>StatType</code>
+            </>
+          ),
+          apiEvents: (
+            <>
+              <code>CharacterCreatedEvent</code>, <code>PlayerJobLevelUpEvent</code>
+            </>
+          ),
+          api: <code>api</code>,
+          core: <code>core</code>,
+          facade: <code>RPGRollAPI</code>,
+          rpgPlayer: <code>RPGPlayer</code>,
+          pkg: <code>com.sack.rpgroll.api</code>,
+        })}{" "}
+        <button type="button" className="underline" onClick={() => onNavigate("arquitectura")}>
+          {localizedPageLabel("arquitectura", pageTitle("arquitectura"), locale)}
         </button>
         .
       </p>

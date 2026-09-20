@@ -19,4 +19,6 @@ export const TRANSLATED_PAGES: ReadonlySet<string> = new Set(["inicio", "primero
   "habilidades-traits",
   "trabajos",
   "progresion",
+  "arquitectura",
+  "api",
 ]);
