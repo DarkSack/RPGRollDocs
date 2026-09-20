@@ -106,7 +106,7 @@ export function Effects({
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll]\nsoftdepend: [Particles, RPGRoll-Guilds]"}
+        code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Guilds]"}
       />
       <p>
         Sin{" "}

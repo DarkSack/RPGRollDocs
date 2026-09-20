@@ -81,7 +81,7 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </PageHeader>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-Enchantments, Vault, PlaceholderAPI]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Enchantments, Vault, PlaceholderAPI, SackResourcePack]"} />
 
       <SectionHeading id="rareza">Rareza</SectionHeading>
       <p>

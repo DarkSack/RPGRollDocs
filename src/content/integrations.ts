@@ -1,10 +1,11 @@
 /**
  * Catálogo de integraciones con plugins de terceros.
  *
- * Cada entrada está verificada contra lo que documenta la página del addon
- * correspondiente: qué declara su `plugin.yml` (`depend` vs `softdepend`) y
- * qué deja de funcionar si el plugin no está. No se lista nada "porque suele
- * integrarse" — si no aparece documentado en el repo, no está acá.
+ * Cada entrada está verificada contra el `plugin.yml` real de cada módulo en
+ * el repositorio del proyecto Java (`depend` vs `softdepend`), más lo que la
+ * página del addon documenta sobre qué deja de funcionar si el plugin falta.
+ * No se lista nada "porque suele integrarse": si no está en el código, no
+ * está acá.
  *
  * `nonIntegrations` es igual de importante: responde de una la pregunta
  * "¿anda con WorldGuard?" sin que haya que leer cinco páginas.
@@ -88,7 +89,7 @@ export const integrations: Integration[] = [
       {
         slug: "dungeons",
         requirement: "optional",
-        note: "Importar schematics a la Biblioteca. Sin WorldEdit, el comando de importación avisa y el resto de Dungeons sigue funcionando igual.",
+        note: "Importar schematics a la Biblioteca. Declarado en softdepend del plugin.yml de RPGRoll-Dungeons. Sin WorldEdit, el comando de importación avisa y el resto de Dungeons sigue funcionando igual.",
       },
     ],
   },
@@ -138,41 +139,40 @@ export interface AddonDependencies {
 }
 
 /**
- * Grafo de dependencias declarado por cada addon. Extraído de los bloques de
- * `plugin.yml` que ya documenta cada página; "Particles" es el nombre de
- * plugin de RPGRoll-FX.
+ * Grafo de dependencias declarado por cada addon.
+ *
+ * Transcripto de `<modulo>/src/main/resources/plugin.yml` en el repositorio
+ * del proyecto Java, no de los bloques de ejemplo de cada página: varios de
+ * esos bloques estaban desactualizados (ver el commit que agregó esta nota).
+ * Si cambiás un plugin.yml, actualizá también esta tabla.
  */
 export const addonDependencies: AddonDependencies[] = [
   { slug: "npcs", hard: ["RPGRoll", "ProtocolLib"], soft: [] },
-  { slug: "items", hard: ["RPGRoll"], soft: ["RPGRoll-Enchantments", "Vault", "PlaceholderAPI"] },
-  { slug: "encantamientos", hard: ["RPGRoll"], soft: ["PlaceholderAPI"] },
+  { slug: "items", hard: ["RPGRoll"], soft: ["RPGRoll-FX", "RPGRoll-Enchantments", "Vault", "PlaceholderAPI", "SackResourcePack"] },
+  { slug: "encantamientos", hard: ["RPGRoll"], soft: ["RPGRoll-FX", "PlaceholderAPI"] },
   { slug: "quests", hard: ["RPGRoll"], soft: ["PlaceholderAPI"] },
   { slug: "ascension", hard: ["RPGRoll"], soft: ["RPGRoll-Enchantments", "RPGRoll-Quests", "PlaceholderAPI"] },
   { slug: "mobs", hard: ["RPGRoll"], soft: ["RPGRoll-Items", "RPGRoll-Quests", "PlaceholderAPI", "SackResourcePack"] },
   { slug: "chat", hard: ["RPGRoll"], soft: ["RPGRoll-Guilds", "PlaceholderAPI"] },
   { slug: "guilds", hard: ["RPGRoll"], soft: ["RPGRoll-Items", "RPGRoll-Quests", "Vault", "PlaceholderAPI"] },
   { slug: "crates", hard: ["RPGRoll"], soft: ["DecentHolograms"] },
-  // OJO: la página de Dungeons describe WorldEdit como soft-dependency (dos
-  // veces, con el comportamiento exacto si falta), pero el plugin.yml que esa
-  // misma página muestra no lo declara. Acá se transcribe el plugin.yml tal
-  // cual; la integración con WorldEdit está documentada en `integrations`.
-  { slug: "dungeons", hard: ["RPGRoll", "RPGRoll-Mobs", "RPGRoll-Guilds"], soft: ["RPGRoll-Items", "RPGRoll-Quests", "PlaceholderAPI"] },
+  { slug: "dungeons", hard: ["RPGRoll", "RPGRoll-Mobs", "RPGRoll-Guilds"], soft: ["RPGRoll-Items", "RPGRoll-Quests", "PlaceholderAPI", "WorldEdit"] },
   { slug: "rpgroll-particles", hard: ["RPGRoll"], soft: [] },
-  { slug: "rpgroll-effects", hard: ["RPGRoll"], soft: ["Particles", "RPGRoll-Guilds"] },
-  { slug: "magic", hard: ["RPGRoll"], soft: ["Particles", "RPGRoll-Effects"] },
-  { slug: "seasons", hard: ["RPGRoll"], soft: ["Particles", "RPGRoll-Effects", "RPGRoll-Mobs"] },
-  { slug: "fishing", hard: ["RPGRoll"], soft: ["Particles", "RPGRoll-Effects", "RPGRoll-Seasons", "SackResourcePack"] },
-  { slug: "ranching", hard: ["RPGRoll"], soft: ["Particles", "RPGRoll-Effects", "RPGRoll-Seasons", "SackResourcePack"] },
+  { slug: "rpgroll-effects", hard: ["RPGRoll"], soft: ["RPGRoll-FX", "RPGRoll-Guilds"] },
+  { slug: "magic", hard: ["RPGRoll"], soft: ["RPGRoll-FX", "RPGRoll-Effects"] },
+  { slug: "seasons", hard: ["RPGRoll"], soft: ["RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Mobs"] },
+  { slug: "fishing", hard: ["RPGRoll"], soft: ["RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "SackResourcePack"] },
+  { slug: "ranching", hard: ["RPGRoll"], soft: ["RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "SackResourcePack"] },
   {
     slug: "workers",
     hard: ["RPGRoll"],
-    soft: ["Particles", "RPGRoll-Effects", "RPGRoll-Seasons", "RPGRoll-Ranching", "RPGRoll-Fishing", "RPGRoll-Guilds", "Vault", "SackResourcePack"],
+    soft: ["RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "RPGRoll-Ranching", "RPGRoll-Fishing", "RPGRoll-Guilds", "Vault", "SackResourcePack"],
   },
   { slug: "economy", hard: ["RPGRoll"], soft: ["Vault", "PlaceholderAPI", "RPGRoll-Guilds", "RPGRoll-Seasons"] },
   { slug: "crafting", hard: ["RPGRoll"], soft: ["RPGRoll-Items", "RPGRoll-Economy", "RPGRoll-Guilds", "RPGRoll-Seasons"] },
   { slug: "tab", hard: ["RPGRoll"], soft: ["ProtocolLib", "PlaceholderAPI"] },
   { slug: "extras", hard: ["RPGRoll"], soft: ["RPGRoll-TAB", "RPGRoll-Seasons", "PlaceholderAPI", "Vault"] },
-  { slug: "traps", hard: ["RPGRoll"], soft: ["RPGRoll-Items", "RPGRoll-Effects", "PlaceholderAPI"] },
+  { slug: "traps", hard: ["RPGRoll"], soft: ["RPGRoll-Items", "RPGRoll-Effects", "RPGRoll-Mobs", "RPGRoll-FX", "PlaceholderAPI"] },
   // SackResourcePack es un pipeline independiente: su plugin.yml no declara
   // depend ni softdepend en RPGRoll.
   { slug: "sackresourcepack", hard: [], soft: [] },

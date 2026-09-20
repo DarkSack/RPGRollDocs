@@ -53,7 +53,7 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
       </Callout>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [PlaceholderAPI]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, PlaceholderAPI]"} />
       <p>
         La relación con RPGRoll-Items es al revés: es <strong>Items</strong> quien opcionalmente depende de este
         addon (<code>softdepend: [RPGRoll-Enchantments, Vault]</code> en su <code>plugin.yml</code>), nunca al

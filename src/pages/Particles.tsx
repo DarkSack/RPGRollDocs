@@ -238,7 +238,7 @@ export function Particles({ onNavigate }: { onNavigate: (slug: string) => void }
 
       <SectionHeading id="api">API para addons — EffectsAPI y EffectBuilder</SectionHeading>
       <p>
-        Cualquier addon que declare <Kbd>softdepend: [Particles]</Kbd> puede disparar un efecto ya definido por
+        Cualquier addon que declare <Kbd>softdepend: [RPGRoll-FX]</Kbd> puede disparar un efecto ya definido por
         su id:
       </p>
       <CodeBlock
