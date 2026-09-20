@@ -2,6 +2,14 @@ import { useMemo, useState } from "react";
 import { PageHeader, SectionHeading, Callout, Badge, PrevNext } from "../components/ui";
 import { diagnostics, caveats } from "../content/troubleshooting";
 import { pageTitle } from "../content/nav";
+import {
+  useI18n,
+  localizedPageLabel,
+  localizedDiagnostic,
+  localizedCaveatTitle,
+  localizedCaveatBody,
+} from "../i18n";
+import { REFERENCE_COPY } from "./copy/reference";
 import { LifeBuoyIcon, AlertTriangleIcon, AlertOctagonIcon } from "../components/icons/Icon";
 
 /**
@@ -18,7 +26,10 @@ import { LifeBuoyIcon, AlertTriangleIcon, AlertOctagonIcon } from "../components
  * documenta el texto exacto que imprime el plugin, acá no aparece.
  */
 export function Troubleshooting({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = REFERENCE_COPY[locale].troubleshooting;
   const [filter, setFilter] = useState<string>("todos");
+  const label = (slug: string) => localizedPageLabel(slug, pageTitle(slug), locale);
 
   const pages = useMemo(() => [...new Set(caveats.map((c) => c.slug))].sort(), []);
   const visible = filter === "todos" ? caveats : caveats.filter((c) => c.slug === filter);
@@ -26,26 +37,26 @@ export function Troubleshooting({ onNavigate }: { onNavigate: (slug: string) => 
   return (
     <>
       <PageHeader
-        title="Troubleshooting"
+        title={c.title}
         slug="troubleshooting"
         icon={LifeBuoyIcon}
         meta={[
-          { label: "Síntomas", value: String(diagnostics.length) },
-          { label: "Comportamientos", value: String(caveats.length) },
+          { label: c.metaSymptoms, value: String(diagnostics.length) },
+          { label: c.metaBehaviours, value: String(caveats.length) },
         ]}
       >
-        Qué revisar cuando algo no arranca o no hace lo esperado, y la lista de comportamientos documentados que
-        suelen confundirse con errores.
+        {c.intro}
       </PageHeader>
 
-      <SectionHeading id="sintomas">Diagnóstico por síntoma</SectionHeading>
+      <SectionHeading id="sintomas">{c.symptomsTitle}</SectionHeading>
       <p>
-        Cada entrada sale del grafo de dependencias declarado por los plugins y de las integraciones documentadas —
-        no de errores hipotéticos.
+        {c.symptomsLead}
       </p>
 
       <div className="my-5 space-y-3">
-        {diagnostics.map((item) => (
+        {diagnostics.map((raw) => {
+          const item = { ...raw, ...localizedDiagnostic(raw.id, raw, locale) };
+          return (
           <details key={item.id} id={item.id} className="border" style={{ borderColor: "var(--line)" }}>
             <summary className="flex cursor-pointer list-none items-start gap-2.5 px-4 py-3">
               <AlertTriangleIcon size={14} className="mt-0.5 shrink-0" style={{ color: "var(--gold)" }} />
@@ -55,20 +66,20 @@ export function Troubleshooting({ onNavigate }: { onNavigate: (slug: string) => 
             </summary>
 
             <div className="border-t px-4 py-3" style={{ borderColor: "var(--line)" }}>
-              <p className="fui-label mb-2">Causas posibles</p>
+              <p className="fui-label mb-2">{c.causes}</p>
               <ol className="mb-4 ml-4 list-decimal space-y-1.5 text-[13px]" style={{ color: "var(--text-dim)" }}>
                 {item.causes.map((cause) => (
                   <li key={cause}>{cause}</li>
                 ))}
               </ol>
 
-              <p className="fui-label mb-2">Solución</p>
+              <p className="fui-label mb-2">{c.fix}</p>
               <p className="mb-3 text-[13px]" style={{ color: "var(--text-dim)" }}>
                 {item.fix}
               </p>
 
               <div className="flex flex-wrap items-center gap-2">
-                <span className="fui-label">Ver</span>
+                <span className="fui-label">{c.see}</span>
                 {item.slugs.map((slug) => (
                   <button
                     key={slug}
@@ -77,33 +88,32 @@ export function Troubleshooting({ onNavigate }: { onNavigate: (slug: string) => 
                     className="rounded-sm border px-1.5 py-px font-mono text-[10px] uppercase tracking-wider"
                     style={{ borderColor: "var(--line)", color: "var(--text-dim)" }}
                   >
-                    {pageTitle(slug)}
+                    {label(slug)}
                   </button>
                 ))}
               </div>
             </div>
           </details>
-        ))}
+          );
+        })}
       </div>
 
-      <Callout tone="info" title="Antes que nada, mirá la consola del arranque">
-        Cuando falta una dependencia dura, Bukkit nombra exactamente cuál al cargar los plugins. Eso resuelve la
-        mayoría de los casos de &ldquo;el addon no aparece&rdquo; sin tener que revisar configuración.
+      <Callout tone="info" title={c.consoleTitle}>
+        {c.consoleBody}
       </Callout>
 
-      <SectionHeading id="comportamientos">Comportamientos documentados</SectionHeading>
+      <SectionHeading id="comportamientos">{c.behavioursTitle}</SectionHeading>
       <p>
-        No son fallas: son decisiones de diseño o limitaciones conocidas que ya están explicadas en la página de
-        cada sistema, reunidas acá para poder revisarlas de una. Cada una enlaza a su página de origen.
+        {c.behavioursLead}
       </p>
 
       <div className="my-4 flex flex-wrap items-center gap-1.5">
-        <span className="fui-label mr-1">Filtrar</span>
-        <FilterChip label="Todos" active={filter === "todos"} onClick={() => setFilter("todos")} />
+        <span className="fui-label mr-1">{c.filter}</span>
+        <FilterChip label={c.all} active={filter === "todos"} onClick={() => setFilter("todos")} />
         {pages.map((slug) => (
           <FilterChip
             key={slug}
-            label={pageTitle(slug)}
+            label={label(slug)}
             active={filter === slug}
             onClick={() => setFilter(slug)}
           />
@@ -123,14 +133,14 @@ export function Troubleshooting({ onNavigate }: { onNavigate: (slug: string) => 
               <div className="mb-1.5 flex items-start gap-2">
                 <Icon size={13} className="mt-0.5 shrink-0" style={{ color }} />
                 <p className="flex-1 text-[14px] font-medium" style={{ color: "var(--text)" }}>
-                  {caveat.title}
+                  {localizedCaveatTitle(caveat.slug, caveat.title, locale)}
                 </p>
                 <button type="button" onClick={() => onNavigate(caveat.slug)} className="shrink-0">
-                  <Badge>{pageTitle(caveat.slug)}</Badge>
+                  <Badge>{label(caveat.slug)}</Badge>
                 </button>
               </div>
               <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-                {caveat.body}
+                {localizedCaveatBody(caveat.slug, caveat.title, caveat.body, locale)}
               </p>
             </div>
           );

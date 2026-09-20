@@ -10,4 +10,4 @@
  * Al traducir una página: mové su texto a src/pages/copy/<pagina>.ts siguiendo
  * el patrón de quickStart.ts, y agregá su slug acá.
  */
-export const TRANSLATED_PAGES: ReadonlySet<string> = new Set(["inicio", "primeros-pasos", "requisitos", "comandos", "permisos", "configuracion", "base-de-datos", "placeholders", "integraciones"]);
+export const TRANSLATED_PAGES: ReadonlySet<string> = new Set(["inicio", "primeros-pasos", "requisitos", "comandos", "permisos", "configuracion", "base-de-datos", "placeholders", "integraciones", "troubleshooting"]);

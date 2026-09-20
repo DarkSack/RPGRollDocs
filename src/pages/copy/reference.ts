@@ -40,6 +40,27 @@ const es = {
     legendOp: "= solo operadores del servidor.",
     seeCommands: "Ver qué comando corresponde a cada permiso en",
   },
+  troubleshooting: {
+    title: "Troubleshooting",
+    intro:
+      "Qué revisar cuando algo no arranca o no hace lo esperado, y la lista de comportamientos documentados que suelen confundirse con errores.",
+    metaSymptoms: "Síntomas",
+    metaBehaviours: "Comportamientos",
+    symptomsTitle: "Diagnóstico por síntoma",
+    symptomsLead:
+      "Cada entrada sale del grafo de dependencias declarado por los plugins y de las integraciones documentadas — no de errores hipotéticos.",
+    causes: "Causas posibles",
+    fix: "Solución",
+    see: "Ver",
+    consoleTitle: "Antes que nada, mirá la consola del arranque",
+    consoleBody:
+      "Cuando falta una dependencia dura, Bukkit nombra exactamente cuál al cargar los plugins. Eso resuelve la mayoría de los casos de “el addon no aparece” sin tener que revisar configuración.",
+    behavioursTitle: "Comportamientos documentados",
+    behavioursLead:
+      "No son fallas: son decisiones de diseño o limitaciones conocidas que ya están explicadas en la página de cada sistema, reunidas acá para poder revisarlas de una. Cada una enlaza a su página de origen.",
+    filter: "Filtrar",
+    all: "Todos",
+  },
 };
 
 export type ReferenceCopy = typeof es;
@@ -82,6 +103,27 @@ const en: ReferenceCopy = {
     legendOp: "= server operators only.",
     seeCommands: "See which command maps to each permission in",
   },
+  troubleshooting: {
+    title: "Troubleshooting",
+    intro:
+      "What to check when something will not start or does not behave as expected, plus the list of documented behaviours that are often mistaken for bugs.",
+    metaSymptoms: "Symptoms",
+    metaBehaviours: "Behaviours",
+    symptomsTitle: "Diagnosis by symptom",
+    symptomsLead:
+      "Every entry comes from the dependency graph the plugins declare and from the documented integrations — not from hypothetical errors.",
+    causes: "Possible causes",
+    fix: "Fix",
+    see: "See",
+    consoleTitle: "First of all, look at the startup console",
+    consoleBody:
+      "When a hard dependency is missing, Bukkit names exactly which one while loading the plugins. That resolves most “the addon does not show up” cases without touching any configuration.",
+    behavioursTitle: "Documented behaviours",
+    behavioursLead:
+      "These are not failures: they are design decisions or known limitations already explained on each system's page, gathered here so you can scan them in one go. Each links back to its source page.",
+    filter: "Filter",
+    all: "All",
+  },
 };
 
 const pt: ReferenceCopy = {
@@ -121,6 +163,27 @@ const pt: ReferenceCopy = {
     legendTrue: "= todos os jogadores têm por padrão.",
     legendOp: "= apenas operadores do servidor.",
     seeCommands: "Veja qual comando corresponde a cada permissão em",
+  },
+  troubleshooting: {
+    title: "Solução de problemas",
+    intro:
+      "O que verificar quando algo não inicia ou não faz o esperado, e a lista de comportamentos documentados que costumam ser confundidos com erros.",
+    metaSymptoms: "Sintomas",
+    metaBehaviours: "Comportamentos",
+    symptomsTitle: "Diagnóstico por sintoma",
+    symptomsLead:
+      "Cada entrada vem do grafo de dependências declarado pelos plugins e das integrações documentadas — não de erros hipotéticos.",
+    causes: "Causas possíveis",
+    fix: "Solução",
+    see: "Ver",
+    consoleTitle: "Antes de tudo, olhe o console da inicialização",
+    consoleBody:
+      "Quando falta uma dependência dura, o Bukkit nomeia exatamente qual ao carregar os plugins. Isso resolve a maioria dos casos de “o addon não aparece” sem precisar revisar configuração.",
+    behavioursTitle: "Comportamentos documentados",
+    behavioursLead:
+      "Não são falhas: são decisões de design ou limitações conhecidas já explicadas na página de cada sistema, reunidas aqui para você revisá-las de uma vez. Cada uma leva à sua página de origem.",
+    filter: "Filtrar",
+    all: "Todos",
   },
 };
 

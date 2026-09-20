@@ -11,6 +11,11 @@ export {
   localizedIntegrationNote,
   localizedNonIntegration,
 } from "./data/integrations";
+export {
+  localizedDiagnostic,
+  localizedCaveatTitle,
+  localizedCaveatBody,
+} from "./data/troubleshooting";
 export { TRANSLATED_PAGES } from "./translated";
 export type { LocaleContextValue } from "./context";
 export { LOCALES, LOCALE_META, STRINGS } from "./strings";
