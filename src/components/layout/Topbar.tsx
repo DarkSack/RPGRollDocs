@@ -5,7 +5,8 @@ import { sectionOf } from "../../content/nav";
 import { DOC_VERSIONS, SYSTEM_META, REPO_URL } from "../../content/site";
 import { useI18n, localizedPageLabel, localizedSectionLabel, LOCALES, LOCALE_META, type Locale } from "../../i18n";
 import { statusColor } from "../ui/status";
-import { MenuIcon, SunIcon, MoonIcon, GithubIcon, DiceIcon, ChevronRightIcon } from "../icons/Icon";
+import { Logo } from "../ui/Logo";
+import { MenuIcon, SunIcon, MoonIcon, GithubIcon, ChevronRightIcon } from "../icons/Icon";
 
 interface TopbarProps {
   theme: "light" | "dark";
@@ -59,12 +60,7 @@ export function Topbar({
           onClick={onNavigateHome}
           className="flex shrink-0 items-center gap-2 rounded-sm py-1 pr-1"
         >
-          <span
-            className="flex h-6 w-6 items-center justify-center rounded-sm border"
-            style={{ borderColor: "var(--line-strong)", backgroundColor: "var(--ruby-soft)", color: "var(--ruby)" }}
-          >
-            <DiceIcon size={14} />
-          </span>
+          <Logo size={22} />
           <span className="text-[13px] font-semibold tracking-tight" style={{ color: "var(--text)" }}>
             RPGRoll
           </span>

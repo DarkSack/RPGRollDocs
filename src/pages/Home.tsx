@@ -1,4 +1,5 @@
 import { SectionHeading, Card, CardGrid, Callout, PrevNext, Badge, CodeBlock } from "../components/ui";
+import { Logo } from "../components/ui/Logo";
 import { addons } from "../content/addons";
 import { REPO_URL } from "../content/site";
 import {
@@ -6,7 +7,6 @@ import {
   WrenchIcon,
   CubeIcon,
   LayersIcon,
-  DiceIcon,
   BookIcon,
   ArrowRightIcon,
   GithubIcon,
@@ -29,12 +29,7 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
         <p className="fui-label mb-3">Sistema // RPGRoll</p>
 
         <div className="flex items-start gap-3">
-          <span
-            className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border"
-            style={{ borderColor: "var(--line-strong)", backgroundColor: "var(--ruby-soft)", color: "var(--ruby)" }}
-          >
-            <DiceIcon size={19} />
-          </span>
+          <Logo size={38} className="mt-0.5" />
           <h1 className="text-[30px] font-bold leading-tight tracking-tight" style={{ color: "var(--text)" }}>
             Un framework RPG completo para Paper/Minecraft
           </h1>
