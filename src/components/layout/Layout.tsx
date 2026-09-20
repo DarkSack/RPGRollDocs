@@ -3,7 +3,7 @@ import { Topbar } from "./Topbar";
 import { Sidebar } from "./Sidebar";
 import { TableOfContents } from "../ui/TableOfContents";
 import { PageFooter } from "../ui/PageFooter";
-import { useI18n } from "../../i18n";
+import { useI18n, TRANSLATED_PAGES } from "../../i18n";
 import { CloseIcon, InfoIcon } from "../icons/Icon";
 
 interface LayoutProps {
@@ -146,7 +146,7 @@ export function Layout({
         <main id="main-content" className="min-w-0 flex-1">
           <div className="mx-auto flex w-full max-w-[86rem] gap-10 px-5 py-8 sm:px-8">
             <div className="prose-doc min-w-0 flex-1">
-              {locale !== "es" && (
+              {locale !== "es" && !TRANSLATED_PAGES.has(current) && (
                 <p
                   className="mb-8 flex items-start gap-2.5 rounded-sm border px-3 py-2.5 text-[13px]"
                   style={{
