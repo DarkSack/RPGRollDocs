@@ -13,60 +13,69 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { pageTitle } from "../content/nav";
+import { useI18n, fill, localizedPageLabel, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
+import { ADDONS_D_COPY, type AddonsDCopy } from "./copy/addonsD";
 
-const statFields: YamlField[] = [
+type ExtrasCopy = AddonsDCopy["extras"];
+
+const CAVEAT_TITLE = "No confundir con un valor multiplicador directo";
+const CAVEAT_BODY =
+  "stamina_max: 1.3 NO da 130% — da 1.0 + 1.3 = 230%. El valor correcto para \u201c130% del máximo\u201d es 0.3.";
+
+const statFields = (c: ExtrasCopy): YamlField[] => [
   {
     key: "id",
-    label: "Id",
+    label: c.sfId,
     type: "string",
     default: "nuevo_stat",
     placeholder: "sanity",
   },
-  { key: "enabled", label: "Habilitado", type: "boolean", default: "true" },
-  { key: "max", label: "Máximo", type: "number", default: "100" },
-  { key: "start", label: "Valor inicial", type: "number", default: "100" },
+  { key: "enabled", label: c.sfEnabled, type: "boolean", default: "true" },
+  { key: "max", label: c.sfMax, type: "number", default: "100" },
+  { key: "start", label: c.sfStart, type: "number", default: "100" },
 ];
 
-const conditionFields: YamlField[] = [
+const conditionFields = (c: ExtrasCopy): YamlField[] => [
   {
     key: "id",
-    label: "Id",
+    label: c.sfId,
     type: "string",
     default: "nueva_condition",
     placeholder: "cursed",
   },
   {
     key: "duration",
-    label: "Duración en ticks (-1 = indefinida)",
+    label: c.cfDuration,
     type: "number",
     default: "-1",
   },
-  { key: "damage", label: "Daño periódico", type: "number", default: "0" },
+  { key: "damage", label: c.cfDamage, type: "number", default: "0" },
   {
     key: "interval",
-    label: "Intervalo en ticks",
+    label: c.cfInterval,
     type: "number",
     default: "20",
   },
   {
     key: "effects",
-    label: "Potion effects (TYPE o TYPE:AMPLIFICADOR)",
+    label: c.cfEffects,
     type: "list",
     placeholder: "slowness:0, nausea:0",
   },
 ];
 
-const modifierFields: YamlField[] = [
+const modifierFields = (c: ExtrasCopy): YamlField[] => [
   {
     key: "id",
-    label: "Id (debe coincidir con el id en RPGRoll-Core)",
+    label: c.mfId,
     type: "string",
     default: "nueva_raza",
     placeholder: "enano",
   },
   {
     key: "type",
-    label: "Tipo",
+    label: c.mfType,
     type: "select",
     options: ["RACE", "CLASS", "JOB"],
     default: "RACE",
@@ -74,16 +83,17 @@ const modifierFields: YamlField[] = [
 ];
 
 export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ADDONS_D_COPY[locale].extras;
+  const label = (slug: string) => localizedPageLabel(slug, pageTitle(slug), locale);
+
   return (
     <>
-      <PageHeader title="Extras (RPGRoll-Extras)">
-        Motor genérico de necesidades y estados de supervivencia: sed, stamina,
-        fatiga, oxígeno, estrés, temperatura corporal y cualquier condition
-        custom (sangrado, envenenado, congelamiento...) — un administrador puede
-        inventar un need o un estado nuevo enteramente por YAML, sin tocar Java.
+      <PageHeader title={c.title} slug="extras">
+        {c.intro}
       </PageHeader>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         code={
@@ -91,79 +101,62 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <p>
-        Solo <code>depend: RPGRoll</code> es obligatorio (raza/clase/jobs vía{" "}
-        <code>PlayerManager</code> real).{" "}
+        {fill(c.reqBody1, { depend: <code>depend: RPGRoll</code>, pm: <code>PlayerManager</code> })}{" "}
         <button
           type="button"
           onClick={() => onNavigate("tab")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          RPGRoll-TAB
+          {label("tab")}
         </button>{" "}
-        habilita placeholders si está instalado; sin él, los stats siguen
-        funcionando pero no hay forma de mostrarlos en tablist/scoreboard sin el
-        HUD propio. RPGRoll-Seasons/PlaceholderAPI/Vault no se referencian desde
-        ningún código de este addon en esta pasada — quedan como softdepend
-        reservado, no integración real.
+        {c.reqBody2}
       </p>
 
-      <SectionHeading id="stats">Motor genérico de Stats</SectionHeading>
+      <SectionHeading id="stats">{c.statsTitle}</SectionHeading>
       <p>
-        Un único <code>StatEngine</code> atiende sed, stamina, fatiga, oxígeno,
-        estrés o cualquier need custom — el comportamiento completo
-        (decay/regeneración/consumo/umbrales) viene del YAML, no de código
-        específico por stat. Decay y regeneración corren en tareas programadas
-        al intervalo que cada stat declara (no un tick global compartido);
-        ajustes puntuales (consumo por acción, llamadas de otro addon) son
-        siempre por evento.
+        {fill(c.statsBody, { engine: <code>StatEngine</code> })}
       </p>
       <Table>
         <Thead>
-          <Th>Campo</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thField}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">decay</Td>
-            <Td>
-              <code>{"{ amount, interval }"}</code> — baja pasivamente cada{" "}
-              <code>interval</code> ticks.
-            </Td>
+            <Td>{fill(c.fDecay, { obj: <code>{"{ amount, interval }"}</code>, interval: <code>interval</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">regeneration</Td>
-            <Td>
-              Lista de reglas <code>{"{ condition, amount }"}</code> — se suman
-              todas las que matcheen (condición vacía = siempre).
-            </Td>
+            <Td>{fill(c.fRegen, { obj: <code>{"{ condition, amount }"}</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">consumption</Td>
             <Td>
-              Mapa acción→cantidad (<code>sprint</code>/<code>jump</code>/
-              <code>attack</code>/<code>mining</code>/cualquier acción custom
-              reportada por otro addon).
+              {fill(c.fConsumption, {
+                actions: (
+                  <>
+                    <code>sprint</code>/<code>jump</code>/<code>attack</code>/<code>mining</code>
+                  </>
+                ),
+              })}
             </Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">thresholds</Td>
             <Td>
-              Lista de{" "}
-              <code>{"{ condition, potions, actions, apply-conditions }"}</code>{" "}
-              evaluada contra el valor actual cada 20 ticks.
+              {fill(c.fThresholds, { obj: <code>{"{ condition, potions, actions, apply-conditions }"}</code> })}
             </Td>
           </Tr>
         </tbody>
       </Table>
       <p>
-        Dentro de un threshold: <code>potions</code> se reaplica mientras la
-        condición se mantenga verdadera (como un potion effect vanilla
-        refrescado en cada chequeo); <code>actions</code> se ejecuta UNA sola
-        vez, al cruzar hacia ese umbral; <code>apply-conditions</code> son ids
-        de <code>ConditionDefinition</code> que se aplican mientras el umbral se
-        mantiene y se remueven al salir — así un stat en 0 (ej. sed) puede
-        disparar daño periódico reusando el motor de Conditions en vez de
-        reinventarlo.
+        {fill(c.thresholdBody, {
+          potions: <code>potions</code>,
+          actions: <code>actions</code>,
+          applyConditions: <code>apply-conditions</code>,
+          def: <code>ConditionDefinition</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -192,56 +185,46 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <YamlBuilder
-        title="Constructor visual: stat"
-        description="Identidad y límites de un stat. decay/regeneration/consumption/thresholds son demasiado anidados para este formulario — copia y adaptá el ejemplo de arriba para esos bloques."
+        title={c.bStat}
+        description={c.bStatDesc}
         folder="stats"
-        fields={statFields}
+        fields={statFields(c)}
       />
 
-      <SectionHeading id="actividad">Activity State Resolver</SectionHeading>
+      <SectionHeading id="actividad">{c.activityTitle}</SectionHeading>
       <p>
-        Las reglas de <code>regeneration</code> pueden condicionar por actividad
-        del jugador: <code>resting</code>, <code>walking</code>,{" "}
-        <code>sprinting</code>, <code>combat</code>. El resolver NO chequea esto
-        por tick — se apoya en timestamps de eventos reales (último movimiento,
-        último daño recibido o infligido) para clasificar barato en cada
-        evaluación. También acepta condiciones ambientales con prefijo:{" "}
-        <code>biome:</code>, <code>weather:</code>, <code>world:</code>,{" "}
-        <code>dimension:</code>, y la palabra clave especial{" "}
-        <code>underwater</code> (jugador sumergido en líquido).
+        {fill(c.activityBody, {
+          regen: <code>regeneration</code>,
+          states: (
+            <>
+              <code>resting</code>, <code>walking</code>, <code>sprinting</code>, <code>combat</code>
+            </>
+          ),
+          prefixes: (
+            <>
+              <code>biome:</code>, <code>weather:</code>, <code>world:</code>, <code>dimension:</code>
+            </>
+          ),
+          underwater: <code>underwater</code>,
+        })}
       </p>
 
-      <SectionHeading id="consumo">Consumption hooks</SectionHeading>
+      <SectionHeading id="consumo">{c.consumeTitle}</SectionHeading>
       <p>
-        Sprint (al empezar a correr, no continuo), salto, ataque y minado se
-        detectan automáticamente vía eventos vanilla. Pesca, farming y
-        habilidades de otros addons NO se detectan acá a propósito — le
-        corresponde a cada addon reportar su propia acción llamando a{" "}
-        <code>ExtrasAPI.get().needs().consumeAll(player, "fishing")</code> (o el
-        nombre de acción que corresponda), la misma superficie pública que usa
-        el hook interno de minado.
+        {fill(c.consumeBody, { call: <code>ExtrasAPI.get().needs().consumeAll(player, "fishing")</code> })}
       </p>
 
-      <SectionHeading id="conditions">
-        Conditions: estados custom
-      </SectionHeading>
+      <SectionHeading id="conditions">{c.condTitle}</SectionHeading>
       <p>
-        Una <code>ConditionDefinition</code> (sangrado, envenenado,
-        congelamiento, o cualquier estado custom) es daño periódico + potion
-        effects + acciones on-apply/on-tick/on-expire, con duración fija o
-        indefinida (<code>duration: -1</code>, se remueve solo por API/comando o
-        por otro sistema como un threshold de stat). Deliberadamente NO reusa{" "}
+        {fill(c.condBody1, { def: <code>ConditionDefinition</code>, duration: <code>duration: -1</code> })}{" "}
         <button
           type="button"
           onClick={() => onNavigate("rpgroll-effects")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          RPGRoll-Effects
+          {label("rpgroll-effects")}
         </button>{" "}
-        — se mantiene como un motor de estados simple y standalone en vez de
-        acoplarse al sistema de efectos completo (stacking, inmunidades,
-        componentes de aura...), que resuelve un problema más grande del que
-        Extras necesita.
+        {c.condBody2}
       </p>
       <CodeBlock
         language="yaml"
@@ -260,27 +243,20 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <YamlBuilder
-        title="Constructor visual: condition"
-        description="Duración, daño y potion effects de un estado. on-apply/on-tick/on-expire (acciones) son demasiado anidados para este formulario — copia y adaptá el ejemplo de arriba."
+        title={c.bCondition}
+        description={c.bConditionDesc}
         folder="conditions"
-        fields={conditionFields}
+        fields={conditionFields(c)}
       />
 
-      <SectionHeading id="temperatura">
-        Temperatura: ambiental y corporal
-      </SectionHeading>
+      <SectionHeading id="temperatura">{c.tempTitle}</SectionHeading>
       <p>
-        <code>AmbientTemperatureCalculator</code> parte de{" "}
-        <code>Block#getTemperature()</code> vanilla (cubre cualquier bioma sin
-        mantener una tabla propia) y suma modificadores por hora del día, clima,
-        altitud, dimensión (Nether +25°C, End -10°C) y bloques cercanos
-        (lava/fuego calientan, hielo/nieve enfrían, radio de 3 bloques).{" "}
-        <code>BodyTemperatureEngine</code> converge gradualmente hacia la
-        ambiental según <code>exchange-rate</code> (fracción de la diferencia
-        que se cierra en cada actualización) y mapea el resultado a un estado
-        con nombre (hipotermia severa → hipotermia → frío → normal →
-        sobrecalentamiento → hipertermia), cada uno con sus propios potion
-        effects opcionales.
+        {fill(c.tempBody, {
+          calc: <code>AmbientTemperatureCalculator</code>,
+          vanilla: <code>Block#getTemperature()</code>,
+          engine: <code>BodyTemperatureEngine</code>,
+          rate: <code>exchange-rate</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -302,55 +278,48 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <SectionHeading id="proteccion-termica">
-        Protección térmica de ítems
-      </SectionHeading>
+      <SectionHeading id="proteccion-termica">{c.thermalTitle}</SectionHeading>
       <p>
-        <code>ThermalProtectionService</code> suma la protección de las 4 piezas
-        de armadura equipadas. Si un ítem trae <code>thermal_insulation</code>/
-        <code>thermal_cold_resistance</code>/
-        <code>thermal_heat_resistance</code> en el custom-data genérico de{" "}
+        {fill(c.thermalBody1, {
+          service: <code>ThermalProtectionService</code>,
+          keys: (
+            <>
+              <code>thermal_insulation</code>/<code>thermal_cold_resistance</code>/
+              <code>thermal_heat_resistance</code>
+            </>
+          ),
+        })}{" "}
         <button
           type="button"
           onClick={() => onNavigate("items")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          RPGRoll-Items
+          {label("items")}
         </button>{" "}
-        se usa eso; si no, cae a una tabla de materiales vanilla razonable
-        (cuero abriga, netherite protege de ambos extremos, etc.). La lectura
-        del custom-data reconstruye manualmente la{" "}
-        <code>NamespacedKey("rpgroll-items", "item-custom-data")</code> — cero
-        dependencia de compilación con el módulo Items.
+        {fill(c.thermalBody2, { nsKey: <code>NamespacedKey("rpgroll-items", "item-custom-data")</code> })}
       </p>
 
-      <SectionHeading id="modificadores">
-        Modificadores desde raza/clase/job
-      </SectionHeading>
+      <SectionHeading id="modificadores">{c.modTitle}</SectionHeading>
       <p>
-        Un <code>ModifierSet</code> (id + tipo RACE/CLASS/JOB + mapa de valores)
-        aporta bonos a los sistemas de Extras sin que RPGRoll-Core sepa que este
-        addon existe: <code>ModifierResolver</code> lee la raza/clase/ jobs
-        ACTIVOS del jugador vía la API pública de Core y busca acá un set con
-        ese mismo id. Las claves
-        <code>{"<statId>_max"}</code> y <code>{"<statId>_rate"}</code> son
-        multiplicadores —{" "}
-        <strong>
-          el motor calcula{" "}
-          <code>1.0 + suma de todos los modificadores aplicables</code>
-        </strong>
-        , así que un valor de <code>0.3</code> da 130% y un valor de{" "}
-        <code>-0.2</code> da 80%. Cualquier otra clave es un bono aditivo
-        simple, a interpretar por quien la lea (hoy, ningún sistema además de
-        stats consume claves arbitrarias).
+        {fill(c.modBody, {
+          set: <code>ModifierSet</code>,
+          resolver: <code>ModifierResolver</code>,
+          keys: (
+            <>
+              <code>{"<statId>_max"}</code> / <code>{"<statId>_rate"}</code>
+            </>
+          ),
+          strong: (
+            <strong>
+              {fill(c.modStrong, { formula: <code>1.0 + suma de todos los modificadores aplicables</code> })}
+            </strong>
+          ),
+          v1: <code>0.3</code>,
+          v2: <code>-0.2</code>,
+        })}
       </p>
-      <Callout
-        tone="warning"
-        title="No confundir con un valor multiplicador directo"
-      >
-        <code>stamina_max: 1.3</code> NO da 130% — da{" "}
-        <code>1.0 + 1.3 = 230%</code>. El valor correcto para "130% del máximo"
-        es <code>0.3</code>.
+      <Callout tone="warning" title={localizedCaveatTitle("extras", CAVEAT_TITLE, locale)}>
+        {localizedCaveatBody("extras", CAVEAT_TITLE, CAVEAT_BODY, locale)}
       </Callout>
       <CodeBlock
         language="yaml"
@@ -364,87 +333,74 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <YamlBuilder
-        title="Constructor visual: modifier"
-        description="Id y tipo de fuente. Las claves de 'values' (ej. stamina_max, thirst_rate) son libres — copia y adaptá el ejemplo de arriba."
+        title={c.bModifier}
+        description={c.bModifierDesc}
         folder="modifiers"
-        fields={modifierFields}
+        fields={modifierFields(c)}
       />
 
-      <SectionHeading id="condiciones-reusables">
-        Condiciones/expresiones reusables
-      </SectionHeading>
+      <SectionHeading id="condiciones-reusables">{c.reusableTitle}</SectionHeading>
       <p>
-        El mismo <code>RateConditionEvaluator</code> que resuelve{" "}
-        <code>regeneration</code> se usa en cualquier lugar del addon que
-        necesite evaluar una condición de texto: palabras clave de actividad sin
-        prefijo, o <code>biome:</code>/<code>weather:</code>/<code>world:</code>
-        /<code>dimension:</code>/<code>underwater</code> con prefijo. Los
-        umbrales numéricos de <code>thresholds</code> (<code>{"<=30"}</code>,{" "}
-        <code>{">=80"}</code>) usan un evaluador aparte (
-        <code>NumericComparison</code>), específico para comparar contra el
-        valor actual del stat.
+        {fill(c.reusableBody, {
+          evaluator: <code>RateConditionEvaluator</code>,
+          regen: <code>regeneration</code>,
+          prefixes: (
+            <>
+              <code>biome:</code>/<code>weather:</code>/<code>world:</code>/<code>dimension:</code>/
+              <code>underwater</code>
+            </>
+          ),
+          thresholds: <code>thresholds</code>,
+          examples: (
+            <>
+              <code>{"<=30"}</code>, <code>{">=80"}</code>
+            </>
+          ),
+          numeric: <code>NumericComparison</code>,
+        })}
       </p>
 
-      <SectionHeading id="acciones">Sistema de Actions</SectionHeading>
+      <SectionHeading id="acciones">{c.actionsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">MESSAGE</Td>
-            <Td>
-              Le envía un mensaje al jugador (colores <code>&amp;</code>{" "}
-              traducidos).
-            </Td>
+            <Td>{fill(c.aMessage, { amp: <code>&amp;</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">SOUND</Td>
-            <Td>
-              <code>"SOUND_ID;volumen;pitch"</code> reproducido en la ubicación
-              del jugador.
-            </Td>
+            <Td>{fill(c.aSound, { fmt: <code>"SOUND_ID;volumen;pitch"</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">PARTICLE</Td>
-            <Td>
-              <code>"PARTICLE_ID;cantidad"</code> spawneado en la ubicación del
-              jugador.
-            </Td>
+            <Td>{fill(c.aParticle, { fmt: <code>"PARTICLE_ID;cantidad"</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">DAMAGE</Td>
-            <Td>
-              Daño directo (<code>Player#damage</code>) — usado internamente por
-              conditions y thresholds.
-            </Td>
+            <Td>{fill(c.aDamage, { api: <code>Player#damage</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">COMMAND</Td>
-            <Td>
-              Ejecuta un comando de consola con <code>%player%</code>{" "}
-              reemplazado.
-            </Td>
+            <Td>{fill(c.aCommand, { var: <code>%player%</code> })}</Td>
           </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="hud">HUD configurable</SectionHeading>
+      <SectionHeading id="hud">{c.hudTitle}</SectionHeading>
       <p>
-        Un actionbar opcional (deshabilitado por defecto) que renderiza una o
-        más líneas con formato libre, incluyendo una barra de progreso ASCII (
-        <code>{"{bar}"}</code>) con caracteres lleno/vacío configurables.
-        Pensado como fallback simple para servidores sin{" "}
+        {fill(c.hudBody1, { bar: <code>{"{bar}"}</code> })}{" "}
         <button
           type="button"
           onClick={() => onNavigate("tab")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          RPGRoll-TAB
+          {label("tab")}
         </button>{" "}
-        instalado — con TAB, mostrar los mismos valores en tablist/scoreboard
-        vía placeholders suele ser preferible.
+        {c.hudBody2}
       </p>
       <CodeBlock
         language="yaml"
@@ -463,22 +419,19 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <SectionHeading id="integracion-tab">
-        Integración con RPGRoll-TAB
-      </SectionHeading>
+      <SectionHeading id="integracion-tab">{c.tabTitle}</SectionHeading>
       <p>
-        Si RPGRoll-TAB está instalado, Extras registra un placeholder{" "}
-        <code>{"{extras_<statId>}"}</code> y{" "}
-        <code>{"{extras_<statId>_max}"}</code> por cada stat cargado, más{" "}
-        <code>{"{extras_body_temperature}"}</code>,{" "}
-        <code>{"{extras_temperature_state}"}</code> y{" "}
-        <code>{"{extras_conditions}"}</code> (lista separada por comas de las
-        conditions activas). El registro vive aislado en{" "}
-        <code>TabIntegrationBridge</code> — la JVM nunca resuelve clases de TAB
-        si el plugin no está presente.
+        {fill(c.tabBody, {
+          p1: <code>{"{extras_<statId>}"}</code>,
+          p2: <code>{"{extras_<statId>_max}"}</code>,
+          p3: <code>{"{extras_body_temperature}"}</code>,
+          p4: <code>{"{extras_temperature_state}"}</code>,
+          p5: <code>{"{extras_conditions}"}</code>,
+          bridge: <code>TabIntegrationBridge</code>,
+        })}
       </p>
 
-      <SectionHeading id="api">API para addons — ExtrasAPI</SectionHeading>
+      <SectionHeading id="api">{c.apiTitle}</SectionHeading>
       <CodeBlock
         language="java"
         filename="OtroAddon.java"
@@ -500,60 +453,55 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">/extrasadmin reload</Td>
-            <Td>Recarga stats/conditions/modifiers desde disco.</Td>
+            <Td>{c.cReload}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">/extrasadmin list</Td>
-            <Td>Lista todos los stats y conditions cargados.</Td>
+            <Td>{c.cList}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
               {"/extrasadmin get <jugador> <stat>"}
             </Td>
-            <Td>Muestra el valor actual de un stat.</Td>
+            <Td>{c.cGet}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
               {"/extrasadmin set <jugador> <stat> <valor>"}
             </Td>
-            <Td>
-              Fija el valor de un stat (clampeado a [0, máximo efectivo]).
-            </Td>
+            <Td>{c.cSet}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
               {"/extrasadmin add <jugador> <stat> <cantidad>"}
             </Td>
-            <Td>Suma/resta una cantidad al valor actual.</Td>
+            <Td>{c.cAdd}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
               {"/extrasadmin apply <jugador> <condition>"}
             </Td>
-            <Td>Aplica una condition.</Td>
+            <Td>{c.cApply}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
               {"/extrasadmin remove <jugador> <condition>"}
             </Td>
-            <Td>Remueve una condition activa.</Td>
+            <Td>{c.cRemove}</Td>
           </Tr>
         </tbody>
       </Table>
       <p>
-        Todo el comando requiere{" "}
-        <Badge tone="amber">rpgrollextras.admin.*</Badge> (default: op) — no hay
-        comando de jugador propio; los stats se consultan vía placeholders (con
-        TAB) o el HUD.
+        {fill(c.permNote, { perm: <Badge tone="amber">rpgrollextras.admin.*</Badge> })}
       </p>
 
       <PrevNext current="extras" onNavigate={onNavigate} />

@@ -14,32 +14,37 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { pageTitle } from "../content/nav";
+import { useI18n, fill, localizedPageLabel } from "../i18n";
+import { ADDONS_D_COPY, type AddonsDCopy } from "./copy/addonsD";
 
-const speciesFields: YamlField[] = [
+type FishingCopy = AddonsDCopy["fishing"];
+
+const speciesFields = (c: FishingCopy): YamlField[] => [
   {
     key: "id",
-    label: "Id",
+    label: c.fId,
     type: "string",
     default: "nueva_especie",
     placeholder: "river_trout",
   },
   {
     key: "display-name",
-    label: "Nombre visible",
+    label: c.fDisplayName,
     type: "string",
     placeholder: "&bTrucha de Río",
   },
-  { key: "icon", label: "Ícono (Material)", type: "string", default: "COD" },
+  { key: "icon", label: c.fIcon, type: "string", default: "COD" },
   {
     key: "custom-model-data",
-    label: "CustomModelData",
+    label: c.fCmd,
     type: "number",
     default: "0",
   },
-  { key: "description", label: "Descripción", type: "string" },
+  { key: "description", label: c.fDescription, type: "string" },
   {
     key: "category",
-    label: "Categoría",
+    label: c.fCategory,
     type: "select",
     options: [
       "FRESHWATER",
@@ -55,121 +60,121 @@ const speciesFields: YamlField[] = [
   },
   {
     key: "rarity",
-    label: "Rareza",
+    label: c.fRarity,
     type: "select",
     options: ["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY"],
     default: "COMMON",
   },
   {
     key: "water-types",
-    label: "Tipos de agua (vacío = cualquiera)",
+    label: c.fWaterTypes,
     type: "list",
     placeholder: "RIVER, LAKE",
   },
-  { key: "biomes", label: "Biomas (vacío = cualquiera)", type: "list" },
+  { key: "biomes", label: c.fBiomes, type: "list" },
   {
     key: "min-weight",
-    label: "Peso mín. (kg)",
+    label: c.fMinWeight,
     type: "number",
     default: "0.5",
   },
-  { key: "max-weight", label: "Peso máx. (kg)", type: "number", default: "3" },
+  { key: "max-weight", label: c.fMaxWeight, type: "number", default: "3" },
   {
     key: "min-length",
-    label: "Largo mín. (cm)",
+    label: c.fMinLength,
     type: "number",
     default: "15",
   },
   {
     key: "max-length",
-    label: "Largo máx. (cm)",
+    label: c.fMaxLength,
     type: "number",
     default: "40",
   },
-  { key: "base-price", label: "Precio base", type: "number", default: "5" },
+  { key: "base-price", label: c.fBasePrice, type: "number", default: "5" },
   {
     key: "base-experience",
-    label: "Experiencia base",
+    label: c.fBaseXp,
     type: "number",
     default: "3",
   },
   {
     key: "behavior",
-    label: "Comportamiento (dificultad del minijuego)",
+    label: c.fBehavior,
     type: "select",
     options: ["SHY", "AGGRESSIVE", "FAST", "SLOW", "JUMPER", "ELUSIVE"],
     default: "SLOW",
   },
   {
     key: "attracted-by-bait-tags",
-    label: "Tags de carnada que atraen (bono de peso)",
+    label: c.fBaitTags,
     type: "list",
   },
   {
     key: "catch-effect",
-    label: "Efecto RPGRoll-FX al capturar",
+    label: c.fCatchEffect,
     type: "string",
   },
   {
     key: "catch-status-effect",
-    label: "Efecto de estado (RPGRoll-Effects) al capturar",
+    label: c.fCatchStatus,
     type: "string",
   },
 ];
 
-const rodFields: YamlField[] = [
+const rodFields = (c: FishingCopy): YamlField[] => [
   {
     key: "id",
-    label: "Id",
+    label: c.fId,
     type: "string",
     default: "nueva_cana",
     placeholder: "apprentice_rod",
   },
   {
     key: "display-name",
-    label: "Nombre visible",
+    label: c.fDisplayName,
     type: "string",
     placeholder: "&fCaña de Aprendiz",
   },
   {
     key: "material",
-    label: "Material",
+    label: c.fMaterial,
     type: "string",
     default: "FISHING_ROD",
   },
-  { key: "description", label: "Descripción", type: "string" },
-  { key: "durability", label: "Durabilidad", type: "number", default: "64" },
+  { key: "description", label: c.fDescription, type: "string" },
+  { key: "durability", label: c.fDurability, type: "number", default: "64" },
   {
     key: "cast-power",
-    label: "Poder de lanzamiento (cosmético)",
+    label: c.fCastPower,
     type: "number",
     default: "1.0",
   },
   {
     key: "reel-speed",
-    label: "Velocidad de reeleo (ancho de zona)",
+    label: c.fReelSpeed,
     type: "number",
     default: "1.0",
   },
   {
     key: "precision",
-    label: "Precisión (bono a calidad)",
+    label: c.fPrecision,
     type: "number",
     default: "0",
   },
   {
     key: "resistance",
-    label: "Resistencia (fallos permitidos)",
+    label: c.fResistance,
     type: "number",
     default: "1.0",
   },
   {
     key: "luck-bonus",
-    label: "Suerte (peso de especies raras+)",
+    label: c.fLuck,
     type: "number",
     default: "1.0",
   },
-  { key: "preferred-categories", label: "Categorías preferidas", type: "list" },
+  { key: "preferred-categories", label: c.fPreferred, type: "list" },
 ];
 
 export function Fishing({
@@ -177,33 +182,25 @@ export function Fishing({
 }: {
   onNavigate: (slug: string) => void;
 }) {
+  const { locale } = useI18n();
+  const c = ADDONS_D_COPY[locale].fishing;
+  const label = (slug: string) => localizedPageLabel(slug, pageTitle(slug), locale);
+
   return (
     <>
-      <PageHeader title="Fishing (RPGRoll-Fishing)">
-        Pesca como profesión completa — especies configurables con docenas de
-        condiciones de captura, cañas y carnadas que modifican la tirada, un
-        minijuego de forcejeo opcional, tesoros y basura, peces legendarios con
-        requisitos extremos, y una enciclopedia de capturas por jugador.
+      <PageHeader title={c.title} slug="fishing">
+        {c.intro}
       </PageHeader>
 
-      <Callout
-        tone="info"
-        title="No reimplementa el cast/espera/mordida de la pesca"
-      >
-        RPGRoll-Fishing se apoya por completo en <code>PlayerFishEvent</code> de
-        Bukkit — Minecraft decide cuándo y dónde muerde el anzuelo (vanilla), y
-        este addon solo intercepta el estado <code>CAUGHT_FISH</code> para
-        sustituir lo que iba a soltar por su propia tirada ponderada. Esto
-        simplifica muchísimo el addon, pero trae una consecuencia real:{" "}
-        <strong>
-          una especie con <code>water-types: [LAVA]</code> sería imposible de
-          pescar
-        </strong>
-        , porque vanilla nunca genera una mordida con el anzuelo flotando en
-        lava.
+      <Callout tone="info" title={c.vanillaTitle}>
+        {fill(c.vanillaBody, {
+          event: <code>PlayerFishEvent</code>,
+          state: <code>CAUGHT_FISH</code>,
+          strong: <strong>{fill(c.vanillaStrong, { lava: <code>water-types: [LAVA]</code> })}</strong>,
+        })}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         code={
@@ -211,166 +208,137 @@ export function Fishing({
         }
       />
       <p>
-        Sin{" "}
+        {c.reqBody1}{" "}
         <button
           type="button"
           onClick={() => onNavigate("seasons")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          RPGRoll-Seasons
+          {label("seasons")}
         </button>
-        , el campo <code>allowed-seasons</code> de una especie simplemente no
-        filtra nada (siempre elegible por estación) y el clima usa una tabla de
-        temperatura aproximada propia en vez de la de Seasons. Sin
-        Particles/RPGRoll-Effects, <code>catch-effect</code>/
-        <code>catch-status-effect</code> no hacen nada — el resto de la captura
-        funciona igual. Sin{" "}
+        {fill(c.reqBody2, {
+          seasons: <code>allowed-seasons</code>,
+          effects: (
+            <>
+              <code>catch-effect</code>/<code>catch-status-effect</code>
+            </>
+          ),
+        })}{" "}
         <button
           type="button"
           onClick={() => onNavigate("sackresourcepack")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          SackResourcePack
+          {label("sackresourcepack")}
         </button>
-        , <code>custom-model-data</code> se guarda igual en la especie pero no
-        se sincroniza ninguna textura — el ítem se ve con el <code>icon</code>{" "}
-        vanilla normal, sin errores ni advertencias.
+        {fill(c.reqBody3, { cmd: <code>custom-model-data</code>, icon: <code>icon</code> })}
       </p>
 
-      <SectionHeading id="especies">Especies de peces</SectionHeading>
+      <SectionHeading id="especies">{c.speciesTitle}</SectionHeading>
       <p>
-        Una <code>FishSpecies</code> combina identidad (nombre, ícono,{" "}
-        <code>CustomModelData</code>), clasificación (categoría/rareza),
-        condiciones de captura y rango de peso/largo/precio/experiencia.{" "}
-        <strong>
-          Todo campo de tipo lista vacío significa "sin restricción"
-        </strong>{" "}
-        — un <code>water-types</code> vacío permite cualquier agua, no ninguna.
+        {fill(c.speciesBody, {
+          species: <code>FishSpecies</code>,
+          cmd: <code>CustomModelData</code>,
+          strong: <strong>{c.speciesStrong}</strong>,
+          waterTypes: <code>water-types</code>,
+        })}
       </p>
-      <Callout tone="info" title="Texturas custom: la carpeta resourcepack/ se sincroniza sola">
-        <code>custom-model-data</code> solo define el número — el material/textura reales los pone un resource
-        pack. Dejá el modelo/textura en{" "}
-        <code>plugins/RPGRoll-Fishing/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code> y, si
-        SackResourcePack está instalado, se sincroniza solo al arrancar el plugin (mismo mecanismo que ya usa
-        RPGRoll-Items). Sin ese resource pack armado, el pez se ve con su <code>icon</code> vanilla normal.
+      <Callout tone="info" title={c.texTitle}>
+        {fill(c.texBody, {
+          cmd: <code>custom-model-data</code>,
+          path: (
+            <code>plugins/RPGRoll-Fishing/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code>
+          ),
+          icon: <code>icon</code>,
+        })}
       </Callout>
       <Table>
         <Thead>
-          <Th>Condición</Th>
-          <Th>Cómo se resuelve</Th>
+          <Th>{c.thCondition}</Th>
+          <Th>{c.thHow}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">water-types</Td>
-            <Td>
-              Bioma/bloque del anzuelo → RIVER/LAKE/SWAMP/OCEAN/DEEP_OCEAN, o
-              forzado por una <code>FishingRegion</code> para
-              MAGIC_WATER/CORRUPTED_WATER.
-            </Td>
+            <Td>{fill(c.cWater, { region: <code>FishingRegion</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">biomes</Td>
-            <Td>
-              Nombre de bioma vanilla en minúsculas (ej. <code>river</code>).
-            </Td>
+            <Td>{fill(c.cBiomes, { ex: <code>river</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">depths</Td>
-            <Td>
-              Escaneo simple de la columna de agua: SURFACE/MID_WATER/BOTTOM, o
-              UNDERWATER_CAVE si hay techo sólido sobre la superficie.
-            </Td>
+            <Td>{c.cDepths}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">allowed-weathers</Td>
-            <Td>
-              SUNNY/RAIN/SNOW (según temperatura)/STORM, leído de{" "}
-              <code>World#hasStorm/isThundering</code>.
-            </Td>
+            <Td>{fill(c.cWeather, { api: <code>World#hasStorm/isThundering</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">allowed-times</Td>
-            <Td>
-              DAY/NIGHT/DAWN/DUSK/NOON/MIDNIGHT — varios pueden estar activos a
-              la vez, según <code>World#getTime()</code>.
-            </Td>
+            <Td>{fill(c.cTimes, { api: <code>World#getTime()</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">allowed-seasons</Td>
-            <Td>
-              Compara contra la estación efectiva de RPGRoll-Seasons (si está
-              instalado).
-            </Td>
+            <Td>{c.cSeasons}</Td>
           </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="legendarios">Peces legendarios</SectionHeading>
+      <SectionHeading id="legendarios">{c.legendaryTitle}</SectionHeading>
       <p>
-        <code>legendary: true</code> activa hasta 3 condiciones extra, evaluadas{" "}
-        <strong>además</strong> de las normales: <code>required-level</code>{" "}
-        (vía RPGRollAPI, si no está instalado un nivel mínimo &gt; 0 hace la
-        especie imposible), <code>requires-full-moon</code> (una fase lunar
-        propia calculada como <code>(fullTime / 24000) % 8 == 0</code>, no una
-        luna llena "real" de Minecraft), y <code>required-bait</code> (exige esa
-        carnada exacta, no solo un tag). El Leviatán del contenido de ejemplo
-        usa las tres a la vez.
+        {fill(c.legendaryBody, {
+          flag: <code>legendary: true</code>,
+          besides: <strong>{c.legendaryBesides}</strong>,
+          reqLevel: <code>required-level</code>,
+          fullMoon: <code>requires-full-moon</code>,
+          formula: <code>(fullTime / 24000) % 8 == 0</code>,
+          reqBait: <code>required-bait</code>,
+        })}
       </p>
 
-      <SectionHeading id="canas-carnadas">Cañas y carnadas</SectionHeading>
-      <Callout
-        tone="tip"
-        title="Una caña unifica Caña/Carrete/Sedal/Anzuelo del diseño original"
-      >
-        Los cuatro son, en la práctica, multiplicadores sobre la misma tirada de
-        captura — <code>FishingRod</code> los junta en un solo tipo de contenido
-        (mismo criterio que <code>SpellCatalyst</code> en Magic). Lo que los
-        diferenciaría (modelo, lore, nombre) sigue siendo libre por caña.
+      <SectionHeading id="canas-carnadas">{c.rodsTitle}</SectionHeading>
+      <Callout tone="tip" title={c.rodsTipTitle}>
+        {fill(c.rodsTipBody, { rod: <code>FishingRod</code>, catalyst: <code>SpellCatalyst</code> })}
       </Callout>
       <Table>
         <Thead>
-          <Th>Campo de la caña</Th>
-          <Th>Efecto</Th>
+          <Th>{c.thRodField}</Th>
+          <Th>{c.thEffect}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">reel-speed</Td>
-            <Td>
-              Achica la zona de tensión del minijuego RPG (más difícil) o la
-              agranda si es &gt;1 (más fácil).
-            </Td>
+            <Td>{c.rReelSpeed}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">precision</Td>
-            <Td>Bono directo a la tirada de calidad de la captura.</Td>
+            <Td>{c.rPrecision}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">resistance</Td>
-            <Td>Aumenta los fallos permitidos antes de que el pez escape.</Td>
+            <Td>{c.rResistance}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">luck-bonus</Td>
-            <Td>Multiplica el peso de tirada de especies no-COMMON.</Td>
+            <Td>{c.rLuck}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">preferred-categories</Td>
-            <Td>+50% de peso extra a especies de esas categorías.</Td>
+            <Td>{c.rPreferred}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">cast-power</Td>
-            <Td>
-              Cosmético por ahora — reservado para una futura mecánica de
-              distancia real.
-            </Td>
+            <Td>{c.rCastPower}</Td>
           </Tr>
         </tbody>
       </Table>
       <p>
-        Una carnada se sostiene en la mano secundaria y se consume 1 por cada
-        lanzamiento (aunque no muerda nada). <code>quality-bonus</code> suma
-        directo a la tirada de calidad; <code>legendary-weight-multiplier</code>{" "}
-        es la "Carnada Legendaria" del diseño original — solo importa contra
-        especies <code>legendary</code>.
+        {fill(c.baitBody, {
+          quality: <code>quality-bonus</code>,
+          legWeight: <code>legendary-weight-multiplier</code>,
+          legendary: <code>legendary</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -386,14 +354,16 @@ export function Fishing({
         }
       />
 
-      <SectionHeading id="tesoros-basura">Tesoros y basura</SectionHeading>
+      <SectionHeading id="tesoros-basura">{c.treasureTitle}</SectionHeading>
       <p>
-        Antes de sortear una especie, cada picada tira contra{" "}
-        <code>treasure-chance</code>/<code>junk-chance</code> (config global) —
-        si sale tesoro o basura, ni siquiera se evalúan las especies elegibles.
-        Ambos entregan hoy un <code>ItemStack</code> vanilla puro (material +
-        cantidad); referenciar un ítem custom de RPGRoll-Items queda para una
-        integración futura.
+        {fill(c.treasureBody, {
+          chances: (
+            <>
+              <code>treasure-chance</code>/<code>junk-chance</code>
+            </>
+          ),
+          stack: <code>ItemStack</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -410,33 +380,29 @@ export function Fishing({
         }
       />
 
-      <SectionHeading id="regiones">Regiones de pesca</SectionHeading>
+      <SectionHeading id="regiones">{c.regionsTitle}</SectionHeading>
       <p>
-        Una <code>FishingRegion</code> es una caja simple (AABB, sin WorldGuard
-        — mismo estilo que <code>SeasonRegion</code>) que fuerza un{" "}
-        <code>WaterType</code>. Es la única forma de conseguir{" "}
-        <code>MAGIC_WATER</code> o <code>CORRUPTED_WATER</code>, ya que ningún
-        bioma vanilla las implica.
+        {fill(c.regionsBody, {
+          region: <code>FishingRegion</code>,
+          seasonRegion: <code>SeasonRegion</code>,
+          waterType: <code>WaterType</code>,
+          magic: <code>MAGIC_WATER</code>,
+          corrupted: <code>CORRUPTED_WATER</code>,
+        })}
       </p>
 
-      <SectionHeading id="minijuego">
-        Minijuego de forcejeo (modo RPG)
-      </SectionHeading>
+      <SectionHeading id="minijuego">{c.miniTitle}</SectionHeading>
       <p>
-        Con <code>rpg-mode: true</code> (config global), cada picada de pez abre
-        una barra de tensión: un indicador oscila con una onda seno y el jugador
-        tiene que golpear con <strong>click izquierdo (swing de brazo)</strong>{" "}
-        — a propósito, no click derecho, porque con una caña en mano ese botón
-        ya recoge el sedal en vanilla. <code>behavior</code> de la especie
-        decide velocidad de oscilación y ancho de zona; <code>JUMPER</code>{" "}
-        re-centra la zona cada 40 ticks para simular un pez errático. Con{" "}
-        <code>rpg-mode: false</code> la captura se resuelve al instante, sin
-        minijuego (modo vanilla clásico).
+        {fill(c.miniBody, {
+          rpgMode: <code>rpg-mode: true</code>,
+          strong: <strong>{c.miniStrong}</strong>,
+          behavior: <code>behavior</code>,
+          jumper: <code>JUMPER</code>,
+          rpgModeOff: <code>rpg-mode: false</code>,
+        })}
       </p>
 
-      <SectionHeading id="formato-yaml">
-        Ejemplos de archivo YAML
-      </SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="species/dragon_fish.yml"
@@ -488,38 +454,35 @@ export function Fishing({
         }
       />
 
-      <Callout
-        tone="tip"
-        title="Referencia completa: todos los campos en un solo archivo"
-      >
-        <code>species/reference_full.yml</code> (incluido en el jar) agrega{" "}
-        <code>biomes</code>, <code>allowed-times</code> y{" "}
-        <code>attracted-by-bait-tags</code> — los tres campos que ninguno de los
-        dos ejemplos de arriba muestra, junto con todos los demás.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, {
+          file: <code>species/reference_full.yml</code>,
+          fields: (
+            <>
+              <code>biomes</code>, <code>allowed-times</code> &amp; <code>attracted-by-bait-tags</code>
+            </>
+          ),
+        })}
       </Callout>
 
       <YamlBuilder
-        title="Constructor visual: especie de pez"
-        description="Identidad, clasificación y condiciones básicas de captura. Campos de listas van separados por comas; dejalos vacíos para 'sin restricción'."
+        title={c.bSpecies}
+        description={c.bSpeciesDesc}
         folder="species"
-        fields={speciesFields}
+        fields={speciesFields(c)}
       />
       <YamlBuilder
-        title="Constructor visual: caña de pescar"
+        title={c.bRod}
         folder="rods"
-        fields={rodFields}
+        fields={rodFields(c)}
       />
 
-      <SectionHeading id="gui">GUI: Fishing Studio</SectionHeading>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
       <p>
-        <Kbd>/fishingadmin browser</Kbd> abre un hub que enlaza a 6 navegadores
-        — Especies, Cañas, Carnadas, Tesoros, Basura y Regiones.{" "}
-        <Kbd>/fishing encyclopedia</Kbd> abre la enciclopedia personal del
-        jugador: qué especies conoce y su mejor captura (peso/largo/calidad) de
-        cada una.
+        {fill(c.guiBody, { browser: <Kbd>/fishingadmin browser</Kbd>, enc: <Kbd>/fishing encyclopedia</Kbd> })}
       </p>
 
-      <SectionHeading id="api">API para addons — FishingAPI</SectionHeading>
+      <SectionHeading id="api">{c.apiTitle}</SectionHeading>
       <CodeBlock
         language="java"
         filename="OtroAddon.java"
@@ -533,60 +496,54 @@ export function Fishing({
           "CatchResult resultado = FishingAPI.get().forceCatch(player, hookLocation);\n"
         }
       />
-      <Callout
-        tone="tip"
-        title="hasCaught/getCaughtCount no saben nada de misiones ni recetas"
-      >
-        Son atajos genéricos sobre la enciclopedia del jugador — un futuro
-        RPGRoll-Quests definiría su propio objetivo de captura y llamaría a
-        estos métodos; Fishing no necesita saber que "eso" es una misión.
+      <Callout tone="tip" title={c.apiTipTitle}>
+        {c.apiTipBody}
       </Callout>
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">/fishingadmin browser</Td>
-            <Td>Abre el Fishing Studio.</Td>
+            <Td>{c.cBrowser}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">/fishingadmin reload</Td>
-            <Td>Recarga todas las definiciones desde disco.</Td>
+            <Td>{c.cReload}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
               {"/fishingadmin giverod <id>"}
             </Td>
-            <Td>Entrega una caña al jugador.</Td>
+            <Td>{c.cGiveRod}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
               {"/fishingadmin givebait <id>"}
             </Td>
-            <Td>Entrega carnada al jugador.</Td>
+            <Td>{c.cGiveBait}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">/fishing encyclopedia</Td>
-            <Td>Abre la enciclopedia de capturas personal.</Td>
+            <Td>{c.cEncyclopedia}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">/fishing stats</Td>
-            <Td>
-              Resumen: peces capturados, especies descubiertas, tesoros y
-              basura.
-            </Td>
+            <Td>{c.cStats}</Td>
           </Tr>
         </tbody>
       </Table>
       <p>
-        <code>/fishingadmin</code> requiere{" "}
-        <Badge tone="amber">rpgrollfishing.admin.*</Badge> (default: op);{" "}
-        <code>/fishing</code> requiere{" "}
-        <Badge tone="blue">rpgrollfishing.use</Badge> (default: true).
+        {fill(c.permNote, {
+          admin: <code>/fishingadmin</code>,
+          p1: <Badge tone="amber">rpgrollfishing.admin.*</Badge>,
+          use: <code>/fishing</code>,
+          p2: <Badge tone="blue">rpgrollfishing.use</Badge>,
+        })}
       </p>
       <PrevNext current="fishing" onNavigate={onNavigate} />
     </>
