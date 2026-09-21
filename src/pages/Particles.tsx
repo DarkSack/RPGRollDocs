@@ -14,115 +14,162 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { pageTitle } from "../content/nav";
+import { useI18n, fill, localizedPageLabel } from "../i18n";
+import { ADDONS_B_COPY, type AddonsBCopy } from "./copy/addonsB";
 
-const sackEffectFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_efecto", placeholder: "level_up" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&6¡Subida de nivel!" },
-  { key: "description", label: "Descripción", type: "string" },
+type FxCopy = AddonsBCopy["fx"];
+
+const effectFields = (c: FxCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: "nuevo_efecto", placeholder: "level_up" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&6¡Subida de nivel!" },
+  { key: "description", label: c.fDescription, type: "string" },
 ];
 
 export function Particles({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ADDONS_B_COPY[locale].fx;
+
+  const shapes: [string, string, string][] = [
+    ["POINT", "—", c.shPoint],
+    ["CIRCLE", "radius, points", c.shCircle],
+    ["SPHERE", "radius, points", c.shSphere],
+    ["LINE", c.pFromTo, c.shLine],
+    ["HELIX", "radius, height, turns, points", c.shHelix],
+    ["CONE", "radius, length, points", c.shCone],
+    ["CUBE_OUTLINE", c.pHalfSide, c.shCube],
+    ["BURST", "radius, points", c.shBurst],
+  ];
+
+  const commands: [string, string][] = [
+    ["/rpgfx browser", c.cBrowser],
+    ["/rpgfx reload", c.cReload],
+    ["/rpgfx test <id> [jugador]", c.cTest],
+  ];
+
   return (
     <>
-      <PageHeader title="RPGRoll-FX">
-        Librería de efectos audiovisuales reusable — formas de partículas, sonidos, títulos/actionbar/bossbar y
-        efectos de poción, todo secuenciable con delays. Independiente de RPGRollAPI a propósito, similar en
-        espíritu a SCore de Ssomar: pensada para que cualquier addon (de RPGRoll o no) la use como su motor de
-        "cómo se ve/suena esto", sin acoplarse a ningún otro sistema.
+      <PageHeader title={c.title} slug="rpgroll-particles">
+        {c.intro}
       </PageHeader>
 
-      <Callout tone="info" title="No confundir con RPGRoll-Effects">
-        RPGRoll-FX es la capa de <strong>renderizado</strong> (partículas/sonidos/pantalla) — no tiene noción de
-        duración, stacking, condiciones ni buffs/debuffs. Para eso está{" "}
-        <button type="button" onClick={() => onNavigate("rpgroll-effects")} className="text-violet-600 underline dark:text-violet-400">
-          RPGRoll-Effects
+      <Callout tone="info" title={c.confuseTitle}>
+        {fill(c.confuseBody1, { render: <strong>{c.confuseRender}</strong> })}{" "}
+        <button type="button" className="underline" onClick={() => onNavigate("rpgroll-effects")}>
+          {localizedPageLabel("rpgroll-effects", pageTitle("rpgroll-effects"), locale)}
         </button>
-        , el motor de efectos de estado, que de hecho usa RPGRoll-FX por debajo para sus componentes visuales y
-        de sonido.
+        {c.confuseBody2}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock language="yaml" code={"depend: [RPGRoll]"} />
+      <p>{fill(c.reqBody, { cm: <code>ContentManager</code> })}</p>
+
+      <SectionHeading id="modelo">{c.modelTitle}</SectionHeading>
       <p>
-        La dependencia con RPGRoll es solo para reusar el framework de contenido (<code>ContentManager</code>) y de
-        GUIs compartido — la lógica de partículas/sonidos en sí no toca ningún dato de RPGRollAPI.
+        {fill(c.modelBody, {
+          def: <code>EffectDefinition</code>,
+          step: <code>EffectStep</code>,
+          type: <code>type</code>,
+          delay: <code>delay</code>,
+          engine: <code>EffectEngine</code>,
+          scheduler: <code>Bukkit.getScheduler().runTaskLater</code>,
+        })}
       </p>
 
-      <SectionHeading id="modelo">Un efecto es una secuencia de pasos</SectionHeading>
-      <p>
-        Un <code>EffectDefinition</code> (id, nombre, descripción) tiene una lista de <code>EffectStep</code> — cada
-        uno con un <code>type</code>, un <code>delay</code> (en ticks, contado desde que se dispara toda la
-        secuencia, no desde el paso anterior) y params libres. <code>EffectEngine</code> agenda cada paso con{" "}
-        <code>Bukkit.getScheduler().runTaskLater</code> y los ejecuta de forma independiente — un error en un paso
-        (partícula/sonido inválido) solo loguea un warning, no cancela el resto.
-      </p>
-
-      <SectionHeading id="tipos-de-paso">Tipos de paso</SectionHeading>
+      <SectionHeading id="tipos-de-paso">{c.stepsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">PARTICLE</Td><Td>Spawnea una <code>Particle</code> vanilla siguiendo una forma geométrica (ver abajo).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SOUND</Td><Td>Reproduce un <code>Sound</code> vanilla — personal (solo el jugador la escucha) o de mundo, según el <code>target</code>.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TITLE</Td><Td>Título/subtítulo con fade-in/stay/fade-out configurables.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ACTIONBAR</Td><Td>Texto en la barra de acción.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">BOSSBAR</Td><Td>Bossbar temporal (color/estilo/progreso/duración), se remueve sola al vencer.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">POTION</Td><Td>Aplica un <code>PotionEffect</code> vanilla real.</Td></Tr>
+          <Tr>
+            <Td className="font-mono text-xs">PARTICLE</Td>
+            <Td>{fill(c.sParticle, { particle: <code>Particle</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">SOUND</Td>
+            <Td>{fill(c.sSound, { sound: <code>Sound</code>, target: <code>target</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">TITLE</Td>
+            <Td>{c.sTitle}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">ACTIONBAR</Td>
+            <Td>{c.sActionbar}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">BOSSBAR</Td>
+            <Td>{c.sBossbar}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">POTION</Td>
+            <Td>{fill(c.sPotion, { potion: <code>PotionEffect</code> })}</Td>
+          </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="formas">Formas de partícula</SectionHeading>
+      <SectionHeading id="formas">{c.shapesTitle}</SectionHeading>
       <p>
-        El <code>shape</code> de un paso <code>PARTICLE</code> decide la geometría — pura matemática en{" "}
-        <code>ParticleShapes</code>, sin ningún efecto colateral, así es fácil de razonar por separado del motor de
-        ejecución.
+        {fill(c.shapesBody, {
+          shape: <code>shape</code>,
+          particle: <code>PARTICLE</code>,
+          shapes: <code>ParticleShapes</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Forma</Th>
-          <Th>Params relevantes</Th>
-          <Th>Descripción</Th>
+          <Th>{c.thShape}</Th>
+          <Th>{c.thParams}</Th>
+          <Th>{c.thDescription}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">POINT</Td><Td className="font-mono text-xs">—</Td><Td>Un solo punto (default si no se especifica shape).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">CIRCLE</Td><Td className="font-mono text-xs">radius, points</Td><Td>Anillo plano horizontal.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SPHERE</Td><Td className="font-mono text-xs">radius, points</Td><Td>Distribución pareja sobre una esfera (espiral áurea/Fibonacci).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">LINE</Td><Td className="font-mono text-xs">points, from/to (target)</Td><Td>Recta entre dos puntos — única forma que usa un segundo target.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">HELIX</Td><Td className="font-mono text-xs">radius, height, turns, points</Td><Td>Espiral ascendente.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">CONE</Td><Td className="font-mono text-xs">radius, length, points</Td><Td>Sale en la dirección hacia donde mira el origen (yaw/pitch), ensanchándose.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">CUBE_OUTLINE</Td><Td className="font-mono text-xs">radius (mitad del lado), points</Td><Td>Las 12 aristas de un cubo centrado en el origen.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">BURST</Td><Td className="font-mono text-xs">radius, points</Td><Td>Puntos aleatorios dentro de una esfera — explosión difusa.</Td></Tr>
+          {shapes.map(([shape, params, desc]) => (
+            <Tr key={shape}>
+              <Td className="font-mono text-xs">{shape}</Td>
+              <Td className="font-mono text-xs">{params}</Td>
+              <Td>{desc}</Td>
+            </Tr>
+          ))}
         </tbody>
       </Table>
 
-      <SectionHeading id="targets">A quién/dónde apunta cada paso</SectionHeading>
-      <p>
-        <code>EffectTarget</code> resuelve la ubicación/destinatario de cada paso a partir del{" "}
-        <code>EffectContext</code> (quién lo disparó y, opcionalmente, un objetivo):
-      </p>
+      <SectionHeading id="targets">{c.targetsTitle}</SectionHeading>
+      <p>{fill(c.targetsBody, { target: <code>EffectTarget</code>, context: <code>EffectContext</code> })}</p>
       <Table>
         <Thead>
-          <Th>Target</Th>
-          <Th>Resuelve a</Th>
+          <Th>{c.thTarget}</Th>
+          <Th>{c.thResolves}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">SELF</Td><Td>El jugador que disparó el efecto (<code>caster</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TARGET</Td><Td>La entidad/ubicación objetivo, si el contexto tiene una — si no, cae a SELF.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">LOCATION</Td><Td>Todavía cae a la ubicación del caster (no tiene coordenadas propias configurables desde acá).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ALL_NEARBY</Td><Td>Solo para SOUND/TITLE/ACTIONBAR/BOSSBAR — todos los jugadores dentro de <code>radius</code> alrededor de <code>around</code>.</Td></Tr>
+          <Tr>
+            <Td className="font-mono text-xs">SELF</Td>
+            <Td>{fill(c.tSelf, { caster: <code>caster</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">TARGET</Td>
+            <Td>{c.tTarget}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">LOCATION</Td>
+            <Td>{c.tLocation}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">ALL_NEARBY</Td>
+            <Td>{fill(c.tNearby, { radius: <code>radius</code>, around: <code>around</code> })}</Td>
+          </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="formato-yaml">Ejemplos de archivo YAML</SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
-        filename="effects/level_up.yml (plugins/Particles/effects/)"
+        filename="effects/level_up.yml"
         code={
           "id: level_up\n" +
           'display-name: "&6¡Subida de nivel!"\n' +
-          'description: "Explosión de partículas doradas + sonido + título, para disparar desde otro addon al subir de nivel."\n' +
           "\n" +
           "steps:\n" +
           "  - type: PARTICLE\n" +
@@ -143,19 +190,10 @@ export function Particles({ onNavigate }: { onNavigate: (slug: string) => void }
           "  - type: TITLE\n" +
           "    delay: 2\n" +
           '    title: "&6&l¡NIVEL SUPERIOR!"\n' +
-          '    subtitle: "&7Seguí así"\n' +
           "    target: SELF\n" +
           "    fade-in: 5\n" +
           "    stay: 40\n" +
-          "    fade-out: 10\n" +
-          "\n" +
-          "  - type: PARTICLE\n" +
-          "    delay: 10\n" +
-          "    particle: FIREWORK\n" +
-          "    shape: BURST\n" +
-          "    target: SELF\n" +
-          "    count: 40\n" +
-          "    speed: 0.3\n"
+          "    fade-out: 10\n"
         }
       />
       <CodeBlock
@@ -164,7 +202,6 @@ export function Particles({ onNavigate }: { onNavigate: (slug: string) => void }
         code={
           "id: frost_nova\n" +
           'display-name: "&b&lNova de Escarcha"\n' +
-          'description: "Onda de partículas + sonido + bossbar temporal + lentitud para todos los que estén cerca — un hechizo de área."\n' +
           "\n" +
           "steps:\n" +
           "  - type: PARTICLE\n" +
@@ -174,21 +211,6 @@ export function Particles({ onNavigate }: { onNavigate: (slug: string) => void }
           "    target: SELF\n" +
           "    radius: 0.5\n" +
           "    points: 30\n" +
-          "\n" +
-          "  - type: SOUND\n" +
-          "    delay: 0\n" +
-          "    sound: BLOCK_GLASS_BREAK\n" +
-          "    target: LOCATION\n" +
-          "    volume: 1.5\n" +
-          "    pitch: 0.7\n" +
-          "\n" +
-          "  - type: PARTICLE\n" +
-          "    delay: 3\n" +
-          "    particle: SNOWFLAKE\n" +
-          "    shape: CIRCLE\n" +
-          "    target: SELF\n" +
-          "    radius: 2.5\n" +
-          "    points: 50\n" +
           "\n" +
           "  - type: BOSSBAR\n" +
           "    delay: 3\n" +
@@ -209,74 +231,69 @@ export function Particles({ onNavigate }: { onNavigate: (slug: string) => void }
           "    radius: 6\n"
         }
       />
-
-      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
-        <code>effects/reference_full.yml</code> (incluido en el jar) usa los 6 tipos de paso, las 8 formas de
-        partícula (incluyendo <code>LINE</code>, <code>HELIX</code>, <code>CONE</code> y{" "}
-        <code>CUBE_OUTLINE</code>, que los ejemplos de arriba no muestran) y los 4 targets, incluyendo{" "}
-        <code>TARGET</code>.
+      <Callout tone="tip">
+        <code>effects/reference_full.yml</code>{" "}
+        {fill(c.refBody, {
+          shapes: (
+            <>
+              <code>LINE</code>, <code>HELIX</code>, <code>CONE</code>, <code>CUBE_OUTLINE</code>
+            </>
+          ),
+          target: <code>TARGET</code>,
+        })}
       </Callout>
 
-      <YamlBuilder
-        title="Constructor visual: identidad del efecto"
-        description="id/nombre/descripción. La lista de steps es demasiado variada para un formulario lineal (cada tipo tiene sus propios params) — copia y adaptá uno de los ejemplos de arriba, o usá /rpgfx browser para armarlo paso a paso desde el chat en el juego."
-        folder="effects"
-        fields={sackEffectFields}
+      <YamlBuilder title={c.builderTitle} description={c.builderDesc} folder="effects" fields={effectFields(c)} />
+
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
+      <p>
+        {fill(c.guiBody, {
+          browser: <Kbd>/rpgfx browser</Kbd>,
+          syntax: <code>{"TIPO delay clave=valor,clave2=valor2"}</code>,
+        })}
+      </p>
+      <CodeBlock
+        language="text"
+        code={
+          "PARTICLE 0 particle=FLAME,shape=SPHERE,radius=1.5,points=40\nSOUND 5 sound=ENTITY_BLAZE_SHOOT,volume=1,pitch=1.2"
+        }
       />
+      <p>{c.guiAfter}</p>
 
-      <SectionHeading id="gui">GUI: Effect Studio de RPGRoll-FX</SectionHeading>
-      <p>
-        <Kbd>/rpgfx browser</Kbd> abre un navegador con botón "Crear nueva". El editor muestra la lista de
-        steps (tipo, delay, params resumidos) con soporte para quitarlos (shift-click) y agregar nuevos escribiendo
-        en el chat con la sintaxis <code>{"TIPO delay clave=valor,clave2=valor2"}</code>, por ejemplo:
-      </p>
-      <CodeBlock language="text" code={"PARTICLE 0 particle=FLAME,shape=SPHERE,radius=1.5,points=40\nSOUND 5 sound=ENTITY_BLAZE_SHOOT,volume=1,pitch=1.2"} />
-      <p>
-        El botón "▶ Probar" dispara el efecto completo sobre ti mismo, ahí mismo, para ver/escuchar el resultado
-        sin salir de la GUI.
-      </p>
-
-      <SectionHeading id="api">API para addons — EffectsAPI y EffectBuilder</SectionHeading>
-      <p>
-        Cualquier addon que declare <Kbd>softdepend: [RPGRoll-FX]</Kbd> puede disparar un efecto ya definido por
-        su id:
-      </p>
+      <SectionHeading id="api">{c.apiTitle}</SectionHeading>
+      <p>{fill(c.apiBody, { soft: <Kbd>softdepend: [RPGRoll-FX]</Kbd> })}</p>
       <CodeBlock
         language="java"
         filename="OtroAddon.java"
-        code={
-          "if (RPGRollFXAPI.isReady()) {\n" +
-          '    RPGRollFXAPI.get().play("level_up", player);\n' +
-          "}\n"
-        }
+        code={"if (RPGRollFXAPI.isReady()) {\n" + '    RPGRollFXAPI.get().play("level_up", player);\n' + "}\n"}
       />
-      <p>
-        O armar uno de una sola vez, sin declarar nada en YAML, con el constructor fluido{" "}
-        <code>EffectBuilder</code> (mismo motor de ejecución por debajo, comportamiento idéntico):
-      </p>
+      <p>{fill(c.apiBuilder, { builder: <code>EffectBuilder</code> })}</p>
       <CodeBlock
         language="java"
         code={
           "RPGRollFXAPI.get().builder()\n" +
-          "    .particle(Particle.FLAME).shape(\"SPHERE\").radius(1.5).points(40)\n" +
+          '    .particle(Particle.FLAME).shape("SPHERE").radius(1.5).points(40)\n' +
           "    .then().sound(Sound.ENTITY_BLAZE_SHOOT).volume(1).pitch(1.2)\n" +
           "    .play(caster);\n"
         }
       />
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">/rpgfx browser</Td><Td>Abre el navegador gráfico.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/rpgfx reload</Td><Td>Recarga las definiciones desde disco.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/rpgfx test <id> [jugador]"}</Td><Td>Dispara un efecto sobre ti mismo o sobre otro jugador.</Td></Tr>
+          {commands.map(([cmd, what]) => (
+            <Tr key={cmd}>
+              <Td className="font-mono text-xs">{cmd}</Td>
+              <Td>{what}</Td>
+            </Tr>
+          ))}
         </tbody>
       </Table>
-      <p>Todos requieren <Badge tone="amber">rpgrollfx.admin.*</Badge> (default: op).</p>
+      <p>{fill(c.cmdNote, { perm: <Badge tone="amber">rpgrollfx.admin.*</Badge> })}</p>
 
       <PrevNext current="rpgroll-particles" onNavigate={onNavigate} />
     </>
