@@ -14,49 +14,58 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { pageTitle } from "../content/nav";
+import { useI18n, fill, localizedPageLabel, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
+import { ADDONS_C_COPY, type AddonsCCopy } from "./copy/addonsC";
 
-const seasonFields: YamlField[] = [
+type SeasonsCopy = AddonsCCopy["seasons"];
+
+const CAVEAT_TITLE = "La temperatura por bioma es una tabla propia, no un valor real de Bukkit";
+const CAVEAT_BODY =
+  "Bukkit no expone la temperatura interna real de un bioma como un double consultable de forma estable entre versiones — Seasons mantiene su propia tabla aproximada en plugins/RPGRoll-Seasons/biome-temperatures.yml (editable), y cada estación suma un delta por bioma encima de esa base.";
+
+const seasonFields = (c: SeasonsCopy): YamlField[] => [
   {
     key: "id",
-    label: "Id",
+    label: c.fId,
     type: "string",
     default: "nueva_estacion",
     placeholder: "spring",
   },
   {
     key: "display-name",
-    label: "Nombre visible",
+    label: c.fDisplayName,
     type: "string",
     placeholder: "&aPrimavera",
   },
   {
     key: "icon",
-    label: "Ícono (Material)",
+    label: c.fIcon,
     type: "string",
     default: "SUNFLOWER",
   },
-  { key: "color", label: "Color", type: "string", default: "WHITE" },
-  { key: "description", label: "Descripción", type: "string" },
-  { key: "duration-amount", label: "Duración", type: "number", default: "7" },
+  { key: "color", label: c.fColor, type: "string", default: "WHITE" },
+  { key: "description", label: c.fDescription, type: "string" },
+  { key: "duration-amount", label: c.fDuration, type: "number", default: "7" },
   {
     key: "duration-unit",
-    label: "Unidad de duración",
+    label: c.fDurationUnit,
     type: "select",
     options: ["REAL_HOURS", "REAL_DAYS", "REAL_WEEKS", "MINECRAFT_DAYS"],
     default: "MINECRAFT_DAYS",
   },
   {
     key: "exclusive-boss",
-    label: "Jefe exclusivo (id de mob)",
+    label: c.fBoss,
     type: "string",
   },
   {
     key: "world-event-daily-chance",
-    label: "Chance diaria de evento mundial (0-1)",
+    label: c.fEventChance,
     type: "number",
     default: "0",
   },
-  { key: "tags", label: "Tags", type: "list", placeholder: "mild, growth" },
+  { key: "tags", label: c.fTags, type: "list", placeholder: "mild, growth" },
 ];
 
 export function Seasons({
@@ -64,25 +73,20 @@ export function Seasons({
 }: {
   onNavigate: (slug: string) => void;
 }) {
+  const { locale } = useI18n();
+  const c = ADDONS_C_COPY[locale].seasons;
+
   return (
     <>
-      <PageHeader title="Seasons (RPGRoll-Seasons)">
-        Calendario y estaciones 100% personalizables — no atado al reloj
-        día/noche de Minecraft. Clima dinámico por bioma, reacciones de
-        vegetación, mobs y un jefe exclusivo por estación, eventos mundiales, y
-        regiones con su propio calendario o estación fija.
+      <PageHeader title={c.title} slug="seasons">
+        {c.intro}
       </PageHeader>
 
-      <Callout tone="info" title="No depende del calendario de Minecraft">
-        Un <code>SeasonCalendar</code> (se llama así, no simplemente "Calendar",
-        para no colisionar con <code>java.util.Calendar</code>) es un ciclo
-        ordenado de ids de estación que se repite para siempre. Cada estación
-        mide su duración en horas reales, días reales, semanas reales o días de
-        Minecraft — la que elijas, independiente entre estaciones del mismo
-        calendario.
+      <Callout tone="info" title={c.calTitle}>
+        {fill(c.calBody, { cal: <code>SeasonCalendar</code>, javaCal: <code>java.util.Calendar</code> })}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         code={
@@ -90,28 +94,30 @@ export function Seasons({
         }
       />
       <p>
-        Sin RPGRoll-Mobs, los <code>mob-modifiers</code>/
-        <code>exclusive-boss</code> de una estación simplemente no hacen nada
-        (el resto — calendario, clima, vegetación, eventos mundiales de
-        partículas/sonido — funciona igual). Sin{" "}
+        {fill(c.reqBody1, {
+          mobMods: (
+            <>
+              <code>mob-modifiers</code>/<code>exclusive-boss</code>
+            </>
+          ),
+        })}{" "}
         <button
           type="button"
           onClick={() => onNavigate("rpgroll-effects")}
           className="text-violet-600 underline dark:text-violet-400"
         >
-          RPGRoll-Effects
+          {localizedPageLabel("rpgroll-effects", pageTitle("rpgroll-effects"), locale)}
         </button>
-        , los componentes <code>APPLY_EFFECT</code> de un evento mundial
-        tampoco.
+        {fill(c.reqBody2, { applyEffect: <code>APPLY_EFFECT</code> })}
       </p>
 
-      <SectionHeading id="calendarios">Calendarios y estaciones</SectionHeading>
+      <SectionHeading id="calendarios">{c.calendarsTitle}</SectionHeading>
       <p>
-        Un calendario no tiene por qué llamarse
-        "Primavera/Verano/Otoño/Invierno" — puede ser cualquier ciclo temático
-        ("Luna Roja" → "Era del Sol" → "Oscuridad" → "Renacimiento"). Cada mundo
-        tiene su propio reloj (<code>"world:&lt;nombre&gt;"</code>),
-        independiente del de otros mundos, aunque compartan el mismo calendario.
+        {fill(c.calendarsBody, {
+          classic: <em>Primavera/Verano/Otoño/Invierno</em>,
+          example: <em>Luna Roja → Era del Sol → Oscuridad → Renacimiento</em>,
+          clock: <code>"world:&lt;nombre&gt;"</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -129,169 +135,129 @@ export function Seasons({
         }
       />
 
-      <SectionHeading id="subestaciones">Subestaciones</SectionHeading>
+      <SectionHeading id="subestaciones">{c.subTitle}</SectionHeading>
       <p>
-        Cualquier estación puede dividirse en subestaciones (ej. Primavera
-        Temprana/Media/Tardía), cada una con su propia duración y,
-        opcionalmente, una temperatura fija que <strong>reemplaza</strong> (no
-        suma) la temperatura calculada del bioma mientras esté activa.
+        {fill(c.subBody, { replaces: <strong>{c.subReplaces}</strong> })}
       </p>
 
-      <SectionHeading id="clima">
-        Sistema climático y temperatura
-      </SectionHeading>
+      <SectionHeading id="clima">{c.climateTitle}</SectionHeading>
       <p>
-        Cada estación define un <code>ClimateProfile</code>: chances (0.0-1.0)
-        de lluvia, tormenta, nieve, niebla, ola de calor y tormenta eléctrica,
-        más una temperatura base y su variación. Un <code>WeatherTickTask</code>{" "}
-        re-sortea el clima de cada mundo con jugadores online cada 5 minutos y
-        lo aplica con <code>World#setStorm/setThundering</code> — la nieve es
-        100% vanilla: si está lloviendo y el bioma es frío, Minecraft ya la
-        dibuja solo.
+        {fill(c.climateBody, {
+          profile: <code>ClimateProfile</code>,
+          task: <code>WeatherTickTask</code>,
+          api: <code>World#setStorm/setThundering</code>,
+        })}
       </p>
-      <Callout
-        tone="warning"
-        title="La temperatura por bioma es una tabla propia, no un valor real de Bukkit"
-      >
-        Bukkit no expone la temperatura interna real de un bioma como un double
-        consultable de forma estable entre versiones — Seasons mantiene su
-        propia tabla aproximada en{" "}
-        <code>plugins/RPGRoll-Seasons/biome-temperatures.yml</code> (editable),
-        y cada estación suma un delta por bioma encima de esa base.
+      <Callout tone="warning" title={localizedCaveatTitle("seasons", CAVEAT_TITLE, locale)}>
+        {localizedCaveatBody("seasons", CAVEAT_TITLE, CAVEAT_BODY, locale)}
       </Callout>
 
-      <SectionHeading id="vegetacion">Vegetación dinámica</SectionHeading>
+      <SectionHeading id="vegetacion">{c.vegTitle}</SectionHeading>
       <p>
-        Un <code>VegetationTask</code> aplica los efectos de la estación activa
-        cerca de cada jugador online, con muestreo al azar y probabilidad baja
-        por intento — un efecto ambiental gradual, no un "photoshop" instantáneo
-        del radio entero.
+        {fill(c.vegBody, { task: <code>VegetationTask</code> })}
       </p>
       <Table>
         <Thead>
-          <Th>Efecto</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thEffect}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">SNOW_LAYERS</Td>
-            <Td>
-              Capas de nieve sobre pasto/tierra/piedra en puntos con temperatura
-              &lt; 0°C.
-            </Td>
+            <Td>{c.vSnow}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">ICE_LAKES</Td>
-            <Td>Congela agua expuesta en puntos fríos.</Td>
+            <Td>{c.vIce}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">DRY_GRASS</Td>
-            <Td>
-              Reduce la humedad de tierra de cultivo cercana — sequía mecánica
-              real, no solo visual.
-            </Td>
+            <Td>{c.vDry}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">FALLING_LEAVES</Td>
-            <Td>Partículas de hojas cayendo cerca de árboles.</Td>
+            <Td>{c.vLeaves}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">FLOWER_BOOM</Td>
-            <Td>Florece pasto cercano con flores al azar.</Td>
+            <Td>{c.vFlower}</Td>
           </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="mobs-jefes">
-        Mobs y jefe exclusivo de temporada
-      </SectionHeading>
+      <SectionHeading id="mobs-jefes">{c.mobsTitle}</SectionHeading>
       <p>
-        <code>mob-modifiers</code> es una lista de (id de mob de RPGRoll-Mobs,
-        chance extra de spawn) evaluada cerca de cada jugador online.{" "}
-        <code>exclusive-boss</code> es, como mucho, un mob por estación con una
-        chance fija del 15% de aparecer una vez por día de Minecraft (según{" "}
-        <code>World#getFullTime()</code>, sin relación con la unidad de duración
-        que configuraste para la estación) cerca de un jugador al azar del
-        mundo, con anuncio a todos.
+        {fill(c.mobsBody, {
+          mobMods: <code>mob-modifiers</code>,
+          boss: <code>exclusive-boss</code>,
+          fullTime: <code>World#getFullTime()</code>,
+        })}
       </p>
 
-      <SectionHeading id="eventos">Eventos mundiales</SectionHeading>
+      <SectionHeading id="eventos">{c.eventsTitle}</SectionHeading>
       <p>
-        Un <code>WorldEvent</code> corre sobre <strong>todos</strong> los
-        jugadores online del mundo donde se dispara — no hay noción de "target"
-        individual como en Magic/Effects. Cada estación sortea, una vez por día
-        de Minecraft, si dispara uno de sus <code>world-events</code> elegibles
-        según <code>world-event-daily-chance</code>.
+        {fill(c.eventsBody, {
+          event: <code>WorldEvent</code>,
+          all: <strong>{c.eventsAll}</strong>,
+          worldEvents: <code>world-events</code>,
+          chance: <code>world-event-daily-chance</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Tipo de componente</Th>
-          <Th>Alcance</Th>
+          <Th>{c.thComponent}</Th>
+          <Th>{c.thScope}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">PARTICLE / SOUND / VISUAL</Td>
-            <Td>Por jugador (VISUAL delega en Particles).</Td>
+            <Td>{c.ePerPlayer}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">APPLY_EFFECT</Td>
-            <Td>Por jugador, vía RPGRoll-Effects.</Td>
+            <Td>{c.eEffect}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">SPAWN_MOB</Td>
-            <Td>
-              Por jugador, con su propia <code>chance</code> — vía RPGRoll-Mobs.
-            </Td>
+            <Td>{fill(c.eSpawn, { chance: <code>chance</code> })}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">MESSAGE</Td>
-            <Td>Una vez, a todo el mundo.</Td>
+            <Td>{c.eMessage}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">COMMAND / SET_WEATHER</Td>
-            <Td>Una vez por mundo (no por jugador).</Td>
+            <Td>{c.eCommand}</Td>
           </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="regiones">Regiones</SectionHeading>
+      <SectionHeading id="regiones">{c.regionsTitle}</SectionHeading>
       <p>
-        Una <code>SeasonRegion</code> es una simple caja (AABB, sin depender de
-        WorldGuard) con un modo de override:
+        {fill(c.regionsBody, { region: <code>SeasonRegion</code> })}
       </p>
       <Table>
         <Thead>
-          <Th>Modo</Th>
-          <Th>Comportamiento</Th>
+          <Th>{c.thMode}</Th>
+          <Th>{c.thBehaviour}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">FOLLOW_WORLD_CALENDAR</Td>
-            <Td>
-              Usa el reloj normal del mundo (default — casi ninguna región lo
-              necesita explícitamente).
-            </Td>
+            <Td>{c.mFollow}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">PINNED_SEASON</Td>
-            <Td>
-              Siempre la misma estación fija, sin ningún reloj (ej. "Desierto:
-              siempre verano").
-            </Td>
+            <Td>{c.mPinnedSeason}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">PINNED_CALENDAR</Td>
-            <Td>
-              Corre su propio calendario con un reloj completamente
-              independiente al del mundo (ej. "Reino mágico: su propio ciclo").
-            </Td>
+            <Td>{c.mPinnedCal}</Td>
           </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="formato-yaml">
-        Ejemplos de archivo YAML
-      </SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="seasons/summer.yml (plugins/RPGRoll-Seasons/seasons/)"
@@ -353,34 +319,30 @@ export function Seasons({
         }
       />
 
-      <Callout
-        tone="tip"
-        title="Referencia completa: todos los campos en un solo archivo"
-      >
-        <code>seasons/reference_full.yml</code> (incluido en el jar) agrega{" "}
-        <code>sub-seasons</code> y <code>mob-modifiers</code>, los dos campos
-        que ninguno de los dos ejemplos de arriba muestra, junto con todos los
-        demás.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, {
+          file: <code>seasons/reference_full.yml</code>,
+          fields: (
+            <>
+              <code>sub-seasons</code> &amp; <code>mob-modifiers</code>
+            </>
+          ),
+        })}
       </Callout>
 
       <YamlBuilder
-        title="Constructor visual: identidad y duración de la estación"
-        description="Clima, subestaciones, modificadores de bioma, vegetación y mobs de temporada son demasiado variados para un formulario lineal — todos viven en pantallas propias dentro del editor in-game. Copia y adaptá uno de los ejemplos de arriba para esos campos."
+        title={c.bSeason}
+        description={c.bSeasonDesc}
         folder="seasons"
-        fields={seasonFields}
+        fields={seasonFields(c)}
       />
 
-      <SectionHeading id="gui">GUI: Season Studio</SectionHeading>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
       <p>
-        <Kbd>/seasonsadmin browser</Kbd> abre un hub que enlaza a 4 navegadores
-        — Calendarios, Estaciones, Eventos Mundiales y Regiones. El editor de
-        una estación agrupa identidad/duración/clima/tags/modificadores de
-        bioma/vegetación/eventos elegibles en un solo hub vía chat, y separa
-        subestaciones y mobs de temporada en sus propias pantallas (listas con
-        alta/baja).
+        {fill(c.guiBody, { browser: <Kbd>/seasonsadmin browser</Kbd> })}
       </p>
 
-      <SectionHeading id="api">API para addons — SeasonsAPI</SectionHeading>
+      <SectionHeading id="api">{c.apiTitle}</SectionHeading>
       <CodeBlock
         language="java"
         filename="OtroAddon.java"
@@ -396,63 +358,56 @@ export function Seasons({
           'SeasonsAPI.get().triggerWorldEvent("aurora", world);\n'
         }
       />
-      <Callout
-        tone="tip"
-        title="isSeasonAllowed no sabe nada de cultivos ni peces"
-      >
-        Es un atajo genérico: compara la estación efectiva en una ubicación
-        contra un conjunto de ids permitidos. Un futuro RPGRoll-Farming
-        definiría, en su propio YAML de cultivo, algo como{" "}
-        <code>allowed-seasons: [spring, summer]</code> y llamaría a este método
-        — Seasons no necesita saber que "eso" es trigo.
+      <Callout tone="tip" title={c.apiTipTitle}>
+        {fill(c.apiTipBody, { example: <code>allowed-seasons: [spring, summer]</code> })}
       </Callout>
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">/seasonsadmin browser</Td>
-            <Td>Abre el Season Studio.</Td>
+            <Td>{c.cBrowser}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">/seasonsadmin reload</Td>
-            <Td>Recarga todas las definiciones desde disco.</Td>
+            <Td>{c.cReload}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
               {"/seasonsadmin setseason <mundo> <id>"}
             </Td>
-            <Td>Fuerza la estación de un mundo.</Td>
+            <Td>{c.cSetSeason}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
               {"/seasonsadmin advance <mundo>"}
             </Td>
-            <Td>Avanza a la siguiente estación del calendario de ese mundo.</Td>
+            <Td>{c.cAdvance}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
               {"/seasonsadmin trigger <id> <mundo>"}
             </Td>
-            <Td>Dispara un evento mundial a mano.</Td>
+            <Td>{c.cTrigger}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">{"/seasons info [mundo]"}</Td>
-            <Td>
-              Estación actual y, si sos jugador, la temperatura donde estás.
-            </Td>
+            <Td>{c.cInfo}</Td>
           </Tr>
         </tbody>
       </Table>
       <p>
-        Los comandos <code>/seasonsadmin</code> requieren{" "}
-        <Badge tone="amber">rpgrollseasons.admin.*</Badge> (default: op);{" "}
-        <code>/seasons</code> requiere{" "}
-        <Badge tone="blue">rpgrollseasons.use</Badge> (default: true).
+        {fill(c.permNote, {
+          admin: <code>/seasonsadmin</code>,
+          p1: <Badge tone="amber">rpgrollseasons.admin.*</Badge>,
+          use: <code>/seasons</code>,
+          p2: <Badge tone="blue">rpgrollseasons.use</Badge>,
+        })}
       </p>
       <PrevNext current="seasons" onNavigate={onNavigate} />
     </>

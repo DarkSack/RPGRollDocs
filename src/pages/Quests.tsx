@@ -14,13 +14,41 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { placeholders } from "../content/placeholders";
+import { useI18n, fill, localizedPlaceholder, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
+import { ADDONS_C_COPY, type AddonsCCopy } from "./copy/addonsC";
 
-const questFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_mision", placeholder: "hunter" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&cCazador de Zombies" },
+type QuestsCopy = AddonsCCopy["quests"];
+
+const CAVEATS: Record<string, [string, string]> = {
+  reload: [
+    "reload no recarga las regiones",
+    "/questadmin reload solo recarga las misiones. Un cambio en regions/*.yml necesita reiniciar el server, o usar el editor gráfico (que sí escribe a disco al instante, aunque no fuerza un reload del resto del server).",
+  ],
+  complete: [
+    "COMPLETE_QUEST es solo informativo",
+    "Existe como tipo de acción pero no fuerza ningún progreso — solo loguea. Para completar una misión desde afuera (recompensa u otro sistema) hay que usar /questadmin complete o encadenarla vía rewards.quests.",
+  ],
+  npc: [
+    "El gancho existe, pero nada lo dispara todavía",
+    "Quests escucha un evento propio NpcTalkEvent para progresar TALK_TO_NPC y DELIVER_ITEM — pensado para que cualquier sistema de NPCs lo dispare sin acoplarse a él. Al revisar el código de RPGRoll-NPCs, ningún listener llama a este evento todavía: la integración está definida de este lado, pero no conectada del otro.",
+  ],
+  yamlOnly: [
+    "Objetivos y diálogo siguen siendo solo YAML",
+    "Ni el editor in-game ni el constructor visual de esta página tocan objectives, dialog ni options de una etapa — son demasiado anidados para un formulario lineal. Para el resto del juego (jugar la misión, ver diálogos, botones de rama) sigue sin haber ningún inventario/menú — todo pasa por /quest y mensajes de chat.",
+  ],
+  track: [
+    "track no existe",
+    "El plugin.yml anuncia /quest track en su texto de uso, pero el comando no tiene ese subcomando implementado — escribirlo solo te muestra el mensaje de uso.",
+  ],
+};
+
+const questFields = (c: QuestsCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: "nueva_mision", placeholder: "hunter" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&cCazador de Zombies" },
   {
     key: "category",
-    label: "Categoría",
+    label: c.fCategory,
     type: "select",
     options: [
       "MAIN_STORY",
@@ -36,35 +64,35 @@ const questFields: YamlField[] = [
   },
   {
     key: "difficulty",
-    label: "Dificultad",
+    label: c.fDifficulty,
     type: "select",
     options: ["EASY", "NORMAL", "HARD", "ELITE", "LEGENDARY", "MYTHIC"],
   },
-  { key: "repeatable", label: "Repetible", type: "boolean" },
-  { key: "cooldown", label: "Cooldown (si es repetible)", type: "string", placeholder: "24h" },
+  { key: "repeatable", label: c.fRepeatable, type: "boolean" },
+  { key: "cooldown", label: c.fCooldown, type: "string", placeholder: "24h" },
   {
     key: "requirements",
-    label: "Requisitos",
+    label: c.fRequirements,
     type: "group",
-    fields: [{ key: "level", label: "Nivel mínimo", type: "number", default: "0" }],
+    fields: [{ key: "level", label: c.fMinLevel, type: "number", default: "0" }],
   },
   {
     key: "rewards",
-    label: "Recompensas",
+    label: c.fRewards,
     type: "group",
     fields: [
-      { key: "money", label: "Dinero", type: "number", default: "0" },
-      { key: "experience", label: "Experiencia", type: "number", default: "0" },
+      { key: "money", label: c.fMoney, type: "number", default: "0" },
+      { key: "experience", label: c.fExperience, type: "number", default: "0" },
     ],
   },
 ];
 
-const regionFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_region", placeholder: "castle" },
-  { key: "world", label: "Mundo", type: "string", default: "world" },
+const regionFields = (c: QuestsCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: "nueva_region", placeholder: "castle" },
+  { key: "world", label: c.fWorld, type: "string", default: "world" },
   {
     key: "min",
-    label: "Esquina mínima",
+    label: c.fMin,
     type: "group",
     fields: [
       { key: "x", label: "X", type: "number", default: "0" },
@@ -74,7 +102,7 @@ const regionFields: YamlField[] = [
   },
   {
     key: "max",
-    label: "Esquina máxima",
+    label: c.fMax,
     type: "group",
     fields: [
       { key: "x", label: "X", type: "number", default: "0" },
@@ -85,34 +113,46 @@ const regionFields: YamlField[] = [
 ];
 
 export function Quests({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ADDONS_C_COPY[locale].quests;
+  const questPlaceholders = placeholders.filter((p) => p.expansion === "rpgrollquests");
+
+  const note = (key: keyof typeof CAVEATS) => {
+    const [title, body] = CAVEATS[key];
+    return {
+      title: localizedCaveatTitle("quests", title, locale),
+      body: localizedCaveatBody("quests", title, body, locale),
+    };
+  };
+
   return (
     <>
-      <PageHeader title="Misiones (RPGRoll-Quests)">
-        Motor de misiones por etapas: objetivos, condiciones, diálogos con ramas, recompensas encadenables y
-        regiones propias (sin WorldGuard) — sin GUI, todo por comando y chat.
+      <PageHeader title={c.title} slug="quests">
+        {c.intro}
       </PageHeader>
 
-      <Callout tone="info" title="Autocontenido — su propio guardado en YAML por jugador">
-        No usa la base de datos SQLite de <code>:core</code> ni PDC: el progreso de cada jugador vive en{" "}
-        <code>plugins/RPGRoll-Quests/playerdata/&lt;uuid&gt;.yml</code>.
+      <Callout tone="info" title={c.selfTitle}>
+        {fill(c.selfBody, {
+          core: <code>:core</code>,
+          path: <code>plugins/RPGRoll-Quests/playerdata/&lt;uuid&gt;.yml</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [PlaceholderAPI]"} />
-      <p>No depende de RPGRoll-Items (las recompensas de ítem usan <code>Material</code> vanilla directo) ni de RPGRoll-NPCs (la integración es por un evento propio, ver más abajo).</p>
+      <p>{fill(c.reqBody, { material: <code>Material</code> })}</p>
 
-      <SectionHeading id="estructura">Una misión es una lista de etapas</SectionHeading>
+      <SectionHeading id="estructura">{c.structTitle}</SectionHeading>
       <p>
-        Cada <code>QuestStage</code> tiene objetivos, condiciones y, opcionalmente, un diálogo. Por defecto avanza
-        linealmente a la siguiente etapa de la lista cuando se cumplen todos sus objetivos <strong>y</strong>{" "}
-        condiciones — pero si el diálogo de la etapa tiene opciones, la etapa <strong>no avanza sola</strong>: se
-        le muestran al jugador como botones de chat clickeables, cada uno saltando a la etapa que quieras (para
-        adelante, para atrás, o a cualquier id) — así es como se arma un árbol de decisiones real sobre una lista
-        que en el archivo es plana.
+        {fill(c.structBody, {
+          stage: <code>QuestStage</code>,
+          and: <strong>{c.structAnd}</strong>,
+          notAuto: <strong>{c.structNotAuto}</strong>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
-        filename="quests/tutorial.yml (fragmento con ramas)"
+        filename={c.branchFile}
         code={
           "stages:\n" +
           "  - id: talk_to_elder\n" +
@@ -135,40 +175,43 @@ export function Quests({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <SectionHeading id="objetivos">Objetivos</SectionHeading>
-      <p>10 tipos incorporados, la mitad reactivos a eventos y la otra mitad chequeados por un polling cada 20 ticks:</p>
+      <SectionHeading id="objetivos">{c.objTitle}</SectionHeading>
+      <p>{c.objLead}</p>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>Cómo progresa</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thHow}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">KILL_ENTITY</Td><Td>EntityDeathEvent, si mató un jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">BREAK_BLOCK / PLACE_BLOCK</Td><Td>BlockBreakEvent / BlockPlaceEvent.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">COLLECT_ITEM</Td><Td>EntityPickupItemEvent del jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">DELIVER_ITEM</Td><Td>Al hablar con el NPC correcto, consume los ítems del inventario del jugador si tiene suficientes.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TALK_TO_NPC</Td><Td>Evento propio <code>NpcTalkEvent</code> (ver integración con NPCs).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">COMMAND</Td><Td>PlayerCommandPreprocessEvent — dispara con cualquier comando que empiece igual.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">WAIT</Td><Td>Polling: tiempo transcurrido desde que entraste a la etapa.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">REACH_LOCATION</Td><Td>Polling: distancia a un punto fijo, con radio configurable.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">DISCOVER_REGION</Td><Td>Polling: estar dentro de una región propia del addon.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">KILL_ENTITY</Td><Td>{c.oKill}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">BREAK_BLOCK / PLACE_BLOCK</Td><Td>{c.oBlock}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">COLLECT_ITEM</Td><Td>{c.oCollect}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">DELIVER_ITEM</Td><Td>{c.oDeliver}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TALK_TO_NPC</Td><Td>{fill(c.oTalk, { event: <code>NpcTalkEvent</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">COMMAND</Td><Td>{c.oCommand}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">WAIT</Td><Td>{c.oWait}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">REACH_LOCATION</Td><Td>{c.oReach}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">DISCOVER_REGION</Td><Td>{c.oDiscover}</Td></Tr>
         </tbody>
       </Table>
-      <Callout tone="tip">
-        El progreso de objetivos se resetea al cambiar de etapa — cada objetivo cuenta desde 0 dentro de su propia
-        etapa, no acumula entre etapas.
-      </Callout>
+      <Callout tone="tip">{c.objTip}</Callout>
 
-      <SectionHeading id="condiciones">Condiciones</SectionHeading>
+      <SectionHeading id="condiciones">{c.condTitle}</SectionHeading>
       <p>
-        Mismo patrón liviano que Items/Mobs: comparaciones (<code>player.level &gt;= 5</code>) o una única función
-        soportada (<code>player.hasPermission(perm)</code>), resueltas contra{" "}
-        <code>player.level/health/foodlevel</code>, <code>race</code>, <code>class</code>, <code>world</code>,{" "}
-        <code>weather</code> — extensible por otros addons.
+        {fill(c.condBody, {
+          cmp: <code>player.level &gt;= 5</code>,
+          fn: <code>player.hasPermission(perm)</code>,
+          vars: (
+            <>
+              <code>player.level/health/foodlevel</code>, <code>race</code>, <code>class</code>,{" "}
+              <code>world</code>, <code>weather</code>
+            </>
+          ),
+        })}
       </p>
 
-      <SectionHeading id="regiones">Regiones (sin WorldGuard)</SectionHeading>
-      <p>Cuboides simples propias, exactamente como en RPGRoll-Mobs — sin dependencia externa:</p>
+      <SectionHeading id="regiones">{c.regionTitle}</SectionHeading>
+      <p>{c.regionLead}</p>
       <CodeBlock
         language="yaml"
         filename="regions/castle.yml"
@@ -193,45 +236,37 @@ export function Quests({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <YamlBuilder title="Constructor visual: Region" folder="regions" fields={regionFields} />
+      <YamlBuilder title={c.bRegion} folder="regions" fields={regionFields(c)} />
 
-      <Callout tone="warning" title="reload no recarga las regiones">
-        <code>/questadmin reload</code> solo recarga las misiones. Un cambio en <code>regions/*.yml</code>{" "}
-        necesita reiniciar el server, o usar el editor gráfico (que sí escribe a disco al instante, aunque no
-        fuerza un reload del resto del server).
+      <Callout tone="warning" title={note("reload").title}>
+        {note("reload").body}
       </Callout>
 
-      <SectionHeading id="recompensas">Recompensas y encadenado</SectionHeading>
-      <p>Dinero (Vault), experiencia, ítems (<code>Material</code> vanilla, sin integración con RPGRoll-Items), comandos, y una lista de <strong>otras misiones para iniciar automáticamente</strong> al completar esta — permitiendo encadenar una campaña completa.</p>
-      <Callout tone="warning" title="COMPLETE_QUEST es solo informativo">
-        Existe como tipo de acción pero no fuerza ningún progreso — solo loguea. Para completar una misión desde
-        afuera (recompensa u otro sistema) hay que usar <Kbd>{"/questadmin complete"}</Kbd> o encadenarla vía{" "}
-        <code>rewards.quests</code>.
+      <SectionHeading id="recompensas">{c.rewardTitle}</SectionHeading>
+      <p>{fill(c.rewardBody, { material: <code>Material</code>, strong: <strong>{c.rewardStrong}</strong> })}</p>
+      <Callout tone="warning" title={note("complete").title}>
+        {note("complete").body}
       </Callout>
 
-      <SectionHeading id="npcs">Integración con RPGRoll-NPCs</SectionHeading>
-      <Callout tone="warning" title="El gancho existe, pero nada lo dispara todavía">
-        Quests escucha un evento propio <code>NpcTalkEvent</code> para progresar <code>TALK_TO_NPC</code> y{" "}
-        <code>DELIVER_ITEM</code> — pensado para que cualquier sistema de NPCs lo dispare sin acoplarse a él. Al
-        revisar el código de RPGRoll-NPCs, ningún listener llama a este evento todavía: la integración está
-        definida de este lado, pero no conectada del otro.
+      <SectionHeading id="npcs">{c.npcTitle}</SectionHeading>
+      <Callout tone="warning" title={note("npc").title}>
+        {note("npc").body}
       </Callout>
 
-      <SectionHeading id="gui">GUI: navegador y editor para Quest y Region</SectionHeading>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
       <p>
-        <Kbd>{"/questadmin browser [quests|regions]"}</Kbd> (por defecto <code>quests</code>) abre un navegador con
-        botón "Crear nueva". El editor de <code>Quest</code> cubre nombre, categoría, dificultad, repetible,
-        cooldown, nivel requerido y recompensas de dinero/experiencia, más alta/baja rápida de ids de etapa; el de{" "}
-        <code>Region</code> tiene botones "Fijar esquina mínima/máxima acá" que usan tu ubicación actual.
+        {fill(c.guiBody, {
+          browser: <Kbd>{"/questadmin browser [quests|regions]"}</Kbd>,
+          quests: <code>quests</code>,
+          quest: <code>Quest</code>,
+          region: <code>Region</code>,
+        })}
       </p>
-      <Callout tone="warning" title="Objetivos y diálogo siguen siendo solo YAML">
-        Ni el editor in-game ni el constructor visual de esta página tocan <code>objectives</code>,{" "}
-        <code>dialog</code> ni <code>options</code> de una etapa — son demasiado anidados para un formulario lineal.
-        Para el resto del juego (jugar la misión, ver diálogos, botones de rama) sigue sin haber ningún
-        inventario/menú — todo pasa por <Kbd>/quest</Kbd> y mensajes de chat.
+      <Callout tone="warning" title={note("yamlOnly").title}>
+        {note("yamlOnly").body}
       </Callout>
 
-      <SectionHeading id="formato-yaml">Ejemplo de archivo YAML</SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="quests/hunter.yml"
@@ -339,67 +374,75 @@ export function Quests({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
-        <code>quests/reference_full.yml</code> (incluido en el jar) usa los 9 tipos de objetivo, los 6 eventos
-        (<code>on-start</code>/<code>on-progress</code>/<code>on-complete</code>/<code>on-fail</code>/
-        <code>on-abandon</code>/<code>on-stage-change</code>), diálogo con opciones y todos los campos de
-        <code>requirements</code> y <code>rewards</code> en un solo archivo.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, {
+          file: <code>quests/reference_full.yml</code>,
+          events: (
+            <>
+              <code>on-start</code>/<code>on-progress</code>/<code>on-complete</code>/<code>on-fail</code>/
+              <code>on-abandon</code>/<code>on-stage-change</code>
+            </>
+          ),
+          reqs: <code>requirements</code>,
+          rewards: <code>rewards</code>,
+        })}
       </Callout>
 
       <YamlBuilder
-        title="Constructor visual: Quest"
-        description="Identidad, categoría/dificultad, cooldown, requisito de nivel y recompensas simples. Las etapas (stages) con objetivos/diálogo/ramas son demasiado anidadas para este formulario — usá uno de los ejemplos de arriba como base y editalo a mano, o construilas directamente en el editor in-game."
+        title={c.bQuest}
+        description={c.bQuestDesc}
         folder="quests"
-        fields={questFields}
+        fields={questFields(c)}
       />
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">/quest list</Td><Td>Lista todas las misiones definidas.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/quest info <id>"}</Td><Td>Categoría, dificultad, cantidad de etapas, si es repetible.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/quest start <id>"}</Td><Td>La inicia si cumples requisitos, no está en cooldown y no la tienes activa.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/quest abandon <id>"}</Td><Td>La abandona (sin penalidad ni recompensa).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/quest active</Td><Td>Lista tus misiones activas y en qué etapa vas.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/quest completed</Td><Td>Cuántas y cuáles completaste.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/quest list</Td><Td>{c.cList}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/quest info <id>"}</Td><Td>{c.cInfo}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/quest start <id>"}</Td><Td>{c.cStart}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/quest abandon <id>"}</Td><Td>{c.cAbandon}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/quest active</Td><Td>{c.cActive}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/quest completed</Td><Td>{c.cCompleted}</Td></Tr>
         </tbody>
       </Table>
-      <Callout tone="warning" title="track no existe">
-        El <code>plugin.yml</code> anuncia <code>/quest track</code> en su texto de uso, pero el comando no tiene
-        ese subcomando implementado — escribirlo solo te muestra el mensaje de uso.
+      <Callout tone="warning" title={note("track").title}>
+        {note("track").body}
       </Callout>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/questadmin give <jugador> <id>"}</Td><Td>Inicio forzado — ignora requisitos, cooldown y repetibilidad.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/questadmin complete <jugador> <id>"}</Td><Td>Completa una misión activa al instante, con recompensas completas.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/questadmin fail <jugador> <id>"}</Td><Td>La marca como fallida (sin recompensa).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/questadmin reset <jugador> <id>"}</Td><Td>Borra todo rastro de esa misión para el jugador — permite reiniciar incluso una no repetible.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/questadmin browser [quests|regions]"}</Td><Td>Abre el navegador gráfico de misiones o regiones.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/questadmin reload</Td><Td>Recarga misiones (no regiones).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/questadmin give <jugador> <id>"}</Td><Td>{c.aGive}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/questadmin complete <jugador> <id>"}</Td><Td>{c.aComplete}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/questadmin fail <jugador> <id>"}</Td><Td>{c.aFail}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/questadmin reset <jugador> <id>"}</Td><Td>{c.aReset}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/questadmin browser [quests|regions]"}</Td><Td>{c.aBrowser}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/questadmin reload</Td><Td>{c.aReload}</Td></Tr>
         </tbody>
       </Table>
-      <p>Requiere <Badge tone="amber">rpgrollquests.admin.*</Badge> (default: op).</p>
+      <p>{fill(c.permNote, { perm: <Badge tone="amber">rpgrollquests.admin.*</Badge> })}</p>
 
-      <SectionHeading id="placeholders">Placeholders (PlaceholderAPI)</SectionHeading>
-      <p>Expansión <Badge tone="violet">rpgrollquests</Badge>.</p>
+      <SectionHeading id="placeholders">{c.phTitle}</SectionHeading>
+      <p>{fill(c.phLead, { badge: <Badge tone="violet">rpgrollquests</Badge> })}</p>
       <Table>
         <Thead>
-          <Th>Placeholder</Th>
-          <Th>Valor</Th>
+          <Th>{c.thPlaceholder}</Th>
+          <Th>{c.thValue}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">%rpgrollquests_active_count%</Td><Td>Cantidad de misiones activas.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollquests_completed_count%</Td><Td>Cantidad de misiones completadas en total.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"%rpgrollquests_is_active_<id>%"} / {"%rpgrollquests_has_completed_<id>%"}</Td><Td><code>si</code>/<code>no</code>.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"%rpgrollquests_active_<id>_stage%"}</Td><Td>Id de la etapa actual de esa misión, o <code>-</code> si no está activa.</Td></Tr>
+          {questPlaceholders.map((p) => (
+            <Tr key={p.name}>
+              <Td className="font-mono text-xs">{p.name}</Td>
+              <Td>{localizedPlaceholder(p.name, p.description, locale)}</Td>
+            </Tr>
+          ))}
         </tbody>
       </Table>
 
