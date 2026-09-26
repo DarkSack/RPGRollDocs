@@ -37,6 +37,35 @@ const es = {
   seasonBody:
     "Cada temporada es un archivo en {dir}. La activa se elige en {config} con {active}; vacío deja el pase cerrado. {timezone} decide a qué hora cambia el día (diario y misiones diarias) y la semana.",
 
+  levelReqTitle:
+    "Requisitos por nivel",
+  levelReqBody:
+    "Un nivel puede pedir algo más que haber llegado a él con el bloque {block}. Vale para las dos pistas: en {cmd} cada requisito se ve con ✔/✘ y su progreso, la casilla del nivel se pone amarilla mientras falte algo y reclamar (o {claimAll}) lo comprueba. Todas las claves son opcionales.",
+  thKey:
+    "Clave",
+  rqCharacterLevel:
+    "Nivel de personaje (necesita el core).",
+  rqPlaytime:
+    "Tiempo jugado en la temporada sin estar AFK: {example}.",
+  rqSeasonDay:
+    "Disponible a partir de ese día de la temporada (el 1 es el día de inicio).",
+  rqAvailableFrom:
+    "Disponible a partir de esa fecha (AAAA-MM-DD).",
+  rqVotes:
+    "Votos totales.",
+  rqDailyStreak:
+    "Racha actual de la recompensa diaria.",
+  rqMissions:
+    "Misiones del pase completadas esta temporada (diarias, semanales o de temporada).",
+  rqQuests:
+    "Misiones de RPGRoll-Quests completadas.",
+  rqPermission:
+    "Un permiso; {name} es cómo se le muestra al jugador.",
+  levelReqNoteTitle:
+    "Sin el plugin, no se exige",
+  levelReqNoteBody:
+    "Lo que depende de un módulo que no está instalado (nivel de personaje sin el core, quests sin RPGRoll-Quests) no se puede comprobar y no bloquea. El tiempo jugado y las misiones completadas empiezan a contar con esta versión y se reinician al cambiar de temporada.",
+
   missionsTitle: "Misiones",
   missionsBody:
     "Las misiones viven en {file}. Cada una da {xp} puntos de pase al completarse. Las diarias y semanales se sortean de la lista: {daily} por día y {weekly} por semana (la semana empieza el lunes). El sorteo depende solo de la fecha, así que todos los jugadores tienen las mismas misiones ese día.",
@@ -145,6 +174,35 @@ const en: PassCopy = {
   seasonBody:
     "Each season is a file in {dir}. The active one is chosen in {config} with {active}; empty leaves the pass closed. {timezone} decides when the day (daily reward and daily missions) and the week roll over.",
 
+  levelReqTitle:
+    "Per-level requirements",
+  levelReqBody:
+    "A level can ask for more than reaching it with the {block} block. It applies to both tracks: in {cmd} every requirement shows ✔/✘ and its progress, the level tile turns yellow while something is missing, and claiming (or {claimAll}) checks it. Every key is optional.",
+  thKey:
+    "Key",
+  rqCharacterLevel:
+    "Character level (needs the core).",
+  rqPlaytime:
+    "Time played this season while not AFK: {example}.",
+  rqSeasonDay:
+    "Available from that season day on (day 1 is the start date).",
+  rqAvailableFrom:
+    "Available from that date on (YYYY-MM-DD).",
+  rqVotes:
+    "Total votes.",
+  rqDailyStreak:
+    "Current daily reward streak.",
+  rqMissions:
+    "Pass missions completed this season (daily, weekly or season).",
+  rqQuests:
+    "RPGRoll-Quests quests completed.",
+  rqPermission:
+    "A permission; {name} is how it is shown to the player.",
+  levelReqNoteTitle:
+    "Without the plugin, it is not required",
+  levelReqNoteBody:
+    "Whatever depends on a module that is not installed (character level without the core, quests without RPGRoll-Quests) cannot be checked and does not block. Playtime and completed missions start counting with this version and reset when the season changes.",
+
   missionsTitle: "Missions",
   missionsBody:
     "Missions live in {file}. Each one gives {xp} pass points when completed. Daily and weekly ones are drawn from the list: {daily} per day and {weekly} per week (the week starts on Monday). The draw only depends on the date, so every player gets the same missions that day.",
@@ -250,6 +308,35 @@ const pt: PassCopy = {
   seasonTitle: "Temporadas",
   seasonBody:
     "Cada temporada é um arquivo em {dir}. A ativa é escolhida em {config} com {active}; vazio deixa o passe fechado. {timezone} decide a que horas vira o dia (diário e missões diárias) e a semana.",
+
+  levelReqTitle:
+    "Requisitos por nível",
+  levelReqBody:
+    "Um nível pode pedir mais do que ter chegado a ele com o bloco {block}. Vale para as duas trilhas: em {cmd} cada requisito aparece com ✔/✘ e o progresso, o quadro do nível fica amarelo enquanto faltar algo e resgatar (ou {claimAll}) verifica tudo. Todas as chaves são opcionais.",
+  thKey:
+    "Chave",
+  rqCharacterLevel:
+    "Nível de personagem (precisa do core).",
+  rqPlaytime:
+    "Tempo jogado na temporada sem estar AFK: {example}.",
+  rqSeasonDay:
+    "Disponível a partir desse dia da temporada (o 1 é o dia de início).",
+  rqAvailableFrom:
+    "Disponível a partir dessa data (AAAA-MM-DD).",
+  rqVotes:
+    "Votos totais.",
+  rqDailyStreak:
+    "Sequência atual da recompensa diária.",
+  rqMissions:
+    "Missões do passe concluídas nesta temporada (diárias, semanais ou de temporada).",
+  rqQuests:
+    "Missões do RPGRoll-Quests concluídas.",
+  rqPermission:
+    "Uma permissão; {name} é como ela aparece para o jogador.",
+  levelReqNoteTitle:
+    "Sem o plugin, não é exigido",
+  levelReqNoteBody:
+    "O que depende de um módulo que não está instalado (nível de personagem sem o core, quests sem o RPGRoll-Quests) não pode ser verificado e não bloqueia. O tempo jogado e as missões concluídas começam a contar com esta versão e zeram ao trocar de temporada.",
 
   missionsTitle: "Missões",
   missionsBody:

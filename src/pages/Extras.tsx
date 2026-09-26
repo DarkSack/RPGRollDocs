@@ -224,6 +224,88 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
         code={"afk:\n  pause-stats: true\n  idle-seconds: 300 # 5 minutos\n"}
       />
 
+      <SectionHeading id="menu-servidor">{c.menuTitle}</SectionHeading>
+      <p>
+        {fill(c.menuBody, {
+          section: <code>server-menu</code>,
+          config: <code>config.yml</code>,
+          enabled: <code>enabled: false</code>,
+          locked: <code>locked</code>,
+          keep: <code>keep-on-death</code>,
+          join: <code>give-on-join</code>,
+        })}
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="config.yml"
+        code={
+          "server-menu:\n" +
+          "  enabled: true\n" +
+          "  menu: servidor          # menus/servidor.yml\n" +
+          "  give-on-join: true\n" +
+          "  keep-on-death: true\n" +
+          "  locked: true\n" +
+          "  item:\n" +
+          "    material: COMPASS\n" +
+          '    name: "&c&l✦ Brújula del Nether &7(clic)"\n' +
+          "    lore:\n" +
+          '      - "&7Viajes, tienda, pase y más."\n' +
+          "    slot: 8               # casilla de la barra (0-8)\n" +
+          "    glint: true\n"
+        }
+      />
+      <p>
+        {fill(c.menuFilesBody, {
+          dir: <code>menus/</code>,
+          main: <Kbd>/menu</Kbd>,
+          item: <Kbd>/menu item</Kbd>,
+          any: <Kbd>{"/menu <id>"}</Kbd>,
+          perm: <code>rpgrollextras.menu.any</code>,
+        })}
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="menus/servidor.yml"
+        code={
+          "id: servidor\n" +
+          'title: "&c&l✦ Brújula del Nether"\n' +
+          "rows: 5\n" +
+          "filler: GRAY_STAINED_GLASS_PANE   # rellena los huecos\n" +
+          "items:\n" +
+          "  - slot: 4\n" +
+          "    material: PLAYER_HEAD            # sin dueño: la cabeza de quien abre\n" +
+          '    name: "&e&l{player}"\n' +
+          "    actions:\n" +
+          "      - type: COMMAND_AS_PLAYER\n" +
+          '        value: "rpg mystats"\n' +
+          "  - slot: 20\n" +
+          "    material: ENDER_PEARL\n" +
+          '    name: "&a&lViajes"\n' +
+          "    actions:\n" +
+          "      - type: OPEN_GUI                # otro menú de menus/\n" +
+          '        value: "destinos"\n' +
+          "  - slot: 21\n" +
+          "    material: EMERALD\n" +
+          '    name: "&6&lTienda"\n' +
+          "    actions:\n" +
+          "      - type: COMMAND_AS_PLAYER\n" +
+          '        value: "tienda"\n' +
+          "  - slot: 31\n" +
+          "    material: COMMAND_BLOCK\n" +
+          '    name: "&cPanel de staff"\n' +
+          "    permission: sackito.staff        # solo lo ve quien lo tenga\n" +
+          "    actions:\n" +
+          "      - type: OPEN_GUI\n" +
+          '        value: "staff"\n' +
+          "  - slot: 40\n" +
+          "    material: BARRIER\n" +
+          '    name: "&cCerrar"\n' +
+          "    actions:\n" +
+          "      - type: CLOSE\n" +
+          '        value: ""\n'
+        }
+      />
+
       <SectionHeading id="consumo">{c.consumeTitle}</SectionHeading>
       <p>
         {fill(c.consumeBody, { call: <code>ExtrasAPI.get().needs().consumeAll(player, "fishing")</code> })}
@@ -513,10 +595,26 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
             </Td>
             <Td>{c.cRemove}</Td>
           </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">/menu</Td>
+            <Td>{c.cMenu}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">/menu item</Td>
+            <Td>{c.cMenuItem}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">{"/menu <id>"}</Td>
+            <Td>{c.cMenuAny}</Td>
+          </Tr>
         </tbody>
       </Table>
       <p>
-        {fill(c.permNote, { perm: <Badge tone="amber">rpgrollextras.admin.*</Badge> })}
+        {fill(c.permNote, {
+          perm: <Badge tone="amber">rpgrollextras.admin.*</Badge>,
+          menu: <Badge>rpgrollextras.menu</Badge>,
+          any: <Badge tone="amber">rpgrollextras.menu.any</Badge>,
+        })}
       </p>
 
       <PrevNext current="extras" onNavigate={onNavigate} />

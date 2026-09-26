@@ -201,7 +201,7 @@ export const addonDependencies: AddonDependencies[] = [
     hard: ["RPGRoll-Lib"],
     soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "RPGRoll-Ranching", "RPGRoll-Fishing", "RPGRoll-Guilds", "Vault", "SackResourcePack"],
   },
-  { slug: "economy", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "Vault", "PlaceholderAPI", "RPGRoll-Guilds", "RPGRoll-Seasons"] },
+  { slug: "economy", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "Vault", "PlaceholderAPI", "RPGRoll-Guilds", "RPGRoll-Seasons", "RPGRoll-Items", "RPGRoll-Enchantments"] },
   { slug: "crafting", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Items", "RPGRoll-Economy", "RPGRoll-Guilds", "RPGRoll-Seasons"] },
   { slug: "tab", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "ProtocolLib", "PlaceholderAPI"] },
   { slug: "extras", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-TAB", "RPGRoll-Seasons", "PlaceholderAPI", "Vault"] },

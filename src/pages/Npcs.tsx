@@ -201,7 +201,7 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         fields={npcFields}
       />
 
-      <SectionHeading id="acciones">Acciones (NpcAction)</SectionHeading>
+      <SectionHeading id="acciones">Acciones (MenuAction)</SectionHeading>
       <p>Se ejecutan en orden, todas, cada vez que un jugador hace click en el NPC. <code>{"{player}"}</code> se reemplaza por el nombre del jugador.</p>
       <Table>
         <Thead>
@@ -219,6 +219,7 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr><Td className="font-mono text-xs">TELEPORT</Td><Td className="font-mono text-xs">mundo,x,y,z</Td><Td>Teletransporta al jugador.</Td></Tr>
           <Tr><Td className="font-mono text-xs">CONDITIONAL</Td><Td className="font-mono text-xs">condición;accSiTrue[;accSiFalse]</Td><Td>Evalúa una condición y ejecuta una sub-acción distinta según el resultado.</Td></Tr>
           <Tr><Td className="font-mono text-xs">OPEN_GUI</Td><Td className="font-mono text-xs">menuId</Td><Td>Abre un menú definido en <code>menus/*.yml</code> (ver abajo).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">CLOSE</Td><Td className="font-mono text-xs">(vacío)</Td><Td>Cierra el inventario que tenga abierto el jugador.</Td></Tr>
           <Tr><Td className="font-mono text-xs">OPEN_INVENTORY</Td><Td className="font-mono text-xs">{"CHEST|HOPPER|FURNACE[,título]"}</Td><Td>Abre un contenedor vanilla vacío (sin ítems ni acciones propias).</Td></Tr>
         </tbody>
       </Table>
@@ -244,6 +245,7 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr><Td className="font-mono text-xs">HAS_RACE</Td><Td className="font-mono text-xs">razaId</Td></Tr>
           <Tr><Td className="font-mono text-xs">HAS_CLASS</Td><Td className="font-mono text-xs">claseId</Td></Tr>
           <Tr><Td className="font-mono text-xs">HAS_ITEM</Td><Td className="font-mono text-xs">MATERIAL[,cantidad mínima]</Td></Tr>
+          <Tr><Td className="font-mono text-xs">HAS_PERMISSION</Td><Td className="font-mono text-xs">permiso</Td></Tr>
         </tbody>
       </Table>
       <p>
@@ -258,8 +260,13 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <SectionHeading id="menus">Menús (tiendas)</SectionHeading>
       <p>
-        Un <code>NpcMenuDefinition</code> es una GUI de inventario configurable, abierta desde una acción{" "}
-        <code>OPEN_GUI</code>. Vive en <code>plugins/RPGRoll-NPCs/menus/&lt;id&gt;.yml</code>:
+        Un menú es una GUI de inventario configurable, abierta desde una acción <code>OPEN_GUI</code>. Vive en{" "}
+        <code>plugins/RPGRoll-NPCs/menus/&lt;id&gt;.yml</code>. El motor (acciones, condiciones y GUI) está en
+        RPGRoll-Lib, así que el mismo formato sirve para los menús de la brújula de{" "}
+        <a className="underline" href="#page/extras">RPGRoll-Extras</a> sin depender de este módulo. Además de
+        los campos del ejemplo, un menú acepta <code>filler: GRAY_STAINED_GLASS_PANE</code> (rellena los huecos) y
+        cada ítem <code>permission</code> (solo lo ve quien lo tenga); en <code>name</code> y <code>lore</code>,{" "}
+        <code>{"{player}"}</code> es el jugador, y una <code>PLAYER_HEAD</code> muestra su cabeza:
       </p>
       <CodeBlock
         language="yaml"
@@ -352,7 +359,7 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr><Td className="font-mono text-xs">{"/npc edit <id>"}</Td><Td>Reabre el editor sobre un NPC existente.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/npc list</Td><Td>Lista todos los NPCs existentes.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/npc delete <id>"}</Td><Td>Borra un NPC y lo despawnea para todos.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/npc menus</Td><Td>Abre el navegador gráfico de menús (crear/editar <code>NpcMenuDefinition</code>).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/npc menus</Td><Td>Abre el navegador gráfico de menús (crear/editar menús).</Td></Tr>
           <Tr><Td className="font-mono text-xs">/npc reload</Td><Td>Recarga NPCs y menús desde disco, sin reiniciar el servidor.</Td></Tr>
         </tbody>
       </Table>

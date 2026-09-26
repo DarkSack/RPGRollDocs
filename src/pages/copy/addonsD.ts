@@ -40,6 +40,13 @@ const es = {
     activityBody:
       "Las reglas de {regen} pueden condicionar por actividad del jugador: {states}. El resolver NO chequea esto por tick — se apoya en timestamps de eventos reales (último movimiento, último daño recibido o infligido) para clasificar barato en cada evaluación. También acepta condiciones ambientales con prefijo: {prefixes}, y la palabra clave especial {underwater} (jugador sumergido en líquido).",
 
+    menuTitle:
+      "Menú del servidor (brújula)",
+    menuBody:
+      "Un ítem —una brújula por defecto— que abre el menú del servidor con cualquier clic: en el aire, sobre un bloque o una entidad, o sobre él en el inventario. Se configura en {section} de {config} y viene apagado ({enabled}). Con {locked} no se puede tirar, guardar en cofres ni cambiar de mano; con {keep} no cae al morir y vuelve al reaparecer; con {join} se entrega al entrar en su casilla de la barra.",
+    menuFilesBody:
+      "Los menús son YAML en {dir}, con el mismo formato que los de RPGRoll-NPCs: el motor vive en RPGRoll-Lib, así que Extras no depende de NPCs. {main} abre el principal, {item} devuelve la brújula y {any} abre cualquier menú por su id (solo con {perm}, porque un menú puede llevar comandos de consola). Los botones de un módulo que no tengas instalado dan \"comando desconocido\": bórralos o cámbialos.",
+
     consumeTitle: "Consumption hooks",
     consumeBody:
       "Sprint (al empezar a correr, no continuo), salto, ataque y minado se detectan automáticamente vía eventos vanilla. Pesca, farming y habilidades de otros addons NO se detectan acá a propósito — le corresponde a cada addon reportar su propia acción llamando a {call} (o el nombre de acción que corresponda), la misma superficie pública que usa el hook interno de minado.",
@@ -109,8 +116,11 @@ const es = {
     cAdd: "Suma/resta una cantidad al valor actual.",
     cApply: "Aplica una condition.",
     cRemove: "Remueve una condition activa.",
+    cMenu: "Abre el menú del servidor, sin necesidad de la brújula.",
+    cMenuItem: "Devuelve la brújula si la perdiste (con el menú activado).",
+    cMenuAny: "Abre cualquier menú de menus/ por su id.",
     permNote:
-      "Todo el comando requiere {perm} (default: op) — no hay comando de jugador propio; los stats se consultan vía placeholders (con TAB) o el HUD.",
+      "/extrasadmin requiere {perm} (default: op). /menu y /menu item requieren {menu} (default: true); /menu <id>, {any} (default: op). Los stats se consultan vía placeholders (con TAB) o el HUD.",
   },
 
   fishing: {
@@ -277,6 +287,13 @@ const en: AddonsDCopy = {
     activityBody:
       "{regen} rules can be conditioned on player activity: {states}. The resolver does NOT check this per tick — it leans on timestamps from real events (last movement, last damage taken or dealt) to classify cheaply on each evaluation. It also accepts prefixed environmental conditions: {prefixes}, and the special keyword {underwater} (player submerged in a liquid).",
 
+    menuTitle:
+      "Server menu (compass)",
+    menuBody:
+      "An item — a compass by default — that opens the server menu on any click: in the air, on a block or an entity, or on the item itself in the inventory. It is configured in {section} of {config} and ships off ({enabled}). With {locked} it cannot be dropped, stored in chests or swapped between hands; with {keep} it does not drop on death and comes back on respawn; with {join} it is handed out on join in its hotbar slot.",
+    menuFilesBody:
+      "Menus are YAML files in {dir}, with the same format as RPGRoll-NPCs menus: the engine lives in RPGRoll-Lib, so Extras does not depend on NPCs. {main} opens the main one, {item} gives the compass back and {any} opens any menu by id (only with {perm}, because a menu can run console commands). Buttons for a module you do not have installed give \"unknown command\": remove or change them.",
+
     consumeTitle: "Consumption hooks",
     consumeBody:
       "Sprint (on starting to run, not continuously), jumping, attacking and mining are detected automatically through vanilla events. Fishing, farming and other addons' skills are deliberately NOT detected here — it is up to each addon to report its own action by calling {call} (or whatever action name fits), the same public surface the internal mining hook uses.",
@@ -346,8 +363,11 @@ const en: AddonsDCopy = {
     cAdd: "Adds/subtracts an amount from the current value.",
     cApply: "Applies a condition.",
     cRemove: "Removes an active condition.",
+    cMenu: "Opens the server menu, no compass needed.",
+    cMenuItem: "Gives the compass back if you lost it (with the menu enabled).",
+    cMenuAny: "Opens any menu in menus/ by id.",
     permNote:
-      "The whole command requires {perm} (default: op) — there is no player command of its own; stats are read through placeholders (with TAB) or the HUD.",
+      "/extrasadmin requires {perm} (default: op). /menu and /menu item require {menu} (default: true); /menu <id>, {any} (default: op). Stats are read through placeholders (with TAB) or the HUD.",
   },
 
   fishing: {
@@ -512,6 +532,13 @@ const pt: AddonsDCopy = {
     activityBody:
       "As regras de {regen} podem condicionar por atividade do jogador: {states}. O resolver NÃO verifica isso por tick — apoia-se em timestamps de eventos reais (último movimento, último dano recebido ou causado) para classificar barato a cada avaliação. Também aceita condições ambientais com prefixo: {prefixes}, e a palavra-chave especial {underwater} (jogador submerso em líquido).",
 
+    menuTitle:
+      "Menu do servidor (bússola)",
+    menuBody:
+      "Um item — uma bússola por padrão — que abre o menu do servidor com qualquer clique: no ar, num bloco ou numa entidade, ou sobre ele no inventário. Configura-se em {section} do {config} e vem desligado ({enabled}). Com {locked} não dá para jogar fora, guardar em baús nem trocar de mão; com {keep} não cai ao morrer e volta ao renascer; com {join} é entregue ao entrar no seu espaço da barra.",
+    menuFilesBody:
+      "Os menus são YAML em {dir}, com o mesmo formato dos do RPGRoll-NPCs: o motor vive no RPGRoll-Lib, então o Extras não depende do NPCs. {main} abre o principal, {item} devolve a bússola e {any} abre qualquer menu pelo id (só com {perm}, porque um menu pode rodar comandos de console). Botões de um módulo que você não tem instalado dão \"comando desconhecido\": apague-os ou troque-os.",
+
     consumeTitle: "Consumption hooks",
     consumeBody:
       "Sprint (ao começar a correr, não contínuo), pulo, ataque e mineração são detectados automaticamente via eventos vanilla. Pesca, farming e habilidades de outros addons NÃO são detectados aqui de propósito — cabe a cada addon reportar a sua própria ação chamando {call} (ou o nome de ação que couber), a mesma superfície pública que o hook interno de mineração usa.",
@@ -581,8 +608,11 @@ const pt: AddonsDCopy = {
     cAdd: "Soma/subtrai uma quantidade do valor atual.",
     cApply: "Aplica uma condition.",
     cRemove: "Remove uma condition ativa.",
+    cMenu: "Abre o menu do servidor, sem precisar da bússola.",
+    cMenuItem: "Devolve a bússola se você a perdeu (com o menu ativado).",
+    cMenuAny: "Abre qualquer menu de menus/ pelo id.",
     permNote:
-      "Todo o comando exige {perm} (default: op) — não há comando de jogador próprio; os stats são consultados via placeholders (com TAB) ou pelo HUD.",
+      "/extrasadmin exige {perm} (default: op). /menu e /menu item exigem {menu} (default: true); /menu <id>, {any} (default: op). Os stats são consultados via placeholders (com TAB) ou o HUD.",
   },
 
   fishing: {

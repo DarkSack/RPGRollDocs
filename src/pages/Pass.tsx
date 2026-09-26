@@ -158,6 +158,68 @@ export function Pass({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
+      <SectionHeading id="requisitos-nivel">{c.levelReqTitle}</SectionHeading>
+      <p>
+        {fill(c.levelReqBody, {
+          block: <code>requirements</code>,
+          cmd: <Kbd>/pase</Kbd>,
+          claimAll: <code>Reclamar todo</code>,
+        })}
+      </p>
+      <Table>
+        <Thead>
+          <Th>{c.thKey}</Th>
+          <Th>{c.thMeaning}</Th>
+        </Thead>
+        <tbody>
+          {(
+            [
+              ["character-level: 15", c.rqCharacterLevel],
+              ["playtime: 5h", fill(c.rqPlaytime, { example: <code>30m, 5h, 1d, 2h30m</code> })],
+              ["season-day: 7", c.rqSeasonDay],
+              ["available-from: 2026-10-15", c.rqAvailableFrom],
+              ["votes: 10", c.rqVotes],
+              ["daily-streak: 3", c.rqDailyStreak],
+              ["missions: 20", c.rqMissions],
+              ["quests: [camino_3]", c.rqQuests],
+              ["permission: rank.vip", fill(c.rqPermission, { name: <code>permission-name</code> })],
+            ] as const
+          ).map(([key, meaning]) => (
+            <Tr key={key}>
+              <Td className="font-mono text-xs">{key}</Td>
+              <Td>{meaning}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
+      <CodeBlock
+        language="yaml"
+        filename="seasons/temporada_1.yml"
+        code={
+          "levels:\n" +
+          "  20:\n" +
+          "    free: [key:epica:1, material:diamond:8]\n" +
+          "    premium: [key:legendario:1, item:cetro_luminico:1, money:5000]\n" +
+          "    requirements:\n" +
+          "      character-level: 16\n" +
+          "      playtime: 12h\n" +
+          "      season-day: 10\n" +
+          "      missions: 20\n" +
+          "  30:\n" +
+          "    free: [key:legendario:1, money:5000]\n" +
+          "    premium: [item:dragon_slayer:1, key:legendario:2, money:15000]\n" +
+          "    requirements:\n" +
+          "      character-level: 24\n" +
+          "      playtime: 24h\n" +
+          "      quests: [camino_6]\n" +
+          "      permission: rank.vip\n" +
+          '      permission-name: "&6rango VIP"\n'
+        }
+      />
+      <Callout tone="info" title={c.levelReqNoteTitle}>
+        {c.levelReqNoteBody}
+      </Callout>
+
       <SectionHeading id="misiones">{c.missionsTitle}</SectionHeading>
       <p>
         {fill(c.missionsBody, {

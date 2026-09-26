@@ -238,6 +238,69 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         sin Seasons instalados, Economy funciona exactamente igual que antes, sin errores ni advertencias.
       </Callout>
 
+      <SectionHeading id="tienda-servidor">Tienda del servidor (/tienda)</SectionHeading>
+      <p>
+        <Kbd>/tienda</Kbd> (alias <Kbd>/shop</Kbd>) abre una portada con una casilla por sección; cada sección es un
+        YAML en <code>plugins/RPGRoll-Economy/server-shop/&lt;id&gt;.yml</code> y <Kbd>{"/tienda <id>"}</Kbd> la abre
+        directo. Dentro, <strong>clic izquierdo</strong> compra un lote y con shift una pila entera;{" "}
+        <strong>clic derecho</strong> vende un lote y con shift todo lo que el jugador lleve encima. Cobra y paga en la
+        moneda de la sección (la por defecto si no dice otra), queda en el libro mayor como{" "}
+        <code>MARKET_BUY</code>/<code>MARKET_SELL</code> y solo cobra si lo comprado cabe entero en el inventario.
+      </p>
+      <p>
+        Viene con 14 secciones vanilla (bloques, maderas, naturaleza, minerales, comida, granja, botín, redstone,
+        herramientas, armaduras, pociones, encantamientos, decoración y utilidades) y una <strong>Premium</strong> con
+        los ítems de RPGRoll-Items y los libros de RPGRoll-Enchantments a precios altos. Se recargan con{" "}
+        <Kbd>/economyadmin reload</Kbd>.
+      </p>
+      <Table>
+        <Thead>
+          <Th>Línea</Th>
+          <Th>Entrega</Th>
+        </Thead>
+        <tbody>
+          <Tr><Td className="font-mono text-xs">material: OAK_LOG</Td><Td>Un ítem vanilla. Es lo único que la tienda le compra al jugador, y solo "limpio": con nombre, encantado o de RPGRoll no cuenta.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">item: flame_blade</Td><Td>Un ítem de RPGRoll-Items (necesita ese módulo).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">enchant: lifesteal + level</Td><Td>El libro de un encantamiento de RPGRoll-Enchantments, que se aplica en el yunque.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">book: mending + level</Td><Td>Un libro encantado vanilla, por la clave del encantamiento.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">potion: STRONG_HEALING</Td><Td>Una poción vanilla; <code>form: SPLASH_POTION</code> o <code>LINGERING_POTION</code> para arrojadiza o persistente.</Td></Tr>
+        </tbody>
+      </Table>
+      <CodeBlock
+        language="yaml"
+        filename="server-shop/minerales.yml"
+        code={
+          "id: minerales\n" +
+          'display-name: "&bMinerales"\n' +
+          "icon: DIAMOND\n" +
+          "slot: 22                # casilla en la portada (0-44)\n" +
+          "premium: false          # true: brillo y marco dorado\n" +
+          'permission: ""          # vacío = todos\n' +
+          'currency: ""            # vacío = la moneda por defecto\n' +
+          "description:\n" +
+          '  - "&7Lingotes, gemas y bloques"\n' +
+          "items:\n" +
+          "  - material: GOLD_INGOT\n" +
+          "    amount: 16          # unidades por compra y por venta\n" +
+          "    buy: 320            # precio del lote; sin buy no se vende\n" +
+          "    sell: 80            # lo que paga por el lote; sin sell no lo compra\n" +
+          "  - material: DIAMOND\n" +
+          "    market: DIAMOND     # precio del mercado dinámico\n" +
+          "  - enchant: lifesteal\n" +
+          "    level: 3\n" +
+          "    buy: 90000\n" +
+          '    name: "&cLifesteal III"\n' +
+          '    lore: ["&7Solo esta temporada"]\n'
+        }
+      />
+      <Callout tone="info" title="Sin dinero infinito">
+        Una línea con <code>market:</code> se compra al precio de mercado del momento y se vende a{" "}
+        <code>server-shop.market-sell-ratio</code> de él (0.4 por defecto, en <code>config.yml</code>); comprar sube
+        su demanda y vender su oferta. Con precios fijos, un <code>sell</code> mayor que <code>buy</code> se recorta
+        y se avisa en consola: comprar para revender en el acto nunca da dinero. Las secciones incluidas recompran
+        solo materias primas, al 25 % de su precio.
+      </Callout>
+
       <SectionHeading id="tiendas">Tiendas de jugador</SectionHeading>
       <p>
         Cada jugador puede abrir una tienda (<code>PlayerShop</code>) desde <Kbd>/economy shop</Kbd>: agrega el
@@ -428,6 +491,7 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           <Tr><Td className="font-mono text-xs">{"/economyadmin setbalance <jugador> <moneda> <cant>"}</Td><Td>Fija un balance exacto.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">/economyadmin inflation</Td><Td>Muestra la última foto de inflación.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">/economyadmin snapshot</Td><Td>Fuerza una foto de masa monetaria.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/tienda [sección]"}</Td><Td>Abre la tienda del servidor, o una sección directa.</Td><Td><Badge>rpgrolleconomy.servershop</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/economy balance [moneda]"}</Td><Td>Ver tu saldo.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/economy pay <jugador> <cant> [moneda]"}</Td><Td>Pagarle a otro jugador.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">/economy bank</Td><Td>Abre tus cuentas bancarias.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>

@@ -247,7 +247,7 @@ export const searchIndex: SearchEntry[] = [
   h("npcs", "Cómo funcionan los NPCs", "como-funciona"),
   h("npcs", "Crear y editar un NPC", "crear-npc"),
   h("npcs", "Formato del archivo YAML", "formato-yaml"),
-  h("npcs", "Acciones (NpcAction)", "acciones"),
+  h("npcs", "Acciones (MenuAction)", "acciones"),
   h("npcs", "CONDITIONAL: sub-acciones y condiciones", "condicionales"),
   h("npcs", "Menús (tiendas)", "menus"),
   h("npcs", "Comandos", "comandos"),
@@ -352,6 +352,7 @@ export const searchIndex: SearchEntry[] = [
   h("economy", "Wallets", "wallets"),
   h("economy", "Bancos y préstamos", "bancos-prestamos"),
   h("economy", "Mercado dinámico", "mercado-dinamico"),
+  h("economy", "Tienda del servidor (/tienda)", "tienda-servidor"),
   h("economy", "Tiendas de jugador", "tiendas"),
   h("economy", "Subastas", "subastas"),
   h("economy", "Empresas", "empresas"),
@@ -447,6 +448,7 @@ export const searchIndex: SearchEntry[] = [
   h("pass", "Cómo funciona", "como-funciona"),
   h("pass", "Formato de recompensas", "recompensas"),
   h("pass", "Temporadas", "temporadas"),
+  h("pass", "Requisitos por nivel", "requisitos-nivel"),
   h("pass", "Misiones", "misiones"),
   h("pass", "Recompensa diaria", "diario"),
   h("pass", "Votos (Votifier)", "votos"),
@@ -457,6 +459,7 @@ export const searchIndex: SearchEntry[] = [
 
   // Extras
   h("extras", "Jugadores AFK", "afk"),
+  h("extras", "Menú del servidor (brújula)", "menu-servidor"),
 ];
 
 function h(slug: string, headingLabel: string, heading: string): SearchEntry {
