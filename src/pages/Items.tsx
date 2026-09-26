@@ -68,6 +68,8 @@ const gemFields: YamlField[] = [
   { key: "id", label: "Id", type: "string", default: "nueva_gema", placeholder: "ruby" },
   { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&cRubí" },
   { key: "type", label: "Tipo de socket aceptado", type: "string", default: "GENERIC", placeholder: "FIRE" },
+  { key: "material", label: "Ítem base", type: "string", default: "EMERALD", placeholder: "EMERALD" },
+  { key: "item-model", label: "Modelo del resource pack", type: "string", placeholder: "miserver:rubi" },
   { key: "stats", label: "Bono de stats", type: "map", placeholder: "damage=3" },
 ];
 
@@ -158,9 +160,16 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <SectionHeading id="sockets">Sockets y gemas</SectionHeading>
       <p>
         Un ítem declara ranuras (<code>sockets:</code>, con <code>id</code> y tipos aceptados opcionales) y una
-        gema (siempre un <code>EMERALD</code> con lore) se inserta con <Kbd>{"/item socket <id>"}</Kbd>, tomando
-        la gema de tu <strong>offhand</strong> y consumiéndola si encaja. El bono de stats de cada gema insertada
-        se suma al de la definición base + mejoras.
+        gema se inserta con <Kbd>{"/item socket <id>"}</Kbd>, tomando la gema de tu <strong>offhand</strong> y
+        consumiéndola si encaja. El bono de stats de cada gema insertada se suma al de la definición base +
+        mejoras.
+      </p>
+      <p>
+        La gema es un <code>EMERALD</code> con lore salvo que su YAML diga otra cosa: <code>material</code> cambia
+        el ítem base e <code>item-model</code> le da su propio modelo del resource pack (ver{" "}
+        <a href="#page/items">Texturas propias</a>). Para repartirlas, cualquier sitio que acepte un id de ítem
+        acepta también <code>{"gem:<id>"}</code>: <Kbd>{"/itemadmin give <jugador> gem:ruby"}</Kbd>, o{" "}
+        <code>reference: gem:ruby</code> en el botín de RPGRoll-Mobs y RPGRoll-Dungeons.
       </p>
       <CodeBlock language="yaml" filename="gems/ruby.yml" code={'id: ruby\ndisplay-name: "&cRubí"\ntype: FIRE\nstats:\n  damage: 3\n'} />
       <CodeBlock
@@ -177,10 +186,35 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         <li><strong>Durabilidad</strong> — sistema propio, independiente del daño vanilla del ítem (se crea sin daño real; el contador vive aparte). Se degrada en golpes/romper bloques, se puede reparar manualmente o automáticamente (cada minuto, si <code>auto-repair-per-minute &gt; 0</code>); al llegar a 0 el ítem se consume.</li>
       </ul>
 
+      <SectionHeading id="texturas-propias">Texturas propias: item-model</SectionHeading>
+      <p>
+        <code>item-model: "miserver:espada_de_mitrilo"</code> pone el componente <code>item_model</code> (1.21.4+)
+        en el ítem: el cliente dibuja ese modelo en lugar del del material base. Vale en la definición y en cada
+        skin. Si no se pone el namespace se asume <code>minecraft:</code>.
+      </p>
+      <p>
+        El resource pack tiene que traer <code>assets/miserver/items/espada_de_mitrilo.json</code> (la definición
+        del ítem), su modelo y su textura; con SackResourcePack basta con un módulo de contenido que los
+        incluya. Quien rechace el pack ve el material base, así que conviene que el material tenga sentido por sí
+        solo.
+      </p>
+      <Callout tone="info" title="El mismo identificador sirve para Bedrock">
+        Los mappings de ítems de Geyser (formato 2) reconocen un ítem por su material de Java y su{" "}
+        <code>item_model</code>. Una definición con <code>{'"model": "miserver:espada_de_mitrilo"'}</code> bajo{" "}
+        <code>minecraft:iron_sword</code> en <code>custom_mappings/</code>, más un <code>.mcpack</code> con la
+        textura en <code>packs/</code>, hace que los jugadores de Bedrock vean lo mismo.
+      </Callout>
+
       <SectionHeading id="comportamiento">Triggers, habilidades y condiciones</SectionHeading>
       <p>Un ítem tiene dos formas de reaccionar a eventos: <code>triggers</code> (acciones directas, sin condición extra) y <code>abilities</code> (con cooldown propio y condiciones, activas o pasivas).</p>
       <p>20 triggers disponibles: <code>EQUIP, UNEQUIP, RIGHT_CLICK, LEFT_CLICK, ENTITY_HIT, ENTITY_KILL, BLOCK_BREAK, BLOCK_PLACE, PLAYER_DAMAGE, PLAYER_DEATH, PLAYER_RESPAWN, PLAYER_MOVE, PLAYER_JUMP, PLAYER_SNEAK, PLAYER_SPRINT, PLAYER_INTERACT, CONSUME, THROW, PICKUP, DROP</code>.</p>
       <p>Acciones incorporadas: <code>MESSAGE, COMMAND, SOUND, PARTICLE, EXPLOSION, DAMAGE, HEAL, FIRE, TITLE, BOSSBAR, SUMMON, PROJECTILE</code> — cinemáticas, abrir GUIs y scripts quedan como punto de extensión para otros addons.</p>
+      <p>
+        <code>MESSAGE</code> y <code>COMMAND</code> reemplazan <code>{"{player}"}</code> por el jugador,{" "}
+        <code>{"{target}"}</code> por el objetivo si es un jugador y <code>{"{target_uuid}"}</code> por el UUID del
+        objetivo sea lo que sea. Este último es el que sirve contra mobs:{" "}
+        <code>{"effect give {target_uuid} minecraft:slowness 4 2"}</code>.
+      </p>
       <p>
         Las condiciones de una <em>ability</em> son expresiones simples (<code>player.level &gt;= 20</code>,{" "}
         <code>player.health &lt; 50%</code>, <code>player.hasPermission(perm)</code>) resueltas contra{" "}
@@ -206,6 +240,38 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         <code>sourceId</code> para que otro addon (una tienda de NPC, un sistema de trabajos, misiones) decida
         cuándo entregar el ítem.
       </p>
+      <p>
+        Un ingrediente puede ser otro ítem de RPGRoll-Items con <code>{"item:<id>"}</code>, en el{" "}
+        <code>key</code> de una <code>SHAPED</code> o en <code>ingredients</code>. <code>amount</code> dice cuántos
+        da la receta (por defecto 1, hasta 64). En <code>FURNACE</code> y <code>STONECUTTER</code> la entrada es
+        el primer ingrediente o, si no hay, <code>base-material</code>.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="packs/forja/lingote_de_mitrilo.yml (fragmento)"
+        code={
+          "recipes:\n" +
+          "  - type: FURNACE\n" +
+          "    ingredients: [\"item:mitrilo_en_bruto\"]\n" +
+          "  - type: SHAPED\n" +
+          "    shape: [NNN, NNN, NNN]\n" +
+          "    key:\n" +
+          "      N: item:pepita_de_mitrilo\n"
+        }
+      />
+      <p>
+        Bukkit solo compara materiales, así que la receta se registra con el material del ítem y el plugin
+        comprueba al preparar el resultado que de verdad sea ese ítem. Con{" "}
+        <code>recipes.protect-custom-items: true</code> (por defecto, en <code>config.yml</code>) además un ítem
+        de RPGRoll no sirve como su material en recetas vanilla ni en las que piden el material pelado, y no se
+        quema como combustible: un lingote de mitrilo hecho sobre un fragmento de prismarina no fabrica
+        prismarina, y un bastón hecho de palo no es leña.
+      </p>
+      <Callout tone="warning" title="Dos recetas con la misma forma y los mismos materiales chocan">
+        Si una receta tuya coincide en forma y materiales con una vanilla (un lingote sobre{" "}
+        <code>IRON_INGOT</code> en forma de espada) o con otra tuya, el servidor elige una de las dos y la otra no
+        sale nunca. Da a cada ítem que uses como ingrediente un material base que no aparezca en esa forma.
+      </Callout>
 
       <SectionHeading id="gui">GUI: navegador y editor</SectionHeading>
       <p><Kbd>/itemadmin browser</Kbd> abre un grid paginado con la apariencia real de cada ítem como ícono, filtro por categoría, y búsqueda. Click izquierdo te da el ítem; click derecho abre el editor completo — un botón por componente:</p>
@@ -427,7 +493,7 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Th>Qué hace</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/itemadmin give <jugador> <id> [cantidad]"}</Td><Td>Entrega un ítem, con overflow al piso.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/itemadmin give <jugador> <id|gem:id> [cantidad]"}</Td><Td>Entrega un ítem o una gema de engaste, con overflow al piso.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/itemadmin list</Td><Td>Lista todos los ítems con su pack y rareza.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/itemadmin reload</Td><Td>Recarga todas las definiciones.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/itemadmin create <id> [pack]"}</Td><Td>Crea un ítem base y abre el editor directo (sin [pack], eliges/creas uno desde un menú).</Td></Tr>
