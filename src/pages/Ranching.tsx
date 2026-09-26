@@ -179,7 +179,7 @@ export function Ranching({
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
+          "depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
         }
       />
       <p>

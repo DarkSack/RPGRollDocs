@@ -52,6 +52,23 @@ export function Progression({ onNavigate }: { onNavigate: (slug: string) => void
       />
       <p>{fill(c.maxLevel, { key: <code>gameplay.yml → experience.max_level</code> })}</p>
 
+      <SectionHeading id="bonos-exp">{c.bonusTitle}</SectionHeading>
+      <p>{fill(c.bonusBody, { addxp: <Kbd>/rpg addxp</Kbd> })}</p>
+      <p>
+        {fill(c.bonusPerm, {
+          perm: <code>rpgroll.exp.bonus.&lt;n&gt;</code>,
+          example: <code>rpgroll.exp.bonus.10</code>,
+        })}
+      </p>
+      <CodeBlock
+        language="bash"
+        code={
+          "lp group vip permission set rpgroll.exp.bonus.10 true\n" +
+          "lp group vipmas permission set rpgroll.exp.bonus.20 true\n" +
+          "lp group mvp permission set rpgroll.exp.bonus.30 true\n"
+        }
+      />
+
       <SectionHeading id="formula">{c.formulaTitle}</SectionHeading>
       <CodeBlock language="text" code={c.formula} />
 

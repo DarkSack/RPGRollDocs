@@ -139,7 +139,7 @@ export function Quests({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </Callout>
 
       <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [PlaceholderAPI]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, Vault, PlaceholderAPI]"} />
       <p>{fill(c.reqBody, { material: <code>Material</code> })}</p>
 
       <SectionHeading id="estructura">{c.structTitle}</SectionHeading>

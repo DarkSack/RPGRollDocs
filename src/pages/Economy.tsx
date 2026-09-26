@@ -79,7 +79,8 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           <Th>Para qué</Th>
         </Thead>
         <tbody>
-          <Tr><Td>RPGRoll (core)</Td><Td><Badge tone="violet">depend</Badge></Td><Td>Framework de GUIs y utilidades compartidas.</Td></Tr>
+          <Tr><Td>RPGRoll-Lib</Td><Td><Badge tone="violet">depend</Badge></Td><Td>Framework de GUIs y utilidades compartidas.</Td></Tr>
+          <Tr><Td>RPGRoll (core)</Td><Td><Badge>softdepend</Badge></Td><Td>Solo orden de carga: Economy funciona completo sin el core.</Td></Tr>
           <Tr><Td>Vault</Td><Td><Badge>softdepend</Badge></Td><Td>RPGRoll-Economy se registra como <strong>proveedor</strong> del servicio Economy — no lo consume, lo implementa.</Td></Tr>
           <Tr><Td>PlaceholderAPI</Td><Td><Badge>softdepend</Badge></Td><Td>Placeholders <code>%rpgeconomy_...%</code>.</Td></Tr>
           <Tr><Td>RPGRoll-Guilds</Td><Td><Badge>softdepend</Badge></Td><Td>Integración activa: impuesto territorial periódico por guild (ver "Integración activa" más abajo).</Td></Tr>

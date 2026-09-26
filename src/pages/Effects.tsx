@@ -106,7 +106,7 @@ export function Effects({
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Guilds]"}
+        code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, RPGRoll-Guilds]"}
       />
       <p>
         Sin{" "}
@@ -374,11 +374,11 @@ export function Effects({
         <tbody>
           <Tr>
             <Td className="font-mono text-xs">LEVEL_MIN / LEVEL_MAX</Td>
-            <Td>Nivel del jugador (vía RPGRollAPI).</Td>
+            <Td>Nivel del personaje (del core, vía RPGRoll-Lib; sin el core no aplica).</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">RACE / CLASS / JOB</Td>
-            <Td>Raza / clase / profesión actual.</Td>
+            <Td>Raza / clase / profesión actual (sin el core no aplica).</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">WORLD / WEATHER / TIME_RANGE</Td>
@@ -394,8 +394,8 @@ export function Effects({
           <Tr>
             <Td className="font-mono text-xs">MANA_BELOW / MANA_ABOVE</Td>
             <Td>
-              Porcentaje de maná actual (<code>CombatStats</code> de
-              RPGRollAPI).
+              Porcentaje de maná actual del personaje (del core, vía
+              RPGRoll-Lib; sin el core no aplica).
             </Td>
           </Tr>
           <Tr>

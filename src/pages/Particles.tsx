@@ -62,7 +62,7 @@ export function Particles({ onNavigate }: { onNavigate: (slug: string) => void }
       </Callout>
 
       <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll]"} />
       <p>{fill(c.reqBody, { cm: <code>ContentManager</code> })}</p>
 
       <SectionHeading id="modelo">{c.modelTitle}</SectionHeading>

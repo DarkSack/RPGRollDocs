@@ -96,12 +96,13 @@ export function Requirements({ onNavigate }: { onNavigate: (slug: string) => voi
       <p>{fill(c.platformBody, { paper: <strong>Paper</strong> })}</p>
 
       <SectionHeading id="instalacion">{c.installTitle}</SectionHeading>
-      <p>{fill(c.installLead, { dir: <code>plugins/</code> })}</p>
+      <p>{fill(c.installLead, { dir: <code>plugins/</code>, lib: <code>RPGRoll-Lib.jar</code> })}</p>
       <CodeBlock
         language="bash"
         filename="plugins/"
         code={
           `plugins/\n` +
+          `  RPGRoll-Lib.jar        # ${c.cLib}\n` +
           `  RPGRoll.jar            # ${c.cCore}\n` +
           `  RPGRoll-Items.jar      # ${c.cAddons}\n` +
           `  RPGRoll-Quests.jar\n` +
@@ -116,6 +117,9 @@ export function Requirements({ onNavigate }: { onNavigate: (slug: string) => voi
 
       <SectionHeading id="dependencias-duras">{c.hardTitle}</SectionHeading>
       <p>{fill(c.hardLead, { soft: <code>softdepend</code> })}</p>
+      {hardThirdParty.length === 0 ? (
+        <p>{c.hardNone}</p>
+      ) : (
       <Table>
         <Thead>
           <Th>{c.thAddon}</Th>
@@ -134,6 +138,7 @@ export function Requirements({ onNavigate }: { onNavigate: (slug: string) => voi
           ))}
         </tbody>
       </Table>
+      )}
       <p>
         {c.hardAfter} <Go to="integraciones">{pageLabel("integraciones", locale)}</Go>.
       </p>

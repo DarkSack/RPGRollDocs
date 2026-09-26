@@ -77,7 +77,7 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll, RPGRoll-Mobs, RPGRoll-Guilds]\nsoftdepend: [RPGRoll-Items, RPGRoll-Quests, PlaceholderAPI, WorldEdit]"}
+        code={"depend: [RPGRoll-Lib, RPGRoll-Mobs, RPGRoll-Guilds]\nsoftdepend: [RPGRoll, Vault, RPGRoll-Items, RPGRoll-Quests, PlaceholderAPI, WorldEdit]"}
       />
       <Callout tone="warning" title="Dos dependencias duras, no soft">
         A diferencia de casi todos los demás addons de RPGRoll, Dungeons <strong>no</strong> puede correr sin

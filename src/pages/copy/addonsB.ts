@@ -14,7 +14,7 @@ const es = {
 
     reqTitle: "Requisitos",
     reqBody:
-      "La dependencia con RPGRoll es solo para reusar el framework de contenido ({cm}) y de GUIs compartido — la lógica de partículas/sonidos en sí no toca ningún dato de RPGRollAPI.",
+      "La única dependencia es RPGRoll-Lib, para reusar el framework de contenido ({cm}) y de GUIs compartido — la lógica de partículas/sonidos no toca ningún dato de personaje, así que funciona igual sin el core.",
 
     modelTitle: "Un efecto es una secuencia de pasos",
     modelBody:
@@ -198,7 +198,7 @@ const en: AddonsBCopy = {
 
     reqTitle: "Requirements",
     reqBody:
-      "The dependency on RPGRoll is only to reuse the shared content ({cm}) and GUI framework — the particle/sound logic itself never touches any RPGRollAPI data.",
+      "The only dependency is RPGRoll-Lib, to reuse the shared content ({cm}) and GUI framework — the particle/sound logic never touches any character data, so it works the same without the core.",
 
     modelTitle: "An effect is a sequence of steps",
     modelBody:
@@ -380,7 +380,7 @@ const pt: AddonsBCopy = {
 
     reqTitle: "Requisitos",
     reqBody:
-      "A dependência com o RPGRoll é só para reutilizar o framework de conteúdo ({cm}) e de GUIs compartilhado — a lógica de partículas/sons em si não toca nenhum dado da RPGRollAPI.",
+      "A única dependência é o RPGRoll-Lib, para reutilizar o framework de conteúdo ({cm}) e de GUIs compartilhado — a lógica de partículas/sons não toca nenhum dado de personagem, então funciona igual sem o núcleo.",
 
     modelTitle: "Um efeito é uma sequência de passos",
     modelBody:

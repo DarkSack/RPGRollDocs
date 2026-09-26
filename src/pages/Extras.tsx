@@ -9,6 +9,7 @@ import {
   Tr,
   Td,
   Badge,
+  Kbd,
   PrevNext,
   YamlBuilder,
   type YamlField,
@@ -97,7 +98,7 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll]\nsoftdepend: [RPGRoll-TAB, RPGRoll-Seasons, PlaceholderAPI, Vault]"
+          "depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-TAB, RPGRoll-Seasons, PlaceholderAPI, Vault]"
         }
       />
       <p>
@@ -208,6 +209,20 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
           underwater: <code>underwater</code>,
         })}
       </p>
+
+      <SectionHeading id="afk">{c.afkTitle}</SectionHeading>
+      <p>
+        {fill(c.afkBody, {
+          idle: <code>idle-seconds</code>,
+          pause: <code>pause-stats: false</code>,
+          reload: <Kbd>/extrasadmin reload</Kbd>,
+        })}
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="config.yml"
+        code={"afk:\n  pause-stats: true\n  idle-seconds: 300 # 5 minutos\n"}
+      />
 
       <SectionHeading id="consumo">{c.consumeTitle}</SectionHeading>
       <p>

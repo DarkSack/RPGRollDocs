@@ -230,6 +230,11 @@ const es = {
     gainBody:
       "{listener} otorga XP al matar un mob, con montos configurables por tipo de entidad en {key} (10 por defecto si el tipo no está listado explícitamente).",
     maxLevel: "Nivel máximo: 100 ({key}).",
+    bonusTitle: "Bonos de experiencia",
+    bonusBody:
+      "La XP que se gana jugando —al matar mobs, en las recompensas de RPGRoll-Quests y en las recetas de RPGRoll-Crafting— recibe un bono en porcentaje. Los comandos de admin, como {addxp}, dan la cantidad exacta.",
+    bonusPerm:
+      "El bono base sale de los permisos {perm}: {example} da +10 %. Si el jugador tiene varios gana el mayor, no se suman, así un rango que hereda de otro no cobra los dos. Encima se suma lo que registren los addons: RPGRoll-Ascension aporta el bono de prestigio y el permanente de legado.",
     formulaTitle: "Fórmula de experiencia requerida",
     formula: "XP requerida para nivel N = base_exp × N ^ exp_multiplier   (100 × N^1.5 por defecto)",
 
@@ -482,6 +487,11 @@ const en: CoreCopy = {
     gainBody:
       "{listener} grants XP on killing a mob, with amounts configurable per entity type in {key} (10 by default if the type is not listed explicitly).",
     maxLevel: "Maximum level: 100 ({key}).",
+    bonusTitle: "Experience bonuses",
+    bonusBody:
+      "XP earned by playing — killing mobs, RPGRoll-Quests rewards and RPGRoll-Crafting recipes — gets a percentage bonus. Admin commands, such as {addxp}, give the exact amount.",
+    bonusPerm:
+      "The base bonus comes from {perm} permissions: {example} gives +10%. If the player has several, the highest wins — they do not add up — so a rank inheriting from another does not collect both. On top of that comes whatever addons register: RPGRoll-Ascension contributes the prestige bonus and the permanent legacy bonus.",
     formulaTitle: "Required experience formula",
     formula: "XP required for level N = base_exp × N ^ exp_multiplier   (100 × N^1.5 by default)",
 
@@ -732,6 +742,11 @@ const pt: CoreCopy = {
     gainBody:
       "{listener} concede XP ao matar um mob, com valores configuráveis por tipo de entidade em {key} (10 por padrão se o tipo não estiver listado explicitamente).",
     maxLevel: "Nível máximo: 100 ({key}).",
+    bonusTitle: "Bônus de experiência",
+    bonusBody:
+      "A XP ganha jogando — ao matar mobs, nas recompensas do RPGRoll-Quests e nas receitas do RPGRoll-Crafting — recebe um bônus em porcentagem. Os comandos de admin, como {addxp}, dão a quantidade exata.",
+    bonusPerm:
+      "O bônus base vem das permissões {perm}: {example} dá +10%. Se o jogador tiver várias, vale a maior — não se somam —, então um rank que herda de outro não recebe as duas. Por cima soma-se o que os addons registrarem: o RPGRoll-Ascension contribui com o bônus de prestígio e o permanente de legado.",
     formulaTitle: "Fórmula de experiência necessária",
     formula: "XP necessária para o nível N = base_exp × N ^ exp_multiplier   (100 × N^1.5 por padrão)",
 

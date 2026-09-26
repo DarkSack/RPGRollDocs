@@ -60,6 +60,7 @@ export const nav: NavSection[] = [
       { slug: "tab", label: "TAB" },
       { slug: "extras", label: "Extras" },
       { slug: "traps", label: "Traps & Defenses" },
+      { slug: "pass", label: "Pase de temporada" },
     ],
   },
   {

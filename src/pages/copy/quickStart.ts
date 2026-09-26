@@ -36,11 +36,12 @@ const es = {
   s2: {
     title: "Instalá el núcleo",
     lead1: "Todo el ecosistema se instala dejando jars en",
-    lead2: "Lo único obligatorio es el núcleo: los addons vienen después, y ninguno es necesario para arrancar.",
-    comment: "el núcleo — esto es todo lo que necesitás por ahora",
+    lead2: "Para empezar alcanzan dos: RPGRoll-Lib, la librería compartida que necesitan todos los módulos (gratis), y el núcleo. Los addons vienen después, y ninguno es necesario para arrancar.",
+    libComment: "la librería compartida — la piden todos los módulos",
+    comment: "el núcleo — con esto alcanza por ahora",
     calloutTitle: "Empezá solo con el núcleo",
     calloutBody:
-      "Es tentador copiar los 23 addons de una. No lo hagas en la primera vuelta: si algo falla, con un solo jar sabés exactamente dónde mirar. Los addons se suman en el paso 06.",
+      "Es tentador copiar los 24 addons de una. No lo hagas en la primera vuelta: si algo falla, con un solo jar sabés exactamente dónde mirar. Los addons se suman en el paso 06.",
   },
 
   s3: {
@@ -132,11 +133,12 @@ const en: QuickStartCopy = {
   s2: {
     title: "Install the core",
     lead1: "The whole ecosystem installs by dropping jars into",
-    lead2: "Only the core is mandatory: addons come later, and none of them are needed to start.",
+    lead2: "Two are enough to start: RPGRoll-Lib, the shared library every module needs (free), and the core. Addons come later, and none of them are needed to start.",
+    libComment: "the shared library — every module asks for it",
     comment: "the core — this is all you need for now",
     calloutTitle: "Start with the core alone",
     calloutBody:
-      "It is tempting to copy all 23 addons at once. Don't, on the first pass: with a single jar, if something fails you know exactly where to look. Addons come in step 06.",
+      "It is tempting to copy all 24 addons at once. Don't, on the first pass: with a single jar, if something fails you know exactly where to look. Addons come in step 06.",
   },
 
   s3: {
@@ -225,11 +227,12 @@ const pt: QuickStartCopy = {
   s2: {
     title: "Instale o núcleo",
     lead1: "Todo o ecossistema se instala colocando jars em",
-    lead2: "Só o núcleo é obrigatório: os addons vêm depois, e nenhum é necessário para iniciar.",
+    lead2: "Para começar bastam dois: o RPGRoll-Lib, a biblioteca compartilhada que todos os módulos precisam (grátis), e o núcleo. Os addons vêm depois, e nenhum é necessário para iniciar.",
+    libComment: "a biblioteca compartilhada — todos os módulos a pedem",
     comment: "o núcleo — isto é tudo o que você precisa por agora",
     calloutTitle: "Comece só com o núcleo",
     calloutBody:
-      "É tentador copiar os 23 addons de uma vez. Não faça isso na primeira volta: com um único jar, se algo falhar você sabe exatamente onde olhar. Os addons entram no passo 06.",
+      "É tentador copiar os 24 addons de uma vez. Não faça isso na primeira volta: com um único jar, se algo falhar você sabe exatamente onde olhar. Os addons entram no passo 06.",
   },
 
   s3: {

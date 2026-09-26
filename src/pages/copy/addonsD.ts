@@ -33,6 +33,9 @@ const es = {
     sfMax: "Máximo",
     sfStart: "Valor inicial",
 
+    afkTitle: "Jugadores AFK",
+    afkBody:
+      "Tras {idle} segundos sin tocar nada —moverse, girar la cámara, chatear, golpear— los stats del jugador se congelan: la sed no baja, la fatiga no sube y tampoco regeneran, hasta que vuelva a hacer algo. Los umbrales ya alcanzados siguen aplicando sus efectos. Se desactiva con {pause}; tras cambiarlo, {reload}.",
     activityTitle: "Activity State Resolver",
     activityBody:
       "Las reglas de {regen} pueden condicionar por actividad del jugador: {states}. El resolver NO chequea esto por tick — se apoya en timestamps de eventos reales (último movimiento, último daño recibido o infligido) para clasificar barato en cada evaluación. También acepta condiciones ambientales con prefijo: {prefixes}, y la palabra clave especial {underwater} (jugador sumergido en líquido).",
@@ -267,6 +270,9 @@ const en: AddonsDCopy = {
     sfMax: "Maximum",
     sfStart: "Starting value",
 
+    afkTitle: "AFK players",
+    afkBody:
+      "After {idle} seconds without touching anything — moving, turning the camera, chatting, hitting — the player's stats freeze: thirst does not drop, fatigue does not rise and they do not regenerate either, until the player does something again. Thresholds already reached keep applying their effects. Turn it off with {pause}; after changing it, {reload}.",
     activityTitle: "Activity State Resolver",
     activityBody:
       "{regen} rules can be conditioned on player activity: {states}. The resolver does NOT check this per tick — it leans on timestamps from real events (last movement, last damage taken or dealt) to classify cheaply on each evaluation. It also accepts prefixed environmental conditions: {prefixes}, and the special keyword {underwater} (player submerged in a liquid).",
@@ -499,6 +505,9 @@ const pt: AddonsDCopy = {
     sfMax: "Máximo",
     sfStart: "Valor inicial",
 
+    afkTitle: "Jogadores AFK",
+    afkBody:
+      "Depois de {idle} segundos sem tocar em nada — mover-se, girar a câmera, conversar, bater — os stats do jogador congelam: a sede não cai, a fadiga não sobe e também não regeneram, até ele voltar a fazer algo. Os limites já alcançados continuam aplicando os seus efeitos. Desativa-se com {pause}; depois de mudar, {reload}.",
     activityTitle: "Activity State Resolver",
     activityBody:
       "As regras de {regen} podem condicionar por atividade do jogador: {states}. O resolver NÃO verifica isso por tick — apoia-se em timestamps de eventos reais (último movimento, último dano recebido ou causado) para classificar barato a cada avaliação. Também aceita condições ambientais com prefixo: {prefixes}, e a palavra-chave especial {underwater} (jogador submerso em líquido).",

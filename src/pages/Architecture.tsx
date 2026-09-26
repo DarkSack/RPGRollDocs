@@ -144,9 +144,10 @@ export function Architecture({ onNavigate }: { onNavigate: (slug: string) => voi
           jar: <code>core-&lt;version&gt;.jar</code>,
           modules: (
             <>
-              <code>api</code> + <code>common</code> + <code>core</code>
+              <code>api</code> + <code>core</code>
             </>
           ),
+          common: <code>common</code>,
           driver: <code>sqlite-jdbc</code>,
           relocated: <code>com.sack.rpgroll.libs.sqlite</code>,
         })}
@@ -176,7 +177,7 @@ export function Architecture({ onNavigate }: { onNavigate: (slug: string) => voi
           core: <code>core</code>,
           classes: (
             <>
-              <code>InventoryGUI</code>, <code>ItemBuilder</code>, <code>RPGRollAPI</code>
+              <code>RPGRollAPI</code>, <code>RPGPlayer</code>
             </>
           ),
           compileCore: <code>compileOnly(project(":core"))</code>,
@@ -190,6 +191,39 @@ export function Architecture({ onNavigate }: { onNavigate: (slug: string) => voi
           shadow: <code>com.gradleup.shadow</code>,
           core: <code>core</code>,
         })}
+      </Callout>
+
+      <SectionHeading id="rpgroll-lib">{c.libTitle}</SectionHeading>
+      <p>
+        {fill(c.libBody, {
+          common: <code>common</code>,
+          lib: <strong>RPGRoll-Lib</strong>,
+          depend: <code>depend</code>,
+          listener: <code>GUIListener</code>,
+        })}
+      </p>
+      <CodeBlock
+        language="text"
+        code={
+          "RPGRoll-Lib (:common)            ← depend de todos los módulos\n" +
+          "├── common.content / lang / yaml  ContentManager, LangManager, YamlLoader\n" +
+          "├── common.command                BrigadierCommands\n" +
+          "├── common.character              Characters, RPGCharacters, CharacterLevelUpEvent\n" +
+          "├── common.integration            VaultEconomy\n" +
+          "├── gui                           InventoryGUI, ItemBuilder, GUIListener\n" +
+          "└── util                          ComponentUtils, TabCompleteUtil\n"
+        }
+      />
+      <p>
+        {fill(c.libModules, {
+          characters: <code>Characters.get()</code>,
+          vault: <code>VaultEconomy.get()</code>,
+          event: <code>CharacterLevelUpEvent</code>,
+        })}
+      </p>
+      <p>{c.libWithoutCore}</p>
+      <Callout tone="warning" title={c.libLicenseTitle}>
+        {fill(c.libLicenseBody, { licensing: <code>:licensing</code> })}
       </Callout>
 
       <SectionHeading id="componentutils">{c.textTitle}</SectionHeading>

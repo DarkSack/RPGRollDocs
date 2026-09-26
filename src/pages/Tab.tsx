@@ -47,7 +47,7 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </PageHeader>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [ProtocolLib, PlaceholderAPI]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, ProtocolLib, PlaceholderAPI]"} />
       <p>
         Funciona completo sin ProtocolLib (header/footer, sorting, teams, nametag multi-línea, belowname,
         sidebar, bossbars — todo vía API nativa de Paper/Adventure). Con ProtocolLib instalado se suma el control

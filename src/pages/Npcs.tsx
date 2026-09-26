@@ -63,54 +63,61 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
   return (
     <>
       <PageHeader title="NPCs (RPGRoll-NPCs)">
-        Un addon <strong>separado</strong> de RPGRoll: NPCs interactuables renderizados como jugadores falsos vía
-        paquetes de ProtocolLib, con acciones y condiciones que se enganchan al RPGRoll real.
+        Un addon <strong>separado</strong> de RPGRoll: NPCs interactuables con forma de jugador (Mannequins nativos
+        del servidor), con acciones y condiciones que se enganchan a los personajes de RPGRoll cuando el core está
+        instalado.
       </PageHeader>
 
       <Callout tone="info" title="Es un plugin distinto, con su propio jar">
-        A diferencia de todo lo demás en esta documentación, <code>RPGRoll-NPCs</code> no vive dentro del jar de{" "}
-        <code>core</code> — es su propio plugin (<code>npcs/</code>, módulo Gradle separado) que se instala junto a
-        RPGRoll y depende de él a través de <code>RPGRollAPI</code>.
+        <code>RPGRoll-NPCs</code> no vive dentro del jar de <code>core</code> — es su propio plugin (<code>npcs/</code>,
+        módulo Gradle separado). Solo necesita <code>RPGRoll-Lib</code>; el core es opcional y, si está, las
+        condiciones de nivel, raza, clase y oficio leen el personaje del jugador.
       </Callout>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <p>Declarado en su <code>plugin.yml</code>:</p>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll, ProtocolLib]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-Quests]"} />
       <ul>
-        <li><strong>RPGRoll</strong> — para <code>RPGRollAPI</code> (usado por las condiciones) y el framework de GUIs (<code>InventoryGUI</code>/<code>ItemBuilder</code>).</li>
+        <li><strong>RPGRoll-Lib</strong> — framework de GUIs (<code>InventoryGUI</code>/<code>ItemBuilder</code>) y el acceso a los personajes.</li>
         <li>
-          <strong>ProtocolLib</strong> — tiene que estar instalado como plugin real en el servidor. Es lo que
-          permite renderizar los NPCs como jugadores falsos a nivel de paquete, sin crear entidades reales.
+          <strong>RPGRoll</strong> (opcional) — sin el core, las condiciones <code>MIN_LEVEL</code>,{" "}
+          <code>HAS_RACE</code>, <code>HAS_CLASS</code>, <code>HAS_JOB</code> y <code>MIN_JOB_LEVEL</code> no se
+          cumplen; <code>HAS_ITEM</code> y todas las acciones funcionan igual.
         </li>
+        <li><strong>RPGRoll-Quests</strong> (opcional) — acciones y condiciones de misión.</li>
       </ul>
       <Callout tone="tip">
         Compilá con <Kbd>./gradlew :npcs:build</Kbd> — el jar queda en{" "}
         <code>npcs/build/libs/npcs-&lt;version&gt;.jar</code> (no el <code>-plain.jar</code>). Igual que{" "}
-        <code>core</code>, usa Shadow para empaquetar OkHttp (necesario para hablar con la API de MineSkin) — pero{" "}
-        <code>ProtocolLib</code> y <code>Gson</code> quedan afuera a propósito (el primero porque debe ser la{" "}
-        <em>misma</em> instancia que corre en el servidor, el segundo porque Paper ya lo trae).
+        <code>core</code>, usa Shadow para empaquetar OkHttp (necesario para hablar con la API de MineSkin); Gson queda
+        afuera porque Paper ya lo trae. Ya no hace falta ProtocolLib.
       </Callout>
 
       <SectionHeading id="como-funciona">Cómo funcionan los NPCs</SectionHeading>
       <p>
-        Un NPC no es una entidad real de Minecraft — es una ilusión mantenida a punta de paquetes (
-        <code>FakePlayerRenderer</code>): se le asigna un UUID y un entityId fijos, y se envían los paquetes{" "}
-        <code>PLAYER_INFO</code> (para que el cliente pueda mostrar la skin), <code>SPAWN_ENTITY</code>, y{" "}
-        <code>ENTITY_METADATA</code> (pose) solo a los jugadores cercanos.
+        Cada NPC es un <code>Mannequin</code>: la entidad con forma de jugador que trae el propio servidor. Lleva
+        nombre con formato, skin, pose y rotación, lo ven todos los jugadores (también los de Bedrock vía Geyser) y
+        los clics llegan como eventos normales de Bukkit. Antes se dibujaban jugadores falsos con paquetes de
+        ProtocolLib, lo que se rompía con cada versión nueva del protocolo.
       </p>
       <ul>
         <li>
-          <strong>Visibilidad por distancia:</strong> cada NPC se muestra solo a jugadores dentro de 48 bloques,
-          recalculado en join, teletransporte, y cambios de bloque de posición (no en cada micro-movimiento).
+          <strong>El YAML es la única fuente de verdad:</strong> las entidades no se guardan con el chunk. Se crean al
+          cargar el plugin o el chunk y desaparecen al descargarse, así no quedan duplicados tras un cierre brusco.
         </li>
         <li>
-          <strong>Sin IA ni colisión real:</strong> al no ser una entidad real, un NPC no camina, no tiene
-          hitbox real más allá de lo que el cliente infiere de un jugador falso, y no interactúa con el mundo
-          por sí mismo.
+          <strong>Sin IA, daño ni colisión:</strong> el Mannequin se crea inmóvil, sin IA, invulnerable, silencioso y
+          sin colisión — no camina ni interactúa con el mundo por sí mismo.
         </li>
         <li>
-          <strong>Interacción:</strong> se detecta a nivel de paquete (<code>USE_ENTITY</code>), con un cooldown
-          de 300ms para evitar que un solo click dispare la acción varias veces.
+          <strong>Interacción:</strong> click derecho sobre la entidad, con un cooldown de 300ms para evitar que un
+          solo click dispare la acción varias veces.
+        </li>
+        <li>
+          <strong>Regiones protegidas:</strong> WorldGuard (<code>mob-spawning deny</code> con{" "}
+          <code>block-plugin-spawning</code>) y otros anti-mobs cancelan las criaturas creadas por plugins. El addon
+          deshace esa cancelación solo para sus propios NPCs; si otro plugin la vuelve a cancelar, la consola lo avisa
+          con <code>✘ NPC '&lt;id&gt;': otro plugin canceló su aparición</code>.
         </li>
       </ul>
 

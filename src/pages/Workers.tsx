@@ -57,7 +57,7 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Effects, RPGRoll-Seasons, RPGRoll-Ranching, RPGRoll-Fishing, RPGRoll-Guilds, Vault, SackResourcePack]"}
+        code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, RPGRoll-Effects, RPGRoll-Seasons, RPGRoll-Ranching, RPGRoll-Fishing, RPGRoll-Guilds, Vault, SackResourcePack]"}
       />
       <p>
         De todos los addons que el diseño original nombraba como integración (Ranching/Fishing/Mining/Blacksmith/
@@ -196,7 +196,7 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
       </Table>
       <Callout tone="warning" title="El pescador NO usa FishingAPI de verdad">
         <code>FishingAPI.forceCatch(...)</code> exige un <code>Player</code> real (lo necesita para chequear
-        nivel vía RPGRollAPI en peces legendarios), y un worker no es un jugador. Simularlo con un jugador falso
+        el nivel de personaje en peces legendarios), y un worker no es un jugador. Simularlo con un jugador falso
         sería frágil y engañoso, así que <code>FishingBehavior</code> se queda con una captura vanilla simple en
         vez de la genética/calidad rica de{" "}
         <button type="button" onClick={() => onNavigate("fishing")} className="text-violet-600 underline dark:text-violet-400">
@@ -226,8 +226,8 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
       <SectionHeading id="economia">Economía: salarios, contratos y moral</SectionHeading>
       <p>
         El worker en sí no tiene cuenta — "cobrar" es, en la práctica, un costo de mantenimiento que el empleador
-        paga con su saldo real de Vault (vía <code>RPGRollAPI.get().getEconomyProvider()</code>, ya cableado en{" "}
-        <code>:core</code> — no se inventó una economía propia). <code>HOURLY</code> se cobra en un tick
+        paga con su saldo real de Vault (vía <code>VaultEconomy</code> de RPGRoll-Lib, sea cual sea el proveedor —
+        no se inventó una economía propia). <code>HOURLY</code> se cobra en un tick
         periódico; <code>PER_TASK</code> se cobra en el momento exacto de entregar en un almacén.
       </p>
       <p>

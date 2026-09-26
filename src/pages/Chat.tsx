@@ -110,7 +110,7 @@ export function Chat({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </PageHeader>
 
       <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-Guilds, PlaceholderAPI]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-Guilds, PlaceholderAPI]"} />
       <p>{fill(c.reqBody, { guild: <code>scope: GUILD</code>, team: <code>scope: TEAM</code> })}</p>
 
       <SectionHeading id="canales">{c.channelsTitle}</SectionHeading>

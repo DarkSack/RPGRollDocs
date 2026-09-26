@@ -27,12 +27,12 @@ export const diagnostics: Diagnostic[] = [
     id: "addon-no-carga",
     symptom: "Un addon no aparece en /plugins o no carga al arrancar",
     causes: [
-      "Falta el core: todos los addons salvo SackResourcePack declaran depend: [RPGRoll]. Sin RPGRoll.jar en plugins/, Bukkit no carga el addon.",
-      "Falta una dependencia dura propia del addon. RPGRoll-NPCs declara depend: [RPGRoll, ProtocolLib] y RPGRoll-Dungeons declara depend: [RPGRoll, RPGRoll-Mobs, RPGRoll-Guilds].",
+      "Falta RPGRoll-Lib: todos los addons salvo SackResourcePack declaran depend: [RPGRoll-Lib]. Sin RPGRoll-Lib.jar en plugins/, Bukkit no carga el addon.",
+      "Falta una dependencia dura propia del addon. RPGRoll-Ascension y RPGRoll-Magic necesitan además el core (depend: [RPGRoll-Lib, RPGRoll]) y RPGRoll-Dungeons declara depend: [RPGRoll-Lib, RPGRoll-Mobs, RPGRoll-Guilds].",
       "Versión de Java incorrecta: el ecosistema compila contra Java 25.",
     ],
     fix: "Revisá la consola del arranque: Bukkit nombra la dependencia faltante. La lista completa de depend/softdepend por addon está en la página de Integraciones.",
-    slugs: ["npcs", "dungeons"],
+    slugs: ["ascension", "magic", "dungeons"],
   },
   {
     id: "placeholders-crudos",
@@ -58,9 +58,10 @@ export const diagnostics: Diagnostic[] = [
     id: "npcs-invisibles",
     symptom: "Los NPCs no aparecen",
     causes: [
-      "ProtocolLib no está instalado. Es la única dependencia dura de terceros del ecosistema: los NPCs son entidades simuladas por paquetes, y sin ProtocolLib el addon directamente no carga.",
+      "Otro plugin canceló su aparición: WorldGuard (mob-spawning deny con block-plugin-spawning) u otro anti-mobs. RPGRoll-NPCs deshace esa cancelación para sus propios Mannequins a prioridad HIGHEST; si aun así algo la cancela, la consola avisa con «✘ NPC '<id>': otro plugin canceló su aparición».",
+      "El chunk no está cargado: los NPCs no se guardan con el mundo, se crean cuando su chunk carga y desaparecen cuando se descarga.",
     ],
-    fix: "Instalá ProtocolLib como plugin real en el servidor (no sombreado dentro de un jar).",
+    fix: "Buscá el aviso ✘ NPC en la consola y ajustá la protección de región o el anti-mobs de ese mundo. Ya no hace falta ProtocolLib: los NPCs son Mannequins nativos del servidor.",
     slugs: ["npcs"],
   },
   {

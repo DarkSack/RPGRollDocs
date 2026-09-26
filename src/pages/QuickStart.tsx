@@ -83,7 +83,7 @@ export function QuickStart({ onNavigate }: { onNavigate: (slug: string) => void 
         <p>
           {c.s2.lead1} <code>plugins/</code>. {c.s2.lead2}
         </p>
-        <CodeBlock language="bash" filename="plugins/" code={`plugins/\n  RPGRoll.jar      # ${c.s2.comment}`} />
+        <CodeBlock language="bash" filename="plugins/" code={`plugins/\n  RPGRoll-Lib.jar  # ${c.s2.libComment}\n  RPGRoll.jar      # ${c.s2.comment}`} />
         <Callout tone="tip" title={c.s2.calloutTitle}>
           {c.s2.calloutBody}
         </Callout>

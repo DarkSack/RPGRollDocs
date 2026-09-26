@@ -13,7 +13,7 @@ const es = {
     apiCard:
       "Contrato público para addons: {types}, y los eventos que no exponen tipos internos. Sin dependencias — módulo hoja puro.",
     commonCard:
-      "Framework genérico de carga de contenido YAML ({managers}) y {loader}. También sin dependencias — solo usa la API de Paper.",
+      "Framework genérico de carga de contenido YAML ({managers}) y {loader}, más menús, idiomas y comandos. Solo usa la API de Paper, y se distribuye como el plugin RPGRoll-Lib.",
     coreCard: "La implementación completa: jugadores, base de datos, comandos, GUIs, combate, trabajos. Depende de {deps}.",
 
     graphTitle: "Grafo de dependencias",
@@ -39,17 +39,28 @@ const es = {
 
     shadowTitle: "Empaquetado (Shadow)",
     shadowBody:
-      "Solo {file} aplica el plugin {shadow}. El jar final ({jar}) bundlea las clases de {modules} + el driver {driver} (con sus binarios nativos para todas las plataformas), y reubica el paquete de sqlite-jdbc a {relocated} para evitar choques con otros plugins que también lo empaqueten.",
+      "Solo {file} aplica el plugin {shadow}. El jar final ({jar}) bundlea las clases de {modules} + el driver {driver} (con sus binarios nativos para todas las plataformas), y reubica el paquete de sqlite-jdbc a {relocated} para evitar choques con otros plugins que también lo empaqueten. {common} ya no va adentro: en runtime lo aporta el plugin RPGRoll-Lib.",
     shadowJar: "este es el que va a plugins/ (shadow jar, todo bundleado)",
     shadowPlain: "solo las clases de core, sin dependencias (no usar directamente)",
 
     addonsTitle: "Módulos de addon (ej. npcs)",
     addonsBody1: "Un addon como",
     addonsBody2:
-      "es su propio módulo Gradle (propio {build}, propio {pluginYml}, propio jar) que aplica {addonConv} en vez de {pluginConv} directamente. Esa convención agrega automáticamente Paper API + {compileApi} + {compileCommon}. Si el addon también necesita clases que viven físicamente en {core} (como {classes}), tiene que agregar {compileCore} él mismo — {addonConvShort} no lo incluye por defecto, porque en teoría un addon “puro” solo debería necesitar el contrato de {api}.",
+      "es su propio módulo Gradle (propio {build}, propio {pluginYml}, propio jar) que aplica {addonConv} en vez de {pluginConv} directamente. Esa convención agrega Paper API + {compileApi} + {compileCommon} y embebe el módulo de licencias en el jar — nada del core. Un addon que necesite clases que viven físicamente en {core} (como {classes}) tiene que agregar {compileCore} él mismo: hoy solo Ascension y Magic lo hacen. El resto lee el personaje a través de RPGRoll-Lib (ver la sección siguiente).",
     addonsTipTitle: "Cada addon decide su propio empaquetado",
     addonsTipBody:
       "{npcs} tiene su propio {shadow} configurado por separado del de {core}, porque necesita bundlear y reubicar sus propias dependencias externas (OkHttp, en su caso) sin tocar el jar principal del plugin.",
+
+    libTitle: "RPGRoll-Lib: la librería compartida",
+    libBody:
+      "{common} se distribuye como un plugin propio, {lib}: gratis, sin licencia, y en el {depend} de todos los módulos. Paper deja que un plugin vea las clases de los que declara en depend/softdepend, así que en runtime todo el ecosistema usa la misma copia — un solo {listener} y un solo registro de menús abiertos.",
+    libModules:
+      "Gracias a eso los módulos ya no compilan contra el core. Lo que necesitan del personaje lo leen con {characters}, que queda vacío si el core no está; la economía la toman de Vault con {vault}; y las subidas de nivel las escuchan como {event}. Solo Ascension y Magic, que trabajan sobre el personaje en sí (prestigio, maná y stats de combate), siguen con el core en depend.",
+    libWithoutCore:
+      "Sin el core no hay personajes. Cada módulo decide qué hacer con sus requisitos de personaje —Quests, Items y Fishing los ignoran; las condiciones de Crafting y NPCs no se cumplen— y la EXP de personaje simplemente no se entrega. Todo lo demás funciona igual.",
+    libLicenseTitle: "La licencia no vive en la librería",
+    libLicenseBody:
+      "{licensing} va embebido en el jar de cada módulo. Si viviera en RPGRoll-Lib, que es gratis y va aparte, reemplazar ese único jar por uno modificado desbloquearía todos los módulos a la vez.",
 
     textTitle: "Colores y formato de texto — ComponentUtils",
     textBody:
@@ -110,6 +121,15 @@ const es = {
     evLeaveJob: "Un jugador abandona un trabajo.",
     exampleFile: "MiListener.java — ejemplo cancelando un join a trabajo",
 
+    noCoreTitle: "Addons que no dependen del core",
+    noCoreBody:
+      "Si tu addon solo necesita leer el personaje, no hace falta atarlo al core: declará {depend} y {soft} en tu {pluginYml}, compilá contra {common} y pedí los datos a RPGRoll-Lib. Si el core no está instalado, {get} devuelve vacío y tu addon sigue funcionando.",
+    noCoreIface: "Lo que expone {iface} (todo por UUID; sin personaje devuelve valores neutros: 0, vacío o false):",
+    rBonusService: "suma los bonos de EXP del jugador (ver abajo)",
+    expTitle: "Bonos de experiencia",
+    expBody:
+      "{service} aplica un bono a la EXP de personaje que se gana jugando (mobs, recompensas de misiones, recetas); los comandos de admin no pasan por él. El bono es el mayor permiso {perm} del jugador —no se acumulan entre sí— más lo que registre cada addon. RPGRoll-Ascension, por ejemplo, registra el bono de prestigio. Un addon con el core puede sumar el suyo:",
+
     whereTitle: "Dónde viven estos archivos, físicamente",
     whereBody:
       "{apiTypes} y dos de los eventos ({apiEvents}) viven en el módulo {api}, sin ninguna dependencia de {core}. {facade} y los 3 eventos que exponen {rpgPlayer} viven físicamente en {core} (para poder usar sus clases concretas), pero conservan el paquete {pkg} para que el código de tu addon no note la diferencia. Más detalle en",
@@ -129,7 +149,7 @@ const en: DevelopersCopy = {
     apiCard:
       "Public contract for addons: {types}, and the events that do not expose internal types. No dependencies — a pure leaf module.",
     commonCard:
-      "Generic YAML content-loading framework ({managers}) and {loader}. Also dependency-free — it only uses the Paper API.",
+      "Generic YAML content-loading framework ({managers}) and {loader}, plus menus, languages and commands. It only uses the Paper API, and ships as the RPGRoll-Lib plugin.",
     coreCard: "The full implementation: players, database, commands, GUIs, combat, jobs. Depends on {deps}.",
 
     graphTitle: "Dependency graph",
@@ -155,17 +175,28 @@ const en: DevelopersCopy = {
 
     shadowTitle: "Packaging (Shadow)",
     shadowBody:
-      "Only {file} applies the {shadow} plugin. The final jar ({jar}) bundles the classes from {modules} + the {driver} driver (with its native binaries for every platform), and relocates the sqlite-jdbc package to {relocated} to avoid clashes with other plugins that also bundle it.",
+      "Only {file} applies the {shadow} plugin. The final jar ({jar}) bundles the classes from {modules} + the {driver} driver (with its native binaries for every platform), and relocates the sqlite-jdbc package to {relocated} to avoid clashes with other plugins that also bundle it. {common} is no longer inside: at runtime the RPGRoll-Lib plugin provides it.",
     shadowJar: "this is the one that goes into plugins/ (shadow jar, everything bundled)",
     shadowPlain: "core classes only, no dependencies (do not use directly)",
 
     addonsTitle: "Addon modules (e.g. npcs)",
     addonsBody1: "An addon like",
     addonsBody2:
-      "is its own Gradle module (its own {build}, its own {pluginYml}, its own jar) that applies {addonConv} instead of {pluginConv} directly. That convention automatically adds the Paper API + {compileApi} + {compileCommon}. If the addon also needs classes that live physically in {core} (such as {classes}), it has to add {compileCore} itself — {addonConvShort} does not include it by default, because in theory a “pure” addon should only need the {api} contract.",
+      "is its own Gradle module (its own {build}, its own {pluginYml}, its own jar) that applies {addonConv} instead of {pluginConv} directly. That convention adds the Paper API + {compileApi} + {compileCommon} and embeds the licensing module in the jar — nothing from the core. An addon that needs classes living physically in {core} (such as {classes}) has to add {compileCore} itself: today only Ascension and Magic do. The rest read the character through RPGRoll-Lib (see the next section).",
     addonsTipTitle: "Every addon decides its own packaging",
     addonsTipBody:
       "{npcs} has its own {shadow} configured separately from {core}'s, because it needs to bundle and relocate its own external dependencies (OkHttp, in its case) without touching the plugin's main jar.",
+
+    libTitle: "RPGRoll-Lib: the shared library",
+    libBody:
+      "{common} ships as a plugin of its own, {lib}: free, unlicensed, and in the {depend} of every module. Paper lets a plugin see the classes of the ones it declares in depend/softdepend, so at runtime the whole ecosystem uses the same copy — a single {listener} and a single registry of open menus.",
+    libModules:
+      "Thanks to that, modules no longer compile against the core. What they need from the character they read with {characters}, which is empty when the core is not installed; they take the economy from Vault with {vault}; and they listen to level-ups as {event}. Only Ascension and Magic, which work on the character itself (prestige, mana and combat stats), keep the core in depend.",
+    libWithoutCore:
+      "Without the core there are no characters. Each module decides what to do with its character requirements — Quests, Items and Fishing ignore them; Crafting and NPC conditions are not met — and character EXP is simply not granted. Everything else works the same.",
+    libLicenseTitle: "Licensing does not live in the library",
+    libLicenseBody:
+      "{licensing} is embedded in every module's jar. If it lived in RPGRoll-Lib, which is free and ships separately, replacing that single jar with a modified one would unlock every module at once.",
 
     textTitle: "Colours and text formatting — ComponentUtils",
     textBody:
@@ -226,6 +257,15 @@ const en: DevelopersCopy = {
     evLeaveJob: "A player leaves a job.",
     exampleFile: "MyListener.java — example cancelling a job join",
 
+    noCoreTitle: "Addons that do not depend on the core",
+    noCoreBody:
+      "If your addon only needs to read the character, there is no need to tie it to the core: declare {depend} and {soft} in your {pluginYml}, compile against {common} and ask RPGRoll-Lib for the data. When the core is not installed, {get} returns empty and your addon keeps working.",
+    noCoreIface: "What {iface} exposes (all by UUID; without a character it returns neutral values: 0, empty or false):",
+    rBonusService: "adds up the player's EXP bonuses (see below)",
+    expTitle: "Experience bonuses",
+    expBody:
+      "{service} applies a bonus to the character EXP earned by playing (mobs, quest rewards, recipes); admin commands do not go through it. The bonus is the player's highest {perm} permission — they do not stack with each other — plus whatever each addon registers. RPGRoll-Ascension, for example, registers the prestige bonus. An addon with the core can add its own:",
+
     whereTitle: "Where these files live, physically",
     whereBody:
       "{apiTypes} and two of the events ({apiEvents}) live in the {api} module, with no dependency on {core}. {facade} and the 3 events that expose {rpgPlayer} live physically in {core} (so they can use its concrete classes), but keep the {pkg} package so your addon's code does not notice the difference. More detail in",
@@ -243,7 +283,7 @@ const pt: DevelopersCopy = {
     apiCard:
       "Contrato público para addons: {types}, e os eventos que não expõem tipos internos. Sem dependências — módulo folha puro.",
     commonCard:
-      "Framework genérico de carregamento de conteúdo YAML ({managers}) e {loader}. Também sem dependências — usa só a API do Paper.",
+      "Framework genérico de carregamento de conteúdo YAML ({managers}) e {loader}, além de menus, idiomas e comandos. Usa só a API do Paper, e é distribuído como o plugin RPGRoll-Lib.",
     coreCard: "A implementação completa: jogadores, banco de dados, comandos, GUIs, combate, trabalhos. Depende de {deps}.",
 
     graphTitle: "Grafo de dependências",
@@ -269,17 +309,28 @@ const pt: DevelopersCopy = {
 
     shadowTitle: "Empacotamento (Shadow)",
     shadowBody:
-      "Só {file} aplica o plugin {shadow}. O jar final ({jar}) empacota as classes de {modules} + o driver {driver} (com os seus binários nativos para todas as plataformas), e realoca o pacote do sqlite-jdbc para {relocated} para evitar conflitos com outros plugins que também o empacotem.",
+      "Só {file} aplica o plugin {shadow}. O jar final ({jar}) empacota as classes de {modules} + o driver {driver} (com os seus binários nativos para todas as plataformas), e realoca o pacote do sqlite-jdbc para {relocated} para evitar conflitos com outros plugins que também o empacotem. {common} não vai mais dentro: em runtime quem o fornece é o plugin RPGRoll-Lib.",
     shadowJar: "este é o que vai para plugins/ (shadow jar, tudo empacotado)",
     shadowPlain: "só as classes do core, sem dependências (não usar diretamente)",
 
     addonsTitle: "Módulos de addon (ex. npcs)",
     addonsBody1: "Um addon como",
     addonsBody2:
-      "é o seu próprio módulo Gradle (próprio {build}, próprio {pluginYml}, próprio jar) que aplica {addonConv} em vez de {pluginConv} diretamente. Essa convenção adiciona automaticamente Paper API + {compileApi} + {compileCommon}. Se o addon também precisar de classes que vivem fisicamente no {core} (como {classes}), tem de adicionar {compileCore} ele mesmo — {addonConvShort} não o inclui por padrão, porque em teoria um addon “puro” só deveria precisar do contrato de {api}.",
+      "é o seu próprio módulo Gradle (próprio {build}, próprio {pluginYml}, próprio jar) que aplica {addonConv} em vez de {pluginConv} diretamente. Essa convenção adiciona Paper API + {compileApi} + {compileCommon} e embute o módulo de licenças no jar — nada do núcleo. Um addon que precise de classes que vivem fisicamente no {core} (como {classes}) tem de adicionar {compileCore} ele mesmo: hoje só Ascension e Magic fazem isso. Os demais leem o personagem através do RPGRoll-Lib (veja a seção seguinte).",
     addonsTipTitle: "Cada addon decide o seu próprio empacotamento",
     addonsTipBody:
       "{npcs} tem o seu próprio {shadow} configurado à parte do de {core}, porque precisa empacotar e realocar as suas próprias dependências externas (OkHttp, no caso) sem tocar no jar principal do plugin.",
+
+    libTitle: "RPGRoll-Lib: a biblioteca compartilhada",
+    libBody:
+      "{common} é distribuído como um plugin próprio, {lib}: grátis, sem licença, e no {depend} de todos os módulos. O Paper deixa um plugin ver as classes dos que ele declara em depend/softdepend, então em runtime todo o ecossistema usa a mesma cópia — um só {listener} e um só registro de menus abertos.",
+    libModules:
+      "Graças a isso os módulos não compilam mais contra o núcleo. O que precisam do personagem eles leem com {characters}, que fica vazio se o núcleo não estiver; a economia vem do Vault com {vault}; e as subidas de nível eles escutam como {event}. Só Ascension e Magic, que trabalham sobre o próprio personagem (prestígio, mana e stats de combate), continuam com o núcleo em depend.",
+    libWithoutCore:
+      "Sem o núcleo não há personagens. Cada módulo decide o que fazer com os seus requisitos de personagem — Quests, Items e Fishing os ignoram; as condições de Crafting e NPCs não são cumpridas — e a EXP de personagem simplesmente não é entregue. Todo o resto funciona igual.",
+    libLicenseTitle: "A licença não vive na biblioteca",
+    libLicenseBody:
+      "{licensing} vai embutido no jar de cada módulo. Se vivesse no RPGRoll-Lib, que é grátis e vai à parte, trocar esse único jar por um modificado liberaria todos os módulos de uma vez.",
 
     textTitle: "Cores e formatação de texto — ComponentUtils",
     textBody:
@@ -339,6 +390,15 @@ const pt: DevelopersCopy = {
     evJoinJob: "Um jogador tenta entrar num trabalho — um addon pode cancelar (ex. um requisito extra que o RPGRoll desconhece).",
     evLeaveJob: "Um jogador sai de um trabalho.",
     exampleFile: "MeuListener.java — exemplo cancelando a entrada num trabalho",
+
+    noCoreTitle: "Addons que não dependem do núcleo",
+    noCoreBody:
+      "Se o seu addon só precisa ler o personagem, não é preciso amarrá-lo ao núcleo: declare {depend} e {soft} no seu {pluginYml}, compile contra {common} e peça os dados ao RPGRoll-Lib. Se o núcleo não estiver instalado, {get} devolve vazio e o seu addon continua funcionando.",
+    noCoreIface: "O que {iface} expõe (tudo por UUID; sem personagem devolve valores neutros: 0, vazio ou false):",
+    rBonusService: "soma os bônus de EXP do jogador (veja abaixo)",
+    expTitle: "Bônus de experiência",
+    expBody:
+      "{service} aplica um bônus à EXP de personagem ganha jogando (mobs, recompensas de missões, receitas); os comandos de admin não passam por ele. O bônus é a maior permissão {perm} do jogador — não se acumulam entre si — mais o que cada addon registrar. O RPGRoll-Ascension, por exemplo, registra o bônus de prestígio. Um addon com o núcleo pode somar o seu:",
 
     whereTitle: "Onde estes arquivos vivem, fisicamente",
     whereBody:

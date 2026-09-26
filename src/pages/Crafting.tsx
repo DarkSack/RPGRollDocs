@@ -219,13 +219,21 @@ export function Crafting({
         </Thead>
         <tbody>
           <Tr>
-            <Td>RPGRoll (core)</Td>
+            <Td>RPGRoll-Lib</Td>
             <Td>
               <Badge tone="violet">depend</Badge>
             </Td>
+            <Td>Framework de GUIs y utilidades compartidas.</Td>
+          </Tr>
+          <Tr>
+            <Td>RPGRoll (core)</Td>
             <Td>
-              Framework de GUIs, RPGRollAPI (nivel/raza/clase/job del jugador) y
-              xp de personaje.
+              <Badge>softdepend</Badge>
+            </Td>
+            <Td>
+              Nivel, raza, clase y oficio del jugador para las condiciones LEVEL_MIN, RACE,
+              CLASS y JOB_MIN, y la xp de personaje de las recetas. Sin el core esas
+              condiciones no se cumplen y la xp se omite.
             </Td>
           </Tr>
           <Tr>

@@ -53,7 +53,7 @@ export function Traps({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </PageHeader>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-Items, RPGRoll-Effects, RPGRoll-Mobs, RPGRoll-FX, PlaceholderAPI]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-Items, RPGRoll-Effects, RPGRoll-Mobs, RPGRoll-FX, RPGRoll-Guilds, PlaceholderAPI]"} />
       <p>
         RPGRoll-Items es opcional: si está instalado, <code>required-item-id</code> reconoce ítems custom por id
         (vía <code>ItemInstanceService</code>); si no, cae a un <code>Material</code> vanilla directo en la mano.

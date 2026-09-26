@@ -24,6 +24,7 @@ import {
   WrenchIcon,
   CubeIcon,
   AlertTriangleIcon,
+  CalendarIcon,
 } from "../components/icons/Icon";
 
 export interface AddonMeta {
@@ -36,7 +37,7 @@ export interface AddonMeta {
 }
 
 /**
- * Metadata visual (ícono, blurb, tono) para los 23 addons oficiales — separado
+ * Metadata visual (ícono, blurb, tono) para los 24 addons oficiales — separado
  * de content/nav.ts a propósito para no tocar la forma de NavItem/NavSection
  * que ya consumen Sidebar/PrevNext/search.ts. Sidebar y Home leen de acá.
  */
@@ -64,6 +65,7 @@ export const addons: AddonMeta[] = [
   { slug: "tab", icon: TableListIcon, blurb: "TabList, scoreboard, nametags y bossbars por placeholders.", tone: "blue" },
   { slug: "extras", icon: WrenchIcon, blurb: "Sed, stamina, temperatura y condiciones de supervivencia.", tone: "green" },
   { slug: "traps", icon: AlertTriangleIcon, blurb: "Trampas, torretas y mecanismos configurables: triggers, condiciones, cadenas y bloques protegidos.", tone: "red" },
+  { slug: "pass", icon: CalendarIcon, blurb: "Pase de temporada gratis y premium, misiones, recompensa diaria y votos.", tone: "amber" },
 ];
 
 export function addonMeta(slug: string): AddonMeta | undefined {

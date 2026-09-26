@@ -111,7 +111,7 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-Items, RPGRoll-Quests, PlaceholderAPI, SackResourcePack]"}
+        code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, Vault, RPGRoll-Items, RPGRoll-Quests, PlaceholderAPI, SackResourcePack]"}
       />
       <p>
         Sin RPGRoll-Items ni RPGRoll-Quests instalados, todo sigue funcionando: el equipo de un mob cae a{" "}

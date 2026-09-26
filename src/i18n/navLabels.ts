@@ -39,6 +39,7 @@ export const PAGE_LABELS: Record<string, PartialLabels> = {
   quests: { es: "Misiones (Quests)", en: "Quests", pt: "Missões (Quests)" },
   mobs: { es: "Mobs y jefes", en: "Mobs & bosses", pt: "Mobs e chefes" },
   traps: { es: "Traps & Defenses", en: "Traps & defenses", pt: "Traps e defesas" },
+  pass: { en: "Season pass", pt: "Passe de temporada" },
 
   "room-designer": { es: "Diseñador de Salas", en: "Room designer", pt: "Designer de salas" },
   "tab-designer": { es: "Diseñador de TAB", en: "TAB designer", pt: "Designer de TAB" },

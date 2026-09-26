@@ -100,7 +100,7 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </dl>
       </section>
 
-      <p>{fill(c.lead, { jar: <code>RPGRoll.jar</code> })}</p>
+      <p>{fill(c.lead, { jar: <code>RPGRoll.jar</code>, lib: <code>RPGRoll-Lib</code> })}</p>
 
       <SectionHeading id="para-quien-es">{c.audienceTitle}</SectionHeading>
       <CardGrid>
@@ -138,7 +138,7 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <SectionHeading id="addons">{fill(c.addonsTitle, { n: addons.length })}</SectionHeading>
       <p>
         {fill(c.addonsLead, {
-          depend: <code>depend: [RPGRoll]</code>,
+          depend: <code>depend: [RPGRoll-Lib]</code>,
           dir: <code>plugins/</code>,
         })}
       </p>
@@ -184,7 +184,7 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <SectionHeading id="quick-start">{c.quickTitle}</SectionHeading>
       <ol>
-        <li>{fill(c.step1, { jar: <code>RPGRoll.jar</code>, dir: <code>plugins/</code> })}</li>
+        <li>{fill(c.step1, { jar: <code>RPGRoll.jar</code>, lib: <code>RPGRoll-Lib.jar</code>, dir: <code>plugins/</code> })}</li>
         <li>{c.step2}</li>
         <li>
           {fill(c.step3, {
@@ -202,7 +202,7 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <CodeBlock
         language="bash"
         filename="plugins/"
-        code={`plugins/\n  RPGRoll.jar\n  RPGRoll-Items.jar\n  RPGRoll-Quests.jar\n  # ${c.quickComment}`}
+        code={`plugins/\n  RPGRoll-Lib.jar\n  RPGRoll.jar\n  RPGRoll-Items.jar\n  RPGRoll-Quests.jar\n  # ${c.quickComment}`}
       />
 
       <SectionHeading id="stack">{c.stackTitle}</SectionHeading>

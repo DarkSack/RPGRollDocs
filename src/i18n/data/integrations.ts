@@ -14,9 +14,11 @@ const summariesEn: Map_ = {
   placeholderapi:
     "Ten expansions register 57 placeholders across the ecosystem. Without PlaceholderAPI everything still works: there are simply no placeholders for other plugins.",
   vault:
-    "RPGRoll-Economy does not consume Vault: it registers as the provider of the Economy service. Once installed, everything that already spoke Vault (Jobs, Guilds, Items, Workers) works with no extra configuration.",
+    "RPGRoll-Economy does not consume Vault: it registers as the provider of the Economy service. On the other side, the addons that charge or pay take Vault's economy through RPGRoll-Lib, without going through the core — so they work the same with RPGRoll-Economy, EssentialsX or any other provider.",
   protocollib:
-    "The only third-party plugin that is a hard dependency anywhere: RPGRoll-NPCs will not load without it, because NPCs are packet-simulated entities. In TAB, by contrast, it is optional.",
+    "Optional and only in RPGRoll-TAB. No addon requires it: RPGRoll-NPCs used it to draw fake players with packets, but since its NPCs became native server Mannequins it no longer needs it.",
+  votifier:
+    "Receives votes from server-list sites. RPGRoll-Pass hooks VotifierEvent through reflection, so any fork that fires it works.",
   worldedit:
     "An alternative source of dungeon rooms: importing a .schem instead of using vanilla Structure Blocks. It uses the WorldEdit API (ClipboardHolder + EditSession) to resolve rotation and mirroring.",
   decentholograms: "Hologram lines above physical crates.",
@@ -43,8 +45,12 @@ const notesEn: Map_ = {
   "vault:workers": "Wages for worker NPCs.",
   "vault:extras": "Costs tied to the survival conditions.",
   "vault:crafting": "Optional money cost of a recipe (via RPGRoll-Economy).",
+  "vault:quests": "GIVE_MONEY reward and money requirements to accept a quest.",
+  "vault:mobs": "Money rewards for killing mobs.",
+  "vault:dungeons": "Money rewards from dungeons.",
+  "vault:pass": "money: rewards from the pass, the daily reward and votes. Without an economy those rewards are skipped with a console warning.",
+  "votifier:pass": "Rewards, streak and pass points for voting. Without Votifier, /votar still shows the links and /passadmin vote simulates a vote.",
 
-  "protocollib:npcs": "Real depend: NPCs are built from ProtocolLib packets. Without it the addon does not load.",
   "protocollib:tab":
     "TAB works fully without ProtocolLib (header/footer, sorting, teams, nametags, sidebar, bossbars through the native Paper/Adventure API); with it you also get packet-level control.",
 
@@ -66,9 +72,11 @@ const summariesPt: Map_ = {
   placeholderapi:
     "Dez expansões registram 57 placeholders do ecossistema. Sem o PlaceholderAPI tudo continua funcionando: simplesmente não há placeholders para outros plugins.",
   vault:
-    "O RPGRoll-Economy não consome o Vault: ele se registra como provedor do serviço Economy. Assim que instalado, tudo o que já falava Vault (Jobs, Guilds, Items, Workers) fica funcional sem configuração extra.",
+    "O RPGRoll-Economy não consome o Vault: ele se registra como provedor do serviço Economy. Do outro lado, os addons que cobram ou pagam pegam a economia do Vault através do RPGRoll-Lib, sem passar pelo núcleo — então funcionam igual com RPGRoll-Economy, EssentialsX ou qualquer outro provedor.",
   protocollib:
-    "Único plugin de terceiros que é dependência dura em algum addon: o RPGRoll-NPCs não carrega sem ele, porque os NPCs são entidades simuladas por pacotes. No TAB, por outro lado, é opcional.",
+    "Opcional e só no RPGRoll-TAB. Nenhum addon o exige: o RPGRoll-NPCs o usava para desenhar jogadores falsos por pacotes, mas desde que os seus NPCs viraram Mannequins nativos do servidor não precisa mais dele.",
+  votifier:
+    "Recebe os votos dos sites de listas de servidores. O RPGRoll-Pass se conecta ao VotifierEvent por reflexão, então qualquer fork que o dispare serve.",
   worldedit:
     "Origem alternativa de salas em Dungeons: importar um .schem em vez de usar Structure Blocks vanilla. Usa a API do WorldEdit (ClipboardHolder + EditSession) para resolver rotação e espelhamento.",
   decentholograms: "Linhas de holograma sobre os crates físicos.",
@@ -95,8 +103,12 @@ const notesPt: Map_ = {
   "vault:workers": "Salário dos NPCs trabalhadores.",
   "vault:extras": "Custos associados às condições de sobrevivência.",
   "vault:crafting": "Custo monetário opcional de uma receita (via RPGRoll-Economy).",
+  "vault:quests": "Recompensa GIVE_MONEY e requisitos de dinheiro para aceitar uma missão.",
+  "vault:mobs": "Recompensas em dinheiro ao matar mobs.",
+  "vault:dungeons": "Recompensas em dinheiro das masmorras.",
+  "vault:pass": "Recompensas money: do passe, do diário e dos votos. Sem economia, essas recompensas são puladas com um aviso no console.",
+  "votifier:pass": "Recompensas, sequência e pontos de passe por votar. Sem Votifier, /votar continua mostrando os links e /passadmin vote simula um voto.",
 
-  "protocollib:npcs": "Depend real: os NPCs são construídos com pacotes do ProtocolLib. Sem ele o addon não carrega.",
   "protocollib:tab":
     "O TAB funciona completo sem o ProtocolLib (header/footer, sorting, teams, nametags, sidebar, bossbars via API nativa do Paper/Adventure); com ele soma-se o controle a nível de pacote.",
 

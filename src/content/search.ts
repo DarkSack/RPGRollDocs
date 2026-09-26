@@ -27,6 +27,7 @@ export const searchIndex: SearchEntry[] = [
   h("arquitectura", "Arranque (Bootstrap)", "bootstrap"),
   h("arquitectura", "Empaquetado (Shadow)", "empaquetado"),
   h("arquitectura", "Módulos de addon (ej. npcs)", "addons"),
+  h("arquitectura", "RPGRoll-Lib: la librería compartida", "rpgroll-lib"),
   h("arquitectura", "Colores y formato de texto — ComponentUtils", "componentutils"),
   h("arquitectura", "Tab-completion — TabCompleteUtil", "tabcompleteutil"),
   h("arquitectura", "GUIs: volver al navegador anterior", "gui-back-navigation"),
@@ -116,6 +117,8 @@ export const searchIndex: SearchEntry[] = [
   h("api", "Configurar tu addon", "setup"),
   h("api", "Métodos disponibles", "metodos"),
   h("api", "Eventos", "eventos"),
+  h("api", "Bonos de experiencia", "bonos-exp"),
+  h("api", "Addons que no dependen del core", "sin-core"),
   h("api", "Dónde viven estos archivos, físicamente", "donde-viven"),
 
   // Chat
@@ -275,6 +278,7 @@ export const searchIndex: SearchEntry[] = [
 
   // Progression
   h("progresion", "Ganar experiencia", "ganar-xp"),
+  h("progresion", "Bonos de experiencia", "bonos-exp"),
   h("progresion", "Fórmula de experiencia requerida", "formula"),
   h("progresion", "Qué se aplica exactamente al subir de nivel", "que-pasa"),
   h("progresion", "Recompensas configuradas por defecto", "tabla-rewards"),
@@ -437,6 +441,22 @@ export const searchIndex: SearchEntry[] = [
   h("traps", "Torretas", "torretas"),
   h("traps", "Ejemplos de archivo YAML", "ejemplos"),
   h("traps", "Comandos — /trapadmin", "comandos"),
+
+  // Pass
+  h("pass", "Requisitos", "requisitos"),
+  h("pass", "Cómo funciona", "como-funciona"),
+  h("pass", "Formato de recompensas", "recompensas"),
+  h("pass", "Temporadas", "temporadas"),
+  h("pass", "Misiones", "misiones"),
+  h("pass", "Recompensa diaria", "diario"),
+  h("pass", "Votos (Votifier)", "votos"),
+  h("pass", "Pase premium", "premium"),
+  h("pass", "Comandos — /pase, /diario, /votar, /passadmin", "comandos"),
+  h("pass", "Permisos", "permisos"),
+  h("pass", "Archivos", "archivos"),
+
+  // Extras
+  h("extras", "Jugadores AFK", "afk"),
 ];
 
 function h(slug: string, headingLabel: string, heading: string): SearchEntry {

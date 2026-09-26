@@ -62,7 +62,7 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </Callout>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Effects]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib, RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Effects]"} />
       <p>
         Sin{" "}
         <button type="button" onClick={() => onNavigate("rpgroll-particles")} className="text-violet-600 underline dark:text-violet-400">

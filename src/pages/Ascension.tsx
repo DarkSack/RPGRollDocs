@@ -140,7 +140,7 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
       </Callout>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-Enchantments, RPGRoll-Quests, PlaceholderAPI]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib, RPGRoll]\nsoftdepend: [RPGRoll-Enchantments, RPGRoll-Quests, RPGRoll-Mobs, RPGRoll-Items, Vault, PlaceholderAPI]"} />
       <p>Sin ninguno de los dos, Ascension funciona igual: un talento que otorgaría un encantamiento simplemente no lo aplica, y un requisito de "quest completada" nunca bloquea.</p>
 
       <SectionHeading id="race-evolution">Evolución de raza</SectionHeading>
@@ -357,6 +357,15 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
         Al alcanzar el nivel requerido, <Kbd>/ascend prestige</Kbd> resetea tu nivel a 1 (conservando evolución,
         especialización y talentos) a cambio de un bono de experiencia acumulativo entre rangos, más las skills
         que ese rango otorgue.
+      </p>
+      <p>
+        El bono se aplica de verdad a toda la XP de personaje que se gana jugando (mobs, misiones, recetas):
+        Ascension lo registra en el <code>ExperienceBonusService</code> del core junto con el bono permanente de
+        legado, y se suma al bono por rango (<code>rpgroll.exp.bonus.&lt;n&gt;</code>). Ver{" "}
+        <button type="button" className="underline" onClick={() => onNavigate("progresion")}>
+          Progresión y nivel
+        </button>
+        .
       </p>
       <CodeBlock
         language="yaml"

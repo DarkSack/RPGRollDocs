@@ -35,6 +35,7 @@ const en: BlurbMap = {
   tab: "TabList, scoreboard, nametags and bossbars driven by placeholders.",
   extras: "Thirst, stamina, temperature and survival conditions.",
   traps: "Configurable traps, turrets and mechanisms: triggers, conditions, chains and protected blocks.",
+  pass: "Free and premium season pass, missions, daily reward and votes.",
 };
 
 const pt: BlurbMap = {
@@ -61,6 +62,7 @@ const pt: BlurbMap = {
   tab: "TabList, scoreboard, nametags e bossbars por placeholders.",
   extras: "Sede, stamina, temperatura e condições de sobrevivência.",
   traps: "Armadilhas, torres e mecanismos configuráveis: triggers, condições, cadeias e blocos protegidos.",
+  pass: "Passe de temporada grátis e premium, missões, recompensa diária e votos.",
 };
 
 const BLURBS: Partial<Record<Locale, BlurbMap>> = { en, pt };

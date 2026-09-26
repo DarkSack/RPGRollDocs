@@ -16,8 +16,8 @@ const diagEn: Record<string, { symptom: string; causes: string[]; fix: string }>
   "addon-no-carga": {
     symptom: "An addon does not show up in /plugins or fails to load at startup",
     causes: [
-      "The core is missing: every addon except SackResourcePack declares depend: [RPGRoll]. Without RPGRoll.jar in plugins/, Bukkit will not load the addon.",
-      "One of the addon's own hard dependencies is missing. RPGRoll-NPCs declares depend: [RPGRoll, ProtocolLib] and RPGRoll-Dungeons declares depend: [RPGRoll, RPGRoll-Mobs, RPGRoll-Guilds].",
+      "RPGRoll-Lib is missing: every addon except SackResourcePack declares depend: [RPGRoll-Lib]. Without RPGRoll-Lib.jar in plugins/, Bukkit will not load the addon.",
+      "One of the addon's own hard dependencies is missing. RPGRoll-Ascension and RPGRoll-Magic also need the core (depend: [RPGRoll-Lib, RPGRoll]) and RPGRoll-Dungeons declares depend: [RPGRoll-Lib, RPGRoll-Mobs, RPGRoll-Guilds].",
       "Wrong Java version: the ecosystem compiles against Java 25.",
     ],
     fix: "Check the startup console: Bukkit names the missing dependency. The full depend/softdepend list per addon is on the Integrations page.",
@@ -41,9 +41,10 @@ const diagEn: Record<string, { symptom: string; causes: string[]; fix: string }>
   "npcs-invisibles": {
     symptom: "NPCs do not appear",
     causes: [
-      "ProtocolLib is not installed. It is the ecosystem's only hard third-party dependency: NPCs are packet-simulated entities, and without ProtocolLib the addon simply does not load.",
+      "Another plugin cancelled their spawn: WorldGuard (mob-spawning deny with block-plugin-spawning) or another anti-mob plugin. RPGRoll-NPCs undoes that cancellation for its own Mannequins at HIGHEST priority; if something still cancels it, the console warns with «✘ NPC '<id>': otro plugin canceló su aparición».",
+      "The chunk is not loaded: NPCs are not saved with the world, they are created when their chunk loads and removed when it unloads.",
     ],
-    fix: "Install ProtocolLib as a real plugin on the server (not shaded inside a jar).",
+    fix: "Look for the ✘ NPC warning in the console and adjust the region protection or anti-mob plugin for that world. ProtocolLib is no longer needed: NPCs are native server Mannequins.",
   },
   "crates-sin-holograma": {
     symptom: "Crates work but the hologram is missing",
@@ -248,8 +249,8 @@ const diagPt: Record<string, { symptom: string; causes: string[]; fix: string }>
   "addon-no-carga": {
     symptom: "Um addon não aparece em /plugins ou não carrega ao iniciar",
     causes: [
-      "Falta o núcleo: todos os addons exceto SackResourcePack declaram depend: [RPGRoll]. Sem RPGRoll.jar em plugins/, o Bukkit não carrega o addon.",
-      "Falta uma dependência dura do próprio addon. RPGRoll-NPCs declara depend: [RPGRoll, ProtocolLib] e RPGRoll-Dungeons declara depend: [RPGRoll, RPGRoll-Mobs, RPGRoll-Guilds].",
+      "Falta o RPGRoll-Lib: todos os addons exceto SackResourcePack declaram depend: [RPGRoll-Lib]. Sem RPGRoll-Lib.jar em plugins/, o Bukkit não carrega o addon.",
+      "Falta uma dependência dura do próprio addon. RPGRoll-Ascension e RPGRoll-Magic precisam também do núcleo (depend: [RPGRoll-Lib, RPGRoll]) e RPGRoll-Dungeons declara depend: [RPGRoll-Lib, RPGRoll-Mobs, RPGRoll-Guilds].",
       "Versão de Java incorreta: o ecossistema compila contra Java 25.",
     ],
     fix: "Verifique o console da inicialização: o Bukkit nomeia a dependência faltante. A lista completa de depend/softdepend por addon está na página de Integrações.",
@@ -273,9 +274,10 @@ const diagPt: Record<string, { symptom: string; causes: string[]; fix: string }>
   "npcs-invisibles": {
     symptom: "Os NPCs não aparecem",
     causes: [
-      "O ProtocolLib não está instalado. É a única dependência dura de terceiros do ecossistema: os NPCs são entidades simuladas por pacotes, e sem o ProtocolLib o addon simplesmente não carrega.",
+      "Outro plugin cancelou o seu surgimento: WorldGuard (mob-spawning deny com block-plugin-spawning) ou outro anti-mobs. O RPGRoll-NPCs desfaz esse cancelamento para os seus próprios Mannequins com prioridade HIGHEST; se mesmo assim algo o cancelar, o console avisa com «✘ NPC '<id>': otro plugin canceló su aparición».",
+      "O chunk não está carregado: os NPCs não são salvos com o mundo, são criados quando o chunk carrega e somem quando ele descarrega.",
     ],
-    fix: "Instale o ProtocolLib como plugin real no servidor (não sombreado dentro de um jar).",
+    fix: "Procure o aviso ✘ NPC no console e ajuste a proteção de região ou o anti-mobs desse mundo. O ProtocolLib não é mais necessário: os NPCs são Mannequins nativos do servidor.",
   },
   "crates-sin-holograma": {
     symptom: "Os crates funcionam mas o holograma não aparece",

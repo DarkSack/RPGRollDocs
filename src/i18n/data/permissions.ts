@@ -32,6 +32,7 @@ const en: Descriptions = {
   "rpgroll.admin.resetstats": "Reset and refund a player's attribute points.",
   "rpgroll.admin.job": "Manage player jobs.",
   "rpgroll.admin.content": "Visual editor for races/classes/jobs/skills/traits.",
+  "rpgroll.exp.bonus.<n>": "<n>% bonus to the character experience earned by playing. With several, the highest wins; they do not add up.",
 };
 
 const pt: Descriptions = {
@@ -58,6 +59,7 @@ const pt: Descriptions = {
   "rpgroll.admin.resetstats": "Reiniciar e reembolsar os pontos de atributo de um jogador.",
   "rpgroll.admin.job": "Gerenciar trabalhos de jogadores.",
   "rpgroll.admin.content": "Editor visual de raças/classes/trabalhos/habilidades/traits.",
+  "rpgroll.exp.bonus.<n>": "Bônus de <n>% na experiência de personagem ganha jogando. Com várias, vale a maior; não se somam.",
 };
 
 const MAP: Partial<Record<Locale, Descriptions>> = { en, pt };

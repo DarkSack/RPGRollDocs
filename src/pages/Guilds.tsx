@@ -87,7 +87,7 @@ export function Guilds({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll]\nsoftdepend: [RPGRoll-Items, RPGRoll-Quests, Vault, PlaceholderAPI]"}
+        code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-Items, RPGRoll-Quests, Vault, PlaceholderAPI]"}
       />
       <p>
         {fill(c.reqBody, {

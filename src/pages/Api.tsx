@@ -21,6 +21,7 @@ export function Api({ onNavigate }: { onNavigate: (slug: string) => void }) {
     ["getTraitManager()", "TraitManager"],
     ["getJobManager()", "JobManager"],
     ["getEconomyProvider()", "VaultEconomyProvider"],
+    ["getExperienceBonusService()", `ExperienceBonusService — ${c.rBonusService}`],
     ["getVersion()", c.rVersion],
   ];
 
@@ -156,6 +157,86 @@ export function Api({ onNavigate }: { onNavigate: (slug: string) => void }) {
           '        Bukkit.broadcastMessage(event.getPlayer().getName() + " alcanzó el nivel " + event.getNewLevel() + "!");\n' +
           "    }\n" +
           "}\n"
+        }
+      />
+
+      <SectionHeading id="bonos-exp">{c.expTitle}</SectionHeading>
+      <p>
+        {fill(c.expBody, {
+          service: <code>ExperienceBonusService</code>,
+          perm: <code>rpgroll.exp.bonus.&lt;n&gt;</code>,
+        })}
+      </p>
+      <CodeBlock
+        language="java"
+        code={
+          "ExperienceBonusService bonus = RPGRollAPI.get().getExperienceBonusService();\n" +
+          "\n" +
+          "// En porcentaje: +25% mientras dure el evento.\n" +
+          'bonus.registerSource("miaddon:evento", player -> eventoActivo ? 25 : 0);\n' +
+          "\n" +
+          "// En onDisable:\n" +
+          'bonus.unregisterSource("miaddon:evento");\n'
+        }
+      />
+
+      <SectionHeading id="sin-core">{c.noCoreTitle}</SectionHeading>
+      <p>
+        {fill(c.noCoreBody, {
+          depend: <code>depend: [RPGRoll-Lib]</code>,
+          soft: <code>softdepend: [RPGRoll]</code>,
+          pluginYml: <code>plugin.yml</code>,
+          common: <code>compileOnly(project(":common"))</code>,
+          get: <code>Characters.get()</code>,
+        })}
+      </p>
+      <CodeBlock
+        language="java"
+        filename="MiAddon.java"
+        code={
+          "import com.sack.rpgroll.common.character.CharacterLevelUpEvent;\n" +
+          "import com.sack.rpgroll.common.character.Characters;\n" +
+          "import com.sack.rpgroll.common.integration.VaultEconomy;\n" +
+          "\n" +
+          "// Nivel del personaje; 0 si no hay core o el jugador no tiene personaje.\n" +
+          "int level = Characters.get().map(c -> c.level(player.getUniqueId())).orElse(0);\n" +
+          "\n" +
+          "// EXP con los bonos del jugador (rango, prestigio), guardada.\n" +
+          "Characters.get().ifPresent(c ->\n" +
+          "        c.addExperience(player.getUniqueId(), c.boostExperience(player, 150)));\n" +
+          "\n" +
+          "// Dinero por Vault, sea cual sea el proveedor de economía.\n" +
+          "VaultEconomy.get().ifPresent(economy -> economy.depositPlayer(player, 250));\n" +
+          "\n" +
+          "// Solo llega si el core está instalado.\n" +
+          "@EventHandler\n" +
+          "public void onLevelUp(CharacterLevelUpEvent event) {\n" +
+          '    event.getPlayer().sendMessage("Nivel " + event.getNewLevel());\n' +
+          "}\n"
+        }
+      />
+      <p>{fill(c.noCoreIface, { iface: <code>RPGCharacters</code> })}</p>
+      <CodeBlock
+        language="java"
+        filename="RPGCharacters.java"
+        code={
+          "boolean hasCharacter(UUID player);\n" +
+          "int level(UUID player);\n" +
+          "long experience(UUID player);\n" +
+          "Optional<String> race(UUID player);\n" +
+          "Optional<String> playerClass(UUID player);\n" +
+          "boolean hasJob(UUID player, String jobId);\n" +
+          "int jobLevel(UUID player, String jobId);\n" +
+          "Set<String> activeJobs(UUID player);\n" +
+          "boolean hasTrait(UUID player, String traitId);\n" +
+          "boolean hasSkill(UUID player, String skillId);\n" +
+          "int mana(UUID player);\n" +
+          "int maxMana(UUID player);\n" +
+          "void addExperience(UUID player, int amount);   // tal cual, sin bonos\n" +
+          "int boostExperience(Player player, int base);  // base + bonos del jugador\n" +
+          "void learnSkill(UUID player, String skillId);\n" +
+          "void joinJob(UUID player, String jobId);\n" +
+          "boolean isPlayerPlaced(Block block);           // lo puso un jugador\n"
         }
       />
 

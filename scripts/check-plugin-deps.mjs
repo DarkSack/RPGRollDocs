@@ -19,6 +19,8 @@
  * Uso:
  *   node scripts/check-plugin-deps.mjs
  *   node scripts/check-plugin-deps.mjs --json
+ *   node scripts/check-plugin-deps.mjs --local ../RPGRoll   (clon local, sin red:
+ *     sirve para documentar un cambio antes de que llegue a main)
  */
 
 import { readFile } from "node:fs/promises";
@@ -58,7 +60,22 @@ const MODULES = {
   extras: "extras",
   traps: "traps",
   sackresourcepack: "sackresourcepack",
+  pass: "pass",
 };
+
+const localIndex = process.argv.indexOf("--local");
+const LOCAL_REPO = localIndex === -1 ? null : process.argv[localIndex + 1];
+const SOURCE_LABEL = LOCAL_REPO ? LOCAL_REPO : `${SOURCE_REPO}@${SOURCE_BRANCH}`;
+
+/** El plugin.yml de un módulo, del clon local si se pasó --local, si no de GitHub. */
+async function readPluginYml(module) {
+  if (!LOCAL_REPO) return fetchWithRetry(rawUrl(module));
+  try {
+    return await readFile(join(LOCAL_REPO, module, "src/main/resources/plugin.yml"), "utf8");
+  } catch {
+    return null;
+  }
+}
 
 const rawUrl = (module) =>
   `https://raw.githubusercontent.com/${SOURCE_REPO}/${SOURCE_BRANCH}/${module}/src/main/resources/plugin.yml`;
@@ -104,6 +121,10 @@ const splitItems = (raw) =>
  * Solo cuenta un par `depend`/`softdepend` que viva en el MISMO literal de
  * cadena, que es como las páginas escriben el ejemplo real:
  * `code={"depend: [RPGRoll]\nsoftdepend: [...]"}`. Las menciones sueltas en
+ * Desde RPGRoll-Lib, el bloque de un addon oficial lleva `RPGRoll-Lib` (o, en
+ * los dos módulos atados al core, `RPGRoll`) en depend: eso lo distingue del
+ * ejemplo de un addon de terceros.
+ *
  * prosa (por ejemplo `<Kbd>softdepend: [RPGRoll-FX]</Kbd>`, que explica cómo
  * un tercero dependería de este addon) quedan afuera a propósito: no
  * describen el plugin.yml de la página.
@@ -115,7 +136,7 @@ function extractDocBlock(source) {
   let match;
   while ((match = re.exec(source)) !== null) {
     const hard = splitItems(match[1]);
-    if (!hard.includes("RPGRoll")) continue; // ejemplo de un addon de terceros
+    if (!hard.includes("RPGRoll-Lib") && !hard.includes("RPGRoll")) continue; // ejemplo de un addon de terceros
     return { hard, soft: match[2] === undefined ? [] : splitItems(match[2]) };
   }
   return null;
@@ -127,12 +148,12 @@ async function main() {
   const checked = [];
 
   for (const [slug, module] of Object.entries(MODULES)) {
-    const yaml = await fetchWithRetry(rawUrl(module));
+    const yaml = await readPluginYml(module);
     if (yaml === null) {
       problems.push({
         slug,
         kind: "sin-plugin-yml",
-        detail: `No existe ${module}/src/main/resources/plugin.yml en ${SOURCE_REPO}. ¿Se renombró el módulo?`,
+        detail: `No existe ${module}/src/main/resources/plugin.yml en ${SOURCE_LABEL}. ¿Se renombró el módulo?`,
       });
       continue;
     }
@@ -205,9 +226,9 @@ async function main() {
   if (asJson) {
     console.log(JSON.stringify({ checked: checked.length, problems }, null, 2));
   } else if (problems.length === 0) {
-    console.log(`OK — ${checked.length} plugin.yml verificados contra ${SOURCE_REPO}@${SOURCE_BRANCH}.`);
+    console.log(`OK — ${checked.length} plugin.yml verificados contra ${SOURCE_LABEL}.`);
   } else {
-    console.error(`\n${problems.length} desviación(es) respecto de ${SOURCE_REPO}@${SOURCE_BRANCH}:\n`);
+    console.error(`\n${problems.length} desviación(es) respecto de ${SOURCE_LABEL}:\n`);
     for (const problem of problems) {
       console.error(`  [${problem.slug}] ${problem.kind}`);
       console.error(`      ${problem.detail}\n`);

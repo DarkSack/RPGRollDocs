@@ -74,4 +74,10 @@ export const permissions: PermissionInfo[] = [
     description: "Editor visual de razas/clases/trabajos/skills/traits.",
     default: "op",
   },
+  {
+    node: "rpgroll.exp.bonus.<n>",
+    description:
+      "Bono de <n> % a la experiencia de personaje que se gana jugando. Si hay varios gana el mayor; no se suman.",
+    default: "false",
+  },
 ];
