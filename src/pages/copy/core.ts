@@ -246,7 +246,7 @@ const es = {
     p3: "{key} aumentan su salud/maná máximos (y curan/restauran esa misma cantidad).",
     p4: "{key} se aprenden/adquieren automáticamente — sin pisar el nivel de una skill que el jugador ya hubiera subido manualmente.",
     p5: "Se dispara el evento {event} (para que otros plugins/listeners puedan reaccionar).",
-    p6: "Se guarda el jugador y se le muestra un mensaje resumen.",
+    p6: "Se guarda el jugador y se le muestra un mensaje resumen. Si la EXP alcanza para varios niveles (una misión o el pase que dan mucha), se repite hasta agotarla. Se comprueba con cualquier fuente de EXP, no solo al matar mobs.",
 
     tableTitle: "Recompensas configuradas por defecto",
     thLevel: "Nivel",
@@ -503,7 +503,7 @@ const en: CoreCopy = {
     p3: "{key} increase their max health/mana (and heal/restore that same amount).",
     p4: "{key} are learned/acquired automatically — without overwriting the level of a skill the player had already raised manually.",
     p5: "The {event} event is fired (so other plugins/listeners can react).",
-    p6: "The player is saved and shown a summary message.",
+    p6: "The player is saved and shown a summary message. If the EXP is enough for several levels (a quest or the pass granting a lot), it repeats until it runs out. It is checked for every EXP source, not only mob kills.",
 
     tableTitle: "Rewards configured by default",
     thLevel: "Level",
@@ -758,7 +758,7 @@ const pt: CoreCopy = {
     p3: "{key} aumentam a vida/mana máximas (e curam/restauram essa mesma quantidade).",
     p4: "{key} são aprendidos/adquiridos automaticamente — sem sobrescrever o nível de uma skill que o jogador já tivesse subido manualmente.",
     p5: "O evento {event} é disparado (para que outros plugins/listeners possam reagir).",
-    p6: "O jogador é salvo e recebe uma mensagem de resumo.",
+    p6: "O jogador é salvo e recebe uma mensagem de resumo. Se a EXP der para vários níveis (uma missão ou o passe que dão muita), repete até esgotá-la. É verificado com qualquer fonte de EXP, não só ao matar mobs.",
 
     tableTitle: "Recompensas configuradas por padrão",
     thLevel: "Nível",

@@ -303,6 +303,7 @@ export function Chat({ onNavigate }: { onNavigate: (slug: string) => void }) {
           p2: <Badge tone="amber">rpgrollchat.staff</Badge>,
           admin: <Kbd>/chatadmin</Kbd>,
           p3: <Badge tone="amber">rpgrollchat.admin.*</Badge>,
+          p4: <Badge tone="amber">rpgrollchat.antispam.bypass</Badge>,
         })}
       </p>
 

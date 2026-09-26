@@ -28,7 +28,7 @@ export function Commands({ onNavigate }: { onNavigate: (slug: string) => void })
           list: (
             <>
               <code>/rpg reload</code>, <code>/rpg addxp</code>, <code>/rpg job</code>,{" "}
-              <code>/rpg resetstats</code>, <code>/rpg setrace</code> &amp; <code>/rpg setclass</code>
+              <code>/rpg resetstats</code>, <code>/rpg restore</code>, <code>/rpg setrace</code> &amp; <code>/rpg setclass</code>
             </>
           ),
           rest: (

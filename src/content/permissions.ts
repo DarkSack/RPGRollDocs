@@ -55,6 +55,7 @@ export const permissions: PermissionInfo[] = [
       "rpgroll.admin.resetstats",
       "rpgroll.admin.job",
       "rpgroll.admin.content",
+      "rpgroll.admin.restore",
     ],
   },
   { node: "rpgroll.admin.reload", description: "Recargar configuración del plugin.", default: "op" },
@@ -72,6 +73,11 @@ export const permissions: PermissionInfo[] = [
   {
     node: "rpgroll.admin.content",
     description: "Editor visual de razas/clases/trabajos/skills/traits.",
+    default: "op",
+  },
+  {
+    node: "rpgroll.admin.restore",
+    description: "Restaurar la vida o el maná de un jugador (/rpg restore).",
     default: "op",
   },
   {

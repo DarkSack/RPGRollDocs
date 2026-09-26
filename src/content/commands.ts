@@ -174,6 +174,16 @@ export const commands: CommandInfo[] = [
     consoleAllowed: true,
   },
   {
+    name: "restore",
+    usage: "/rpg restore <jugador> [vida|mana]",
+    description:
+      "Rellena la vida y el maná de un jugador conectado a su máximo; con vida o mana, solo una de las dos. Útil para probar hechizos caros sin esperar la regeneración.",
+    permission: "rpgroll.admin.restore",
+    aliases: [],
+    category: "admin",
+    consoleAllowed: true,
+  },
+  {
     name: "job",
     usage: "/rpg job <give|remove|setlevel> <jugador> <jobId> [nivel]",
     description: "Administra los trabajos activos de un jugador: asignar, quitar o fijar su nivel.",

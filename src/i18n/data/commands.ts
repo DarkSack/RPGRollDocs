@@ -29,6 +29,7 @@ const en: Descriptions = {
   setrace: "Changes a player's race. Without --recalc it keeps their current stats.",
   setclass: "Same as setrace, but for the player's class.",
   resetstats: "Resets a player's 6 attributes to their base value and gives back the spent points.",
+  restore: "Refills an online player's health and mana to the maximum; with vida (health) or mana, only one of them. Handy for testing expensive spells without waiting for regeneration.",
   job: "Manages a player's active jobs: assign, remove or set the level.",
 };
 
@@ -52,6 +53,7 @@ const pt: Descriptions = {
   setrace: "Muda a raça de um jogador. Sem --recalc mantém os stats atuais.",
   setclass: "Igual a setrace, mas para a classe do jogador.",
   resetstats: "Reinicia os 6 atributos de um jogador ao valor base e devolve os pontos gastos.",
+  restore: "Recarrega a vida e a mana de um jogador conectado até o máximo; com vida ou mana, só uma das duas. Útil para testar feitiços caros sem esperar a regeneração.",
   job: "Administra os trabalhos ativos de um jogador: atribuir, remover ou fixar o nível.",
 };
 
