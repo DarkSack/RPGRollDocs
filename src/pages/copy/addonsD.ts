@@ -47,6 +47,31 @@ const es = {
     menuFilesBody:
       "Los menús son YAML en {dir}, con el mismo formato que los de RPGRoll-NPCs: el motor vive en RPGRoll-Lib, así que Extras no depende de NPCs. {main} abre el principal, {item} devuelve la brújula y {any} abre cualquier menú por su id (solo con {perm}, porque un menú puede llevar comandos de consola). Los botones de un módulo que no tengas instalado dan \"comando desconocido\": bórralos o cámbialos.",
 
+    bpTitle:
+      "Mochilas mejorables",
+    bpBody:
+      "Una mochila es una cabeza con textura que guarda su contenido aparte, como una shulker: pasarla a otro jugador, tirarla o ponerla en el suelo no pierde nada, porque lo de dentro vive en {data} ligado al ítem. Se abre con clic al aire teniéndola en la mano o con clic derecho sobre ella en el inventario. Todo —niveles, espacios, texturas, recetas, botones y textos— está en {file}.",
+    bpTiersBody:
+      "Cada nivel se fabrica en la mesa de crafteo rodeando la mochila anterior con 8 del material; al mejorarla conserva todo lo que tenía dentro y su dueño. El último pide {item}, un ítem de RPGRoll-Items: una amatista cualquiera no sirve.",
+    bpThTier:
+      "Nivel",
+    bpThSlots:
+      "Espacios",
+    bpThRecipe:
+      "Receta",
+    bpBottomBody:
+      "La fila de abajo es de botones: las pestañas (45 espacios cada una) cuando el nivel no cabe en una, la información y el botón para ligarla. Ligada, solo su dueño —o quien tenga {bypass}— puede abrirla o recogerla del suelo; un jugador puede tener ligadas todas las que quiera. Solo una persona a la vez puede tenerla abierta y dentro no cabe otra mochila (ni lo que pongas en {forbidden}).",
+    bpPlaceBody:
+      "Puesta en el suelo, clic derecho la abre y romperla la devuelve como ítem con todo dentro (también en creativo). Las explosiones, los pistones y el agua no la mueven ni la rompen. Con {allow} desactivado no se puede poner, y clic sobre un bloque también la abre. Con {access} (por defecto) solo quien la puso puede abrirla o recogerla del suelo: los plugins de protección no ven las cabezas como cofres.",
+    bpNoteTitle:
+      "Permisos",
+    bpNoteBody:
+      "{use} (todos) para usarlas, {bypass} (op) para abrir y desligar las de otros y {admin} (op) para /mochila give. Una mochila ligada lleva la marca rpgrollextras:backpack_bound, que la Casa de Subastas de RPGRoll-Economy rechaza por defecto.",
+    cBackpackGive:
+      "Entrega mochilas nuevas (tiendas, cajas, recompensas).",
+    cBackpackList:
+      "Lista los niveles con sus espacios y si tienen receta.",
+
     consumeTitle: "Consumption hooks",
     consumeBody:
       "Sprint (al empezar a correr, no continuo), salto, ataque y minado se detectan automáticamente vía eventos vanilla. Pesca, farming y habilidades de otros addons NO se detectan acá a propósito — le corresponde a cada addon reportar su propia acción llamando a {call} (o el nombre de acción que corresponda), la misma superficie pública que usa el hook interno de minado.",
@@ -294,6 +319,31 @@ const en: AddonsDCopy = {
     menuFilesBody:
       "Menus are YAML files in {dir}, with the same format as RPGRoll-NPCs menus: the engine lives in RPGRoll-Lib, so Extras does not depend on NPCs. {main} opens the main one, {item} gives the compass back and {any} opens any menu by id (only with {perm}, because a menu can run console commands). Buttons for a module you do not have installed give \"unknown command\": remove or change them.",
 
+    bpTitle:
+      "Upgradable backpacks",
+    bpBody:
+      "A backpack is a textured head that keeps its contents apart, like a shulker box: handing it to another player, dropping it or placing it on the ground loses nothing, because what is inside lives in {data}, tied to the item. It opens by clicking the air while holding it, or by right-clicking it in the inventory. Everything —tiers, slots, textures, recipes, buttons and texts— is in {file}.",
+    bpTiersBody:
+      "Each tier is crafted by surrounding the previous backpack with 8 of the material; upgrading keeps everything inside and its owner. The last one needs {item}, an RPGRoll-Items item: any amethyst will not do.",
+    bpThTier:
+      "Tier",
+    bpThSlots:
+      "Slots",
+    bpThRecipe:
+      "Recipe",
+    bpBottomBody:
+      "The bottom row holds the buttons: tabs (45 slots each) when the tier does not fit in one, the info and the bind button. Once bound, only its owner —or whoever has {bypass}— can open it or pick it up from the ground; a player can have as many bound backpacks as they want. Only one person at a time can have it open, and another backpack never fits inside (nor anything in {forbidden}).",
+    bpPlaceBody:
+      "Placed on the ground, right-click opens it and breaking it gives the item back with everything inside (in creative too). Explosions, pistons and water neither move nor break it. With {allow} turned off it cannot be placed, and clicking a block opens it as well. With {access} (the default) only whoever placed it can open it or pick it up: protection plugins do not treat heads as chests.",
+    bpNoteTitle:
+      "Permissions",
+    bpNoteBody:
+      "{use} (everyone) to use them, {bypass} (op) to open and unbind other players' backpacks and {admin} (op) for /mochila give. A bound backpack carries the rpgrollextras:backpack_bound mark, which the RPGRoll-Economy Auction House rejects by default.",
+    cBackpackGive:
+      "Gives new backpacks (shops, crates, rewards).",
+    cBackpackList:
+      "Lists the tiers with their slots and whether they have a recipe.",
+
     consumeTitle: "Consumption hooks",
     consumeBody:
       "Sprint (on starting to run, not continuously), jumping, attacking and mining are detected automatically through vanilla events. Fishing, farming and other addons' skills are deliberately NOT detected here — it is up to each addon to report its own action by calling {call} (or whatever action name fits), the same public surface the internal mining hook uses.",
@@ -538,6 +588,31 @@ const pt: AddonsDCopy = {
       "Um item — uma bússola por padrão — que abre o menu do servidor com qualquer clique: no ar, num bloco ou numa entidade, ou sobre ele no inventário. Configura-se em {section} do {config} e vem desligado ({enabled}). Com {locked} não dá para jogar fora, guardar em baús nem trocar de mão; com {keep} não cai ao morrer e volta ao renascer; com {join} é entregue ao entrar no seu espaço da barra.",
     menuFilesBody:
       "Os menus são YAML em {dir}, com o mesmo formato dos do RPGRoll-NPCs: o motor vive no RPGRoll-Lib, então o Extras não depende do NPCs. {main} abre o principal, {item} devolve a bússola e {any} abre qualquer menu pelo id (só com {perm}, porque um menu pode rodar comandos de console). Botões de um módulo que você não tem instalado dão \"comando desconhecido\": apague-os ou troque-os.",
+
+    bpTitle:
+      "Mochilas evoluíveis",
+    bpBody:
+      "Uma mochila é uma cabeça com textura que guarda o conteúdo à parte, como uma shulker: passá-la para outro jogador, jogá-la fora ou colocá-la no chão não perde nada, porque o que está dentro fica em {data}, ligado ao item. Abre com clique no ar segurando-a ou com clique direito sobre ela no inventário. Tudo —níveis, espaços, texturas, receitas, botões e textos— está em {file}.",
+    bpTiersBody:
+      "Cada nível é fabricado cercando a mochila anterior com 8 do material; ao evoluir ela mantém tudo o que tinha dentro e o dono. O último pede {item}, um item do RPGRoll-Items: uma ametista qualquer não serve.",
+    bpThTier:
+      "Nível",
+    bpThSlots:
+      "Espaços",
+    bpThRecipe:
+      "Receita",
+    bpBottomBody:
+      "A fileira de baixo é de botões: as abas (45 espaços cada) quando o nível não cabe em uma, as informações e o botão para vinculá-la. Vinculada, só o dono —ou quem tiver {bypass}— pode abri-la ou pegá-la do chão; um jogador pode ter vinculadas quantas quiser. Só uma pessoa por vez pode tê-la aberta, e dentro não cabe outra mochila (nem o que você puser em {forbidden}).",
+    bpPlaceBody:
+      "No chão, clique direito abre e quebrá-la devolve o item com tudo dentro (também no criativo). Explosões, pistões e água não a movem nem a quebram. Com {allow} desativado não dá para colocá-la, e clicar num bloco também a abre. Com {access} (padrão) só quem a colocou pode abri-la ou pegá-la do chão: os plugins de proteção não tratam cabeças como baús.",
+    bpNoteTitle:
+      "Permissões",
+    bpNoteBody:
+      "{use} (todos) para usá-las, {bypass} (op) para abrir e desvincular as dos outros e {admin} (op) para /mochila give. Uma mochila vinculada leva a marca rpgrollextras:backpack_bound, que a Casa de Leilões do RPGRoll-Economy recusa por padrão.",
+    cBackpackGive:
+      "Entrega mochilas novas (lojas, caixas, recompensas).",
+    cBackpackList:
+      "Lista os níveis com os espaços e se têm receita.",
 
     consumeTitle: "Consumption hooks",
     consumeBody:

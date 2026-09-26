@@ -98,7 +98,7 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-TAB, RPGRoll-Seasons, PlaceholderAPI, Vault]"
+          "depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-TAB, RPGRoll-Seasons, RPGRoll-Items, PlaceholderAPI, Vault]"
         }
       />
       <p>
@@ -305,6 +305,85 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
           '        value: ""\n'
         }
       />
+
+      <SectionHeading id="mochilas">{c.bpTitle}</SectionHeading>
+      <p>
+        {fill(c.bpBody, {
+          data: <code>data/backpacks/</code>,
+          file: <code>backpacks.yml</code>,
+        })}
+      </p>
+      <p>{fill(c.bpTiersBody, { item: <code>item:mineral_espacial</code> })}</p>
+      <Table>
+        <Thead>
+          <Th>{c.bpThTier}</Th>
+          <Th>{c.bpThSlots}</Th>
+          <Th>{c.bpThRecipe}</Th>
+        </Thead>
+        <tbody>
+          {(
+            [
+              ["cuero", "18", "LEATHER + CHEST"],
+              ["hierro", "27", "IRON_INGOT"],
+              ["oro", "36", "GOLD_INGOT"],
+              ["diamante", "45", "DIAMOND"],
+              ["netherita_fragmentada", "72", "NETHERITE_SCRAP"],
+              ["netherita", "90", "NETHERITE_INGOT"],
+              ["espacial", "135", "item:mineral_espacial"],
+            ] as const
+          ).map(([tier, slots, recipe]) => (
+            <Tr key={tier}>
+              <Td className="font-mono text-xs">{tier}</Td>
+              <Td>{slots}</Td>
+              <Td className="font-mono text-xs">{recipe}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
+      <CodeBlock
+        language="yaml"
+        filename="backpacks.yml"
+        code={
+          "tiers:\n" +
+          "  hierro:\n" +
+          '    name: "&fMochila de Hierro"\n' +
+          "    slots: 27                 # más de 45 reparte en pestañas\n" +
+          "    texture: ddaf8edc32afb461aee0713058023101f924e2a7efa883dae72d5d57d4c053d7\n" +
+          "    lore:\n" +
+          '      - "&7Capacidad: &f{slots} espacios"\n' +
+          "    recipe:\n" +
+          '      shape: ["III", "IBI", "III"]\n' +
+          "      ingredients:\n" +
+          "        I: IRON_INGOT           # material vanilla\n" +
+          "        B: backpack             # la mochila del nivel anterior\n" +
+          "  espacial:\n" +
+          "    slots: 135\n" +
+          "    recipe:\n" +
+          '      shape: ["MMM", "MBM", "MMM"]\n' +
+          "      ingredients:\n" +
+          "        M: item:mineral_espacial  # un ítem de RPGRoll-Items\n" +
+          "        B: backpack\n"
+        }
+      />
+      <p>
+        {fill(c.bpBottomBody, {
+          bypass: <code>rpgrollextras.backpack.bypass</code>,
+          forbidden: <code>settings.forbidden-items</code>,
+        })}
+      </p>
+      <p>
+        {fill(c.bpPlaceBody, {
+          allow: <code>settings.allow-place</code>,
+          access: <code>placed-access: placer</code>,
+        })}
+      </p>
+      <Callout tone="info" title={c.bpNoteTitle}>
+        {fill(c.bpNoteBody, {
+          use: <Badge>rpgrollextras.backpack.use</Badge>,
+          bypass: <Badge tone="amber">rpgrollextras.backpack.bypass</Badge>,
+          admin: <Badge tone="amber">rpgrollextras.backpack.admin</Badge>,
+        })}
+      </Callout>
 
       <SectionHeading id="consumo">{c.consumeTitle}</SectionHeading>
       <p>
@@ -598,6 +677,14 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr>
             <Td className="font-mono text-xs">/menu</Td>
             <Td>{c.cMenu}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">{"/mochila give <jugador> <nivel> [cantidad]"}</Td>
+            <Td>{c.cBackpackGive}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">/mochila list</Td>
+            <Td>{c.cBackpackList}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">/menu item</Td>

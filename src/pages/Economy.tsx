@@ -309,14 +309,68 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         configurado se retiene automáticamente en cada compra.
       </p>
 
-      <SectionHeading id="subastas">Subastas</SectionHeading>
+      <SectionHeading id="subastas">Casa de Subastas (/subasta)</SectionHeading>
       <p>
-        La Casa de Subastas cobra la puja en el momento (<em>escrow</em>): al pujar se te retira el monto de la
-        billetera al instante, y si alguien te supera, se te devuelve solo. Al vencer la subasta, si hubo puja se
-        le paga al vendedor (menos impuesto) y el ítem queda listo para que el ganador lo retire con{" "}
-        <Kbd>/economy auction</Kbd> → "Retirar mis ítems/premios" — funciona sin importar si estaba offline
-        cuando la subasta terminó. Si nadie pujó, el vendedor recupera su propio ítem de la misma forma.
+        <Kbd>/subasta</Kbd> (alias <Kbd>/ah</Kbd> y <Kbd>/subastas</Kbd>) abre un buscador con todo lo que venden los
+        jugadores: 45 publicaciones por página, filtradas por <strong>sección</strong> (ítems especiales de
+        RPGRoll-Items, armas y herramientas, armaduras, libros encantados, pociones, comida, bloques y materiales),
+        ordenadas por más recientes, las que terminan pronto o precio, y con <strong>búsqueda</strong> por nombre,
+        material o encantamiento (buscar «mending» encuentra los libros con Reparación). Cada ítem se ve tal cual —
+        encantamientos, nombre y lore— con su precio, vendedor y tiempo restante.
       </p>
+      <Table>
+        <Thead>
+          <Th>Tipo</Th>
+          <Th>Cómo se publica</Th>
+          <Th>Cómo se compra</Th>
+        </Thead>
+        <tbody>
+          <Tr><Td>Precio fijo</Td><Td className="font-mono text-xs">{"/subasta vender <precio>"}</Td><Td>Clic → confirmar.</Td></Tr>
+          <Tr><Td>Subasta</Td><Td className="font-mono text-xs">{"/subasta subastar <inicial> [compra ya]"}</Td><Td>Clic → escribir la puja; shift-clic compra ya si tiene precio de compra inmediata.</Td></Tr>
+        </tbody>
+      </Table>
+      <p>
+        Se publica lo que el jugador tiene en la mano (también desde el botón de la GUI, con clic para precio fijo
+        o clic derecho para subasta). Los precios aceptan <code>1.5k</code> o <code>2m</code>. La puja se cobra en
+        el momento (<em>escrow</em>) y, si alguien la supera, se devuelve sola con aviso; subir la propia puja solo
+        cobra la diferencia, y una puja en los últimos segundos alarga la subasta para que nadie gane «robando» al
+        final. Pujar el precio de compra inmediata es comprarla.
+      </p>
+      <p>
+        Todo lo que se cierra va a la <strong>caja de recogida</strong> (<Kbd>/subasta recoger</Kbd>): lo comprado,
+        lo ganado y lo que venció sin vender. Lo que no cabe en el inventario se queda en la caja; nunca se tira ni se
+        pierde, y al entrar se avisa si hay algo esperando. En <Kbd>/subasta mis</Kbd> el vendedor ve lo suyo y lo
+        retira con shift-clic mientras no tenga pujas. Al vender se aplican los impuestos <code>SALE</code> y el
+        vendedor recibe un aviso con lo cobrado.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="config.yml"
+        code={
+          "auction-house:\n" +
+          "  aliases: [ah, subastas]\n" +
+          "  duration-hours: 48\n" +
+          "  max-listings: 5              # 0 = sin límite\n" +
+          "  limits:                      # permiso rpgrolleconomy.auction.limit.<nombre>\n" +
+          "    vip: 10\n" +
+          "    mvp: 20\n" +
+          "  min-price: 1\n" +
+          "  max-price: 0                 # 0 = sin máximo\n" +
+          "  listing-fee-percent: 2       # comisión al publicar (sale de la economía)\n" +
+          "  min-bid-increment-percent: 5\n" +
+          "  anti-snipe-seconds: 30\n" +
+          '  currency: ""                 # vacío = la moneda por defecto\n' +
+          "  blacklist: [BEDROCK, BARRIER, COMMAND_BLOCK]\n" +
+          '  blocked-data-keys: ["rpgrollextras:backpack_bound", "rpgrollextras:server_menu_item"]\n'
+        }
+      />
+      <Callout tone="info" title="Qué no se puede vender">
+        Los materiales de <code>blacklist</code> y cualquier ítem con una marca de <code>blocked-data-keys</code>{" "}
+        (<code>plugin:clave</code> de su PersistentDataContainer). Por defecto son las mochilas ligadas y la brújula
+        del menú de RPGRoll-Extras: nadie compra una mochila que no va a poder abrir. Un admin
+        (<code>rpgrolleconomy.auction.admin</code>) retira cualquier publicación con shift-clic derecho; el ítem
+        vuelve a la caja del vendedor y la puja, a su postor.
+      </Callout>
 
       <SectionHeading id="empresas">Empresas</SectionHeading>
       <p>
@@ -497,6 +551,11 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           <Tr><Td className="font-mono text-xs">/economy bank</Td><Td>Abre tus cuentas bancarias.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">/economy shop</Td><Td>Navega tiendas de jugador / administra la tuya.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">/economy auction</Td><Td>Abre la Casa de Subastas.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
+          <Tr><Td className="font-mono text-xs">/subasta</Td><Td>Abre la Casa de Subastas (alias /ah, /subastas).</Td><Td><Badge>rpgrolleconomy.auction</Badge></Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/subasta vender <precio>"}</Td><Td>Publica lo de la mano a precio fijo.</Td><Td><Badge>rpgrolleconomy.auction.sell</Badge></Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/subasta subastar <inicial> [compra ya]"}</Td><Td>Lo publica con pujas.</Td><Td><Badge>rpgrolleconomy.auction.sell</Badge></Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/subasta buscar <texto>"}</Td><Td>Abre el buscador filtrado.</Td><Td><Badge>rpgrolleconomy.auction</Badge></Td></Tr>
+          <Tr><Td className="font-mono text-xs">/subasta mis · /subasta recoger</Td><Td>Tus publicaciones · tu caja de recogida.</Td><Td><Badge>rpgrolleconomy.auction</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">/economy company</Td><Td>Ver/fundar/administrar tus empresas.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
         </tbody>
       </Table>

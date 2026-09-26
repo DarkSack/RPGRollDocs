@@ -354,7 +354,7 @@ export const searchIndex: SearchEntry[] = [
   h("economy", "Mercado dinámico", "mercado-dinamico"),
   h("economy", "Tienda del servidor (/tienda)", "tienda-servidor"),
   h("economy", "Tiendas de jugador", "tiendas"),
-  h("economy", "Subastas", "subastas"),
+  h("economy", "Casa de Subastas (/subasta)", "subastas"),
   h("economy", "Empresas", "empresas"),
   h("economy", "Impuestos", "impuestos"),
   h("economy", "Inflación", "inflacion"),
@@ -460,6 +460,7 @@ export const searchIndex: SearchEntry[] = [
   // Extras
   h("extras", "Jugadores AFK", "afk"),
   h("extras", "Menú del servidor (brújula)", "menu-servidor"),
+  h("extras", "Mochilas mejorables", "mochilas"),
 ];
 
 function h(slug: string, headingLabel: string, heading: string): SearchEntry {
