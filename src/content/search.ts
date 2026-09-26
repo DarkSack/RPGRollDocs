@@ -205,6 +205,7 @@ export const searchIndex: SearchEntry[] = [
   h("items", "Sockets y gemas", "sockets"),
   h("items", "Skins, mejoras y durabilidad", "skins-mejoras-durabilidad"),
   h("items", "Texturas propias: item-model", "texturas-propias"),
+  h("items", "Menas propias", "menas"),
   h("items", "Triggers, habilidades y condiciones", "comportamiento"),
   h("items", "Requisitos de uso", "requisitos-de-uso"),
   h("items", "Recetas", "recetas"),

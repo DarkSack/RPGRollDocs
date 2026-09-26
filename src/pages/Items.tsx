@@ -205,6 +205,65 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         textura en <code>packs/</code>, hace que los jugadores de Bedrock vean lo mismo.
       </Callout>
 
+      <p>
+        <code>equipment-model: "miserver:mitrilo"</code> hace lo mismo con cómo se ve una armadura{" "}
+        <strong>puesta</strong>: apunta a <code>assets/miserver/equipment/mitrilo.json</code>, que a su vez
+        nombra las capas <code>textures/entity/equipment/humanoid/mitrilo.png</code> y{" "}
+        <code>humanoid_leggings/mitrilo.png</code> (64x32, el mapa de siempre). Solo cuenta en materiales que se
+        equipan en la cabeza, el pecho, las piernas o los pies; en Bedrock hace falta además un{" "}
+        <em>attachable</em> en el <code>.mcpack</code>.
+      </p>
+
+      <SectionHeading id="menas">Menas propias</SectionHeading>
+      <p>
+        Minecraft no deja añadir bloques desde un plugin, así que una mena es un estado de bloque vanilla que el
+        resource pack dibuja como otra cosa. Cada archivo de <code>ores/</code> dice qué estado usa, qué suelta,
+        cuánto cuesta picarla y dónde aparece:
+      </p>
+      <CodeBlock language="yaml" filename="ores/mena_de_mitrilo.yml" code={"id: mena_de_mitrilo\ndisplay-name: \"&bMena de Mitrilo\"\nblocks:\n  stone: \"minecraft:note_block[instrument=zombie,note=2,powered=false]\"\n  deepslate: \"minecraft:note_block[instrument=zombie,note=3,powered=false]\"\ndrop:\n  item: mitrilo_en_bruto      # o gem:<id>\n  min: 1\n  max: 1\n  fortune: true\nxp: [2, 4]\nhardness: 4.0                 # como la de vanilla: la del diamante es 3\nrequired-tier: 3              # pico de diamante o mejor\ngeneration:\n  - worlds: [recursos, overworld]\n    min-y: -32\n    max-y: 32\n    veins-per-chunk: 4         # 0.25 = una veta cada cuatro chunks\n    vein-size: [3, 6]\n    replace:\n      STONE: stone\n      DEEPSLATE: deepslate\n"} />
+      <ul>
+        <li>
+          <strong>El disfraz</strong>: bloques musicales con instrumento de cabeza (<code>zombie</code>,{" "}
+          <code>skeleton</code>...), 25 notas cada uno. Con{" "}
+          <code>block-updates.disable-noteblock-updates: true</code> en <code>config/paper-global.yml</code> un
+          bloque musical colocado a mano se queda siempre en arpa y nadie puede fabricar una mena; el plugin lo
+          comprueba igualmente al colocar. Los bloques musicales normales dejan de cambiar de instrumento según el
+          bloque de abajo.
+        </li>
+        <li>
+          <strong>Picarla</strong>: el cliente cree que pica un bloque musical, así que mientras se pica una mena
+          se ajusta el atributo <code>block_break_speed</code> del jugador para que tarde lo que dice{" "}
+          <code>hardness</code> con el pico que lleve. Sin pico, o con uno de nivel menor que{" "}
+          <code>required-tier</code>, tarda más de tres veces y no suelta nada. Fortuna multiplica el drop como en
+          vanilla; Toque de seda no cambia nada (suelta el mineral igual).
+        </li>
+        <li>
+          <strong>Nivel de pico</strong>: madera y oro 0, piedra y cobre 1, hierro 2, diamante 3, netherita 4. Un
+          pico de RPGRoll puede declarar otro con <code>custom-data: {"{"} mining-tier: "5", mining-speed: "8.5"{" "}
+          {"}"}</code>; <code>mining-speed</code> es su velocidad contra las menas (la del diamante es 8).
+        </li>
+        <li>
+          <strong>Generación</strong>: al cargar un chunk nuevo en los mundos de <code>worlds</code>, cada veta
+          sustituye los bloques de <code>replace</code> por la variante que diga. En los mundos de{" "}
+          <code>ores.retrogen-worlds</code> (<code>config.yml</code>) también se siembran los chunks que ya
+          existían, una sola vez por mena: pensado para un mundo de recursos, nunca para uno con construcciones.
+        </li>
+        <li>
+          No suena ni se afina, no arde, y una explosión la rompe soltando su mineral.{" "}
+          <Kbd>/itemadmin ores</Kbd> lista las menas y cuántos bloques se han sembrado desde el arranque.
+        </li>
+      </ul>
+      <Callout tone="warning" title="No cambies el estado de una mena que ya está en el mundo">
+        El mundo guarda el estado del bloque, no el id de la mena. Si le das a una mena otro estado, las ya
+        generadas se quedan como bloques musicales sueltos (o pasan a ser otra mena).
+      </Callout>
+      <Callout tone="info" title="Para Bedrock">
+        Geyser dibuja esos estados con un mapeo de bloques en <code>custom_mappings/</code>
+        (<code>minecraft:note_block</code> con <code>only_override_states: true</code> y un{" "}
+        <code>state_overrides</code> por estado, cada uno con su textura de <code>terrain_texture.json</code>) y el
+        tiempo de picado de <code>destructible_by_mining</code>.
+      </Callout>
+
       <SectionHeading id="comportamiento">Triggers, habilidades y condiciones</SectionHeading>
       <p>Un ítem tiene dos formas de reaccionar a eventos: <code>triggers</code> (acciones directas, sin condición extra) y <code>abilities</code> (con cooldown propio y condiciones, activas o pasivas).</p>
       <p>20 triggers disponibles: <code>EQUIP, UNEQUIP, RIGHT_CLICK, LEFT_CLICK, ENTITY_HIT, ENTITY_KILL, BLOCK_BREAK, BLOCK_PLACE, PLAYER_DAMAGE, PLAYER_DEATH, PLAYER_RESPAWN, PLAYER_MOVE, PLAYER_JUMP, PLAYER_SNEAK, PLAYER_SPRINT, PLAYER_INTERACT, CONSUME, THROW, PICKUP, DROP</code>.</p>
@@ -494,6 +553,7 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </Thead>
         <tbody>
           <Tr><Td className="font-mono text-xs">{"/itemadmin give <jugador> <id|gem:id> [cantidad]"}</Td><Td>Entrega un ítem o una gema de engaste, con overflow al piso.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/itemadmin ores</Td><Td>Lista las menas, su nivel de pico y cuántos bloques se han sembrado desde el arranque.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/itemadmin list</Td><Td>Lista todos los ítems con su pack y rareza.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/itemadmin reload</Td><Td>Recarga todas las definiciones.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/itemadmin create <id> [pack]"}</Td><Td>Crea un ítem base y abre el editor directo (sin [pack], eliges/creas uno desde un menú).</Td></Tr>
