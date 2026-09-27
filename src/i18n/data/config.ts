@@ -11,7 +11,8 @@ type Map_ = Record<string, string>;
 
 const filesEn: Map_ = {
   "config.yml": "General plugin configuration.",
-  "database.yml": "Database connection. Only SQLite is supported right now.",
+  "database.yml":
+    "Database connection: SQLite (default) or PostgreSQL, to share player progress across several servers. With PostgreSQL, each server still keeps what belongs to its world (player-placed blocks) in its own SQLite.",
   "gameplay.yml": "The biggest file: experience, attributes, classes/races, skills, jobs and combat.",
   "levelup-rewards.yml":
     "Per-level rewards: stat points, health/mana bonuses, and unlocked skills/traits. Levels with no explicit entry fall back to 'defaults'.",
@@ -22,12 +23,20 @@ const keysEn: Map_ = {
   language: "Message language (file under lang/).",
   debug: "Enables extra logging for diagnostics.",
 
-  "database.type": "Database engine.",
+  "database.type": "Database engine: sqlite or postgresql.",
   "database.filename": "File name, inside plugins/RPGRoll/database/.",
   "database.connection.foreign_keys": "Enables foreign keys (recommended, do not turn off).",
   "database.connection.journal_mode":
     "SQLite journal mode. WAL is faster for concurrent reads/writes.",
   "database.connection.busy_timeout": "How long to wait when the DB is locked by another connection.",
+  "database.postgresql.host": "PostgreSQL server.",
+  "database.postgresql.port": "PostgreSQL port.",
+  "database.postgresql.database": "Database name.",
+  "database.postgresql.schema":
+    "Schema where RPGRoll creates its tables. The user needs permission to create tables in it.",
+  "database.postgresql.user": "Database user.",
+  "database.postgresql.password": "The user's password.",
+  "database.postgresql.ssl": "Requires TLS. Turn it on if the database is on another machine.",
 
   "experience.base_exp": "Base XP for the level formula.",
   "experience.exp_multiplier": "Formula exponent: base_exp * (level ^ exp_multiplier).",
@@ -69,7 +78,8 @@ const keysEn: Map_ = {
 
 const filesPt: Map_ = {
   "config.yml": "Configuração geral do plugin.",
-  "database.yml": "Conexão com o banco de dados. No momento só SQLite é suportado.",
+  "database.yml":
+    "Conexão com o banco de dados: SQLite (padrão) ou PostgreSQL, para compartilhar o progresso dos jogadores entre vários servidores. Com PostgreSQL, cada servidor continua guardando no seu SQLite o que é do seu mundo (blocos colocados por jogadores).",
   "gameplay.yml": "O arquivo maior: experiência, atributos, classes/raças, habilidades, trabalhos e combate.",
   "levelup-rewards.yml":
     "Recompensas por nível: pontos de atributo, bônus de vida/mana e habilidades/traits desbloqueados. Níveis sem entrada explícita usam os valores de 'defaults'.",
@@ -80,13 +90,21 @@ const keysPt: Map_ = {
   language: "Idioma das mensagens (arquivo em lang/).",
   debug: "Ativa logging adicional para diagnóstico.",
 
-  "database.type": "Motor do banco de dados.",
+  "database.type": "Motor do banco de dados: sqlite ou postgresql.",
   "database.filename": "Nome do arquivo, dentro de plugins/RPGRoll/database/.",
   "database.connection.foreign_keys": "Habilita chaves estrangeiras (recomendado, não desative).",
   "database.connection.journal_mode":
     "Modo de journal do SQLite. WAL é mais rápido para leituras/escritas concorrentes.",
   "database.connection.busy_timeout":
     "Tempo de espera quando o banco está bloqueado por outra conexão.",
+  "database.postgresql.host": "Servidor do PostgreSQL.",
+  "database.postgresql.port": "Porta do PostgreSQL.",
+  "database.postgresql.database": "Nome do banco.",
+  "database.postgresql.schema":
+    "Esquema onde o RPGRoll cria suas tabelas. O usuário precisa de permissão para criar tabelas nele.",
+  "database.postgresql.user": "Usuário do banco.",
+  "database.postgresql.password": "Senha do usuário.",
+  "database.postgresql.ssl": "Exige TLS. Ative se o banco estiver em outra máquina.",
 
   "experience.base_exp": "XP base para a fórmula de nível.",
   "experience.exp_multiplier": "Expoente da fórmula: base_exp * (nível ^ exp_multiplier).",

@@ -26,9 +26,15 @@ export const configFiles: ConfigFileDoc[] = [
   {
     filename: "database.yml",
     path: "plugins/RPGRoll/config/database.yml",
-    description: "Conexión a la base de datos. Actualmente solo SQLite está soportado.",
+    description:
+      "Conexión a la base de datos: SQLite (por defecto) o PostgreSQL, para compartir el progreso de los jugadores entre varios servidores. Con PostgreSQL, cada servidor sigue guardando en su SQLite lo que es de su mundo (los bloques colocados por jugadores).",
     keys: [
-      { key: "database.type", type: "string", default: "sqlite", description: "Motor de base de datos." },
+      {
+        key: "database.type",
+        type: "string",
+        default: "sqlite",
+        description: "Motor de base de datos: sqlite o postgresql.",
+      },
       {
         key: "database.filename",
         type: "string",
@@ -52,6 +58,23 @@ export const configFiles: ConfigFileDoc[] = [
         type: "int (ms)",
         default: "5000",
         description: "Tiempo de espera cuando la BD está bloqueada por otra conexión.",
+      },
+      { key: "database.postgresql.host", type: "string", default: "localhost", description: "Servidor de PostgreSQL." },
+      { key: "database.postgresql.port", type: "int", default: "5432", description: "Puerto de PostgreSQL." },
+      { key: "database.postgresql.database", type: "string", default: "rpgroll", description: "Nombre de la base." },
+      {
+        key: "database.postgresql.schema",
+        type: "string",
+        default: "public",
+        description: "Esquema donde RPGRoll crea sus tablas. El usuario necesita permiso para crear tablas en él.",
+      },
+      { key: "database.postgresql.user", type: "string", default: "rpgroll", description: "Usuario de la base." },
+      { key: "database.postgresql.password", type: "string", default: "''", description: "Contraseña del usuario." },
+      {
+        key: "database.postgresql.ssl",
+        type: "boolean",
+        default: "false",
+        description: "Exige TLS. Actívalo si la base está en otra máquina.",
       },
     ],
   },
