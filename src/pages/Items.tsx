@@ -213,6 +213,11 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         equipan en la cabeza, el pecho, las piernas o los pies; en Bedrock hace falta además un{" "}
         <em>attachable</em> en el <code>.mcpack</code>.
       </p>
+      <p>
+        <code>equipment-model: none</code> deja la pieza sin aspecto de armadura. En la cabeza, el cliente pinta
+        entonces el <strong>modelo del ítem</strong> con su transformación <code>display.head</code>: así se lleva un
+        casco con modelo 3D propio (cuernos, crestas, visores), igual que una calabaza tallada.
+      </p>
 
       <SectionHeading id="menas">Menas propias</SectionHeading>
       <p>
