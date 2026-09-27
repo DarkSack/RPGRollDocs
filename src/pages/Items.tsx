@@ -266,7 +266,7 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <SectionHeading id="comportamiento">Triggers, habilidades y condiciones</SectionHeading>
       <p>Un ítem tiene dos formas de reaccionar a eventos: <code>triggers</code> (acciones directas, sin condición extra) y <code>abilities</code> (con cooldown propio y condiciones, activas o pasivas).</p>
-      <p>20 triggers disponibles: <code>EQUIP, UNEQUIP, RIGHT_CLICK, LEFT_CLICK, ENTITY_HIT, ENTITY_KILL, BLOCK_BREAK, BLOCK_PLACE, PLAYER_DAMAGE, PLAYER_DEATH, PLAYER_RESPAWN, PLAYER_MOVE, PLAYER_JUMP, PLAYER_SNEAK, PLAYER_SPRINT, PLAYER_INTERACT, CONSUME, THROW, PICKUP, DROP</code>.</p>
+      <p>21 triggers disponibles: <code>EQUIP, UNEQUIP, RIGHT_CLICK, LEFT_CLICK, ENTITY_HIT, ENTITY_KILL, BLOCK_BREAK, BLOCK_PLACE, PLAYER_DAMAGE, SHIELD_BLOCK, PLAYER_DEATH, PLAYER_RESPAWN, PLAYER_MOVE, PLAYER_JUMP, PLAYER_SNEAK, PLAYER_SPRINT, PLAYER_INTERACT, CONSUME, THROW, PICKUP, DROP</code>.</p>
       <p>Acciones incorporadas: <code>MESSAGE, COMMAND, SOUND, PARTICLE, EXPLOSION, DAMAGE, HEAL, FIRE, TITLE, BOSSBAR, SUMMON, PROJECTILE</code> — cinemáticas, abrir GUIs y scripts quedan como punto de extensión para otros addons.</p>
       <p>
         <code>MESSAGE</code> y <code>COMMAND</code> reemplazan <code>{"{player}"}</code> por el jugador,{" "}

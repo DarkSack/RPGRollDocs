@@ -315,6 +315,20 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
         fields={professionFields}
       />
 
+      <SectionHeading id="skins">Skins de jugador</SectionHeading>
+      <p>
+        Un worker puede llevar skin de jugador, como los NPCs. Como tiene que seguir siendo un mob para caminar
+        (usa el pathfinder), el mob se vuelve invisible y callado y un maniquí con la skin lo sigue a cada tick: se
+        coloca en su sitio, mira hacia donde mira él, lleva la herramienta de su profesión y la balancea al trabajar.
+        Pegarle al maniquí es pegarle al worker, y el maniquí acusa los golpes. No se guarda con el mundo: se
+        vuelve a crear al cargar el chunk, y al quitar la skin (o el plugin) el mob vuelve a verse.
+      </p>
+      <Callout tone="tip" title="De dónde sale la skin">
+        Un enlace de MineSkin (<code>mineskin.org/...</code>), <code>mineskin:&lt;id&gt;</code> o el uuid de una skin de
+        MineSkin; o el nombre de un jugador de Minecraft, cuya skin se copia tal como la lleva hoy. Se guarda en
+        <code>workers/&lt;uuid&gt;.yml</code> (<code>skin.value</code> y <code>skin.signature</code>).
+      </Callout>
+
       <SectionHeading id="gui">GUI: Worker Studio</SectionHeading>
       <p>
         <Kbd>/workersadmin browser</Kbd> abre un hub que enlaza a 4 navegadores (Profesiones, Habilidades,
@@ -352,6 +366,7 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
           <Tr><Td className="font-mono text-xs">/workersadmin reload</Td><Td>Recarga todas las definiciones desde disco.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/workersadmin spawn <profesion> [nombre]"}</Td><Td>Spawnea un worker en tu ubicación.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/workersadmin designator</Td><Td>Te da el Designador de Almacén.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/workersadmin skin <mineskin|jugador|quitar>"}</Td><Td>Pone al worker que miras la skin de un enlace o id de MineSkin, o la de un jugador; <code>quitar</code> le devuelve el aspecto de su profesión. También desde su ficha (botón Skin, solo staff).</Td></Tr>
           <Tr><Td className="font-mono text-xs">/workers inspect</Td><Td>Abre la ficha del worker al que estás mirando.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/workers hire</Td><Td>Contrata al worker al que estás mirando (salario por defecto de su profesión).</Td></Tr>
           <Tr><Td className="font-mono text-xs">/workers fire</Td><Td>Despide al worker al que estás mirando (si es tuyo, o de tu gremio).</Td></Tr>
