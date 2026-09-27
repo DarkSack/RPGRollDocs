@@ -122,7 +122,7 @@ const es = {
     aBrowser: "Abre el navegador gráfico del tipo de contenido indicado.",
     aEditor: "Abre el editor de un canal existente directamente.",
     aReload: "Recarga canales, idiomas, roles y emotes desde disco.",
-    permNote: "{spy} y {log} requieren {p1} / {p2} respectivamente; {admin} requiere {p3}, y {p4} saltea el antispam (todos default: op).",
+    permNote: "{spy} y {log} requieren {p1} / {p2} respectivamente; {admin} requiere {p3}, y {p4} saltea el antispam. Sin {p5}, los códigos de color y formato (&a, &l...) que escribe un jugador se quitan del chat, los susurros y /me. Todos default: op.",
 
     phTitle: "Placeholders (PlaceholderAPI)",
     phLead: "Expansión {badge}.",
@@ -277,7 +277,7 @@ const en: AddonsACopy = {
     aBrowser: "Opens the graphical browser for the given content type.",
     aEditor: "Opens an existing channel's editor directly.",
     aReload: "Reloads channels, languages, roles and emotes from disk.",
-    permNote: "{spy} and {log} require {p1} / {p2} respectively; {admin} requires {p3}, and {p4} skips the anti-spam (all default: op).",
+    permNote: "{spy} and {log} require {p1} / {p2} respectively; {admin} requires {p3}, and {p4} skips the anti-spam. Without {p5}, the colour and format codes (&a, &l...) a player types are stripped from chat, whispers and /me. All default: op.",
 
     phTitle: "Placeholders (PlaceholderAPI)",
     phLead: "{badge} expansion.",
@@ -430,7 +430,7 @@ const pt: AddonsACopy = {
     aBrowser: "Abre o navegador gráfico do tipo de conteúdo indicado.",
     aEditor: "Abre o editor de um canal existente diretamente.",
     aReload: "Recarrega canais, idiomas, papéis e emotes do disco.",
-    permNote: "{spy} e {log} exigem {p1} / {p2} respectivamente; {admin} exige {p3}, e {p4} ignora o antispam (todos default: op).",
+    permNote: "{spy} e {log} exigem {p1} / {p2} respectivamente; {admin} exige {p3}, e {p4} ignora o antispam. Sem {p5}, os códigos de cor e formato (&a, &l...) que um jogador digita são removidos do chat, dos sussurros e do /me. Todos default: op.",
 
     phTitle: "Placeholders (PlaceholderAPI)",
     phLead: "Expansão {badge}.",

@@ -117,7 +117,12 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         personales, de una empresa, de una guild, o compartidas con co-titulares explícitos. Los bancos también
         ofrecen crédito: un préstamo (<code>Loan</code>) deposita el monto en la cuenta al instante, acumula
         interés diario sobre el saldo restante (tarea periódica, <code>loan-check-interval-ticks</code>), y se
-        paga de a partes hasta llegar a 0.
+        paga de a partes hasta llegar a 0. Los límites van en la sección <code>loans</code> del{" "}
+        <code>config.yml</code>: <code>max-amount</code> (5000 por defecto; 0 = sin tope, no recomendado),{" "}
+        <code>max-active</code> (préstamos sin saldar a la vez por jugador),{" "}
+        <code>daily-interest-percent</code> y <code>term-days</code>. Al vencer se cobra lo que falte, primero
+        de la cuenta y después de la cartera de quien lo pidió; si no alcanza, la deuda sigue y se cobra en cada
+        revisión.
       </p>
       <Table>
         <Thead>
@@ -303,10 +308,12 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
 
       <SectionHeading id="tiendas">Tiendas de jugador</SectionHeading>
       <p>
-        Cada jugador puede abrir una tienda (<code>PlayerShop</code>) desde <Kbd>/economy shop</Kbd>: agrega el
-        ítem que tiene en la mano con un precio y un stock (o ilimitado), y otros jugadores compran directo desde
-        una GUI de navegación de todas las tiendas abiertas del servidor. El impuesto de venta (<code>SALE</code>)
-        configurado se retiene automáticamente en cada compra.
+        Cada jugador puede abrir una tienda (<code>PlayerShop</code>) desde <Kbd>/economy shop</Kbd> y meter en
+        ella el ítem que tiene en la mano, con un precio: el stock es lo que ha metido (si ya vendía ese mismo
+        ítem, se suma y se actualiza el precio), y retirar una línea le devuelve lo que no se vendió. Otros
+        jugadores compran directo desde una GUI de navegación de todas las tiendas abiertas del servidor; si la
+        compra no cabe en el inventario, no se hace. El stock ilimitado queda para las tiendas del servidor. El
+        impuesto de venta (<code>SALE</code>) configurado se retiene automáticamente en cada compra.
       </p>
 
       <SectionHeading id="subastas">Casa de Subastas (/subasta)</SectionHeading>

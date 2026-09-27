@@ -227,9 +227,22 @@ export function Guilds({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <SectionHeading id="comandos-team">{c.teamCmdTitle}</SectionHeading>
       <CommandTable rows={teamCommands} thCommand={c.thCommand} thWhat={c.thWhat} />
+      <p>
+        {fill(c.permWaypoint, {
+          tp: <Kbd>/team waypoint tp</Kbd>,
+          perm: <Badge tone="amber">rpgrollguilds.team.waypoint.teleport</Badge>,
+        })}
+      </p>
 
       <SectionHeading id="comandos-guild">{c.guildCmdTitle}</SectionHeading>
       <CommandTable rows={guildCommands} thCommand={c.thCommand} thWhat={c.thWhat} />
+      <p>
+        {fill(c.territoryLimits, {
+          min: <code>territories.min-radius</code>,
+          max: <code>territories.max-radius</code>,
+          worlds: <code>territories.worlds</code>,
+        })}
+      </p>
 
       <SectionHeading id="comandos-admin">{c.adminCmdTitle}</SectionHeading>
       <CommandTable rows={adminCommands} thCommand={c.thCommand} thWhat={c.thWhat} />

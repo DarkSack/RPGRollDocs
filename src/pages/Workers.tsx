@@ -363,7 +363,16 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
         <code>/workers</code> requiere <Badge tone="blue">rpgrollworkers.use</Badge> (default: true). Con
         RPGRoll-Guilds instalado, cualquier miembro del mismo gremio que el empleador también puede despedir su
         worker — "los gremios pueden compartir trabajadores" del diseño original, resuelto como gestión
-        compartida.
+        compartida. Nadie más puede renombrar ni despedir un worker ajeno sin{" "}
+        <Badge tone="amber">rpgrollworkers.admin.*</Badge>, y mover su hogar requiere{" "}
+        <Badge tone="amber">rpgrollworkers.sethome</Badge> (default: op).
+      </p>
+      <p>
+        Un worker trabaja alrededor de su hogar —el sitio donde se creó— y solo en chunks cargados. Antes de
+        cambiar un bloque lanza el mismo evento que un aldeano al cosechar, así que WorldGuard puede impedirlo y
+        CoreProtect lo registra; en el territorio protegido de un gremio solo trabajan los workers de sus
+        miembros. El leñador solo tala troncos coronados por hojas naturales: la madera de una casa no la toca.
+        GriefPrevention no frena a los mobs dentro de sus claims, por eso mover el hogar es de admin.
       </p>
       <PrevNext current="workers" onNavigate={onNavigate} />
     </>

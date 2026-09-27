@@ -176,6 +176,8 @@ const es = {
     aDelete: "Disuelve una guild por id (sin pasar por su LEADER).",
     aReload: "Recarga las misiones de guild desde disco (no hay nada más que recargar — las guilds son runtime).",
     permNote: "Requiere {perm} (default: op).",
+    permWaypoint: "{tp} requiere {perm} (default: op); sin él, los waypoints del equipo se pueden crear y listar, pero no llevan a nadie.",
+    territoryLimits: "Un territorio protege un cubo alrededor de quien lo reclama. Su radio va de {min} a {max} (5 y 50 por defecto, en el config.yml de Guilds), y {worlds} limita en qué mundos se puede reclamar (vacío = todos).",
 
     phTitle: "Placeholders (PlaceholderAPI)",
     phLead: "Expansión {badge}.",
@@ -360,6 +362,8 @@ const en: AddonsBCopy = {
     aDelete: "Disbands a guild by id (without going through its LEADER).",
     aReload: "Reloads the guild quests from disk (there is nothing else to reload — guilds are runtime).",
     permNote: "Requires {perm} (default: op).",
+    permWaypoint: "{tp} requires {perm} (default: op); without it, team waypoints can still be set and listed, but they do not take anyone there.",
+    territoryLimits: "A territory protects a cube around whoever claims it. Its radius goes from {min} to {max} (5 and 50 by default, in the Guilds config.yml), and {worlds} limits the worlds where claiming is allowed (empty = all).",
 
     phTitle: "Placeholders (PlaceholderAPI)",
     phLead: "{badge} expansion.",
@@ -542,6 +546,8 @@ const pt: AddonsBCopy = {
     aDelete: "Dissolve uma guilda por id (sem passar pelo seu LEADER).",
     aReload: "Recarrega as missões de guilda do disco (não há mais nada para recarregar — as guildas são runtime).",
     permNote: "Exige {perm} (default: op).",
+    permWaypoint: "{tp} exige {perm} (default: op); sem ela, os waypoints do time ainda podem ser criados e listados, mas não levam ninguém até lá.",
+    territoryLimits: "Um território protege um cubo ao redor de quem o reivindica. O raio vai de {min} a {max} (5 e 50 por padrão, no config.yml do Guilds), e {worlds} limita os mundos onde se pode reivindicar (vazio = todos).",
 
     phTitle: "Placeholders (PlaceholderAPI)",
     phLead: "Expansão {badge}.",
