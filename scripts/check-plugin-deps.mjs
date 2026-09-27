@@ -61,6 +61,7 @@ const MODULES = {
   traps: "traps",
   sackresourcepack: "sackresourcepack",
   pass: "pass",
+  furniture: "furniture",
 };
 
 const localIndex = process.argv.indexOf("--local");

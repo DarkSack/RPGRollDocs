@@ -61,6 +61,7 @@ export const nav: NavSection[] = [
       { slug: "extras", label: "Extras" },
       { slug: "traps", label: "Traps & Defenses" },
       { slug: "pass", label: "Pase de temporada" },
+      { slug: "furniture", label: "Muebles" },
     ],
   },
   {

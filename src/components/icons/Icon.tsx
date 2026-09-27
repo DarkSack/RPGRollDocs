@@ -125,6 +125,8 @@ export const HeartPulseIcon = (p: IconProps) =>
   base(p, <><path d="M19 14c1.5-1.5 3-3.2 3-5.5A4.5 4.5 0 0 0 13.5 6 4.5 4.5 0 0 0 5 8.5c0 2.3 1.5 4 3 5.5l6 6 2-2" /><path d="M3.5 12h2l1.5-3 2 5 1.5-3H14" /></>);
 export const RobotIcon = (p: IconProps) =>
   base(p, <><rect x="4" y="9" width="16" height="11" rx="2" /><path d="M12 2v4M8 13v2M16 13v2" /><circle cx="12" cy="4" r="1" fill="currentColor" stroke="none" /></>);
+export const ArmchairIcon = (p: IconProps) =>
+  base(p, <><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3" /><path d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z" /><path d="M5 18v2M19 18v2" /></>);
 export const NpcIcon = (p: IconProps) =>
   base(p, <><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" /></>);
 export const GemIcon = (p: IconProps) =>

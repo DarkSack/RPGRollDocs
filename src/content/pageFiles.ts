@@ -25,6 +25,7 @@ export const PAGE_FILES: Record<string, string> = {
   "dungeons": "Dungeons.tsx",
   "traps": "Traps.tsx",
   "pass": "Pass.tsx",
+  "furniture": "Furniture.tsx",
   "rpgroll-particles": "Particles.tsx",
   "rpgroll-effects": "Effects.tsx",
   "magic": "Magic.tsx",

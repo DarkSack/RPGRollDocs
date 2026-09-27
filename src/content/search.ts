@@ -461,6 +461,23 @@ export const searchIndex: SearchEntry[] = [
   h("pass", "Permisos", "permisos"),
   h("pass", "Archivos", "archivos"),
 
+  // Furniture
+  h("furniture", "Requisitos", "requisitos"),
+  h("furniture", "Cómo funciona", "como-funciona"),
+  h("furniture", "Colocar y usar", "controles"),
+  h("furniture", "Protección y límites", "proteccion"),
+  h("furniture", "Los muebles de fábrica", "catalogo"),
+  h("furniture", "El carpintero", "carpintero"),
+  h("furniture", "Otras formas de conseguirlos", "obtener"),
+  h("furniture", "Formato de un mueble", "formato-yaml"),
+  h("furniture", "Funciones: asiento, almacén, luz, estados, estante", "funciones"),
+  h("furniture", "Bedrock (Geyser, GeyserDisplayEntity)", "bedrock"),
+  h("furniture", "Resource pack", "resource-pack"),
+  h("furniture", "Comandos — /muebles, /furnitureadmin", "comandos"),
+  h("furniture", "Permisos", "permisos"),
+  h("furniture", "Configuración", "configuracion"),
+  h("furniture", "Archivos", "archivos"),
+
   // Extras
   h("extras", "Jugadores AFK", "afk"),
   h("extras", "Menú del servidor (brújula)", "menu-servidor"),

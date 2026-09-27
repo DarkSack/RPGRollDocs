@@ -49,6 +49,7 @@ const notesEn: Map_ = {
   "vault:mobs": "Money rewards for killing mobs.",
   "vault:dungeons": "Money rewards from dungeons.",
   "vault:pass": "money: rewards from the pass, the daily reward and votes. Without an economy those rewards are skipped with a console warning.",
+  "vault:furniture": "Carpenter recipes that cost money. Without an economy those recipes cannot be crafted.",
   "votifier:pass": "Rewards, streak and pass points for voting. Without Votifier, /votar still shows the links and /passadmin vote simulates a vote.",
 
   "protocollib:tab":
@@ -107,6 +108,7 @@ const notesPt: Map_ = {
   "vault:mobs": "Recompensas em dinheiro ao matar mobs.",
   "vault:dungeons": "Recompensas em dinheiro das masmorras.",
   "vault:pass": "Recompensas money: do passe, do diário e dos votos. Sem economia, essas recompensas são puladas com um aviso no console.",
+  "vault:furniture": "Receitas do carpinteiro que cobram dinheiro. Sem economia, essas receitas não podem ser fabricadas.",
   "votifier:pass": "Recompensas, sequência e pontos de passe por votar. Sem Votifier, /votar continua mostrando os links e /passadmin vote simula um voto.",
 
   "protocollib:tab":

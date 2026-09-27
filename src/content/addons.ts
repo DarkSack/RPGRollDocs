@@ -11,6 +11,7 @@ import {
   ShieldIcon,
   BoxesIcon,
   CompassIcon,
+  ArmchairIcon,
   SparklesIcon,
   HeartPulseIcon,
   LeafIcon,
@@ -66,6 +67,7 @@ export const addons: AddonMeta[] = [
   { slug: "extras", icon: WrenchIcon, blurb: "Sed, stamina, temperatura y condiciones de supervivencia.", tone: "green" },
   { slug: "traps", icon: AlertTriangleIcon, blurb: "Trampas, torretas y mecanismos configurables: triggers, condiciones, cadenas y bloques protegidos.", tone: "red" },
   { slug: "pass", icon: CalendarIcon, blurb: "Pase de temporada gratis y premium, misiones, recompensa diaria y votos.", tone: "amber" },
+  { slug: "furniture", icon: ArmchairIcon, blurb: "Muebles con modelo 3D: asientos, almacén, luz, carpintero y versiones por madera y color.", tone: "amber" },
 ];
 
 export function addonMeta(slug: string): AddonMeta | undefined {

@@ -70,6 +70,7 @@ export const integrations: Integration[] = [
       { slug: "mobs", requirement: "optional", note: "Recompensas en dinero al matar mobs." },
       { slug: "dungeons", requirement: "optional", note: "Recompensas en dinero de las mazmorras." },
       { slug: "pass", requirement: "optional", note: "Recompensas money: del pase, el diario y los votos. Sin economía, esas recompensas se omiten con un aviso en consola." },
+      { slug: "furniture", requirement: "optional", note: "Recetas del carpintero que cobran dinero. Sin economía, esas recetas no se pueden fabricar." },
     ],
   },
   {
@@ -180,7 +181,7 @@ export const addonDependencies: AddonDependencies[] = [
   {
     slug: "mobs",
     hard: ["RPGRoll-Lib"],
-    soft: ["RPGRoll", "Vault", "RPGRoll-Items", "RPGRoll-Quests", "PlaceholderAPI", "SackResourcePack"],
+    soft: ["RPGRoll", "Vault", "RPGRoll-Items", "RPGRoll-Quests", "PlaceholderAPI", "SackResourcePack", "FreeMinecraftModels"],
   },
   { slug: "chat", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Guilds", "PlaceholderAPI"] },
   { slug: "guilds", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Items", "RPGRoll-Quests", "Vault", "PlaceholderAPI"] },
@@ -201,7 +202,7 @@ export const addonDependencies: AddonDependencies[] = [
     hard: ["RPGRoll-Lib"],
     soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "RPGRoll-Ranching", "RPGRoll-Fishing", "RPGRoll-Guilds", "Vault", "SackResourcePack"],
   },
-  { slug: "economy", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "Vault", "PlaceholderAPI", "RPGRoll-Guilds", "RPGRoll-Seasons", "RPGRoll-Items", "RPGRoll-Enchantments"] },
+  { slug: "economy", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "Vault", "PlaceholderAPI", "RPGRoll-Guilds", "RPGRoll-Seasons", "RPGRoll-Items", "RPGRoll-Enchantments", "RPGRoll-Furniture"] },
   { slug: "crafting", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Items", "RPGRoll-Economy", "RPGRoll-Guilds", "RPGRoll-Seasons"] },
   { slug: "tab", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "ProtocolLib", "PlaceholderAPI"] },
   { slug: "extras", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-TAB", "RPGRoll-Seasons", "RPGRoll-Items", "PlaceholderAPI", "Vault"] },
@@ -210,12 +211,13 @@ export const addonDependencies: AddonDependencies[] = [
     hard: ["RPGRoll-Lib"],
     soft: ["RPGRoll", "RPGRoll-Items", "RPGRoll-Effects", "RPGRoll-Mobs", "RPGRoll-FX", "RPGRoll-Guilds", "PlaceholderAPI"],
   },
+  { slug: "furniture", hard: ["RPGRoll-Lib"], soft: ["SackResourcePack", "Vault"] },
   {
     slug: "pass",
     hard: ["RPGRoll-Lib"],
     soft: ["RPGRoll", "RPGRoll-Quests", "RPGRoll-Mobs", "RPGRoll-Crates", "RPGRoll-Items", "Votifier", "Vault"],
   },
-  // SackResourcePack es un pipeline independiente: su plugin.yml no declara
-  // depend ni softdepend en RPGRoll.
-  { slug: "sackresourcepack", hard: [], soft: [] },
+  // SackResourcePack es un pipeline independiente: no depende de RPGRoll; solo
+  // arranca después de FreeMinecraftModels si está.
+  { slug: "sackresourcepack", hard: [], soft: ["FreeMinecraftModels"] },
 ];

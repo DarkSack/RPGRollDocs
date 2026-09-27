@@ -85,6 +85,7 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           <Tr><Td>PlaceholderAPI</Td><Td><Badge>softdepend</Badge></Td><Td>Placeholders <code>%rpgeconomy_...%</code>.</Td></Tr>
           <Tr><Td>RPGRoll-Guilds</Td><Td><Badge>softdepend</Badge></Td><Td>Integración activa: impuesto territorial periódico por guild (ver "Integración activa" más abajo).</Td></Tr>
           <Tr><Td>RPGRoll-Seasons</Td><Td><Badge>softdepend</Badge></Td><Td>Integración activa: modificadores de precio de mercado por estación (ver "Economías regionales" más abajo).</Td></Tr>
+          <Tr><Td>RPGRoll-Furniture</Td><Td><Badge>softdepend</Badge></Td><Td>Líneas <code>furniture:</code> de la tienda del servidor (ver "Tienda del servidor").</Td></Tr>
         </tbody>
       </Table>
 
@@ -268,6 +269,7 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           <Tr><Td className="font-mono text-xs">item: flame_blade</Td><Td>Un ítem de RPGRoll-Items (necesita ese módulo).</Td></Tr>
           <Tr><Td className="font-mono text-xs">enchant: lifesteal + level</Td><Td>El libro de un encantamiento de RPGRoll-Enchantments, que se aplica en el yunque.</Td></Tr>
           <Tr><Td className="font-mono text-xs">book: mending + level</Td><Td>Un libro encantado vanilla, por la clave del encantamiento.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">furniture: sofa:red</Td><Td>Un mueble de RPGRoll-Furniture, con su versión opcional tras los dos puntos (necesita ese módulo).</Td></Tr>
           <Tr><Td className="font-mono text-xs">potion: STRONG_HEALING</Td><Td>Una poción vanilla; <code>form: SPLASH_POTION</code> o <code>LINGERING_POTION</code> para arrojadiza o persistente.</Td></Tr>
         </tbody>
       </Table>
