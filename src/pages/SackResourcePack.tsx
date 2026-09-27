@@ -393,6 +393,34 @@ export function SackResourcePack({
         <code>pack_format</code> entre versiones de Minecraft.
       </p>
 
+      <SectionHeading id="packs-externos">Packs de otros plugins (external-packs)</SectionHeading>
+      <p>
+        Algunos plugins generan su propio resource pack en su carpeta (FreeMinecraftModels, por ejemplo,
+        convierte sus modelos de Blockbench). En vez de copiarlo a mano a <code>content/</code>,{" "}
+        <code>external-packs</code> lo lee en su sitio en cada build y lo suma como un módulo más, con su
+        prioridad. La ruta es relativa a <code>plugins/</code> y tiene que tener un <code>assets/</code>{" "}
+        dentro; si todavía no existe (el otro plugin no ha generado nada), se salta sin error.{" "}
+        <code>exclude</code> deja fuera rutas de dentro de su <code>assets/</code>.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="plugins/SackResourcePack/config.yml"
+        code={
+          "external-packs:\n" +
+          "  - path: FreeMinecraftModels/output/FreeMinecraftModels\n" +
+          "    id: freeminecraftmodels\n" +
+          "    namespace: freeminecraftmodels\n" +
+          "    priority: 20\n" +
+          "    exclude:\n" +
+          "      - freeminecraftmodels/rspm_bedrock_pack/   # su pack de Bedrock, no va en el de Java\n"
+        }
+      />
+      <p>
+        SackResourcePack declara <code>softdepend: [FreeMinecraftModels]</code>, así que arranca después y
+        el pack de FMM ya está generado para el primer build. Tras un <Kbd>/fmm reload</Kbd>, un{" "}
+        <Kbd>/srp rebuild</Kbd> lo vuelve a empaquetar.
+      </p>
+
       <SectionHeading id="modo-desarrollo">Modo desarrollo</SectionHeading>
       <p>
         Un <code>WatchService</code> (JDK puro) observa <code>content/</code>{" "}

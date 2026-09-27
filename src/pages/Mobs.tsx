@@ -103,9 +103,10 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <Callout tone="info" title="Alcance de esta primera versión: núcleo PvE a fondo">
         RPGRoll-Mobs prioriza profundidad real en definición de mob, motor de combate, comportamiento y
-        fases de jefe. No integra con ModelEngine/BetterModel ni WorldGuard/WorldEdit — para skins visuales
-        sin esas dependencias, usa <a href="#reskin" onClick={(e) => e.preventDefault()}>model.skins</a>,
-        que sí está implementado.
+        fases de jefe. Para verse distinto tiene dos caminos: modelos 3D animados con FreeMinecraftModels
+        (gratis, opcional — ver <a href="#modelos-3d" onClick={(e) => e.preventDefault()}>Modelos 3D</a>) o
+        skins estáticas sin ninguna dependencia con <a href="#reskin" onClick={(e) => e.preventDefault()}>model.skins</a>.
+        No integra con ModelEngine/BetterModel ni WorldGuard/WorldEdit.
       </Callout>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
@@ -178,6 +179,53 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         Cuando un mob recibe daño, el listener ajusta el daño del evento en el momento (esquive/resistencias), pero
         el chequeo de transición de fase y el trigger <code>DAMAGED</code> se agendan para el próximo tick — recién
         ahí <code>getHealth()</code> refleja la vida ya restada por Bukkit.
+      </Callout>
+
+      <SectionHeading id="modelos-3d">Modelos 3D animados (FreeMinecraftModels)</SectionHeading>
+      <p>
+        <code>model.model-engine-id</code> es el id de un modelo de{" "}
+        <strong>FreeMinecraftModels</strong> (FMM, de MagmaGuy, gratis y GPLv3): el nombre de su{" "}
+        <code>.bbmodel</code> en <code>plugins/FreeMinecraftModels/models/</code>. Con FMM instalado, el mob
+        se vuelve invisible y el modelo lo sigue y se anima; la entidad vanilla sigue siendo la que pelea
+        (hitbox, IA, vida). Sin FMM el campo se ignora y el mob se ve vanilla: la integración es blanda.
+      </p>
+      <Table>
+        <Thead>
+          <Th>Animación</Th>
+          <Th>Quién la lanza</Th>
+        </Thead>
+        <tbody>
+          <Tr><Td className="font-mono text-xs">spawn / idle / walk</Td><Td>FMM, solo (al aparecer, quieto, caminando).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">attack</Td><Td>RPGRoll-Mobs, cuando el mob golpea — salvo que una skill acabe de lanzar otra animación (1,5 s de margen, para no pisarla).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">death</Td><Td>RPGRoll-Mobs, al morir; el modelo se retira al acabarla.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">cualquier otra</Td><Td>La acción <code>ANIMATION</code> de una skill o trigger (<code>value</code>: el nombre; <code>loop: true</code> la repite).</Td></Tr>
+        </tbody>
+      </Table>
+      <CodeBlock
+        language="yaml"
+        filename="un jefe con modelo 3D (fragmento)"
+        code={
+          "base-entity-type: RAVAGER\n" +
+          "model:\n" +
+          "  scale: 1.3                # FMM escala el modelo con el atributo scale del mob\n" +
+          "  model-engine-id: wyrm_carmesi\n" +
+          "skills:\n" +
+          "  - id: aliento_de_fuego\n" +
+          "    trigger: PERIODIC\n" +
+          "    cooldown: \"18s\"\n" +
+          "    actions:\n" +
+          "      - type: ANIMATION\n" +
+          "        value: aliento\n" +
+          "      - type: FIRE\n" +
+          "        ticks: \"100\"\n"
+        }
+      />
+      <Callout tone="info" title="El modelo se diseña al tamaño del mob base">
+        FMM multiplica el modelo por el atributo <code>scale</code> de la entidad, igual que Minecraft hace con
+        su caja de golpes. Si el modelo mide lo mismo que el mob vanilla a escala 1, con cualquier{" "}
+        <code>model.scale</code> seguirán encajando. El nombre del mob se muestra en el hueso <code>tag_</code>{" "}
+        del modelo, no sobre la entidad invisible. Para los jugadores de Bedrock, FMM genera también un pack
+        que reparte ResourcePackManager a Geyser.
       </Callout>
 
       <SectionHeading id="reskin">Skins visuales (sin ModelEngine/BetterModel)</SectionHeading>
@@ -399,7 +447,7 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr><Td className="font-mono text-xs">PERIODIC / HEALTH_THRESHOLD</Td><Td>Cada pocos segundos, mientras esté vivo.</Td></Tr>
         </tbody>
       </Table>
-      <p>Acciones incorporadas: <code>MESSAGE</code>, <code>COMMAND</code>, <code>SOUND</code>, <code>PARTICLE</code>, <code>DAMAGE</code>, <code>HEAL</code>, <code>SUMMON</code>, <code>TELEPORT</code>, <code>EXPLOSION</code>, <code>FIRE</code>, <code>FREEZE</code>, <code>PUSH</code>, <code>PULL</code>, <code>LIGHTNING</code>, <code>TITLE</code> — cada una con sus propios parámetros por <code>key=value</code>.</p>
+      <p>Acciones incorporadas: <code>MESSAGE</code>, <code>COMMAND</code>, <code>SOUND</code>, <code>PARTICLE</code>, <code>DAMAGE</code>, <code>HEAL</code>, <code>SUMMON</code>, <code>TELEPORT</code>, <code>EXPLOSION</code>, <code>FIRE</code>, <code>FREEZE</code>, <code>PUSH</code>, <code>PULL</code>, <code>LIGHTNING</code>, <code>TITLE</code>, <code>ANIMATION</code> — cada una con sus propios parámetros por <code>key=value</code>.</p>
 
       <YamlBuilder
         title="Constructor visual: Mob"
