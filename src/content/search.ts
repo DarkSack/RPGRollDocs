@@ -305,6 +305,7 @@ export const searchIndex: SearchEntry[] = [
   h("ranching", "Nutrición y bienestar", "bienestar"),
   h("ranching", "Enfermedades, vacunas y medicina", "salud"),
   h("ranching", "Producción y calidad", "produccion"),
+  h("ranching", "Modelos 3D e ítems", "modelos"),
   h("ranching", "Ejemplos de archivo YAML", "formato-yaml"),
   h("ranching", "GUI: Ranch Studio", "gui"),
   h("ranching", "API para addons — RanchingAPI", "api"),

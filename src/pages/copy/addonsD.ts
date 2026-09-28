@@ -162,20 +162,20 @@ const es = {
     reqBody2:
       ", el campo {seasons} de una especie simplemente no filtra nada (siempre elegible por estación) y el clima usa una tabla de temperatura aproximada propia en vez de la de Seasons. Sin RPGRoll-FX/RPGRoll-Effects, {effects} no hacen nada — el resto de la captura funciona igual. Sin",
     reqBody3:
-      ", {cmd} se guarda igual en la especie pero no se sincroniza ninguna textura — el ítem se ve con el {icon} vanilla normal, sin errores ni advertencias.",
+      ", la clave {cmd} se guarda igual pero nadie sirve el pack de modelos: el ítem se ve con su {icon} vanilla normal, sin errores ni advertencias.",
 
     speciesTitle: "Especies de peces",
     speciesBody:
       "Una {species} combina identidad (nombre, ícono, {cmd}), clasificación (categoría/rareza), condiciones de captura y rango de peso/largo/precio/experiencia. {strong} — un {waterTypes} vacío permite cualquier agua, no ninguna.",
     speciesStrong: "Todo campo de tipo lista vacío significa “sin restricción”",
-    texTitle: "Texturas custom: la carpeta resourcepack/ se sincroniza sola",
+    texTitle: "Modelos 3D de fábrica",
     texBody:
-      "{cmd} solo define el número — el material/textura reales los pone un resource pack. Dejá el modelo/textura en {path} y, si SackResourcePack está instalado, se sincroniza solo al arrancar el plugin (mismo mecanismo que ya usa RPGRoll-Items). Sin ese resource pack armado, el pez se ve con su {icon} vanilla normal.",
+      "{cmd} pone el modelo del ítem (componente item_model, 1.21.4+). El plugin trae modelos para todas sus especies, cañas (con su versión lanzada), carnadas y basura, con ids como rpgroll_fishing:species/<id>; el pack de Java va dentro del jar y se registra solo en SackResourcePack. En {path} están los .bbmodel para editarlos en Blockbench y el pack con el mapeo de Geyser para Bedrock. Sin model, el ítem se ve con su {icon} vanilla; custom-model-data sigue valiendo para packs propios.",
     thCondition: "Condición",
     thHow: "Cómo se resuelve",
     cWater: "Bioma/bloque del anzuelo → RIVER/LAKE/SWAMP/OCEAN/DEEP_OCEAN, o forzado por una {region} para MAGIC_WATER/CORRUPTED_WATER.",
     cBiomes: "Nombre de bioma vanilla en minúsculas (ej. {ex}).",
-    cDepths: "Escaneo simple de la columna de agua: SURFACE/MID_WATER/BOTTOM, o UNDERWATER_CAVE si hay techo sólido sobre la superficie.",
+    cDepths: "Las capas que hay en la columna de agua del anzuelo: SURFACE siempre, MID_WATER desde 3 bloques de hondo, BOTTOM si hay fondo a menos de 40 bloques, y UNDERWATER_CAVE si hay techo sólido encima. La especie vale si comparte alguna capa.",
     cWeather: "SUNNY/RAIN/SNOW (según temperatura)/STORM, leído de {api}.",
     cTimes: "DAY/NIGHT/DAWN/DUSK/NOON/MIDNIGHT — varios pueden estar activos a la vez, según {api}.",
     cSeasons: "Compara contra la estación efectiva de RPGRoll-Seasons (si está instalado).",
@@ -191,12 +191,12 @@ const es = {
       "Los cuatro son, en la práctica, multiplicadores sobre la misma tirada de captura — {rod} los junta en un solo tipo de contenido (mismo criterio que {catalyst} en Magic). Lo que los diferenciaría (modelo, lore, nombre) sigue siendo libre por caña.",
     thRodField: "Campo de la caña",
     thEffect: "Efecto",
-    rReelSpeed: "Achica la zona de tensión del minijuego RPG (más difícil) o la agranda si es >1 (más fácil).",
+    rReelSpeed: "Ensancha la zona verde del minijuego RPG si es >1 (más fácil) o la estrecha si es <1 (entre x0,5 y x2).",
     rPrecision: "Bono directo a la tirada de calidad de la captura.",
     rResistance: "Aumenta los fallos permitidos antes de que el pez escape.",
     rLuck: "Multiplica el peso de tirada de especies no-COMMON.",
     rPreferred: "+50% de peso extra a especies de esas categorías.",
-    rCastPower: "Cosmético por ahora — reservado para una futura mecánica de distancia real.",
+    rCastPower: "Multiplica la fuerza del lanzamiento (entre 0,5 y 2): con 1,5 el anzuelo cae más o menos a la mitad de distancia más lejos.",
     baitBody:
       "Una carnada se sostiene en la mano secundaria y se consume 1 por cada lanzamiento (aunque no muerda nada). {quality} suma directo a la tirada de calidad; {legWeight} es la “Carnada Legendaria” del diseño original — solo importa contra especies {legendary}.",
 
@@ -210,7 +210,7 @@ const es = {
 
     miniTitle: "Minijuego de forcejeo (modo RPG)",
     miniBody:
-      "Con {rpgMode} (config global), cada picada de pez abre una barra de tensión: un indicador oscila con una onda seno y el jugador tiene que golpear con {strong} — a propósito, no click derecho, porque con una caña en mano ese botón ya recoge el sedal en vanilla. {behavior} de la especie decide velocidad de oscilación y ancho de zona; {jumper} re-centra la zona cada 40 ticks para simular un pez errático. Con {rpgModeOff} la captura se resuelve al instante, sin minijuego (modo vanilla clásico).",
+      "Con {rpgMode} (config global), cada picada de pez abre una barra de tensión: un indicador oscila con una onda seno y el jugador tiene que golpear con {strong} — a propósito, no click derecho, porque con una caña en mano ese botón ya recoge el sedal en vanilla. {behavior} de la especie decide velocidad de oscilación y ancho de zona; {jumper} re-centra la zona cada 40 ticks para simular un pez errático. Con {rpgModeOff} la captura se resuelve al instante, sin minijuego (modo vanilla clásico). Solo cuenta un acierto por cada pasada del indicador por la zona (machacar el botón no gana: fuera de la zona suma fallos), no se puede volver a lanzar a mitad del forcejeo y, si el jugador se desconecta, la partida se corta sin premio. El pez da su base-experience al sacarlo.",
     miniStrong: "click izquierdo (swing de brazo)",
 
     yamlTitle: "Ejemplos de archivo YAML",
@@ -226,6 +226,7 @@ const es = {
     fDisplayName: "Nombre visible",
     fIcon: "Ícono (Material)",
     fCmd: "CustomModelData",
+    fModel: "Modelo (item_model)",
     fDescription: "Descripción",
     fCategory: "Categoría",
     fRarity: "Rareza",
@@ -243,8 +244,8 @@ const es = {
     fCatchStatus: "Efecto de estado (RPGRoll-Effects) al capturar",
     fMaterial: "Material",
     fDurability: "Durabilidad",
-    fCastPower: "Poder de lanzamiento (cosmético)",
-    fReelSpeed: "Velocidad de reeleo (ancho de zona)",
+    fCastPower: "Poder de lanzamiento (alcance)",
+    fReelSpeed: "Velocidad de recogida (ancho de zona)",
     fPrecision: "Precisión (bono a calidad)",
     fResistance: "Resistencia (fallos permitidos)",
     fLuck: "Suerte (peso de especies raras+)",
@@ -434,20 +435,20 @@ const en: AddonsDCopy = {
     reqBody2:
       ", a species' {seasons} field simply filters nothing (always season-eligible) and the weather uses an approximate temperature table of its own instead of Seasons'. Without RPGRoll-FX/RPGRoll-Effects, {effects} do nothing — the rest of the catch works the same. Without",
     reqBody3:
-      ", {cmd} is still stored on the species but no texture gets synced — the item shows with its normal vanilla {icon}, with no errors or warnings.",
+      ", the {cmd} key is still stored but nobody serves the model pack: the item shows with its normal vanilla {icon}, with no errors or warnings.",
 
     speciesTitle: "Fish species",
     speciesBody:
       "A {species} combines identity (name, icon, {cmd}), classification (category/rarity), catch conditions and weight/length/price/experience ranges. {strong} — an empty {waterTypes} allows any water, not none.",
     speciesStrong: "Every empty list field means “no restriction”",
-    texTitle: "Custom textures: the resourcepack/ folder syncs itself",
+    texTitle: "Bundled 3D models",
     texBody:
-      "{cmd} only defines the number — the actual material/texture comes from a resource pack. Drop the model/texture in {path} and, if SackResourcePack is installed, it syncs by itself when the plugin starts (the same mechanism RPGRoll-Items already uses). Without that resource pack built, the fish shows with its normal vanilla {icon}.",
+      "{cmd} sets the item's model (item_model component, 1.21.4+). The plugin ships models for all its species, rods (with their cast version), baits and junk, with ids like rpgroll_fishing:species/<id>; the Java pack lives inside the jar and registers itself in SackResourcePack. {path} holds the .bbmodel files to edit them in Blockbench and the pack with the Geyser mapping for Bedrock. Without model, the item shows with its vanilla {icon}; custom-model-data still works for your own packs.",
     thCondition: "Condition",
     thHow: "How it resolves",
     cWater: "Biome/block at the hook → RIVER/LAKE/SWAMP/OCEAN/DEEP_OCEAN, or forced by a {region} for MAGIC_WATER/CORRUPTED_WATER.",
     cBiomes: "Vanilla biome name in lowercase (e.g. {ex}).",
-    cDepths: "A simple scan of the water column: SURFACE/MID_WATER/BOTTOM, or UNDERWATER_CAVE if there is a solid ceiling above the surface.",
+    cDepths: "The layers present in the hook's water column: SURFACE always, MID_WATER from 3 blocks deep, BOTTOM if there is a floor within 40 blocks, and UNDERWATER_CAVE if there is a solid ceiling above. The species qualifies if it shares any layer.",
     cWeather: "SUNNY/RAIN/SNOW (by temperature)/STORM, read from {api}.",
     cTimes: "DAY/NIGHT/DAWN/DUSK/NOON/MIDNIGHT — several can be active at once, according to {api}.",
     cSeasons: "Compared against RPGRoll-Seasons' effective season (if installed).",
@@ -463,12 +464,12 @@ const en: AddonsDCopy = {
       "All four are, in practice, multipliers on the same catch roll — {rod} merges them into a single content type (the same criterion as {catalyst} in Magic). What would distinguish them (model, lore, name) stays free per rod.",
     thRodField: "Rod field",
     thEffect: "Effect",
-    rReelSpeed: "Shrinks the RPG minigame's tension zone (harder) or widens it if >1 (easier).",
+    rReelSpeed: "Widens the green zone of the RPG minigame when >1 (easier) or narrows it when <1 (between x0.5 and x2).",
     rPrecision: "A direct bonus to the catch's quality roll.",
     rResistance: "Raises the number of misses allowed before the fish escapes.",
     rLuck: "Multiplies the roll weight of non-COMMON species.",
     rPreferred: "+50% extra weight for species in those categories.",
-    rCastPower: "Cosmetic for now — reserved for a future real distance mechanic.",
+    rCastPower: "Multiplies the cast strength (between 0.5 and 2): at 1.5 the hook lands roughly half again as far.",
     baitBody:
       "A bait is held in the off hand and 1 is consumed per cast (even if nothing bites). {quality} adds directly to the quality roll; {legWeight} is the original design's “Legendary Bait” — it only matters against {legendary} species.",
 
@@ -482,7 +483,7 @@ const en: AddonsDCopy = {
 
     miniTitle: "Struggle minigame (RPG mode)",
     miniBody:
-      "With {rpgMode} (global config), every bite opens a tension bar: an indicator oscillates on a sine wave and the player has to strike with {strong} — deliberately not right click, because with a rod in hand that button already reels the line in vanilla. The species' {behavior} decides oscillation speed and zone width; {jumper} re-centres the zone every 40 ticks to simulate an erratic fish. With {rpgModeOff} the catch resolves instantly, with no minigame (classic vanilla mode).",
+      "With {rpgMode} (global config), every bite opens a tension bar: an indicator oscillates on a sine wave and the player has to strike with {strong} — deliberately not right click, because with a rod in hand that button already reels the line in vanilla. The species' {behavior} decides oscillation speed and zone width; {jumper} re-centres the zone every 40 ticks to simulate an erratic fish. With {rpgModeOff} the catch resolves instantly, with no minigame (classic vanilla mode). Only one hit counts per pass of the marker through the zone (button mashing does not win: outside the zone it adds misses), you cannot cast again mid-fight and, if the player disconnects, the fight ends with no reward. The fish grants its base-experience when landed.",
     miniStrong: "left click (arm swing)",
 
     yamlTitle: "YAML file examples",
@@ -498,6 +499,7 @@ const en: AddonsDCopy = {
     fDisplayName: "Display name",
     fIcon: "Icon (Material)",
     fCmd: "CustomModelData",
+    fModel: "Model (item_model)",
     fDescription: "Description",
     fCategory: "Category",
     fRarity: "Rarity",
@@ -515,7 +517,7 @@ const en: AddonsDCopy = {
     fCatchStatus: "Status effect (RPGRoll-Effects) on catch",
     fMaterial: "Material",
     fDurability: "Durability",
-    fCastPower: "Cast power (cosmetic)",
+    fCastPower: "Cast power (range)",
     fReelSpeed: "Reel speed (zone width)",
     fPrecision: "Precision (quality bonus)",
     fResistance: "Resistance (misses allowed)",
@@ -704,20 +706,20 @@ const pt: AddonsDCopy = {
     reqBody2:
       ", o campo {seasons} de uma espécie simplesmente não filtra nada (sempre elegível por estação) e o clima usa uma tabela de temperatura aproximada própria em vez da do Seasons. Sem RPGRoll-FX/RPGRoll-Effects, {effects} não fazem nada — o resto da captura funciona igual. Sem o",
     reqBody3:
-      ", {cmd} é salvo na espécie do mesmo jeito mas nenhuma textura é sincronizada — o item aparece com o {icon} vanilla normal, sem erros nem avisos.",
+      ", a chave {cmd} é salva do mesmo jeito mas ninguém serve o pack de modelos: o item aparece com o {icon} vanilla normal, sem erros nem avisos.",
 
     speciesTitle: "Espécies de peixes",
     speciesBody:
       "Uma {species} combina identidade (nome, ícone, {cmd}), classificação (categoria/raridade), condições de captura e faixa de peso/comprimento/preço/experiência. {strong} — um {waterTypes} vazio permite qualquer água, não nenhuma.",
     speciesStrong: "Todo campo de lista vazio significa “sem restrição”",
-    texTitle: "Texturas customizadas: a pasta resourcepack/ se sincroniza sozinha",
+    texTitle: "Modelos 3D de fábrica",
     texBody:
-      "{cmd} só define o número — o material/textura reais vêm de um resource pack. Deixe o modelo/textura em {path} e, se o SackResourcePack estiver instalado, sincroniza sozinho ao iniciar o plugin (mesmo mecanismo que o RPGRoll-Items já usa). Sem esse resource pack montado, o peixe aparece com o seu {icon} vanilla normal.",
+      "{cmd} define o modelo do item (componente item_model, 1.21.4+). O plugin traz modelos para todas as suas espécies, varas (com a versão lançada), iscas e lixo, com ids como rpgroll_fishing:species/<id>; o pack de Java vai dentro do jar e se registra sozinho no SackResourcePack. Em {path} estão os .bbmodel para editar no Blockbench e o pack com o mapeamento do Geyser para Bedrock. Sem model, o item aparece com o {icon} vanilla; custom-model-data continua valendo para packs próprios.",
     thCondition: "Condição",
     thHow: "Como se resolve",
     cWater: "Bioma/bloco do anzol → RIVER/LAKE/SWAMP/OCEAN/DEEP_OCEAN, ou forçado por uma {region} para MAGIC_WATER/CORRUPTED_WATER.",
     cBiomes: "Nome de bioma vanilla em minúsculas (ex. {ex}).",
-    cDepths: "Varredura simples da coluna de água: SURFACE/MID_WATER/BOTTOM, ou UNDERWATER_CAVE se houver teto sólido acima da superfície.",
+    cDepths: "As camadas presentes na coluna de água do anzol: SURFACE sempre, MID_WATER a partir de 3 blocos de fundura, BOTTOM se houver fundo a menos de 40 blocos, e UNDERWATER_CAVE se houver teto sólido acima. A espécie vale se compartilhar alguma camada.",
     cWeather: "SUNNY/RAIN/SNOW (conforme a temperatura)/STORM, lido de {api}.",
     cTimes: "DAY/NIGHT/DAWN/DUSK/NOON/MIDNIGHT — vários podem estar ativos ao mesmo tempo, conforme {api}.",
     cSeasons: "Compara contra a estação efetiva do RPGRoll-Seasons (se estiver instalado).",
@@ -733,12 +735,12 @@ const pt: AddonsDCopy = {
       "Os quatro são, na prática, multiplicadores sobre a mesma rolagem de captura — {rod} os junta num único tipo de conteúdo (mesmo critério que {catalyst} no Magic). O que os diferenciaria (modelo, lore, nome) continua livre por vara.",
     thRodField: "Campo da vara",
     thEffect: "Efeito",
-    rReelSpeed: "Diminui a zona de tensão do minijogo RPG (mais difícil) ou a aumenta se for >1 (mais fácil).",
+    rReelSpeed: "Alarga a zona verde do minigame RPG se for >1 (mais fácil) ou estreita se for <1 (entre x0,5 e x2).",
     rPrecision: "Bônus direto à rolagem de qualidade da captura.",
     rResistance: "Aumenta as falhas permitidas antes de o peixe escapar.",
     rLuck: "Multiplica o peso de rolagem de espécies não-COMMON.",
     rPreferred: "+50% de peso extra a espécies dessas categorias.",
-    rCastPower: "Cosmético por enquanto — reservado para uma futura mecânica de distância real.",
+    rCastPower: "Multiplica a força do lançamento (entre 0,5 e 2): com 1,5 o anzol cai cerca de metade da distância mais longe.",
     baitBody:
       "Uma isca é segurada na mão secundária e 1 é consumida por lançamento (mesmo que nada morda). {quality} soma direto à rolagem de qualidade; {legWeight} é a “Isca Lendária” do design original — só importa contra espécies {legendary}.",
 
@@ -752,7 +754,7 @@ const pt: AddonsDCopy = {
 
     miniTitle: "Minijogo de luta (modo RPG)",
     miniBody:
-      "Com {rpgMode} (config global), cada mordida abre uma barra de tensão: um indicador oscila numa onda senoidal e o jogador tem de golpear com {strong} — de propósito, não clique direito, porque com uma vara na mão esse botão já recolhe a linha no vanilla. O {behavior} da espécie decide a velocidade de oscilação e a largura da zona; {jumper} recentraliza a zona a cada 40 ticks para simular um peixe errático. Com {rpgModeOff} a captura se resolve na hora, sem minijogo (modo vanilla clássico).",
+      "Com {rpgMode} (config global), cada mordida abre uma barra de tensão: um indicador oscila numa onda senoidal e o jogador tem de golpear com {strong} — de propósito, não clique direito, porque com uma vara na mão esse botão já recolhe a linha no vanilla. O {behavior} da espécie decide a velocidade de oscilação e a largura da zona; {jumper} recentraliza a zona a cada 40 ticks para simular um peixe errático. Com {rpgModeOff} a captura se resolve na hora, sem minijogo (modo vanilla clássico). Só conta um acerto por passagem do indicador pela zona (apertar sem parar não ganha: fora da zona soma erros), não dá para lançar de novo no meio da luta e, se o jogador desconectar, a luta acaba sem prêmio. O peixe dá a sua base-experience ao ser pescado.",
     miniStrong: "clique esquerdo (swing de braço)",
 
     yamlTitle: "Exemplos de arquivo YAML",
@@ -768,6 +770,7 @@ const pt: AddonsDCopy = {
     fDisplayName: "Nome visível",
     fIcon: "Ícone (Material)",
     fCmd: "CustomModelData",
+    fModel: "Modelo (item_model)",
     fDescription: "Descrição",
     fCategory: "Categoria",
     fRarity: "Raridade",
@@ -785,7 +788,7 @@ const pt: AddonsDCopy = {
     fCatchStatus: "Efeito de estado (RPGRoll-Effects) ao capturar",
     fMaterial: "Material",
     fDurability: "Durabilidade",
-    fCastPower: "Poder de lançamento (cosmético)",
+    fCastPower: "Poder de lançamento (alcance)",
     fReelSpeed: "Velocidade de recolhimento (largura da zona)",
     fPrecision: "Precisão (bônus à qualidade)",
     fResistance: "Resistência (falhas permitidas)",

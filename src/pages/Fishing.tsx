@@ -36,6 +36,12 @@ const speciesFields = (c: FishingCopy): YamlField[] => [
   },
   { key: "icon", label: c.fIcon, type: "string", default: "COD" },
   {
+    key: "model",
+    label: c.fModel,
+    type: "string",
+    placeholder: "rpgroll_fishing:species/river_trout",
+  },
+  {
     key: "custom-model-data",
     label: c.fCmd,
     type: "number",
@@ -231,23 +237,23 @@ export function Fishing({
         >
           {label("sackresourcepack")}
         </button>
-        {fill(c.reqBody3, { cmd: <code>custom-model-data</code>, icon: <code>icon</code> })}
+        {fill(c.reqBody3, { cmd: <code>model</code>, icon: <code>icon</code> })}
       </p>
 
       <SectionHeading id="especies">{c.speciesTitle}</SectionHeading>
       <p>
         {fill(c.speciesBody, {
           species: <code>FishSpecies</code>,
-          cmd: <code>CustomModelData</code>,
+          cmd: <code>model</code>,
           strong: <strong>{c.speciesStrong}</strong>,
           waterTypes: <code>water-types</code>,
         })}
       </p>
       <Callout tone="info" title={c.texTitle}>
         {fill(c.texBody, {
-          cmd: <code>custom-model-data</code>,
+          cmd: <code>model</code>,
           path: (
-            <code>plugins/RPGRoll-Fishing/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code>
+            <code>plugins/RPGRoll-Fishing/blockbench/ · bedrock/</code>
           ),
           icon: <code>icon</code>,
         })}
@@ -410,7 +416,7 @@ export function Fishing({
           "id: dragon_fish\n" +
           'display-name: "&4Pez Dragón"\n' +
           "icon: TROPICAL_FISH\n" +
-          "custom-model-data: 1002\n" +
+          "model: rpgroll_fishing:species/dragon_fish\n" +
           'description: "Vive cerca de fumarolas volcánicas submarinas — quema al sacarlo del agua."\n' +
           "category: VOLCANIC\n" +
           "rarity: EPIC\n" +
@@ -432,7 +438,7 @@ export function Fishing({
           "id: leviathan\n" +
           'display-name: "&5&lLeviatán"\n' +
           "icon: TROPICAL_FISH\n" +
-          "custom-model-data: 1000\n" +
+          "model: rpgroll_fishing:species/leviathan\n" +
           'description: "Una criatura ancestral que solo emerge bajo condiciones extremadamente específicas. Requiere la Carnada Legendaria."\n' +
           "category: LEGENDARY\n" +
           "rarity: LEGENDARY\n" +

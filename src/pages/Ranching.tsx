@@ -399,7 +399,10 @@ export function Ranching({
         (Común/Buena/Premium/Orgánica/Legendaria) — si no coincide con la dieta
         de la especie (<code>diet-tags</code>), el efecto se reduce a 40%. El
         bienestar se recalcula solo, acercándose gradualmente a un "objetivo"
-        ambiental:
+        ambiental. El <code>nutrition-value</code> llena la saciedad del animal
+        (0–100, se vacía en un día de Minecraft): lleno, rechaza la comida y el
+        ítem no se gasta. El bono de producción que se acumula comiendo tiene
+        tope: como mucho duplica la siguiente producción.
       </p>
       <Table>
         <Thead>
@@ -515,6 +518,34 @@ export function Ranching({
         Premium → Orgánica → Legendaria) en el lore — listo para que un futuro
         RPGRoll-Cooking le dé un uso real a esa diferencia.
       </p>
+
+      <SectionHeading id="modelos">Modelos 3D e ítems</SectionHeading>
+      <p>
+        Los piensos, medicinas y vacunas aceptan la clave <code>model</code>{" "}
+        (componente item_model, 1.21.4+), y el plugin trae modelos de fábrica
+        para todo su contenido con ids como{" "}
+        <code>rpgroll_ranching:feed/hay</code>. Los productos no tienen YAML
+        propio: su modelo sale de <code>product-models</code> en el{" "}
+        <code>config.yml</code>, por tipo de producto y, si quieres, por
+        calidad. El pack de Java va dentro del jar y se registra solo en
+        SackResourcePack; en <code>blockbench/</code> están los .bbmodel y en{" "}
+        <code>bedrock/</code> el pack y el mapeo de Geyser.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="config.yml"
+        code={
+          "product-models:\n" +
+          "  milk:\n" +
+          "    default: rpgroll_ranching:product/milk\n" +
+          "    LEGENDARY: rpgroll_ranching:product/milk_legendary\n" +
+          "  eggs:\n" +
+          "    default: rpgroll_ranching:product/egg\n" +
+          "    LEGENDARY: rpgroll_ranching:product/egg_legendary\n" +
+          "  meat: rpgroll_ranching:product/meat\n" +
+          "  leather: rpgroll_ranching:product/leather\n"
+        }
+      />
 
       <SectionHeading id="formato-yaml">
         Ejemplos de archivo YAML
@@ -668,6 +699,24 @@ export function Ranching({
               {"/ranchingadmin spawn <especie> [raza]"}
             </Td>
             <Td>Spawnea un animal fundador (sin padres) en tu ubicación.</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">
+              {"/ranchingadmin givefeed|givemedicine|givevaccine <id> [cantidad] [jugador]"}
+            </Td>
+            <Td>
+              Da un pienso, medicina o vacuna. Sin jugador, a quien lo pide;
+              desde la consola hay que indicar cantidad y jugador.
+            </Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">
+              {"/ranchingadmin giveproduct <tipo> [calidad] [cantidad] [jugador]"}
+            </Td>
+            <Td>
+              Da un producto (leche, lana, huevos, carne...) de la calidad
+              indicada (COMMON por defecto), igual que el que da un animal.
+            </Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">/ranching inspect</Td>
