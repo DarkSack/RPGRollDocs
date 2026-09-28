@@ -179,7 +179,7 @@ export function Ranching({
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack]"
+          "depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, RPGRoll-Effects, RPGRoll-Seasons, SackResourcePack, Vault, FreeMinecraftModels]"
         }
       />
       <p>
@@ -205,6 +205,8 @@ export function Ranching({
         </button>
         , el <a href="#reskin" onClick={(e) => e.preventDefault()}>reskin visual por raza</a> simplemente no
         aparece configurado (el animal se ve vanilla normal, nada se rompe).
+        Sin Vault el mercado de animales avisa y no cobra; sin FreeMinecraftModels
+        los animales usan su aspecto vanilla (o el reskin).
       </p>
 
       <SectionHeading id="genetica">
@@ -333,6 +335,50 @@ export function Ranching({
           </Tr>
         </tbody>
       </Table>
+
+      <p>
+        El plugin trae 7 especies con 3 razas cada una, cada raza con su modelo
+        3D:
+      </p>
+      <Table>
+        <Thead>
+          <Th>Especie</Th>
+          <Th>Razas</Th>
+        </Thead>
+        <tbody>
+          <Tr><Td className="font-mono text-xs">cow</Td><Td>holstein, jersey, angus</Td></Tr>
+          <Tr><Td className="font-mono text-xs">sheep</Td><Td>merino, suffolk, jacob</Td></Tr>
+          <Tr><Td className="font-mono text-xs">chicken</Td><Td>leghorn, rhode_island, silkie</Td></Tr>
+          <Tr><Td className="font-mono text-xs">pig</Td><Td>yorkshire, berkshire, mangalica</Td></Tr>
+          <Tr><Td className="font-mono text-xs">rabbit</Td><Td>californian, rex, angora (da pelo)</Td></Tr>
+          <Tr><Td className="font-mono text-xs">duck</Td><Td>pekin, mallard, khaki_campbell (entidad CHICKEN)</Td></Tr>
+          <Tr><Td className="font-mono text-xs">goat</Td><Td>saanen, boer, nubian</Td></Tr>
+        </tbody>
+      </Table>
+
+      <SectionHeading id="modelos-animales">Modelos 3D de animales (FreeMinecraftModels)</SectionHeading>
+      <p>
+        Con FreeMinecraftModels instalado, cada raza lleva su propio modelo
+        (clave <code>model</code> de la raza, p. ej.{" "}
+        <code>model: ranching_holstein</code>). Los modelos de las especies
+        vanilla copian la forma del animal original y cambian colores y
+        detalles (cuernos, manchas, crestas, lana). El plugin copia sus{" "}
+        <code>.bbmodel</code> a <code>plugins/FreeMinecraftModels/models/</code>{" "}
+        al arrancar; si editas uno en Blockbench, no se vuelve a sobrescribir.
+        Tras la primera instalación hay que reiniciar (o <code>/fmm reload</code>)
+        para que FMM los cargue.
+      </p>
+      <p>
+        El modelo solo se pone a los adultos; las crías se ven vanilla. El
+        animal vanilla sigue debajo, invisible, y los clics sobre el modelo le
+        llegan igual: ordeñar, esquilar, alimentar, curar y poner en celo con
+        su comida funcionan como siempre.
+      </p>
+      <Callout tone="info" title="Clic derecho con la mano vacía">
+        FreeMinecraftModels no envía al servidor un clic derecho sin ítem sobre
+        un modelo. Para ver el precio o el dueño de un animal ajeno, golpéalo
+        (clic izquierdo): no le hace daño y muestra el aviso.
+      </Callout>
 
       <SectionHeading id="reskin">Reskin visual por raza (sin ModelEngine/BetterModel)</SectionHeading>
       <p>
@@ -547,6 +593,121 @@ export function Ranching({
         }
       />
 
+      <SectionHeading id="duenos">Dueños, mercado y corral</SectionHeading>
+      <p>
+        Cada animal tiene dueño: quien lo spawnea, lo compra o lo reclama, y
+        las crías heredan el de la madre (o el del padre). Solo el dueño puede
+        ordeñarlo, esquilarlo, alimentarlo, curarlo, criarlo, atarlo o hacerle
+        daño (<Badge tone="amber">rpgrollranching.bypass-owner</Badge> se lo
+        salta). Los animales de antes de esta versión no tienen dueño: con{" "}
+        <code>/ranching reclamar</code> se hacen tuyos.
+      </p>
+      <Table>
+        <Thead>
+          <Th>Qué</Th>
+          <Th>Cómo</Th>
+        </Thead>
+        <tbody>
+          <Tr>
+            <Td>Mis animales</Td>
+            <Td>
+              <code>/ranching animales</code>: clic izquierdo lo llama,
+              derecho lo manda al corral, shift+izquierdo abre su ficha,
+              shift+derecho lo pone o quita de la venta. Abajo: llamar a todos,
+              todos al corral, fijar el corral aquí y el mercado.
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>Llamar</Td>
+            <Td>
+              <code>/ranching llamar [id|todos]</code> trae al animal a tus
+              pies aunque esté en un chunk descargado u otro mundo. Si su
+              entidad ya no existe (la borró un comando o un plugin de
+              limpieza), se crea otra con sus mismos datos.
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>Corral</Td>
+            <Td>
+              <code>/ranching corral fijar</code> guarda tu posición;{" "}
+              <code>/ranching corral enviar [id|todos]</code> los manda allí.
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>Vender a otro jugador</Td>
+            <Td>
+              <code>/ranching vender &lt;precio&gt;</code> mirando al animal (o
+              con su id). Quien lo toque ve el precio y un botón{" "}
+              <code>[Comprar]</code>; también sale en el mercado.
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>Mercado</Td>
+            <Td>
+              <code>/ranching mercado</code>: pestañas de animales de
+              jugadores, tienda del servidor (fundadores nuevos que aparecen a
+              tus pies) y vender al servidor. Toda compra pide confirmación.
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>Vender al servidor</Td>
+            <Td>
+              <code>/ranching vender servidor [id]</code>: paga el precio base
+              de la especie por su calidad (POOR ×0,5, COMMON ×1, GOOD ×1,5,
+              EXCELLENT ×2,5, EXCEPTIONAL ×5) y el animal desaparece.
+            </Td>
+          </Tr>
+        </tbody>
+      </Table>
+      <p>
+        El id de un animal son los primeros caracteres de su UUID, como sale en
+        su ficha (<code>#8c93ce76</code>). El dinero va por Vault.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="config.yml"
+        code={
+          "ownership:\n" +
+          "  protect: true\n" +
+          "  claim-unowned: true\n" +
+          "  max-animals-per-player: 0   # 0 = sin límite; las crías no cuentan\n" +
+          "recall:\n" +
+          "  cooldown-seconds: 5\n" +
+          "  cross-world: true\n" +
+          "  recreate-missing: true\n" +
+          "market:\n" +
+          "  enabled: true\n" +
+          "  min-price: 1\n" +
+          "  max-price: 1000000\n" +
+          "  tax-percent: 0\n" +
+          "  server-shop:\n" +
+          "    - {species: cow, breed: holstein, sex: RANDOM, price: 250}\n" +
+          "  sell-to-server:\n" +
+          "    cow: 100\n"
+        }
+      />
+
+      <SectionHeading id="huevo-secreto">El huevo fosilizado (secreto)</SectionHeading>
+      <p>
+        Muy de vez en cuando una gallina o un pato del rancho pone un{" "}
+        <strong>huevo fosilizado</strong> en lugar de un huevo, y a veces lo
+        desentierra un sniffer. Usado sobre un bloque, se incuba unos segundos
+        y nace un mini T-Rex del jugador (especie <code>trex</code>, raza{" "}
+        <code>tiranosaurio</code>, con su modelo). No se anuncia en el juego:
+        es para que lo descubran los jugadores.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="config.yml"
+        code={
+          "secret:\n" +
+          "  dino-egg-chance: 0.0005        # por huevo de gallina/pato; 0 lo desactiva\n" +
+          "  sniffer-dino-egg-chance: 0.02  # por lo que desentierra un sniffer\n" +
+          "  species: trex\n" +
+          "  breed: tiranosaurio\n"
+        }
+      />
+
       <SectionHeading id="formato-yaml">
         Ejemplos de archivo YAML
       </SectionHeading>
@@ -696,9 +857,13 @@ export function Ranching({
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
-              {"/ranchingadmin spawn <especie> [raza]"}
+              {"/ranchingadmin spawn <especie> [raza|-] [dueño|-] [macho|hembra]"}
             </Td>
-            <Td>Spawnea un animal fundador (sin padres) en tu ubicación.</Td>
+            <Td>
+              Spawnea un animal fundador (sin padres) en tu ubicación. El dueño
+              por defecto es quien lo spawnea (<code>-</code> = sin dueño); el
+              sexo, al azar si no se indica.
+            </Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">
@@ -719,8 +884,32 @@ export function Ranching({
             </Td>
           </Tr>
           <Tr>
+            <Td className="font-mono text-xs">{"/ranchingadmin setowner <jugador|ninguno>"}</Td>
+            <Td>Cambia el dueño del animal al que miras.</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">/ranchingadmin givedinoegg [jugador]</Td>
+            <Td>Da el huevo fosilizado.</Td>
+          </Tr>
+          <Tr>
             <Td className="font-mono text-xs">/ranching inspect</Td>
             <Td>Abre la ficha del animal al que estás mirando.</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">/ranching animales | mercado | reclamar</Td>
+            <Td>Tus animales, el mercado y reclamar uno sin dueño.</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">{"/ranching vender <precio>|cancelar|servidor [id]"}</Td>
+            <Td>Ponerlo en venta, quitarlo o vendérselo al servidor.</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">{"/ranching comprar <id>"}</Td>
+            <Td>Comprar un animal en venta.</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">{"/ranching llamar [id|todos] · corral [fijar|quitar|enviar [id|todos]]"}</Td>
+            <Td>Traer tus animales o mandarlos al corral.</Td>
           </Tr>
         </tbody>
       </Table>

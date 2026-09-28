@@ -308,6 +308,46 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         solo materias primas, al 25 % de su precio.
       </Callout>
 
+      <SectionHeading id="comprador">El comprador (NPC que compra de todo)</SectionHeading>
+      <p>
+        Una ventana donde el jugador deja lo que quiera vender y pulsa{" "}
+        <strong>Vender</strong>. Cada ítem se paga por su valor interno: los peces y
+        los productos del rancho lo llevan dentro (según especie, peso y calidad), y
+        los materiales vanilla limpios (sin nombre ni lore) se pagan a lo que daría{" "}
+        <code>/tienda</code> por ellos. Lo que no compra se devuelve al cerrar; nada se
+        pierde aunque el jugador se desconecte o el servidor se apague con la ventana
+        abierta.
+      </p>
+      <p>
+        Se abre con <code>/economyadmin comprador &lt;jugador&gt;</code>, pensado para
+        la acción <code>COMMAND</code> de un NPC de RPGRoll-NPCs (o de cualquier plugin
+        de NPCs que ejecute comandos por consola). El plugin de NPCs trae el ejemplo{" "}
+        <code>npcs/_ejemplo_comprador.yml</code>:
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="npcs/comprador.yml"
+        code={
+          "id: comprador\n" +
+          'display-name: "&6Comprador"\n' +
+          "location: {world: world, x: 12.0, y: 65.0, z: 5.0, yaw: 90.0, pitch: 0.0}\n" +
+          "actions:\n" +
+          "  - type: MESSAGE\n" +
+          '    value: "&6¿Qué me traes hoy, {player}?"\n' +
+          "  - type: COMMAND\n" +
+          '    value: "economyadmin comprador {player}"\n'
+        }
+      />
+      <CodeBlock
+        language="yaml"
+        filename="config.yml"
+        code={
+          "buyer:\n" +
+          "  value-multiplier: 1.0      # 0.8 = paga un 20 % menos que el valor\n" +
+          "  accept-shop-prices: true   # comprar también materiales al precio de venta de /tienda\n"
+        }
+      />
+
       <SectionHeading id="tiendas">Tiendas de jugador</SectionHeading>
       <p>
         Cada jugador puede abrir una tienda (<code>PlayerShop</code>) desde <Kbd>/economy shop</Kbd> y meter en
@@ -554,6 +594,7 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           <Tr><Td className="font-mono text-xs">{"/economyadmin setbalance <jugador> <moneda> <cant>"}</Td><Td>Fija un balance exacto.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">/economyadmin inflation</Td><Td>Muestra la última foto de inflación.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">/economyadmin snapshot</Td><Td>Fuerza una foto de masa monetaria.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/economyadmin comprador <jugador>"}</Td><Td>Abre la ventana del comprador a ese jugador (para NPCs).</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/tienda [sección]"}</Td><Td>Abre la tienda del servidor, o una sección directa.</Td><Td><Badge>rpgrolleconomy.servershop</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/economy balance [moneda]"}</Td><Td>Ver tu saldo.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/economy pay <jugador> <cant> [moneda]"}</Td><Td>Pagarle a otro jugador.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
