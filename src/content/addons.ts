@@ -12,6 +12,7 @@ import {
   BoxesIcon,
   CompassIcon,
   ArmchairIcon,
+  BookIcon,
   SparklesIcon,
   HeartPulseIcon,
   LeafIcon,
@@ -68,6 +69,7 @@ export const addons: AddonMeta[] = [
   { slug: "traps", icon: AlertTriangleIcon, blurb: "Trampas, torretas y mecanismos configurables: triggers, condiciones, cadenas y bloques protegidos.", tone: "red" },
   { slug: "pass", icon: CalendarIcon, blurb: "Pase de temporada gratis y premium, misiones, recompensa diaria y votos.", tone: "amber" },
   { slug: "furniture", icon: ArmchairIcon, blurb: "Muebles con modelo 3D: asientos, almacén, luz, carpintero y versiones por madera y color.", tone: "amber" },
+  { slug: "recipes", icon: BookIcon, blurb: "Recetario al estilo JEI: cómo se hace y para qué sirve todo, de cualquier plugin.", tone: "violet" },
 ];
 
 export function addonMeta(slug: string): AddonMeta | undefined {

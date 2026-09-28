@@ -26,6 +26,7 @@ import { Dungeons } from "./pages/Dungeons";
 import { Traps } from "./pages/Traps";
 import { Pass } from "./pages/Pass";
 import { Furniture } from "./pages/Furniture";
+import { Recipes } from "./pages/Recipes";
 import { Particles } from "./pages/Particles";
 import { Effects } from "./pages/Effects";
 import { Magic } from "./pages/Magic";
@@ -124,6 +125,8 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Pass onNavigate={onNavigate} />;
     case "furniture":
       return <Furniture onNavigate={onNavigate} />;
+    case "recipes":
+      return <Recipes onNavigate={onNavigate} />;
     case "traps":
       return <Traps onNavigate={onNavigate} />;
     case "rpgroll-particles":

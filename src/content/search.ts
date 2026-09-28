@@ -483,6 +483,18 @@ export const searchIndex: SearchEntry[] = [
   h("furniture", "Configuración", "configuracion"),
   h("furniture", "Archivos", "archivos"),
 
+  // Recetario
+  h("recipes", "Requisitos", "requisitos"),
+  h("recipes", "Qué recetas lee — vanilla, plugins, fermentación, Crafting, muebles", "que-lee"),
+  h("recipes", "Usarlo — cómo se hace, para qué sirve, filtros, búsqueda", "usar"),
+  h("recipes", "El libro del recetario", "libro"),
+  h("recipes", "Recetas a mano — extra/*.yml", "extra"),
+  h("recipes", "Para desarrolladores — RecipeSource", "api"),
+  h("recipes", "Comandos — /recetas, /jei", "comandos"),
+  h("recipes", "Permisos", "permisos"),
+  h("recipes", "Configuración", "configuracion"),
+  h("recipes", "Archivos", "archivos"),
+
   // Extras
   h("extras", "Jugadores AFK", "afk"),
   h("extras", "Menú del servidor (brújula)", "menu-servidor"),

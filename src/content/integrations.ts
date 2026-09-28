@@ -196,7 +196,7 @@ export const addonDependencies: AddonDependencies[] = [
   { slug: "magic", hard: ["RPGRoll-Lib", "RPGRoll"], soft: ["RPGRoll-FX", "RPGRoll-Effects"] },
   { slug: "seasons", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Mobs"] },
   { slug: "fishing", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "SackResourcePack"] },
-  { slug: "ranching", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "SackResourcePack"] },
+  { slug: "ranching", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "SackResourcePack", "Vault", "FreeMinecraftModels"] },
   {
     slug: "workers",
     hard: ["RPGRoll-Lib"],
@@ -212,6 +212,7 @@ export const addonDependencies: AddonDependencies[] = [
     soft: ["RPGRoll", "RPGRoll-Items", "RPGRoll-Effects", "RPGRoll-Mobs", "RPGRoll-FX", "RPGRoll-Guilds", "PlaceholderAPI"],
   },
   { slug: "furniture", hard: ["RPGRoll-Lib"], soft: ["SackResourcePack", "Vault"] },
+  { slug: "recipes", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Crafting", "RPGRoll-Items", "RPGRoll-Furniture", "RPGRoll-Extras"] },
   {
     slug: "pass",
     hard: ["RPGRoll-Lib"],
