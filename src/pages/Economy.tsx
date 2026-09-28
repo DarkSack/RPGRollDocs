@@ -545,6 +545,22 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         <code>wallet()</code> para acreditarle al jugador.
       </p>
 
+      <SectionHeading id="wallet-backend">Saldos compartidos entre servidores — WalletBackend</SectionHeading>
+      <p>
+        Por defecto cada servidor guarda sus saldos en <code>wallets/</code>. Si tienes varios servidores y
+        quieres un solo saldo para todos, otro plugin puede registrar un <code>WalletBackend</code> en el{" "}
+        <code>ServicesManager</code> de Bukkit (<code>com.sack.rpgroll.economy.api.WalletBackend</code>) y decir
+        qué monedas lleva. Desde ese momento, todo lo que mueve esas monedas en RPGRoll-Economy (tiendas,
+        subastas, <code>/pay</code>, comandos de admin y lo que otros plugins cobran por Vault) pasa por él; el
+        resto de monedas, los bancos y los préstamos siguen en el servidor.
+      </p>
+      <p>
+        El saldo que cada jugador ya tuviera en el servidor se traspasa solo, una vez, al entrar
+        (<code>importBalance</code>, con un id que se guarda antes de pedirlo para no duplicarlo si el servidor
+        cae a mitad). Si el almacén no responde, la operación devuelve <code>UNAVAILABLE</code> y no se mueve
+        nada. Sin ningún <code>WalletBackend</code> registrado, todo funciona exactamente como antes.
+      </p>
+
       <SectionHeading id="integracion-vault">Integración con Vault</SectionHeading>
       <p>
         A diferencia de <code>core</code> (que solo <em>consume</em> el servicio Economy de Vault si hay un

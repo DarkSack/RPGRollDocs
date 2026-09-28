@@ -370,6 +370,7 @@ export const searchIndex: SearchEntry[] = [
   h("economy", "Ejemplos de archivo YAML", "formato-yaml"),
   h("economy", "GUI: Economy Studio", "gui"),
   h("economy", "API para addons — EconomyAPI", "api"),
+  h("economy", "Saldos compartidos entre servidores — WalletBackend", "wallet-backend"),
   h("economy", "Integración con Vault", "integracion-vault"),
   h("economy", "Placeholders (PlaceholderAPI)", "placeholders"),
   h("economy", "Comandos", "comandos"),
