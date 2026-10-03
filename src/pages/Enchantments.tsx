@@ -72,7 +72,7 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
       <SectionHeading id="categorias">Categorías y restricción de ítem</SectionHeading>
       <p>
         Cada definición puede restringir en qué ítems es válida vía <code>categories</code> (una o más de{" "}
-        <code>WEAPON, ARMOR, HELMET, CHESTPLATE, LEGGINGS, BOOTS, TOOLS, BOW, CROSSBOW, TRIDENT, FISHING_ROD, ANY</code>
+        <code>WEAPON, ARMOR, HELMET, CHESTPLATE, LEGGINGS, BOOTS, TOOLS, BOW, CROSSBOW, TRIDENT, FISHING_ROD, SWORD, PICKAXE, AXE, SHOVEL, HOE, SHIELD, ANY</code>
         , cada una con su propia lógica de qué <code>Material</code> matchea) o, si necesitas algo más específico,
         una lista explícita de <code>allowed-items</code> que tiene prioridad sobre las categorías.
       </p>
@@ -100,12 +100,17 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
           <Tr><Td className="font-mono text-xs">PLAYER_MOVE</Td><Td>PlayerMoveEvent, filtrado a cambios de bloque real (ignora solo mirar alrededor)</Td></Tr>
           <Tr><Td className="font-mono text-xs">PLAYER_DEATH</Td><Td>PlayerDeathEvent (objetivo = quien mató)</Td></Tr>
           <Tr><Td className="font-mono text-xs">ENTITY_KILL</Td><Td>EntityDeathEvent, si el asesino es un jugador</Td></Tr>
+          <Tr><Td className="font-mono text-xs">BLOCK_INTERACT</Td><Td>PlayerInteractEvent: clic derecho a un bloque con la mano principal</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SHIELD_BLOCK</Td><Td>EntityDamageEvent cuando el escudo del jugador para el golpe (objetivo = el atacante, o quien disparó el proyectil)</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SHIELD_DISABLE</Td><Td>PlayerShieldDisableEvent (Paper): un hacha le desactiva el escudo</Td></Tr>
+          <Tr><Td className="font-mono text-xs">EXP_PICKUP</Td><Td>PlayerExpChangeEvent al recoger experiencia (lo que sobra tras la Reparación vanilla)</Td></Tr>
         </tbody>
       </Table>
       <p>
         En cada uno de estos eventos, el addon revisa mano principal, offhand, casco, pechera, piernas y botas del
         jugador en busca de encantamientos propios, y por cada uno: tira <code>chance</code>, evalúa{" "}
-        <code>conditions</code>, y si todo pasa ejecuta sus <code>effects</code>.
+        <code>conditions</code>, y si todo pasa ejecuta sus <code>effects</code>. Los efectos reciben además el
+        evento, el ítem encantado y su ranura: los de herramienta solo actúan si el ítem está en la mano principal.
       </p>
 
       <SectionHeading id="condiciones">Condiciones</SectionHeading>
@@ -121,8 +126,11 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
         </Thead>
         <tbody>
           <Tr><Td className="font-mono text-xs">player.health</Td><Td>número</Td></Tr>
-          <Tr><Td className="font-mono text-xs">player.level</Td><Td>número (nivel de XP vanilla)</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.level</Td><Td>número (nivel de RPGRoll, igual que en Quests e Items)</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.xplevel</Td><Td>número (nivel de XP vanilla)</Td></Tr>
           <Tr><Td className="font-mono text-xs">player.foodlevel</Td><Td>número</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.sneaking</Td><Td>texto (true / false)</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.shieldticks</Td><Td>número: ticks que lleva el escudo levantado (sin escudo, la condición falla)</Td></Tr>
           <Tr><Td className="font-mono text-xs">world</Td><Td>texto (nombre del mundo)</Td></Tr>
           <Tr><Td className="font-mono text-xs">weather</Td><Td>texto (STORM / RAIN / CLEAR)</Td></Tr>
           <Tr><Td className="font-mono text-xs">target.type</Td><Td>texto (tipo de entidad del objetivo)</Td></Tr>
@@ -155,11 +163,54 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
           <Tr><Td className="font-mono text-xs">PARTICLE</Td><Td>Partícula en la ubicación del objetivo o del jugador.</Td></Tr>
           <Tr><Td className="font-mono text-xs">SOUND</Td><Td>Sonido reproducido al jugador.</Td></Tr>
           <Tr><Td className="font-mono text-xs">PICKUP_ITEMS</Td><Td>Absorbe ítems dropeados en un radio cúbico hacia el inventario del jugador.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PARTICLES</Td><Td>Efecto completo de RPGRoll-FX por id (<code>effect-id</code>).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">VEIN_MINE</Td><Td>Rompe la veta entera de la mena golpeada, hasta <code>max</code> bloques (también las menas de RPGRoll-Items).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TREE_FELL</Td><Td>Tala los troncos conectados hacia arriba (<code>max</code>) y, con <code>leaves: true</code>, deshace sus hojas. Solo si el tronco toca hojas naturales: no se come casas de madera.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">AREA_MINE</Td><Td>Martillo: rompe un cuadrado de lado <code>2·radius+1</code> de cara al jugador. Nada más duro que lo golpeado ni bloques con contenido.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">AUTO_SMELT</Td><Td>Lo que suelta el bloque sale fundido (recetas de horno del servidor) con su experiencia. Respeta Fortuna. Un ítem propio solo se funde con una receta exacta para él.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TILL_AREA</Td><Td>Con BLOCK_INTERACT labra un cuadrado de <code>radius</code>; con BLOCK_BREAK sobre un cultivo maduro cosecha los de alrededor y, con <code>replant: true</code>, replanta con semillas del inventario o de lo que cayó.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">REPAIR</Td><Td>Con EXP_PICKUP: repara <code>ratio</code> de durabilidad por punto de experiencia y gasta solo lo usado; <code>equipment: 1</code> reparte por todo el equipo puesto.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">DAMAGE_BONUS</Td><Td>Suma <code>amount</code> (y multiplica por <code>multiplier</code>) el daño del golpe, escalado por la carga del ataque.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">KNOCKBACK</Td><Td>Empuja al objetivo lejos del jugador (<code>strength</code>, <code>vertical</code>).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">REFLECT</Td><Td>Con SHIELD_BLOCK: devuelve flechas y bolas de fuego a quien las disparó, con el mismo daño (<code>chance</code> en %, <code>speed</code>).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SHIELD_COOLDOWN</Td><Td>Con SHIELD_DISABLE: multiplica el tiempo que el hacha deja el escudo desactivado por <code>factor</code>; 0 lo evita.</Td></Tr>
         </tbody>
       </Table>
       <p>
+        Los efectos que rompen varios bloques lo hacen como si los rompiera el jugador, uno a uno: cada bloque lanza
+        su BlockBreakEvent, así que lo respetan GriefPrevention y WorldGuard, lo registra CoreProtect, gasta la
+        herramienta (nunca hasta romperla: siempre le deja 2 usos) y aplica Fortuna.
+      </p>
+      <p>
         Los parámetros numéricos aceptan tanto un número literal como <code>{"\"{clave}\""}</code> para leerlo del
         bloque <code>levels</code> del nivel actual.
+      </p>
+
+      <SectionHeading id="incluidos">Encantamientos incluidos</SectionHeading>
+      <Table>
+        <Thead>
+          <Th>Id</Th>
+          <Th>Para</Th>
+          <Th>Qué hace</Th>
+        </Thead>
+        <tbody>
+          <Tr><Td className="font-mono text-xs">veinminer</Td><Td>pico</Td><Td>Minero de vetas I–III (12/24/48 bloques). Agachado no se activa.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">timber</Td><Td>hacha</Td><Td>Leñador I–III (24/64/160 troncos), deshace las hojas. Agachado no se activa.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">autosmelt</Td><Td>pico, hacha, pala</Td><Td>Autofundición.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">hammer</Td><Td>pico, pala</Td><Td>Martillo I–II (3x3 y 5x5). Choca con el minero de vetas.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">tiller</Td><Td>azada</Td><Td>Azada amplia I–II (3x3 y 5x5): labra, cosecha y replanta.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">advanced_mending</Td><Td>cualquiera</Td><Td>Reparación avanzada I–III (3, 4 y 4 de durabilidad por punto; el III repara todo el equipo).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">advanced_sharpness</Td><Td>espada, hacha</Td><Td>Filo avanzado I–V: +1 a +5 de daño encima del Filo vanilla.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">shield_reflect</Td><Td>escudo</Td><Td>Reflejo I–III (25/50/80 %).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">shield_parry</Td><Td>escudo</Td><Td>Parada I–III: un golpe en el primer medio segundo de bloqueo aturde y empuja al atacante.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">shield_bash</Td><Td>escudo</Td><Td>Embestida I–II: cada golpe parado empuja al atacante.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">shield_temper</Td><Td>escudo</Td><Td>Temple I–III: el hacha desactiva el escudo un 60 %, un 30 % o nada del tiempo.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">shield_aegis</Td><Td>escudo</Td><Td>Égida I–III: un 30 % de las veces, parar un golpe da corazones de absorción.</Td></Tr>
+        </tbody>
+      </Table>
+      <p>
+        Además vienen <code>lifesteal</code>, <code>frost</code>, <code>magnet</code>, <code>poison</code> y{" "}
+        <code>thunder</code>. Todos funcionan igual en Java y en Bedrock: viven en el servidor.
       </p>
 
       <SectionHeading id="formato-yaml">Ejemplos de archivo YAML</SectionHeading>
