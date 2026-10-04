@@ -63,6 +63,7 @@ export const nav: NavSection[] = [
       { slug: "pass", label: "Pase de temporada" },
       { slug: "furniture", label: "Muebles" },
       { slug: "recipes", label: "Recetario" },
+      { slug: "machines", label: "Máquinas" },
     ],
   },
   {

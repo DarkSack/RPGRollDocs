@@ -497,6 +497,17 @@ export const searchIndex: SearchEntry[] = [
   h("recipes", "Configuración", "configuracion"),
   h("recipes", "Archivos", "archivos"),
 
+  // Máquinas
+  h("machines", "Requisitos", "requisitos"),
+  h("machines", "Hornos, altos hornos y ahumadores por niveles", "hornos"),
+  h("machines", "Spawners — mejoras, pila y toque de seda", "spawners"),
+  h("machines", "Canteras — área, velocidad, fortuna, autofundido, filtro", "canteras"),
+  h("machines", "Costes — dinero de Vault e ítems", "costes"),
+  h("machines", "Modelos y marcos del resource pack", "modelos"),
+  h("machines", "Comandos — /machines", "comandos"),
+  h("machines", "Permisos", "permisos"),
+  h("machines", "Archivos", "archivos"),
+
   // Extras
   h("extras", "Jugadores AFK", "afk"),
   h("extras", "Menú del servidor (brújula)", "menu-servidor"),

@@ -213,6 +213,7 @@ export const addonDependencies: AddonDependencies[] = [
   },
   { slug: "furniture", hard: ["RPGRoll-Lib"], soft: ["SackResourcePack", "Vault"] },
   { slug: "recipes", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Crafting", "RPGRoll-Items", "RPGRoll-Furniture", "RPGRoll-Extras"] },
+  { slug: "machines", hard: ["RPGRoll-Lib"], soft: ["Vault", "GriefPrevention", "RPGRoll-Items", "RPGRoll-Crates", "SackResourcePack"] },
   {
     slug: "pass",
     hard: ["RPGRoll-Lib"],

@@ -32,4 +32,5 @@ export const TRANSLATED_PAGES: ReadonlySet<string> = new Set(["inicio", "primero
   "pass",
   "furniture",
   "recipes",
+  "machines",
 ]);
