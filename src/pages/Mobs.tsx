@@ -476,6 +476,69 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </Callout>
       <YamlBuilder title="Constructor visual: Mob Region" folder="regions" fields={mobRegionFields} />
 
+      <SectionHeading id="tamano-aleatorio">Tamaño aleatorio de los mobs</SectionHeading>
+      <p>
+        Con <code>random-size.enabled: true</code> en el <code>config.yml</code>, cada mob que aparece sale con
+        un tamaño distinto (atributo <code>scale</code>): vacas un poco más grandes o más pequeñas, algún zombi
+        enorme. Vale para los mobs <strong>vanilla</strong> y para los de <strong>RPGRoll</strong>. El tamaño se
+        guarda con la entidad como modificador de atributo, así que sobrevive a reinicios y no se vuelve a
+        tirar al recargar el chunk.
+      </p>
+      <ul>
+        <li>
+          El tamaño sale de una distribución triangular dentro del rango de su categoría (pasivo, neutral u
+          hostil): los tamaños del medio son los más comunes. Con <code>extremes.chance</code> % sale un mini o
+          un gigante fuera del rango.
+        </li>
+        <li>
+          La vida, el daño, la velocidad, la experiencia y el botín siguen al tamaño según su peso en{" "}
+          <code>stats</code>: <code>1 + (tamaño − 1) × peso</code>. Con <code>speed: -0.25</code> los grandes son
+          algo más lentos. El botín solo multiplica lo apilable, nunca el equipo puesto.
+        </li>
+        <li>
+          Un hostil alto (zombi, esqueleto…) nunca baja de <code>hostile-min-height</code> bloques, para que no
+          se cuele por huecos de un bloque que antes le cerraban el paso. Las arañas y los slimes sí pueden
+          encoger.
+        </li>
+        <li>
+          No cambian: mobs vanilla con nombre, mascotas domadas, los tipos de <code>exclude-types</code>, los
+          que aparecen por un motivo fuera de <code>spawn-reasons</code> (por ejemplo{" "}
+          <code>/summon</code>, que es <code>COMMAND</code>) y los mundos de <code>disabled-worlds</code>.
+        </li>
+        <li>
+          Mobs de RPGRoll: el tamaño se multiplica sobre su <code>model.scale</code> y su vida; su ataque propio
+          (stat <code>damage</code>) también sigue al peso de daño. Los jefes nunca cambian, ni los que llevan
+          modelo 3D salvo <code>rpgroll-modeled: true</code> (el modelo no sigue al tamaño). Un mob concreto se
+          queda fuera con <code>custom-data: {"{random-size: \"false\"}"}</code> o tiene rango propio en{" "}
+          <code>types</code> como <code>"rpgroll:&lt;id&gt;"</code>.
+        </li>
+      </ul>
+      <CodeBlock
+        language="yaml"
+        filename="config.yml"
+        code={`random-size:
+  enabled: false            # viene apagado: se enciende en cada servidor
+  rpgroll-mobs: true        # también los mobs de RPGRoll
+  rpgroll-modeled: false    # los de modelo 3D no (el modelo no sigue al tamaño)
+  disabled-worlds: [lobby, creativo, arena]
+  spawn-reasons: [NATURAL, CHUNK_GEN, SPAWNER, TRIAL_SPAWNER, BREEDING, SPAWNER_EGG, ...]
+  exclude-types: [ender_dragon, wither, warden, elder_guardian, giant]
+  ranges:
+    passive: {min: 0.75, max: 1.25}
+    neutral: {min: 0.8, max: 1.25}
+    hostile: {min: 0.85, max: 1.3}
+  extremes: {chance: 1.5, small: 0.5, large: 1.8}   # % de minis y gigantes
+  types:                    # rango propio por tipo (sin extremos)
+    villager: {min: 0.92, max: 1.08}
+    "rpgroll:forest_goblin": {min: 0.9, max: 1.4}
+  hostile-min-height: 1.05
+  stats: {health: 1.0, damage: 0.5, speed: -0.25, experience: 1.0, loot: 0.5}`}
+      />
+      <Callout tone="info">
+        <Kbd>/mobadmin reload</Kbd> relee también el <code>config.yml</code>: el cambio vale para los mobs que
+        aparezcan desde ese momento; los que ya existían conservan su tamaño.
+      </Callout>
+
       <SectionHeading id="gui">GUI: navegador y editor</SectionHeading>
       <p>
         <Kbd>/mobadmin browser</Kbd> abre un navegador paginado con búsqueda y filtro por categoría. Click sobre
@@ -503,7 +566,7 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr><Td className="font-mono text-xs">{"/mobadmin spawn <id> [jugador]"}</Td><Td>Invoca un mob en la ubicación del jugador indicado (o la tuya).</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/mobadmin list [categoría]"}</Td><Td>Lista definiciones cargadas, opcionalmente filtradas.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/mobadmin info <id>"}</Td><Td>Muestra stats y componentes resumidos de una definición.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/mobadmin reload</Td><Td>Recarga todas las definiciones desde disco.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/mobadmin reload</Td><Td>Recarga el config.yml y todas las definiciones desde disco.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/mobadmin killall [id]"}</Td><Td>Elimina todos los mobs activos, opcionalmente de una sola definición.</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/mobadmin create <id> [tipo-entidad-base]"}</Td><Td>Crea un mob base y abre el editor directo.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/mobadmin browser</Td><Td>Abre el navegador gráfico.</Td></Tr>

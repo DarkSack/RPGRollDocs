@@ -226,6 +226,7 @@ export const searchIndex: SearchEntry[] = [
   h("mobs", "Modelos 3D animados (FreeMinecraftModels)", "modelos-3d"),
   h("mobs", "Reglas de spawn natural", "spawn"),
   h("mobs", "Regiones de mob (MobRegion)", "regiones"),
+  h("mobs", "Tamaño aleatorio de los mobs", "tamano-aleatorio"),
   h("mobs", "GUI: navegador y editor", "gui"),
   h("mobs", "Comandos", "comandos"),
   h("mobs", "Placeholders (PlaceholderAPI)", "placeholders"),
