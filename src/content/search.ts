@@ -79,6 +79,7 @@ export const searchIndex: SearchEntry[] = [
   h("crates", "Ejemplos de archivo YAML", "formato-yaml"),
   h("crates", "GUI: navegador, editor y ruleta", "gui"),
   h("crates", "Comandos", "comandos"),
+  h("crates", "Lucky blocks", "lucky-blocks"),
 
   // Ascension
   h("ascension", "Requisitos", "requisitos"),

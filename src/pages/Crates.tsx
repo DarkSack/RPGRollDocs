@@ -16,6 +16,7 @@ import {
 } from "../components/ui";
 import { useI18n, fill, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
 import { ADDONS_A_COPY, type AddonsACopy } from "./copy/addonsA";
+import { LUCKY_COPY } from "./copy/lucky";
 
 const CAVEAT_TITLE = "Un crate necesita al menos 1 recompensa";
 const CAVEAT_BODY =
@@ -51,6 +52,7 @@ function crateFields(c: AddonsACopy["crates"]): YamlField[] {
 export function Crates({ onNavigate }: { onNavigate: (slug: string) => void }) {
   const { locale } = useI18n();
   const c = ADDONS_A_COPY[locale].crates;
+  const l = LUCKY_COPY[locale];
 
   const commands: [string, string][] = [
     ["/crate setlocation <id>", c.cSetLocation],
@@ -230,6 +232,77 @@ export function Crates({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </tbody>
       </Table>
       <p>{fill(c.cmdNote, { perm: <Badge tone="amber">rpgrollcrates.admin.*</Badge> })}</p>
+
+      <SectionHeading id="lucky-blocks">{l.title}</SectionHeading>
+      <p>{l.intro}</p>
+      <ul>
+        {l.how.map((line) => (
+          <li key={line}>{line}</li>
+        ))}
+      </ul>
+      <Callout tone="info" title={l.safeTitle}>
+        {l.safe}
+      </Callout>
+      <Table>
+        <Thead>
+          <Th>{l.thAction}</Th>
+          <Th>{l.thParams}</Th>
+          <Th>{c.thWhat}</Th>
+        </Thead>
+        <tbody>
+          {l.actions.map(([type, params, what]) => (
+            <Tr key={type}>
+              <Td className="font-mono text-xs">{type}</Td>
+              <Td className="font-mono text-xs">{params}</Td>
+              <Td>{what}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
+      <CodeBlock
+        language="yaml"
+        filename="lucky/comun.yml"
+        code={`id: comun
+display-name: "&eLucky Block"
+lore:
+  - "&7Rómpelo y prueba suerte."
+note: 0                     # instrumento skeleton, nota 0-24 (una por tipo)
+item:
+  material: PAPER
+  model: "miservidor:lucky_comun"   # vacío: se ve como el material
+  glow: false
+outcomes:
+  - id: diamantes
+    weight: 7
+    luck: GOOD
+    message: "&b¡Diamantes!"
+    actions:
+      - {type: DROP, item: DIAMOND, amount: 1-3}
+  - id: tnt
+    weight: 4
+    luck: BAD
+    message: "&c¡Corre!"
+    actions:
+      - {type: EXPLOSION, power: 3, delay: 50}`}
+      />
+      <p>{l.crateNote}</p>
+      <Callout tone="warning" title={l.packTitle}>
+        {l.pack}
+      </Callout>
+      <Table>
+        <Thead>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
+        </Thead>
+        <tbody>
+          {l.cmds.map(([cmd, what]) => (
+            <Tr key={cmd}>
+              <Td className="font-mono text-xs">{cmd}</Td>
+              <Td>{what}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
 
       <PrevNext current="crates" onNavigate={onNavigate} />
     </>
