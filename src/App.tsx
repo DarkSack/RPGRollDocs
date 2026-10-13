@@ -1,9 +1,12 @@
-import { useHashRoute } from "./hooks/useHashRoute";
+import { useEffect } from "react";
+import { useRoute } from "./hooks/useRoute";
 import { useTheme } from "./hooks/useTheme";
 import { useDocVersion } from "./hooks/useDocVersion";
 import { Layout } from "./components/layout/Layout";
 import { LocaleProvider, useI18n, localizedPageLabel } from "./i18n";
-import { pageTitle } from "./content/nav";
+import { allSlugs, pageTitle } from "./content/nav";
+import { addons } from "./content/addons";
+import { DEFAULT_DESCRIPTION, SITE_URL, pageDescriptions, pagePath } from "./content/seo";
 
 import { Home } from "./pages/Home";
 import { Architecture } from "./pages/Architecture";
@@ -62,13 +65,37 @@ function App() {
 }
 
 function Console() {
-  const [route, navigate] = useHashRoute();
+  const [route, navigate] = useRoute();
   const [theme, toggleTheme] = useTheme();
   const [version, setVersion] = useDocVersion();
   const { locale } = useI18n();
 
+  const known = allSlugs.includes(route);
   const title = localizedPageLabel(route, pageTitle(route), locale);
-  document.title = route === "inicio" ? "RPGRoll — Docs" : `${title} — RPGRoll Docs`;
+  const fullTitle = !known
+    ? "Página no encontrada — RPGRoll Docs"
+    : route === "inicio"
+      ? "RPGRoll — Docs"
+      : `${title} — RPGRoll Docs`;
+
+  // El primer HTML ya trae estos datos (los escribe scripts/prerender.mjs);
+  // esto los mantiene al día cuando se navega sin recargar.
+  useEffect(() => {
+    document.title = fullTitle;
+    const description =
+      pageDescriptions[route] ?? addons.find((a) => a.slug === route)?.blurb ?? DEFAULT_DESCRIPTION;
+    setMeta('meta[name="description"]', "content", description);
+    setMeta('meta[property="og:title"]', "content", fullTitle);
+    setMeta('meta[property="og:description"]', "content", description);
+    setMeta('meta[property="og:url"]', "content", SITE_URL + pagePath(route));
+    setMeta('link[rel="canonical"]', "href", SITE_URL + pagePath(route));
+    setMeta('meta[name="robots"]', "content", known ? "index, follow" : "noindex");
+
+    // `/dungeons#pegar-estructura`: la sección no existe hasta que la página
+    // nueva se pinta, así que el salto nativo del navegador llega tarde.
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (id) requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+  }, [route, fullTitle, known]);
 
   return (
     <Layout
@@ -181,8 +208,30 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
     case "troubleshooting":
       return <Troubleshooting onNavigate={onNavigate} />;
     default:
-      return <Home onNavigate={onNavigate} />;
+      return <NotFound />;
   }
+}
+
+function NotFound() {
+  return (
+    <>
+      <h1 className="text-2xl font-semibold" style={{ color: "var(--text)" }}>
+        Esta página no existe
+      </h1>
+      <p className="mt-4">
+        Puede que el enlace sea antiguo o tenga una errata. Usa el buscador (Ctrl/Cmd+K) o vuelve a la{" "}
+        <a className="underline" href="/">
+          introducción
+        </a>
+        .
+      </p>
+    </>
+  );
+}
+
+/** Actualiza un atributo de una etiqueta del `<head>`, si existe. */
+function setMeta(selector: string, attribute: string, value: string) {
+  document.head.querySelector(selector)?.setAttribute(attribute, value);
 }
 
 export default App;

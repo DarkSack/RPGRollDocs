@@ -128,7 +128,7 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         <li>Click en <strong>Nombre</strong> → te pide el nombre por chat.</li>
         <li>
           Click en <strong>Skin</strong> → pegas un link o ID de{" "}
-          <a href="#" onClick={(e) => e.preventDefault()}>mineskin.org</a> por chat; el addon consulta la API de
+          <a href="https://mineskin.org" target="_blank" rel="noopener noreferrer">mineskin.org</a> por chat; el addon consulta la API de
           MineSkin y resuelve el <code>value</code>/<code>signature</code> reales automáticamente (no hace falta
           pegar el texto largo de la textura a mano).
         </li>
@@ -263,7 +263,7 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         Un menú es una GUI de inventario configurable, abierta desde una acción <code>OPEN_GUI</code>. Vive en{" "}
         <code>plugins/RPGRoll-NPCs/menus/&lt;id&gt;.yml</code>. El motor (acciones, condiciones y GUI) está en
         RPGRoll-Lib, así que el mismo formato sirve para los menús de la brújula de{" "}
-        <a className="underline" href="#page/extras">RPGRoll-Extras</a> sin depender de este módulo. Además de
+        <a className="underline" href="/extras">RPGRoll-Extras</a> sin depender de este módulo. Además de
         los campos del ejemplo, un menú acepta <code>filler: GRAY_STAINED_GLASS_PANE</code> (rellena los huecos) y
         cada ítem <code>permission</code> (solo lo ve quien lo tenga); en <code>name</code> y <code>lore</code>,{" "}
         <code>{"{player}"}</code> es el jugador, y una <code>PLAYER_HEAD</code> muestra su cabeza:

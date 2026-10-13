@@ -87,6 +87,12 @@ const es = {
     reportIssue: "Reportar un problema",
     lastUpdated: "Última revisión",
   },
+  legal: {
+    noCookies: "Esta documentación no usa cookies ni analíticas.",
+    terms: "Términos",
+    privacy: "Privacidad",
+    notice: "Aviso legal",
+  },
   feedback: {
     question: "¿Te sirvió esta página?",
     yes: "Sí",
@@ -198,6 +204,12 @@ const en: Strings = {
     reportIssue: "Report an issue",
     lastUpdated: "Last reviewed",
   },
+  legal: {
+    noCookies: "These docs use no cookies and no analytics.",
+    terms: "Terms",
+    privacy: "Privacy",
+    notice: "Legal notice",
+  },
   feedback: {
     question: "Was this page helpful?",
     yes: "Yes",
@@ -300,6 +312,12 @@ const pt: Strings = {
     editOnGithub: "Editar esta página",
     reportIssue: "Relatar um problema",
     lastUpdated: "Última revisão",
+  },
+  legal: {
+    noCookies: "Esta documentação não usa cookies nem analytics.",
+    terms: "Termos",
+    privacy: "Privacidade",
+    notice: "Aviso legal",
   },
   feedback: {
     question: "Esta página ajudou?",

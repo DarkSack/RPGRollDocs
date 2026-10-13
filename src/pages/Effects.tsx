@@ -111,13 +111,9 @@ export function Effects({
       />
       <p>
         Sin{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("rpgroll-particles")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/rpgroll-particles" className="text-violet-600 underline dark:text-violet-400">
           RPGRoll-FX
-        </button>{" "}
+        </a>{" "}
         instalado, los componentes <code>VISUAL</code> simplemente no hacen nada
         (el resto del efecto funciona igual). Sin RPGRoll-Guilds, las
         condiciones <code>GUILD</code>/<code>TEAM</code> nunca se cumplen. Con

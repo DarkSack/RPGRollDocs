@@ -2,23 +2,36 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./logo-32.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo-32.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#020617" media="(prefers-color-scheme: dark)" />
+    <!--
+      Título, descripción, canónica y Open Graph los reescribe por página
+      scripts/prerender.mjs al compilar, y la app al navegar. Los valores de
+      aquí son los de la portada.
+    -->
+    <title>RPGRoll — Docs</title>
     <meta
       name="description"
-      content="Documentación de RPGRoll — framework RPG estilo D&D con 22 addons oficiales para servidores Paper/Minecraft."
+      content="Documentación de RPGRoll, el framework RPG modular para servidores Paper de Minecraft: núcleo, addons, comandos, permisos, configuración y API."
     />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://docs.sackito.online/" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="RPGRoll — Documentación" />
+    <meta property="og:site_name" content="RPGRoll Docs" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:url" content="https://docs.sackito.online/" />
+    <meta property="og:title" content="RPGRoll — Docs" />
     <meta
       property="og:description"
-      content="Documentación de RPGRoll — framework RPG estilo D&D con 22 addons oficiales para servidores Paper/Minecraft."
+      content="Documentación de RPGRoll, el framework RPG modular para servidores Paper de Minecraft: núcleo, addons, comandos, permisos, configuración y API."
     />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="RPGRoll — Documentación" />
-    <title>RPGRoll — Documentación</title>
+    <meta property="og:image" content="https://docs.sackito.online/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://docs.sackito.online/og.png" />
   </head>
   <body>
     <div id="root"></div>

@@ -118,13 +118,9 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         Sin RPGRoll-Items ni RPGRoll-Quests instalados, todo sigue funcionando: el equipo de un mob cae a{" "}
         <code>Material</code> vanilla directo, el loot de tipo <code>ITEM</code> también, y el loot de tipo{" "}
         <code>QUEST</code> simplemente no hace nada. Sin{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("sackresourcepack")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/sackresourcepack" className="text-violet-600 underline dark:text-violet-400">
           SackResourcePack
-        </button>
+        </a>
         , las <a href="#reskin" onClick={(e) => e.preventDefault()}>skins visuales</a> de un mob simplemente no
         aparecen configuradas como opción (no rompe nada — el mob se ve vanilla normal).
       </p>

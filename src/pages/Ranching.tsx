@@ -184,25 +184,17 @@ export function Ranching({
       />
       <p>
         Sin{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("seasons")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/seasons" className="text-violet-600 underline dark:text-violet-400">
           RPGRoll-Seasons
-        </button>
+        </a>
         , el factor climático de bienestar/fertilidad/producción simplemente no
         aplica (el resto funciona igual). RPGRoll-Farming, RPGRoll-Cooking y
         RPGRoll-Alchemy no existen, así que Ranching no se integra con ellos —
         esas integraciones del diseño original quedan sin usar como métodos genéricos en{" "}
         <code>RanchingAPI</code>. Sin{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("sackresourcepack")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/sackresourcepack" className="text-violet-600 underline dark:text-violet-400">
           SackResourcePack
-        </button>
+        </a>
         , el <a href="#reskin" onClick={(e) => e.preventDefault()}>reskin visual por raza</a> simplemente no
         aparece configurado (el animal se ve vanilla normal, nada se rompe).
         Sin Vault el mercado de animales avisa y no cobra; sin FreeMinecraftModels

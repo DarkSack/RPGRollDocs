@@ -65,13 +65,13 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib, RPGRoll]\nsoftdepend: [RPGRoll-FX, RPGRoll-Effects]"} />
       <p>
         Sin{" "}
-        <button type="button" onClick={() => onNavigate("rpgroll-particles")} className="text-violet-600 underline dark:text-violet-400">
+        <a href="/rpgroll-particles" className="text-violet-600 underline dark:text-violet-400">
           RPGRoll-FX
-        </button>
+        </a>
         , los componentes <code>VISUAL</code> no hacen nada. Sin{" "}
-        <button type="button" onClick={() => onNavigate("rpgroll-effects")} className="text-violet-600 underline dark:text-violet-400">
+        <a href="/rpgroll-effects" className="text-violet-600 underline dark:text-violet-400">
           RPGRoll-Effects
-        </button>
+        </a>
         , los componentes <code>APPLY_EFFECT</code>/<code>REMOVE_EFFECT</code> tampoco — el resto del motor
         (daño, movimiento, maná, cooldowns, runas) funciona igual.
       </p>

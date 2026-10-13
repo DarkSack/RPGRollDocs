@@ -3,6 +3,7 @@ import { useI18n } from "../../i18n";
 import { DOCS_REPO_URL, DOCS_SOURCE_PATH, ISSUES_URL } from "../../content/site";
 import { pageFile } from "../../content/pageFiles";
 import { pageTitle } from "../../content/nav";
+import { SHOP_URL, SITE_URL, pagePath } from "../../content/seo";
 import { ThumbsUpIcon, ThumbsDownIcon, PencilIcon, AlertOctagonIcon, ExternalLinkIcon } from "../icons/Icon";
 
 /**
@@ -22,7 +23,7 @@ export function PageFooter({ slug }: { slug: string }) {
   const file = pageFile(slug);
   const editUrl = file ? `${DOCS_REPO_URL}/edit/main/${DOCS_SOURCE_PATH}/${file}` : null;
   const issueUrl = `${ISSUES_URL}/new?title=${encodeURIComponent(`docs(${slug}): `)}&body=${encodeURIComponent(
-    `Página: ${pageTitle(slug)} (#page/${slug})\n\n`,
+    `Página: ${pageTitle(slug)} (${SITE_URL}${pagePath(slug)})\n\n`,
   )}`;
 
   return (
@@ -76,6 +77,22 @@ export function PageFooter({ slug }: { slug: string }) {
           )}
         </p>
       )}
+
+      {/* Lo legal vive en la tienda, que es quien vende: duplicarlo aquí sería
+          tener dos versiones que acaban diciendo cosas distintas. */}
+      <p className="mt-6 flex flex-wrap gap-x-4 gap-y-1 text-[12px]" style={{ color: "var(--text-faint)" }}>
+        <span>{t.legal.noCookies}</span>
+        <a className="underline" href={`${SHOP_URL}/terminos`}>
+          {t.legal.terms}
+        </a>
+        <a className="underline" href={`${SHOP_URL}/privacidad`}>
+          {t.legal.privacy}
+        </a>
+        <a className="underline" href={`${SHOP_URL}/aviso-legal`}>
+          {t.legal.notice}
+        </a>
+        <span>© {new Date().getFullYear()} Sack (DarkSack)</span>
+      </p>
     </footer>
   );
 }

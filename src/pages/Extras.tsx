@@ -103,13 +103,9 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
       <p>
         {fill(c.reqBody1, { depend: <code>depend: RPGRoll</code>, pm: <code>PlayerManager</code> })}{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("tab")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/tab" className="text-violet-600 underline dark:text-violet-400">
           {label("tab")}
-        </button>{" "}
+        </a>{" "}
         {c.reqBody2}
       </p>
 
@@ -459,13 +455,9 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <SectionHeading id="conditions">{c.condTitle}</SectionHeading>
       <p>
         {fill(c.condBody1, { def: <code>ConditionDefinition</code>, duration: <code>duration: -1</code> })}{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("rpgroll-effects")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/rpgroll-effects" className="text-violet-600 underline dark:text-violet-400">
           {label("rpgroll-effects")}
-        </button>{" "}
+        </a>{" "}
         {c.condBody2}
       </p>
       <CodeBlock
@@ -531,13 +523,9 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
             </>
           ),
         })}{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("items")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/items" className="text-violet-600 underline dark:text-violet-400">
           {label("items")}
-        </button>{" "}
+        </a>{" "}
         {fill(c.thermalBody2, { nsKey: <code>NamespacedKey("rpgroll-items", "item-custom-data")</code> })}
       </p>
 
@@ -635,13 +623,9 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <SectionHeading id="hud">{c.hudTitle}</SectionHeading>
       <p>
         {fill(c.hudBody1, { bar: <code>{"{bar}"}</code> })}{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("tab")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/tab" className="text-violet-600 underline dark:text-violet-400">
           {label("tab")}
-        </button>{" "}
+        </a>{" "}
         {c.hudBody2}
       </p>
       <CodeBlock

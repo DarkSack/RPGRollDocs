@@ -167,7 +167,7 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <p>
         La gema es un <code>EMERALD</code> con lore salvo que su YAML diga otra cosa: <code>material</code> cambia
         el ítem base e <code>item-model</code> le da su propio modelo del resource pack (ver{" "}
-        <a href="#page/items">Texturas propias</a>). Para repartirlas, cualquier sitio que acepte un id de ítem
+        <a href="#texturas-propias">Texturas propias</a>). Para repartirlas, cualquier sitio que acepte un id de ítem
         acepta también <code>{"gem:<id>"}</code>: <Kbd>{"/itemadmin give <jugador> gem:ruby"}</Kbd>, o{" "}
         <code>reference: gem:ruby</code> en el botín de RPGRoll-Mobs y RPGRoll-Dungeons.
       </p>

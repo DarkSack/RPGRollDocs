@@ -5,6 +5,7 @@ import { pageTitle } from "../content/nav";
 import { useI18n, fill, localizedPlaceholder, localizedPageLabel } from "../i18n";
 import { PH_INT_COPY } from "./copy/placeholdersIntegrations";
 import { BracesIcon, SearchIcon } from "../components/icons/Icon";
+import { pagePath } from "../content/seo";
 
 function normalize(text: string): string {
   return text
@@ -96,9 +97,9 @@ export function Placeholders({ onNavigate }: { onNavigate: (slug: string) => voi
             </SectionHeading>
             <p>
               {c.registeredBy}{" "}
-              <button type="button" className="underline" onClick={() => onNavigate(slug)}>
+              <a href={pagePath(slug)} className="underline">
                 {localizedPageLabel(slug, pageTitle(slug), locale)}
-              </button>
+              </a>
               .
             </p>
             <Table>

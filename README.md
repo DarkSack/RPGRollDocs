@@ -34,7 +34,7 @@ src/
 ├── components/
 │   ├── ui/                Componentes base reutilizables (CodeBlock, Badge, Callout, Table, Card, YamlBuilder, ...)
 │   └── layout/             Layout, Sidebar, Topbar, SearchBar
-├── hooks/               useHashRoute (enrutador propio sin dependencias), useTheme (modo oscuro/claro)
+├── hooks/               useRoute (enrutador propio sin dependencias), useTheme (modo oscuro/claro)
 ├── pages/               Una página por sección de la documentación (31 páginas: introducción, arquitectura,
 │                        sistemas del core, y una por cada uno de los 18 addons)
 └── App.tsx              Enruta cada slug del sidebar a su página
@@ -42,14 +42,17 @@ src/
 
 ## Navegación
 
-No usa React Router — es un enrutador por hash hecho a mano (`src/hooks/useHashRoute.ts`) con el formato
-`#page/<slug>` (para no chocar con los anchors de sección `#id` de cada página, generados por
-`SectionHeading`). Agregar una página nueva:
+No usa React Router — es un enrutador por ruta hecho a mano (`src/hooks/useRoute.ts`): cada página vive en
+`/<slug>` y el `#id` queda libre para los anchors de sección de `SectionHeading`. Los enlaces antiguos
+`/#page/<slug>` se reescriben solos. `npm run build` termina con `scripts/prerender.mjs`, que escribe un
+`dist/<slug>/index.html` por página (título, descripción y canónica propios), el `404.html`, el sitemap y
+el robots; sin ese paso las URLs directas darían 404 en Vercel. Agregar una página nueva:
 
 1. Agregar la entrada en `src/content/nav.ts` (aparece en la sidebar automáticamente).
 2. Crear el componente en `src/pages/`, recibiendo `{ onNavigate }: { onNavigate: (slug: string) => void }` como
    prop para poder linkear a otras páginas.
 3. Agregar el `case` correspondiente en el `switch` de `App.tsx`.
+4. Agregar su descripción en `src/content/seo.ts` (si falta, el build avisa).
 
 ## Buscador global (Ctrl/Cmd+K)
 

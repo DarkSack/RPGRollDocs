@@ -86,9 +86,9 @@ export function Progression({ onNavigate }: { onNavigate: (slug: string) => void
           {fill(c.p2, {
             key: <code>stat_points</code>,
             link: (
-              <button type="button" className="underline" onClick={() => onNavigate("stats-combate")}>
+              <a href="/stats-combate" className="underline">
                 {localizedPageLabel("stats-combate", pageTitle("stats-combate"), locale)}
-              </button>
+              </a>
             ),
           })}
         </li>

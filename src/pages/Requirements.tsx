@@ -6,6 +6,7 @@ import { pageTitle } from "../content/nav";
 import { useI18n, fill, localizedPageLabel, type Locale } from "../i18n";
 import { REQUIREMENTS_COPY, type RequirementsCopy } from "./copy/requirements";
 import { ServerIcon } from "../components/icons/Icon";
+import { pagePath } from "../content/seo";
 
 const pageLabel = (slug: string, locale: Locale) => localizedPageLabel(slug, pageTitle(slug), locale);
 
@@ -34,9 +35,9 @@ export function Requirements({ onNavigate }: { onNavigate: (slug: string) => voi
   );
 
   const Go = ({ to, children }: { to: string; children: ReactNode }) => (
-    <button type="button" className="underline" onClick={() => onNavigate(to)}>
+    <a href={pagePath(to)} className="underline">
       {children}
-    </button>
+    </a>
   );
 
   return (

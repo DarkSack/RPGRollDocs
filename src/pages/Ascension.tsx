@@ -362,9 +362,9 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
         El bono se aplica de verdad a toda la XP de personaje que se gana jugando (mobs, misiones, recetas):
         Ascension lo registra en el <code>ExperienceBonusService</code> del core junto con el bono permanente de
         legado, y se suma al bono por rango (<code>rpgroll.exp.bonus.&lt;n&gt;</code>). Ver{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("progresion")}>
+        <a href="/progresion" className="underline">
           Progresión y nivel
-        </button>
+        </a>
         .
       </p>
       <CodeBlock

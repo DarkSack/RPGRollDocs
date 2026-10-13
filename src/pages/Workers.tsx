@@ -62,15 +62,15 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
       <p>
         De todos los addons que el diseño original nombraba como integración (Ranching/Fishing/Mining/Blacksmith/
         Housing/Magic/Quests/Guilds/Teams), solo{" "}
-        <button type="button" onClick={() => onNavigate("ranching")} className="text-violet-600 underline dark:text-violet-400">
+        <a href="/ranching" className="text-violet-600 underline dark:text-violet-400">
           RPGRoll-Ranching
-        </button>
+        </a>
         , RPGRoll-Fishing, RPGRoll-Seasons, RPGRoll-Quests, RPGRoll-Guilds y RPGRoll-Magic existen en este proyecto
         — RPGRoll-Mining, RPGRoll-Blacksmith y "Housing" como addon separado no existen. Sin Vault + un plugin de
         economía real, los salarios simplemente no se cobran (el resto de la simulación sigue igual). Sin{" "}
-        <button type="button" onClick={() => onNavigate("sackresourcepack")} className="text-violet-600 underline dark:text-violet-400">
+        <a href="/sackresourcepack" className="text-violet-600 underline dark:text-violet-400">
           SackResourcePack
-        </button>
+        </a>
         , el <a href="#reskin" onClick={(e) => e.preventDefault()}>reskin visual</a> de una profesión simplemente
         no aparece configurado (no rompe nada — el worker se ve con su <code>entity-type</code> vanilla normal).
       </p>
@@ -199,9 +199,9 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
         el nivel de personaje en peces legendarios), y un worker no es un jugador. Simularlo con un jugador falso
         sería frágil y engañoso, así que <code>FishingBehavior</code> se queda con una captura vanilla simple en
         vez de la genética/calidad rica de{" "}
-        <button type="button" onClick={() => onNavigate("fishing")} className="text-violet-600 underline dark:text-violet-400">
+        <a href="/fishing" className="text-violet-600 underline dark:text-violet-400">
           RPGRoll-Fishing
-        </button>
+        </a>
         . Una profesión sin ningún behavior registrado sigue "trabajando" a efectos de horario/salario/experiencia,
         solo que sin ninguna interacción física real (fallback silencioso, no un error).
       </Callout>

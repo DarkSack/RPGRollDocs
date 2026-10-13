@@ -43,9 +43,9 @@ export function SkillsTraits({ onNavigate }: { onNavigate: (slug: string) => voi
       <p>
         {fill(c.useLead, {
           link: (
-            <button type="button" className="underline" onClick={() => onNavigate("progresion")}>
+            <a href="/progresion" className="underline">
               {c.useLink}
-            </button>
+            </a>
           ),
         })}
       </p>

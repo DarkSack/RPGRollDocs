@@ -11,6 +11,7 @@ import {
 } from "../i18n";
 import { REFERENCE_COPY } from "./copy/reference";
 import { LifeBuoyIcon, AlertTriangleIcon, AlertOctagonIcon } from "../components/icons/Icon";
+import { pagePath } from "../content/seo";
 
 /**
  * Diagnóstico de problemas.
@@ -81,15 +82,9 @@ export function Troubleshooting({ onNavigate }: { onNavigate: (slug: string) => 
               <div className="flex flex-wrap items-center gap-2">
                 <span className="fui-label">{c.see}</span>
                 {item.slugs.map((slug) => (
-                  <button
-                    key={slug}
-                    type="button"
-                    onClick={() => onNavigate(slug)}
-                    className="rounded-sm border px-1.5 py-px font-mono text-[10px] uppercase tracking-wider"
-                    style={{ borderColor: "var(--line)", color: "var(--text-dim)" }}
-                  >
+                  <a href={pagePath(slug)} key={slug} className="rounded-sm border px-1.5 py-px font-mono text-[10px] uppercase tracking-wider" style={{ borderColor: "var(--line)", color: "var(--text-dim)" }}>
                     {label(slug)}
-                  </button>
+                  </a>
                 ))}
               </div>
             </div>
@@ -135,9 +130,9 @@ export function Troubleshooting({ onNavigate }: { onNavigate: (slug: string) => 
                 <p className="flex-1 text-[14px] font-medium" style={{ color: "var(--text)" }}>
                   {localizedCaveatTitle(caveat.slug, caveat.title, locale)}
                 </p>
-                <button type="button" onClick={() => onNavigate(caveat.slug)} className="shrink-0">
+                <a href={pagePath(caveat.slug)} className="shrink-0">
                   <Badge>{label(caveat.slug)}</Badge>
-                </button>
+                </a>
               </div>
               <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-dim)" }}>
                 {localizedCaveatBody(caveat.slug, caveat.title, caveat.body, locale)}

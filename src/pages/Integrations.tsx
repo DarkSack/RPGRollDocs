@@ -11,6 +11,7 @@ import {
 } from "../i18n";
 import { PH_INT_COPY } from "./copy/placeholdersIntegrations";
 import { PlugIcon } from "../components/icons/Icon";
+import { pagePath } from "../content/seo";
 
 const REQUIREMENT_TONE: Record<Requirement, "violet" | "neutral" | "green"> = {
   required: "violet",
@@ -71,9 +72,9 @@ export function Integrations({ onNavigate }: { onNavigate: (slug: string) => voi
               {integration.usedBy.map((use) => (
                 <Tr key={use.slug}>
                   <Td>
-                    <button type="button" className="underline" onClick={() => onNavigate(use.slug)}>
+                    <a href={pagePath(use.slug)} className="underline">
                       {label(use.slug)}
-                    </button>
+                    </a>
                   </Td>
                   <Td>
                     <Badge tone={REQUIREMENT_TONE[use.requirement]}>{reqLabel[use.requirement]}</Badge>
@@ -119,9 +120,9 @@ export function Integrations({ onNavigate }: { onNavigate: (slug: string) => voi
           {addonDependencies.map((addon) => (
             <Tr key={addon.slug}>
               <Td>
-                <button type="button" className="underline" onClick={() => onNavigate(addon.slug)}>
+                <a href={pagePath(addon.slug)} className="underline">
                   {label(addon.slug)}
-                </button>
+                </a>
               </Td>
               <Td className="font-mono text-xs">{addon.hard.length > 0 ? addon.hard.join(", ") : "—"}</Td>
               <Td className="font-mono text-xs">{addon.soft.length > 0 ? addon.soft.join(", ") : "—"}</Td>

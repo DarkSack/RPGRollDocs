@@ -82,9 +82,9 @@ export function Permissions({ onNavigate }: { onNavigate: (slug: string) => void
 
       <p className="mt-6">
         {c.seeCommands}{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("comandos")}>
+        <a href="/comandos" className="underline">
           {localizedPageLabel("comandos", pageTitle("comandos"), locale)}
-        </button>
+        </a>
         .
       </p>
 

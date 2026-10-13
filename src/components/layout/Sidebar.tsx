@@ -3,10 +3,12 @@ import { nav } from "../../content/nav";
 import { addonMeta, DefaultNavIcon } from "../../content/addons";
 import { useI18n, localizedPageLabel, localizedSectionLabel } from "../../i18n";
 import { SearchIcon } from "../icons/Icon";
+import { pagePath } from "../../content/seo";
 
 interface SidebarProps {
   current: string;
-  onNavigate: (slug: string) => void;
+  /** Ya no se usa: los enlaces son `<a href>` y los intercepta useRoute. */
+  onNavigate?: (slug: string) => void;
   onLinkClick?: () => void;
 }
 
@@ -25,7 +27,7 @@ function normalize(text: string): string {
  * etiqueta traducida y también por slug, que es lo que alguien recuerda
  * cuando viene de una URL.
  */
-export function Sidebar({ current, onNavigate, onLinkClick }: SidebarProps) {
+export function Sidebar({ current, onLinkClick }: SidebarProps) {
   const { t, locale } = useI18n();
   const [filter, setFilter] = useState("");
 
@@ -85,14 +87,13 @@ export function Sidebar({ current, onNavigate, onLinkClick }: SidebarProps) {
                 const Icon = addonMeta(item.slug)?.icon ?? DefaultNavIcon;
                 return (
                   <li key={item.slug}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onNavigate(item.slug);
-                        onLinkClick?.();
-                      }}
+                    {/* Enlace real (lo intercepta useRoute para no recargar): es la
+                        jerarquía de enlaces internos que sigue el rastreador. */}
+                    <a
+                      href={pagePath(item.slug)}
+                      onClick={() => onLinkClick?.()}
                       aria-current={active ? "page" : undefined}
-                      className="-ml-px flex w-full items-center gap-2 border-l-2 py-[5px] pl-2.5 pr-2 text-left text-[13px] leading-tight transition-colors"
+                      className="-ml-px flex w-full items-center gap-2 border-l-2 py-[5px] pl-2.5 pr-2 text-left text-[13px] leading-tight no-underline transition-colors"
                       style={{
                         borderLeftColor: active ? "var(--ruby)" : "transparent",
                         backgroundColor: active ? "var(--surface-2)" : "transparent",
@@ -106,7 +107,7 @@ export function Sidebar({ current, onNavigate, onLinkClick }: SidebarProps) {
                         style={{ color: active ? "var(--ruby)" : "var(--text-faint)" }}
                       />
                       <span className="truncate">{localizedPageLabel(item.slug, item.label, locale)}</span>
-                    </button>
+                    </a>
                   </li>
                 );
               })}

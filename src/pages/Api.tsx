@@ -260,9 +260,9 @@ export function Api({ onNavigate }: { onNavigate: (slug: string) => void }) {
           rpgPlayer: <code>RPGPlayer</code>,
           pkg: <code>com.sack.rpgroll.api</code>,
         })}{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("arquitectura")}>
+        <a href="/arquitectura" className="underline">
           {localizedPageLabel("arquitectura", pageTitle("arquitectura"), locale)}
-        </button>
+        </a>
         .
       </p>
 

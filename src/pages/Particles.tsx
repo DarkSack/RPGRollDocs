@@ -55,9 +55,9 @@ export function Particles({ onNavigate }: { onNavigate: (slug: string) => void }
 
       <Callout tone="info" title={c.confuseTitle}>
         {fill(c.confuseBody1, { render: <strong>{c.confuseRender}</strong> })}{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("rpgroll-effects")}>
+        <a href="/rpgroll-effects" className="underline">
           {localizedPageLabel("rpgroll-effects", pageTitle("rpgroll-effects"), locale)}
-        </button>
+        </a>
         {c.confuseBody2}
       </Callout>
 

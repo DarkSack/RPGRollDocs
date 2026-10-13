@@ -101,13 +101,9 @@ export function Seasons({
             </>
           ),
         })}{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("rpgroll-effects")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/rpgroll-effects" className="text-violet-600 underline dark:text-violet-400">
           {localizedPageLabel("rpgroll-effects", pageTitle("rpgroll-effects"), locale)}
-        </button>
+        </a>
         {fill(c.reqBody2, { applyEffect: <code>APPLY_EFFECT</code> })}
       </p>
 

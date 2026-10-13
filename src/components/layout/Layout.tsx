@@ -91,7 +91,6 @@ export function Layout({
         theme={theme}
         onToggleTheme={onToggleTheme}
         onToggleMobileNav={() => setMobileNavOpen((v) => !v)}
-        onNavigateHome={() => onNavigate("inicio")}
         onNavigate={onNavigate}
         current={current}
         version={version}

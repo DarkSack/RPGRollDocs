@@ -7,9 +7,9 @@ export function RoomDesigner({ onNavigate }: { onNavigate: (slug: string) => voi
     <>
       <PageHeader title="Diseñador de Salas" icon={CubeIcon} eyebrow="Herramienta">
         Diseñá una estructura CUSTOM para la{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("dungeons")}>
+        <a href="/dungeons" className="underline">
           Biblioteca de Estructuras
-        </button>{" "}
+        </a>{" "}
         de RPGRoll-Dungeons pintando capa por capa, mirándola en 3D en vivo, y copiando el YAML ya armado — sin
         instalar nada ni tocar código Java.
       </PageHeader>
@@ -56,18 +56,9 @@ export function RoomDesigner({ onNavigate }: { onNavigate: (slug: string) => voi
       <p>
         Con el archivo ya en <code>structures/</code>, corré <code>/dungeonadmin reload</code> en el juego y
         pegala con <code>/dungeonadmin structure browser</code> — ver la sección{" "}
-        <button
-          type="button"
-          className="underline"
-          onClick={() => {
-            onNavigate("dungeons");
-            requestAnimationFrame(() =>
-              setTimeout(() => document.getElementById("pegar-estructura")?.scrollIntoView(), 60),
-            );
-          }}
-        >
+        <a className="underline" href="/dungeons#pegar-estructura">
           Pegar una estructura
-        </button>{" "}
+        </a>{" "}
         de la documentación de Dungeons para el detalle completo (incluye la alternativa con Structure Block
         vanilla, para construir a mano en el juego en vez de acá).
       </p>

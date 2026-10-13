@@ -5,6 +5,7 @@ import { useI18n, localizedPageLabel, type Locale } from "../i18n";
 import { pageTitle } from "../content/nav";
 import { QUICK_START_COPY } from "./copy/quickStart";
 import { CompassIcon } from "../components/icons/Icon";
+import { pagePath } from "../content/seo";
 
 /**
  * Recorrido de puesta en marcha.
@@ -24,9 +25,9 @@ export function QuickStart({ onNavigate }: { onNavigate: (slug: string) => void 
 
   /** Link interno dentro de una oración. */
   const Go = ({ to, children }: { to: string; children: ReactNode }) => (
-    <button type="button" className="underline" onClick={() => onNavigate(to)}>
+    <a href={pagePath(to)} className="underline">
       {children}
-    </button>
+    </a>
   );
 
   return (

@@ -12,7 +12,7 @@ interface TopbarProps {
   theme: "light" | "dark";
   onToggleTheme: () => void;
   onToggleMobileNav: () => void;
-  onNavigateHome: () => void;
+  onNavigateHome?: () => void;
   onNavigate: (slug: string) => void;
   current: string;
   version: string;
@@ -24,7 +24,6 @@ export function Topbar({
   theme,
   onToggleTheme,
   onToggleMobileNav,
-  onNavigateHome,
   onNavigate,
   current,
   version,
@@ -55,10 +54,9 @@ export function Topbar({
           <MenuIcon size={18} />
         </button>
 
-        <button
-          type="button"
-          onClick={onNavigateHome}
-          className="flex shrink-0 items-center gap-2 rounded-sm py-1 pr-1"
+        <a
+          href="/"
+          className="flex shrink-0 items-center gap-2 rounded-sm py-1 pr-1 no-underline"
         >
           <Logo size={22} />
           <span className="text-[13px] font-semibold tracking-tight" style={{ color: "var(--text)" }}>
@@ -70,7 +68,7 @@ export function Topbar({
           >
             {t.brand.docs}
           </span>
-        </button>
+        </a>
 
         {page && section && (
           <nav

@@ -3,15 +3,16 @@ import { configFiles } from "../content/config";
 import { pageTitle } from "../content/nav";
 import { useI18n, fill, localizedConfigFile, localizedConfigKey, localizedPageLabel } from "../i18n";
 import { CONFIG_DB_COPY } from "./copy/configDatabase";
+import { pagePath } from "../content/seo";
 
 export function Configuration({ onNavigate }: { onNavigate: (slug: string) => void }) {
   const { locale } = useI18n();
   const c = CONFIG_DB_COPY[locale].config;
 
   const Go = ({ to }: { to: string }) => (
-    <button type="button" className="underline" onClick={() => onNavigate(to)}>
+    <a href={pagePath(to)} className="underline">
       {localizedPageLabel(to, pageTitle(to), locale)}
-    </button>
+    </a>
   );
 
   return (

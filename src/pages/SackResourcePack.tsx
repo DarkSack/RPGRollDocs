@@ -37,13 +37,9 @@ export function SackResourcePack({
         <code>softdepend</code> en RPGRoll, y el código solo usa{" "}
         <code>compileOnly(paper-api)</code>. La idea es que sirva para{" "}
         <strong>cualquier</strong> ecosistema de plugins, del mismo modo que{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("rpgroll-particles")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/rpgroll-particles" className="text-violet-600 underline dark:text-violet-400">
           RPGRoll-FX
-        </button>{" "}
+        </a>{" "}
         es una librería de partículas/sonido standalone.
       </Callout>
 

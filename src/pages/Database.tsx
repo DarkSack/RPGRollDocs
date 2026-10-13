@@ -91,9 +91,9 @@ export function Database({ onNavigate }: { onNavigate: (slug: string) => void })
       <SectionHeading id="conexion">{c.connTitle}</SectionHeading>
       <p>
         {fill(c.connBody, { file: <code>database.yml</code> })}{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("configuracion")}>
+        <a href="/configuracion" className="underline">
           {localizedPageLabel("configuracion", pageTitle("configuracion"), locale)}
-        </button>{" "}
+        </a>{" "}
         {c.connAfter}
       </p>
 

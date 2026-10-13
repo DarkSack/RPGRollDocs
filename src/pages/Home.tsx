@@ -15,6 +15,7 @@ import {
   ArrowRightIcon,
   GithubIcon,
 } from "../components/icons/Icon";
+import { pagePath } from "../content/seo";
 
 const pageLabel = (slug: string, locale: Locale) => localizedPageLabel(slug, pageTitle(slug), locale);
 
@@ -30,9 +31,9 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
   ];
 
   const Go = ({ to, children }: { to: string; children: ReactNode }) => (
-    <button type="button" className="underline" onClick={() => onNavigate(to)}>
+    <a href={pagePath(to)} className="underline">
       {children}
-    </button>
+    </a>
   );
 
   return (
@@ -55,23 +56,13 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => onNavigate("configuracion")}
-            className="inline-flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-[13px] font-medium text-white transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "var(--ruby)" }}
-          >
+          <a href="/configuracion" className="inline-flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-[13px] font-medium text-white transition-opacity hover:opacity-90" style={{ backgroundColor: "var(--ruby)" }}>
             {c.ctaConfigure}
             <ArrowRightIcon size={14} />
-          </button>
-          <button
-            type="button"
-            onClick={() => onNavigate("arquitectura")}
-            className="inline-flex items-center gap-1.5 rounded-sm border px-3 py-1.5 text-[13px] font-medium transition-colors"
-            style={{ borderColor: "var(--line)", color: "var(--text-dim)" }}
-          >
+          </a>
+          <a href="/arquitectura" className="inline-flex items-center gap-1.5 rounded-sm border px-3 py-1.5 text-[13px] font-medium transition-colors" style={{ borderColor: "var(--line)", color: "var(--text-dim)" }}>
             {c.ctaArchitecture}
-          </button>
+          </a>
           <a
             href={REPO_URL}
             target="_blank"
@@ -146,7 +137,7 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
         {addons.map((addon) => {
           const Icon = addon.icon;
           return (
-            <Card key={addon.slug} onClick={() => onNavigate(addon.slug)}>
+            <Card key={addon.slug} href={pagePath(addon.slug)}>
               <div className="flex items-start gap-3">
                 <span className={iconWrapClass(addon.tone)}>
                   <Icon size={16} />

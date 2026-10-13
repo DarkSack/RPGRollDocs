@@ -429,9 +429,9 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <Callout tone="info" title="Armá todo esto visualmente: Diseñador de TAB">
         En vez de escribir a mano los 10 tipos de archivo de arriba, usá el{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("tab-designer")}>
+        <a href="/tab-designer" className="underline">
           Diseñador de TAB
-        </button>{" "}
+        </a>{" "}
         — una herramienta en el navegador que arma perfiles, contextos, scoreboards, tablists, nametags, belowname,
         bossbars, sorting, teams y animaciones con formularios, y te da el YAML exacto que lee cada{" "}
         <code>*Parser.java</code> listo para copiar o descargar. No reemplaza ningún editor in-game (no existe uno

@@ -164,9 +164,9 @@ export function Architecture({ onNavigate }: { onNavigate: (slug: string) => voi
       <SectionHeading id="addons">{c.addonsTitle}</SectionHeading>
       <p>
         {c.addonsBody1}{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("npcs")}>
+        <a href="/npcs" className="underline">
           RPGRoll-NPCs
-        </button>{" "}
+        </a>{" "}
         {fill(c.addonsBody2, {
           build: <code>build.gradle.kts</code>,
           pluginYml: <code>plugin.yml</code>,

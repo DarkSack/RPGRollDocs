@@ -8,9 +8,9 @@ export function TabDesigner({ onNavigate }: { onNavigate: (slug: string) => void
       <PageHeader title="Diseñador de TAB" icon={TableListIcon} eyebrow="Herramienta">
         Armá perfiles, contextos, scoreboards, tablists, nametags, belowname, bossbars, sorting, teams y
         animaciones para{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("tab")}>
+        <a href="/tab" className="underline">
           RPGRoll-TAB
-        </button>{" "}
+        </a>{" "}
         con formularios en vez de escribir el YAML a mano, y copia o descargá el resultado listo para pegar en el
         servidor — sin instalar nada ni tocar código Java.
       </PageHeader>
@@ -47,27 +47,13 @@ export function TabDesigner({ onNavigate }: { onNavigate: (slug: string) => void
       <SectionHeading id="siguiente-paso">Siguiente paso</SectionHeading>
       <p>
         Con los archivos ya en <code>tab/</code>, corré <code>/tabadmin reload</code> — ver la sección{" "}
-        <button
-          type="button"
-          className="underline"
-          onClick={() => {
-            onNavigate("tab");
-            requestAnimationFrame(() => setTimeout(() => document.getElementById("comandos")?.scrollIntoView(), 60));
-          }}
-        >
+        <a className="underline" href="/tab#comandos">
           Comandos
-        </button>{" "}
+        </a>{" "}
         de la documentación de TAB para el resto de los comandos de administración, y{" "}
-        <button
-          type="button"
-          className="underline"
-          onClick={() => {
-            onNavigate("tab");
-            requestAnimationFrame(() => setTimeout(() => document.getElementById("motor-de-contexto")?.scrollIntoView(), 60));
-          }}
-        >
+        <a className="underline" href="/tab#motor-de-contexto">
           Context Engine
-        </button>{" "}
+        </a>{" "}
         para entender cómo se elige, entre varios Contextos que matchean, cuál perfil termina aplicado.
       </p>
 

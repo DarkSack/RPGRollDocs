@@ -215,13 +215,9 @@ export function Fishing({
       />
       <p>
         {c.reqBody1}{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("seasons")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/seasons" className="text-violet-600 underline dark:text-violet-400">
           {label("seasons")}
-        </button>
+        </a>
         {fill(c.reqBody2, {
           seasons: <code>allowed-seasons</code>,
           effects: (
@@ -230,13 +226,9 @@ export function Fishing({
             </>
           ),
         })}{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("sackresourcepack")}
-          className="text-violet-600 underline dark:text-violet-400"
-        >
+        <a href="/sackresourcepack" className="text-violet-600 underline dark:text-violet-400">
           {label("sackresourcepack")}
-        </button>
+        </a>
         {fill(c.reqBody3, { cmd: <code>model</code>, icon: <code>icon</code> })}
       </p>
 

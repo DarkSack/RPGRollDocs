@@ -48,17 +48,17 @@ export function Commands({ onNavigate }: { onNavigate: (slug: string) => void })
           ex3: <code>/rpg race &lt;Tab&gt;</code>,
           ex4: <code>/rpg class &lt;Tab&gt;</code>,
         })}{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("arquitectura")}>
+        <a href="/arquitectura" className="underline">
           {c.tabLink}
-        </button>
+        </a>
         .
       </Callout>
 
       <p className="mt-6">
         {c.seePerms}{" "}
-        <button type="button" className="underline" onClick={() => onNavigate("permisos")}>
+        <a href="/permisos" className="underline">
           {localizedPageLabel("permisos", pageTitle("permisos"), locale)}
-        </button>
+        </a>
         .
       </p>
 

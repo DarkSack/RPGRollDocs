@@ -3,6 +3,7 @@ import { PageHeader, SectionHeading, Callout, CodeBlock, Table, Thead, Th, Tr, T
 import { pageTitle } from "../content/nav";
 import { useI18n, fill, localizedPageLabel, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
 import { CORE_COPY } from "./copy/core";
+import { pagePath } from "../content/seo";
 
 const CAVEAT_TITLE = "passive-traits no se aplica solo";
 const CAVEAT_BODY =
@@ -13,9 +14,9 @@ export function RacesClasses({ onNavigate }: { onNavigate: (slug: string) => voi
   const c = CORE_COPY[locale].races;
 
   const Go = ({ to, children }: { to: string; children: ReactNode }) => (
-    <button type="button" className="underline" onClick={() => onNavigate(to)}>
+    <a href={pagePath(to)} className="underline">
       {children}
-    </button>
+    </a>
   );
 
   return (
