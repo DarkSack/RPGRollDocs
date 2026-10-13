@@ -113,6 +113,7 @@ export const searchIndex: SearchEntry[] = [
   h("rpgroll-effects", "GUI: Effect Studio", "gui"),
   h("rpgroll-effects", "API para addons — EffectsAPI", "api"),
   h("rpgroll-effects", "Comandos", "comandos"),
+  h("rpgroll-effects", "Placeholders", "placeholders"),
 
   // API
   h("api", "Configurar tu addon", "setup"),
@@ -512,6 +513,7 @@ export const searchIndex: SearchEntry[] = [
   h("extras", "Jugadores AFK", "afk"),
   h("extras", "Menú del servidor (brújula)", "menu-servidor"),
   h("extras", "Mochilas mejorables", "mochilas"),
+  h("extras", "Viajes: /rtp, /death y warps", "viajes"),
 ];
 
 function h(slug: string, headingLabel: string, heading: string): SearchEntry {

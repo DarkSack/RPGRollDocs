@@ -247,7 +247,7 @@ export function Chat({ onNavigate }: { onNavigate: (slug: string) => void }) {
           list: <code>wave, laugh, sit, cry, dance</code>,
           cmds: (
             <>
-              <Kbd>/wave</Kbd>, <Kbd>/laugh</Kbd>…
+              <Kbd>/wave</Kbd>, <Kbd>/laugh</Kbd>, <Kbd>/sit</Kbd>, <Kbd>/cry</Kbd>, <Kbd>/dance</Kbd>
             </>
           ),
           generic: <Kbd>{"/emote <nombre>"}</Kbd>,

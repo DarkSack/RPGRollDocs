@@ -70,7 +70,7 @@ export function Crates({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </PageHeader>
 
       <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, DecentHolograms]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, DecentHolograms, Vault]"} />
       <p>{c.reqBody}</p>
 
       <SectionHeading id="modelo">{c.modelTitle}</SectionHeading>

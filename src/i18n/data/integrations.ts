@@ -38,6 +38,7 @@ const notesEn: Map_ = {
   "placeholderapi:tab": "Resolves third-party placeholders inside TAB templates.",
   "placeholderapi:extras": "Exposes the survival bars as placeholders.",
   "placeholderapi:traps": "Placeholder-based trap conditions.",
+  "placeholderapi:rpgroll-effects": "rpgrolleffects expansion.",
 
   "vault:economy": "Registers as the provider of Vault's Economy service — it implements it, it does not consume it.",
   "vault:items": "Money costs for upgrading and repairing.",
@@ -50,6 +51,7 @@ const notesEn: Map_ = {
   "vault:dungeons": "Money rewards from dungeons.",
   "vault:pass": "money: rewards from the pass, the daily reward and votes. Without an economy those rewards are skipped with a console warning.",
   "vault:furniture": "Carpenter recipes that cost money. Without an economy those recipes cannot be crafted.",
+  "vault:crates": "MONEY action of lucky blocks. Without an economy that action pays nothing.",
   "votifier:pass": "Rewards, streak and pass points for voting. Without Votifier, /votar still shows the links and /passadmin vote simulates a vote.",
 
   "protocollib:tab":
@@ -97,6 +99,7 @@ const notesPt: Map_ = {
   "placeholderapi:tab": "Resolve placeholders de terceiros dentro dos templates do TAB.",
   "placeholderapi:extras": "Expõe as barras de sobrevivência como placeholders.",
   "placeholderapi:traps": "Condições de armadilha baseadas em placeholders.",
+  "placeholderapi:rpgroll-effects": "Expansão rpgrolleffects.",
 
   "vault:economy": "Registra-se como provedor do serviço Economy do Vault — implementa-o, não o consome.",
   "vault:items": "Custos monetários de melhoria e reparo.",
@@ -109,6 +112,7 @@ const notesPt: Map_ = {
   "vault:dungeons": "Recompensas em dinheiro das masmorras.",
   "vault:pass": "Recompensas money: do passe, do diário e dos votos. Sem economia, essas recompensas são puladas com um aviso no console.",
   "vault:furniture": "Receitas do carpinteiro que cobram dinheiro. Sem economia, essas receitas não podem ser fabricadas.",
+  "vault:crates": "Ação MONEY dos lucky blocks. Sem economia, essa ação não paga nada.",
   "votifier:pass": "Recompensas, sequência e pontos de passe por votar. Sem Votifier, /votar continua mostrando os links e /passadmin vote simula um voto.",
 
   "protocollib:tab":

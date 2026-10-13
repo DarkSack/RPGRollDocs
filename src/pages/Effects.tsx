@@ -14,6 +14,7 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { placeholders } from "../content/placeholders";
 
 const effectFields: YamlField[] = [
   {
@@ -106,7 +107,7 @@ export function Effects({
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
       <CodeBlock
         language="yaml"
-        code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, RPGRoll-Guilds]"}
+        code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, RPGRoll-Guilds, PlaceholderAPI]"}
       />
       <p>
         Sin{" "}
@@ -119,7 +120,9 @@ export function Effects({
         </button>{" "}
         instalado, los componentes <code>VISUAL</code> simplemente no hacen nada
         (el resto del efecto funciona igual). Sin RPGRoll-Guilds, las
-        condiciones <code>GUILD</code>/<code>TEAM</code> nunca se cumplen.
+        condiciones <code>GUILD</code>/<code>TEAM</code> nunca se cumplen. Con
+        PlaceholderAPI se registra la expansión <code>rpgrolleffects</code>{" "}
+        (tabla de placeholders, más abajo); sin él, nada más cambia.
       </p>
 
       <SectionHeading id="modelo">Anatomía de un efecto</SectionHeading>
@@ -696,6 +699,29 @@ export function Effects({
         Todos requieren <Badge tone="amber">rpgrolleffects.admin.*</Badge>{" "}
         (default: op).
       </p>
+
+      <SectionHeading id="placeholders">Placeholders</SectionHeading>
+      <p>
+        Con PlaceholderAPI instalado, la expansión{" "}
+        <Badge tone="violet">rpgrolleffects</Badge> expone los efectos activos
+        de cada jugador.
+      </p>
+      <Table>
+        <Thead>
+          <Th>Placeholder</Th>
+          <Th>Valor</Th>
+        </Thead>
+        <tbody>
+          {placeholders
+            .filter((p) => p.expansion === "rpgrolleffects")
+            .map((p) => (
+              <Tr key={p.name}>
+                <Td className="font-mono text-xs">{p.name}</Td>
+                <Td>{p.description}</Td>
+              </Tr>
+            ))}
+        </tbody>
+      </Table>
       <PrevNext current="rpgroll-effects" onNavigate={onNavigate} />
     </>
   );

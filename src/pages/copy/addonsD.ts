@@ -144,6 +144,24 @@ const es = {
     cMenu: "Abre el menú del servidor, sin necesidad de la brújula.",
     cMenuItem: "Devuelve la brújula si la perdiste (con el menú activado).",
     cMenuAny: "Abre cualquier menú de menus/ por su id.",
+    cRtp: "Teletransporte aleatorio (con random-teleport activado).",
+    cDeath: "Vuelve al punto de tu última muerte (con death-teleport activado).",
+    cWarp: "Viaja a un warp de jugador. Sin nombre, abre el menú de warps.",
+    cSetwarp: "Crea un warp donde estás. Igual que /warp set <nombre>.",
+    cDelwarp: "Borra uno de tus warps. Igual que /warp delete <nombre>.",
+    cWarps: "Abre el menú con todos los warps. Igual que /warp list.",
+    travelTitle: "Viajes: /rtp, /death y warps de jugador",
+    travelBody:
+      "Tres comandos de viaje, cada uno con su interruptor en {config} y los tres apagados de fábrica. Encender o apagar uno pide reiniciar el servidor; el resto de sus opciones se recarga con {reload}. Si otro plugin ya registra {rtp} o {warp} (Essentials, por ejemplo), deja el de Extras apagado o desactiva ese comando en el otro plugin.",
+    travelRtp:
+      "{rtp} lleva a un punto al azar del mundo. Solo funciona en los mundos listados en {worlds} y con cielo abierto (ni Nether ni cuevas); sin argumento usa el mundo donde estás si está en la lista y, si no, {def}. El destino cae en el anillo entre {min} y {max} bloques desde el centro del borde del mundo, que además lo limita. El jugador tiene que quedarse quieto {delay} segundos (moverse lo cancela) y espera {cooldown} segundos entre un uso y el siguiente. Se prueban hasta 12 puntos y se descartan los que no tienen suelo firme o caen sobre agua, lava, magma, cactus, fuego, bayas o nieve polvo; el chunk de destino se carga o se genera sin parar el servidor.",
+    travelDeath:
+      "{death} lleva al punto de tu última muerte, el que guarda el propio juego, para recoger lo que se cayó antes de que desaparezca. A diferencia de un /back, sigue llevando allí aunque después hayas usado otro teletransporte. No comprueba cómo está el sitio: quien murió en lava vuelve a la lava.",
+    travelWarps:
+      "Los warps son puntos públicos que crea cada jugador. {set} fija uno donde estás, {warp} viaja a él, {del} lo borra y {list} abre un menú con todos (hasta 45) y un botón para crear uno con tu nombre. El nombre lleva de 2 a 16 caracteres: minúsculas, números y guion bajo. Cada jugador puede tener tantos como diga {max}. No se puede fijar un warp donde no puedes construir (el claim de otro, una región protegida), en los mundos de {disabled} ni en un sitio peligroso; y solo se viaja si el destino sigue siendo pisable, para que nadie convierta un warp en una trampa cavando debajo. Se guardan en {file}.",
+    travelPermTitle: "Permisos de viaje",
+    travelPermBody:
+      "{travel} usa /rtp, {death} usa /death y {warp} usa y crea warps (los tres default: true). {nodelay} y {nocooldown} quitan la espera y el enfriamiento de /rtp, y {admin} permite warps sin límite, en cualquier sitio, y borrar los de otros (los tres default: op).",
     permNote:
       "/extrasadmin requiere {perm} (default: op). /menu y /menu item requieren {menu} (default: true); /menu <id>, {any} (default: op). Los stats se consultan vía placeholders (con TAB) o el HUD.",
   },
@@ -417,6 +435,24 @@ const en: AddonsDCopy = {
     cMenu: "Opens the server menu, no compass needed.",
     cMenuItem: "Gives the compass back if you lost it (with the menu enabled).",
     cMenuAny: "Opens any menu in menus/ by id.",
+    cRtp: "Random teleport (with random-teleport enabled).",
+    cDeath: "Returns to the spot of your last death (with death-teleport enabled).",
+    cWarp: "Travels to a player warp. With no name, opens the warps menu.",
+    cSetwarp: "Creates a warp where you stand. Same as /warp set <name>.",
+    cDelwarp: "Deletes one of your warps. Same as /warp delete <name>.",
+    cWarps: "Opens the menu with every warp. Same as /warp list.",
+    travelTitle: "Travel: /rtp, /death and player warps",
+    travelBody:
+      "Three travel commands, each with its own switch in {config} and all three off by default. Turning one on or off needs a server restart; the rest of its options reload with {reload}. If another plugin already registers {rtp} or {warp} (Essentials, for example), leave the Extras one off or disable that command in the other plugin.",
+    travelRtp:
+      "{rtp} takes you to a random spot in the world. It only works in the worlds listed under {worlds} and with open sky (no Nether, no caves); with no argument it uses the world you are in if it is listed and, otherwise, {def}. The destination falls in the ring between {min} and {max} blocks from the center of the world border, which also limits it. The player has to stand still for {delay} seconds (moving cancels it) and waits {cooldown} seconds between uses. Up to 12 spots are tried, and those without solid ground or landing on water, lava, magma, cactus, fire, berry bushes or powder snow are discarded; the destination chunk is loaded or generated without stalling the server.",
+    travelDeath:
+      "{death} takes you to the spot of your last death, the one the game itself stores, so you can pick up what dropped before it despawns. Unlike a /back, it still takes you there even if you used another teleport afterwards. It does not check what the spot looks like: whoever died in lava goes back into the lava.",
+    travelWarps:
+      "Warps are public spots each player creates. {set} sets one where you stand, {warp} travels to it, {del} deletes it and {list} opens a menu with all of them (up to 45) and a button to create one named after you. The name is 2 to 16 characters: lowercase letters, numbers and underscore. Each player can own as many as {max} says. A warp cannot be set where you cannot build (someone else's claim, a protected region), in the worlds under {disabled} or in a dangerous spot; and you only travel if the destination is still safe to stand on, so nobody turns a warp into a trap by digging under it. They are saved in {file}.",
+    travelPermTitle: "Travel permissions",
+    travelPermBody:
+      "{travel} uses /rtp, {death} uses /death and {warp} uses and creates warps (all three default: true). {nodelay} and {nocooldown} remove the wait and the cooldown of /rtp, and {admin} allows unlimited warps, anywhere, and deleting other players' warps (all three default: op).",
     permNote:
       "/extrasadmin requires {perm} (default: op). /menu and /menu item require {menu} (default: true); /menu <id>, {any} (default: op). Stats are read through placeholders (with TAB) or the HUD.",
   },
@@ -688,6 +724,24 @@ const pt: AddonsDCopy = {
     cMenu: "Abre o menu do servidor, sem precisar da bússola.",
     cMenuItem: "Devolve a bússola se você a perdeu (com o menu ativado).",
     cMenuAny: "Abre qualquer menu de menus/ pelo id.",
+    cRtp: "Teletransporte aleatório (com random-teleport ativado).",
+    cDeath: "Volta ao ponto da sua última morte (com death-teleport ativado).",
+    cWarp: "Viaja para um warp de jogador. Sem nome, abre o menu de warps.",
+    cSetwarp: "Cria um warp onde você está. Igual a /warp set <nome>.",
+    cDelwarp: "Apaga um dos seus warps. Igual a /warp delete <nome>.",
+    cWarps: "Abre o menu com todos os warps. Igual a /warp list.",
+    travelTitle: "Viagens: /rtp, /death e warps de jogador",
+    travelBody:
+      "Três comandos de viagem, cada um com seu interruptor em {config} e os três desligados de fábrica. Ligar ou desligar um pede reiniciar o servidor; o resto das opções recarrega com {reload}. Se outro plugin já registra {rtp} ou {warp} (Essentials, por exemplo), deixe o do Extras desligado ou desative esse comando no outro plugin.",
+    travelRtp:
+      "{rtp} leva a um ponto aleatório do mundo. Só funciona nos mundos listados em {worlds} e com céu aberto (nem Nether nem cavernas); sem argumento usa o mundo onde você está se estiver na lista e, se não, {def}. O destino cai no anel entre {min} e {max} blocos a partir do centro da borda do mundo, que também o limita. O jogador precisa ficar parado {delay} segundos (mover-se cancela) e espera {cooldown} segundos entre um uso e o seguinte. São testados até 12 pontos e descartados os que não têm chão firme ou caem sobre água, lava, magma, cacto, fogo, arbustos de bagas ou neve fofa; o chunk de destino é carregado ou gerado sem parar o servidor.",
+    travelDeath:
+      "{death} leva ao ponto da sua última morte, o que o próprio jogo guarda, para recolher o que caiu antes que desapareça. Diferente de um /back, continua levando para lá mesmo que depois você tenha usado outro teletransporte. Não verifica como está o lugar: quem morreu na lava volta para a lava.",
+    travelWarps:
+      "Os warps são pontos públicos que cada jogador cria. {set} fixa um onde você está, {warp} viaja até ele, {del} o apaga e {list} abre um menu com todos (até 45) e um botão para criar um com o seu nome. O nome tem de 2 a 16 caracteres: minúsculas, números e sublinhado. Cada jogador pode ter quantos {max} permitir. Não dá para fixar um warp onde você não pode construir (o claim de outro, uma região protegida), nos mundos de {disabled} nem em um lugar perigoso; e só se viaja se o destino continuar seguro para pisar, para que ninguém transforme um warp em armadilha cavando embaixo. Ficam salvos em {file}.",
+    travelPermTitle: "Permissões de viagem",
+    travelPermBody:
+      "{travel} usa /rtp, {death} usa /death e {warp} usa e cria warps (os três default: true). {nodelay} e {nocooldown} tiram a espera e o cooldown do /rtp, e {admin} permite warps sem limite, em qualquer lugar, e apagar os de outros (os três default: op).",
     permNote:
       "/extrasadmin exige {perm} (default: op). /menu e /menu item exigem {menu} (default: true); /menu <id>, {any} (default: op). Os stats são consultados via placeholders (com TAB) ou o HUD.",
   },

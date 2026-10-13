@@ -77,6 +77,12 @@ const en: Map_ = {
   "%rpgeconomy_inflation%": "Inflation % of the default currency.",
   "%rpgeconomy_market_price_<producto>%": "Current market price.",
   "%rpgeconomy_tax_rate_<tipo>%": "Total % configured for that tax type.",
+
+  "%rpgrolleffects_count%": "How many visible effects the player has.",
+  "%rpgrolleffects_active%": "Names of their visible effects, comma-separated (empty if none).",
+  "%rpgrolleffects_has_<id>%": "true/false: whether they have that effect.",
+  "%rpgrolleffects_time_<id>%": "Seconds left on that effect (0 if they do not have it; -1 if permanent).",
+  "%rpgrolleffects_stacks_<id>%": "Stacks of that effect (0 if they do not have it).",
 };
 
 const pt: Map_ = {
@@ -148,6 +154,12 @@ const pt: Map_ = {
   "%rpgeconomy_inflation%": "% de inflação da moeda padrão.",
   "%rpgeconomy_market_price_<producto>%": "Preço atual de mercado.",
   "%rpgeconomy_tax_rate_<tipo>%": "% total configurado para esse tipo de imposto.",
+
+  "%rpgrolleffects_count%": "Quantos efeitos visíveis o jogador tem.",
+  "%rpgrolleffects_active%": "Nomes dos seus efeitos visíveis, separados por vírgulas (vazio se não tiver).",
+  "%rpgrolleffects_has_<id>%": "true/false: se tem esse efeito.",
+  "%rpgrolleffects_time_<id>%": "Segundos restantes desse efeito (0 se não o tem; -1 se for permanente).",
+  "%rpgrolleffects_stacks_<id>%": "Cargas desse efeito (0 se não o tem).",
 };
 
 const MAP: Partial<Record<Locale, Map_>> = { en, pt };

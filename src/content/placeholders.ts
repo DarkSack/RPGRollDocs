@@ -77,6 +77,11 @@ export const placeholders: PlaceholderInfo[] = [
   { name: "%rpgeconomy_inflation%", description: "% de inflación de la moneda por defecto.", expansion: "rpgeconomy", slug: "economy" },
   { name: "%rpgeconomy_market_price_<producto>%", description: "Precio actual de mercado.", expansion: "rpgeconomy", slug: "economy" },
   { name: "%rpgeconomy_tax_rate_<tipo>%", description: "% total configurado para ese tipo de impuesto.", expansion: "rpgeconomy", slug: "economy" },
+  { name: "%rpgrolleffects_count%", description: "Cuántos efectos visibles tiene el jugador.", expansion: "rpgrolleffects", slug: "rpgroll-effects" },
+  { name: "%rpgrolleffects_active%", description: "Nombres de sus efectos visibles, separados por comas (vacío si no tiene).", expansion: "rpgrolleffects", slug: "rpgroll-effects" },
+  { name: "%rpgrolleffects_has_<id>%", description: "true/false: si tiene ese efecto.", expansion: "rpgrolleffects", slug: "rpgroll-effects" },
+  { name: "%rpgrolleffects_time_<id>%", description: "Segundos que le quedan a ese efecto (0 si no lo tiene; -1 si es permanente).", expansion: "rpgrolleffects", slug: "rpgroll-effects" },
+  { name: "%rpgrolleffects_stacks_<id>%", description: "Cargas de ese efecto (0 si no lo tiene).", expansion: "rpgrolleffects", slug: "rpgroll-effects" },
 ];
 
 /** Expansiones presentes, ordenadas alfabéticamente. */

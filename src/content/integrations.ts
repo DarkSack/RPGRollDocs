@@ -51,6 +51,7 @@ export const integrations: Integration[] = [
       { slug: "tab", requirement: "optional", note: "Resuelve placeholders de terceros dentro de las plantillas de TAB." },
       { slug: "extras", requirement: "optional", note: "Expone las barras de supervivencia como placeholders." },
       { slug: "traps", requirement: "optional", note: "Condiciones de trampa basadas en placeholders." },
+      { slug: "rpgroll-effects", requirement: "optional", note: "Expansión rpgrolleffects." },
     ],
   },
   {
@@ -71,6 +72,7 @@ export const integrations: Integration[] = [
       { slug: "dungeons", requirement: "optional", note: "Recompensas en dinero de las mazmorras." },
       { slug: "pass", requirement: "optional", note: "Recompensas money: del pase, el diario y los votos. Sin economía, esas recompensas se omiten con un aviso en consola." },
       { slug: "furniture", requirement: "optional", note: "Recetas del carpintero que cobran dinero. Sin economía, esas recetas no se pueden fabricar." },
+      { slug: "crates", requirement: "optional", note: "Acción MONEY de los lucky blocks. Sin economía, esa acción no paga nada." },
     ],
   },
   {
@@ -185,14 +187,14 @@ export const addonDependencies: AddonDependencies[] = [
   },
   { slug: "chat", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Guilds", "PlaceholderAPI"] },
   { slug: "guilds", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Items", "RPGRoll-Quests", "Vault", "PlaceholderAPI"] },
-  { slug: "crates", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "DecentHolograms"] },
+  { slug: "crates", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "DecentHolograms", "Vault"] },
   {
     slug: "dungeons",
     hard: ["RPGRoll-Lib", "RPGRoll-Mobs", "RPGRoll-Guilds"],
     soft: ["RPGRoll", "Vault", "RPGRoll-Items", "RPGRoll-Quests", "PlaceholderAPI", "WorldEdit"],
   },
   { slug: "rpgroll-particles", hard: ["RPGRoll-Lib"], soft: ["RPGRoll"] },
-  { slug: "rpgroll-effects", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Guilds"] },
+  { slug: "rpgroll-effects", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Guilds", "PlaceholderAPI"] },
   { slug: "magic", hard: ["RPGRoll-Lib", "RPGRoll"], soft: ["RPGRoll-FX", "RPGRoll-Effects"] },
   { slug: "seasons", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Mobs"] },
   { slug: "fishing", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "SackResourcePack"] },
@@ -209,7 +211,7 @@ export const addonDependencies: AddonDependencies[] = [
   {
     slug: "traps",
     hard: ["RPGRoll-Lib"],
-    soft: ["RPGRoll", "RPGRoll-Items", "RPGRoll-Effects", "RPGRoll-Mobs", "RPGRoll-FX", "RPGRoll-Guilds", "PlaceholderAPI"],
+    soft: ["RPGRoll", "RPGRoll-Items", "RPGRoll-Effects", "RPGRoll-Mobs", "RPGRoll-FX", "RPGRoll-Guilds", "PlaceholderAPI", "SackResourcePack"],
   },
   { slug: "furniture", hard: ["RPGRoll-Lib"], soft: ["SackResourcePack", "Vault"] },
   { slug: "recipes", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Crafting", "RPGRoll-Items", "RPGRoll-Furniture", "RPGRoll-Extras"] },

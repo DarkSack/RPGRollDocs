@@ -53,12 +53,14 @@ export function Traps({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </PageHeader>
 
       <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-Items, RPGRoll-Effects, RPGRoll-Mobs, RPGRoll-FX, RPGRoll-Guilds, PlaceholderAPI]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-Items, RPGRoll-Effects, RPGRoll-Mobs, RPGRoll-FX, RPGRoll-Guilds, PlaceholderAPI, SackResourcePack]"} />
       <p>
         RPGRoll-Items es opcional: si está instalado, <code>required-item-id</code> reconoce ítems custom por id
         (vía <code>ItemInstanceService</code>); si no, cae a un <code>Material</code> vanilla directo en la mano.
         RPGRoll-Effects también es opcional: sin él, la acción <Kbd>EFFECT</Kbd> simplemente no hace nada (con un
-        warning en consola) en vez de crashear.
+        warning en consola) en vez de crashear. SackResourcePack también es opcional: si está instalado, los modelos
+        de fábrica de torretas, munición y trampas se registran en el pack (aplica con <Kbd>/srp rebuild</Kbd>); sin
+        él cada ítem se ve con su material vanilla.
       </p>
 
       <SectionHeading id="modelo">Definición vs. instancia colocada</SectionHeading>

@@ -385,6 +385,72 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
         })}
       </Callout>
 
+      <SectionHeading id="viajes">{c.travelTitle}</SectionHeading>
+      <p>
+        {fill(c.travelBody, {
+          config: <code>config.yml</code>,
+          reload: <Kbd>/extrasadmin reload</Kbd>,
+          rtp: <Kbd>/rtp</Kbd>,
+          warp: <Kbd>/warp</Kbd>,
+        })}
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="config.yml"
+        code={
+          "random-teleport:\n" +
+          "  enabled: false\n" +
+          "  delay-seconds: 3\n" +
+          "  cooldown-seconds: 300\n" +
+          "  default-world: world\n" +
+          "  worlds:\n" +
+          "    world:\n" +
+          "      min-radius: 250\n" +
+          "      max-radius: 3000\n" +
+          "\n" +
+          "death-teleport:\n" +
+          "  enabled: false\n" +
+          "\n" +
+          "player-warps:\n" +
+          "  enabled: false\n" +
+          "  max-per-player: 2\n" +
+          "  disabled-worlds: []\n"
+        }
+      />
+      <p>
+        {fill(c.travelRtp, {
+          rtp: <Kbd>{"/rtp [mundo]"}</Kbd>,
+          worlds: <code>worlds</code>,
+          def: <code>default-world</code>,
+          min: <code>min-radius</code>,
+          max: <code>max-radius</code>,
+          delay: <code>delay-seconds</code>,
+          cooldown: <code>cooldown-seconds</code>,
+        })}
+      </p>
+      <p>{fill(c.travelDeath, { death: <Kbd>/death</Kbd> })}</p>
+      <p>
+        {fill(c.travelWarps, {
+          set: <Kbd>{"/setwarp <nombre>"}</Kbd>,
+          warp: <Kbd>{"/warp <nombre>"}</Kbd>,
+          del: <Kbd>{"/delwarp <nombre>"}</Kbd>,
+          list: <Kbd>/warps</Kbd>,
+          max: <code>max-per-player</code>,
+          disabled: <code>disabled-worlds</code>,
+          file: <code>warps.yml</code>,
+        })}
+      </p>
+      <Callout tone="info" title={c.travelPermTitle}>
+        {fill(c.travelPermBody, {
+          travel: <Badge>rpgrollextras.travel</Badge>,
+          death: <Badge>rpgrollextras.death</Badge>,
+          warp: <Badge>rpgrollextras.warp</Badge>,
+          nodelay: <Badge tone="amber">rpgrollextras.travel.nodelay</Badge>,
+          nocooldown: <Badge tone="amber">rpgrollextras.travel.nocooldown</Badge>,
+          admin: <Badge tone="amber">rpgrollextras.warp.admin</Badge>,
+        })}
+      </Callout>
+
       <SectionHeading id="consumo">{c.consumeTitle}</SectionHeading>
       <p>
         {fill(c.consumeBody, { call: <code>ExtrasAPI.get().needs().consumeAll(player, "fishing")</code> })}
@@ -693,6 +759,30 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr>
             <Td className="font-mono text-xs">{"/menu <id>"}</Td>
             <Td>{c.cMenuAny}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">{"/rtp [mundo]"}</Td>
+            <Td>{c.cRtp}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">/death</Td>
+            <Td>{c.cDeath}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">{"/warp [nombre]"}</Td>
+            <Td>{c.cWarp}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">{"/setwarp <nombre>"}</Td>
+            <Td>{c.cSetwarp}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">{"/delwarp <nombre>"}</Td>
+            <Td>{c.cDelwarp}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">/warps</Td>
+            <Td>{c.cWarps}</Td>
           </Tr>
         </tbody>
       </Table>
