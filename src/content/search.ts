@@ -350,6 +350,7 @@ export const searchIndex: SearchEntry[] = [
   h("seasons", "Vegetación dinámica", "vegetacion"),
   h("seasons", "Mobs y jefe exclusivo de temporada", "mobs-jefes"),
   h("seasons", "Eventos mundiales", "eventos"),
+  h("seasons", "Desastres naturales", "desastres"),
   h("seasons", "Regiones", "regiones"),
   h("seasons", "Ejemplos de archivo YAML", "formato-yaml"),
   h("seasons", "GUI: Season Studio", "gui"),

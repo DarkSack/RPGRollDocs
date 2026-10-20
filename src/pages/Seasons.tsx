@@ -228,6 +228,96 @@ export function Seasons({
         </tbody>
       </Table>
 
+      <SectionHeading id="desastres">{c.disTitle}</SectionHeading>
+      <p>
+        {fill(c.disBody, {
+          folder: <code>plugins/RPGRoll-Seasons/disasters/</code>,
+          duration: <code>duration</code>,
+          chance: <code>chance</code>,
+          seasons: <code>seasons</code>,
+          intensity: <code>intensity</code>,
+        })}
+      </p>
+      <Table>
+        <Thead>
+          <Th>{c.thPhenomenon}</Th>
+          <Th>{c.thDisasterWhat}</Th>
+        </Thead>
+        <tbody>
+          <Tr>
+            <Td className="font-mono text-xs">TORNADO</Td>
+            <Td>{c.dTornado}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">METEOR_STORM</Td>
+            <Td>{c.dMeteor}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">ACID_RAIN</Td>
+            <Td>{c.dAcid}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">EARTHQUAKE</Td>
+            <Td>{c.dQuake}</Td>
+          </Tr>
+        </tbody>
+      </Table>
+      <CodeBlock
+        language="yaml"
+        filename="disasters/hailstorm.yml"
+        code={
+          "id: hailstorm\n" +
+          'display-name: "&b&lGranizada"\n' +
+          'description: "Cae granizo: a cubierto no te hará daño."\n' +
+          "duration: 900\n" +
+          "intensity: 1.0\n" +
+          "chance: 0.02\n" +
+          "seasons: [spring, summer]\n" +
+          'start-sound: "ENTITY_LIGHTNING_BOLT_THUNDER 0.8 1.4"\n' +
+          "\n" +
+          "phenomena:\n" +
+          "  - type: METEOR_STORM\n" +
+          "    storm: true\n" +
+          "    interval: 6\n" +
+          "    blocks: [ICE, PACKED_ICE]\n" +
+          '    trail-particles: ["SNOWFLAKE*2"]\n' +
+          '    impact-particles: ["ITEM_SNOWBALL*12"]\n' +
+          '    impact-sound: "BLOCK_GLASS_BREAK 0.6 1.6"\n' +
+          "    damage: 1.5\n" +
+          "    crater-radius: 0\n"
+        }
+      />
+      <SectionHeading id="desastres-combinados">{c.disCombineTitle}</SectionHeading>
+      <p>
+        {fill(c.disCombineBody, {
+          combine: <code>combine</code>,
+          reference: <code>disasters/_reference.yml</code>,
+        })}
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="disasters/apocalypse.yml"
+        code={
+          "id: apocalypse\n" +
+          'display-name: "&4&lFin del Mundo"\n' +
+          "duration: 1800\n" +
+          "intensity: 1.3\n" +
+          "chance: 0\n" +
+          "combine: [tornado, meteor_storm, earthquake]\n" +
+          "messages:\n" +
+          '  title: "&4&l¡FIN DEL MUNDO!"\n' +
+          "phenomena:\n" +
+          "  - type: ACID_RAIN\n" +
+          "    thunder: true\n"
+        }
+      />
+      <Callout tone="info" title={c.disSafeTitle}>
+        {fill(c.disSafeBody, {
+          safe: <code>disasters.safe-radius</code>,
+          gamemodes: <code>disasters.gamemodes</code>,
+        })}
+      </Callout>
+
       <SectionHeading id="regiones">{c.regionsTitle}</SectionHeading>
       <p>
         {fill(c.regionsBody, { region: <code>SeasonRegion</code> })}
@@ -390,6 +480,20 @@ export function Seasons({
               {"/seasonsadmin trigger <id> <mundo>"}
             </Td>
             <Td>{c.cTrigger}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">
+              {"/seasonsadmin disaster start <id> [mundo] [intensidad]"}
+            </Td>
+            <Td>{c.cDisStart}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">{"/seasonsadmin disaster stop [mundo]"}</Td>
+            <Td>{c.cDisStop}</Td>
+          </Tr>
+          <Tr>
+            <Td className="font-mono text-xs">/seasonsadmin disaster list</Td>
+            <Td>{c.cDisList}</Td>
           </Tr>
           <Tr>
             <Td className="font-mono text-xs">{"/seasons info [mundo]"}</Td>
