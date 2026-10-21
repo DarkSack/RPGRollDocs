@@ -74,9 +74,10 @@ export function Disasters({ onNavigate }: { onNavigate: (slug: string) => void }
   const phenomena: [string, ReactNode][] = [
     ["TORNADO", c.dTornado],
     ["METEOR_STORM", c.dMeteor],
-    ["ACID_RAIN", c.dAcid],
+    ["ACID_RAIN", fill(c.dAcid, { wind: <code>wind</code> })],
     ["EARTHQUAKE", c.dQuake],
     ["SINKHOLE", c.dSinkhole],
+    ["TSUNAMI", c.dTsunami],
     ["MOBS", fill(c.dMobs, { rpgroll: <code>rpgroll:&lt;id&gt;</code> })],
   ];
 

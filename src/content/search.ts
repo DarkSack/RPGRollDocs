@@ -353,7 +353,7 @@ export const searchIndex: SearchEntry[] = [
   h("disasters", "Requisitos", "requisitos"),
   h("disasters", "Cómo funcionan — sorteo diario, aviso, barra de jefe", "como-funcionan"),
   h("disasters", "Niveles 1-6", "niveles"),
-  h("disasters", "Fenómenos — tornado, meteoritos, lluvia ácida, terremoto, socavón, mobs", "fenomenos"),
+  h("disasters", "Fenómenos — tornado, meteoritos, lluvia ácida, terremoto, socavón, tsunami, mobs", "fenomenos"),
   h("disasters", "Destrucción — claims, WorldGuard, zona segura, resistencia", "destruccion"),
   h("disasters", "Configurar la regeneración — regenerate, regenerate-seconds", "regeneracion"),
   h("disasters", "Ejemplos de archivo YAML", "formato-yaml"),

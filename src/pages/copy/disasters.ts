@@ -5,7 +5,7 @@ import type { Locale } from "../../i18n";
 const es = {
   title: "Desastres naturales (RPGRoll-Disasters)",
   intro:
-    "Tornados, terremotos, lluvias de meteoritos, lluvia ácida, socavones, ventiscas y lo que quieras crear: cada desastre es un archivo YAML. Rompen el mundo de verdad, respetando claims y protecciones, y lo roto se repone solo. Salen con niveles del 1 al 6, avisan con cuenta atrás y pueden traer mobs.",
+    "Tornados, terremotos, tsunamis, lluvias de meteoritos, lluvia ácida, socavones, ventiscas y lo que quieras crear: cada desastre es un archivo YAML. Rompen el mundo de verdad, respetando claims y protecciones, y lo roto se repone solo. Salen con niveles del 1 al 6, avisan con cuenta atrás y pueden traer mobs.",
 
   reqTitle: "Requisitos",
   reqBody:
@@ -25,7 +25,7 @@ const es = {
 
   phTitle: "Fenómenos",
   phBody:
-    "Un desastre junta uno o varios fenómenos que ocurren a la vez. Hay seis tipos y cada uno es una plantilla: cambiando sus partículas, bloques, sonidos y números sale un desastre distinto. La granizada es un METEOR_STORM de hielo; la ventisca y la tormenta de arena son ACID_RAIN con MOBS.",
+    "Un desastre junta uno o varios fenómenos que ocurren a la vez. Hay siete tipos y cada uno es una plantilla: cambiando sus partículas, bloques, sonidos y números sale un desastre distinto. La granizada es un METEOR_STORM de hielo; la ventisca y la tormenta de arena son ACID_RAIN con MOBS.",
   thPhenomenon: "Fenómeno",
   thWhat: "Qué hace",
   dTornado:
@@ -33,15 +33,17 @@ const es = {
   dMeteor:
     "Meteoritos que caen en diagonal con estela y estallan cerca de los jugadores. Dejan un cráter de verdad con el borde chamuscado y un núcleo de menas en el fondo. A cubierto no llega el golpe.",
   dAcid:
-    "Algo cae del cielo sobre quien está a la intemperie: daño, efectos o congelación. El casco protege, pero se desgasta. Puede corroer el suelo (la hierba pasa a tierra, las hojas desaparecen), cubrirlo de nieve y disolver objetos tirados.",
+    "Algo cae del cielo sobre quien está a la intemperie: daño, efectos o congelación. El casco protege, pero se desgasta. Puede corroer el suelo (la hierba pasa a tierra, las hojas desaparecen), cubrirlo de nieve o arena y disolver objetos tirados. Con {wind} sopla un viento que empuja de lado a quien está fuera.",
   dQuake:
     "Sacudidas y estruendo bajo cada jugador. Se abren grietas de verdad que serpentean, se estrechan en las puntas y se ramifican, y lo que está cerca resbala hacia ellas. Bajo techo y en cuevas caen trozos del techo. También en el Nether y el End.",
   dSinkhole:
     "El suelo se hunde en un pozo redondo cerca de un jugador, del centro hacia fuera, y lo de encima resbala dentro. El fondo puede quedar con agua, lava o magma.",
+  dTsunami:
+    "Una ola gigante sale del mar, un lago o un río cercano y avanza hacia un jugador. Es un muro de agua de verdad: arrastra, golpea y quita el aire a lo que pilla, arranca plantas y hojas, y al pasar deja charcos que se secan solos. Los edificios la paran.",
   dMobs:
     "Mobs que aparecen alrededor de los jugadores mientras dura: vanilla (con peso, más vida, daño, equipo, efectos y nombre) o de RPGRoll-Mobs con {rpgroll}. Por defecto se van al terminar.",
   examplesBody:
-    "Vienen de ejemplo el tornado, la tormenta de meteoritos, la lluvia ácida, el terremoto, el socavón, la granizada, la ventisca, la tormenta de arena y el fin del mundo, que los combina. Todos los campos con su valor por defecto están en {reference}.",
+    "Vienen de ejemplo el tornado, la tormenta de meteoritos, la lluvia ácida, el terremoto, el socavón, el tsunami, la granizada, la ventisca, la tormenta de arena, el fin del mundo y el Juicio Final, que combinan varios. Todos los campos con su valor por defecto están en {reference}.",
 
   damageTitle: "Destrucción y regeneración",
   damageBody:
@@ -110,7 +112,7 @@ export type DisastersCopy = typeof es;
 const en: DisastersCopy = {
   title: "Natural disasters (RPGRoll-Disasters)",
   intro:
-    "Tornadoes, earthquakes, meteor showers, acid rain, sinkholes, blizzards and anything you want to build: every disaster is a YAML file. They really break the world, respecting claims and protections, and whatever breaks grows back on its own. They come in levels 1 to 6, warn with a countdown and can bring mobs.",
+    "Tornadoes, earthquakes, tsunamis, meteor showers, acid rain, sinkholes, blizzards and anything you want to build: every disaster is a YAML file. They really break the world, respecting claims and protections, and whatever breaks grows back on its own. They come in levels 1 to 6, warn with a countdown and can bring mobs.",
 
   reqTitle: "Requirements",
   reqBody:
@@ -130,7 +132,7 @@ const en: DisastersCopy = {
 
   phTitle: "Phenomena",
   phBody:
-    "A disaster combines one or more phenomena happening together. There are six types and each one is a template: change its particles, blocks, sounds and numbers and you get a different disaster. The hailstorm is an ice METEOR_STORM; the blizzard and the sandstorm are ACID_RAIN with MOBS.",
+    "A disaster combines one or more phenomena happening together. There are seven types and each one is a template: change its particles, blocks, sounds and numbers and you get a different disaster. The hailstorm is an ice METEOR_STORM; the blizzard and the sandstorm are ACID_RAIN with MOBS.",
   thPhenomenon: "Phenomenon",
   thWhat: "What it does",
   dTornado:
@@ -138,15 +140,17 @@ const en: DisastersCopy = {
   dMeteor:
     "Meteors fall at an angle with a trail and explode near players. They leave a real crater with a scorched rim and an ore core at the bottom. Under a roof the blast doesn't reach you.",
   dAcid:
-    "Something falls from the sky on whoever is outdoors: damage, effects or freezing. A helmet protects but wears down. It can corrode the ground (grass turns to dirt, leaves vanish), cover it with snow and dissolve dropped items.",
+    "Something falls from the sky on whoever is outdoors: damage, effects or freezing. A helmet protects but wears down. It can corrode the ground (grass turns to dirt, leaves vanish), cover it with snow or sand and dissolve dropped items. With {wind}, a wind blows sideways on whoever is outdoors.",
   dQuake:
     "Shaking and rumbling under every player. Real cracks open that wind, narrow at the ends and branch, and whatever is nearby slides into them. Indoors and in caves, chunks of the ceiling fall. Also in the Nether and the End.",
   dSinkhole:
     "The ground caves into a round pit near a player, from the centre outwards, and whatever is on top slides in. The bottom can end up with water, lava or magma.",
+  dTsunami:
+    "A giant wave rises from a nearby sea, lake or river and rolls towards a player. It is a real wall of water: it drags, hits and drowns whatever it catches, rips out plants and leaves, and leaves puddles behind that dry on their own. Buildings stop it.",
   dMobs:
     "Mobs that appear around players while it lasts: vanilla (weighted, with more health, damage, gear, effects and a name) or RPGRoll-Mobs ones with {rpgroll}. By default they leave when it ends.",
   examplesBody:
-    "Included as examples: tornado, meteor storm, acid rain, earthquake, sinkhole, hailstorm, blizzard, sandstorm and the end of the world, which combines them. Every field with its default value is in {reference}.",
+    "Included as examples: tornado, meteor storm, acid rain, earthquake, sinkhole, tsunami, hailstorm, blizzard, sandstorm, the end of the world and Doomsday, which combine several. Every field with its default value is in {reference}.",
 
   damageTitle: "Destruction and regeneration",
   damageBody:
@@ -212,7 +216,7 @@ const en: DisastersCopy = {
 const pt: DisastersCopy = {
   title: "Desastres naturais (RPGRoll-Disasters)",
   intro:
-    "Tornados, terremotos, chuvas de meteoros, chuva ácida, crateras de afundamento, nevascas e o que você quiser criar: cada desastre é um arquivo YAML. Eles quebram o mundo de verdade, respeitando claims e proteções, e o que quebra volta sozinho. Vêm em níveis de 1 a 6, avisam com contagem regressiva e podem trazer mobs.",
+    "Tornados, terremotos, tsunamis, chuvas de meteoros, chuva ácida, crateras de afundamento, nevascas e o que você quiser criar: cada desastre é um arquivo YAML. Eles quebram o mundo de verdade, respeitando claims e proteções, e o que quebra volta sozinho. Vêm em níveis de 1 a 6, avisam com contagem regressiva e podem trazer mobs.",
 
   reqTitle: "Requisitos",
   reqBody:
@@ -232,7 +236,7 @@ const pt: DisastersCopy = {
 
   phTitle: "Fenômenos",
   phBody:
-    "Um desastre junta um ou vários fenômenos que acontecem juntos. São seis tipos e cada um é um modelo: mudando partículas, blocos, sons e números sai um desastre diferente. A chuva de granizo é um METEOR_STORM de gelo; a nevasca e a tempestade de areia são ACID_RAIN com MOBS.",
+    "Um desastre junta um ou vários fenômenos que acontecem juntos. São sete tipos e cada um é um modelo: mudando partículas, blocos, sons e números sai um desastre diferente. A chuva de granizo é um METEOR_STORM de gelo; a nevasca e a tempestade de areia são ACID_RAIN com MOBS.",
   thPhenomenon: "Fenômeno",
   thWhat: "O que faz",
   dTornado:
@@ -240,15 +244,17 @@ const pt: DisastersCopy = {
   dMeteor:
     "Meteoros caem na diagonal com rastro e explodem perto dos jogadores. Deixam uma cratera de verdade com a borda queimada e um núcleo de minérios no fundo. Debaixo de um teto o impacto não chega.",
   dAcid:
-    "Algo cai do céu em quem está ao ar livre: dano, efeitos ou congelamento. O capacete protege, mas se desgasta. Pode corroer o chão (a grama vira terra, as folhas somem), cobrir de neve e dissolver itens largados.",
+    "Algo cai do céu em quem está ao ar livre: dano, efeitos ou congelamento. O capacete protege, mas se desgasta. Pode corroer o chão (a grama vira terra, as folhas somem), cobrir de neve ou areia e dissolver itens largados. Com {wind}, um vento empurra de lado quem está ao ar livre.",
   dQuake:
     "Tremores e estrondos sob cada jogador. Abrem-se rachaduras de verdade que serpenteiam, afinam nas pontas e se ramificam, e o que está perto escorrega para dentro. Sob teto e em cavernas caem pedaços do teto. Também no Nether e no End.",
   dSinkhole:
     "O chão afunda num poço redondo perto de um jogador, do centro para fora, e o que está em cima escorrega para dentro. O fundo pode ficar com água, lava ou magma.",
+  dTsunami:
+    "Uma onda gigante sai de um mar, lago ou rio próximo e avança até um jogador. É uma parede de água de verdade: arrasta, golpeia e afoga o que pega, arranca plantas e folhas, e ao passar deixa poças que secam sozinhas. Os prédios a param.",
   dMobs:
     "Mobs que aparecem ao redor dos jogadores enquanto dura: vanilla (com peso, mais vida, dano, equipamento, efeitos e nome) ou do RPGRoll-Mobs com {rpgroll}. Por padrão vão embora no fim.",
   examplesBody:
-    "Vêm de exemplo o tornado, a tempestade de meteoros, a chuva ácida, o terremoto, a cratera, a chuva de granizo, a nevasca, a tempestade de areia e o fim do mundo, que combina todos. Todos os campos com o valor padrão estão em {reference}.",
+    "Vêm de exemplo o tornado, a tempestade de meteoros, a chuva ácida, o terremoto, a cratera, o tsunami, a chuva de granizo, a nevasca, a tempestade de areia, o fim do mundo e o Juízo Final, que combinam vários. Todos os campos com o valor padrão estão em {reference}.",
 
   damageTitle: "Destruição e regeneração",
   damageBody:
