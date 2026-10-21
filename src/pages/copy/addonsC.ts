@@ -155,20 +155,8 @@ const es = {
     eCommand: "Una vez por mundo (no por jugador).",
 
     disTitle: "Desastres naturales",
-    disBody:
-      "Cada archivo de {folder} es un desastre: uno o varios fenómenos que ocurren a la vez durante {duration} ticks. Sale solo con su probabilidad diaria ({chance}) en las estaciones de {seasons}, o con el comando. {intensity} multiplica el daño, el empuje y la frecuencia de todos sus fenómenos. Todo se configura en el YAML: partículas, sonidos, bloques, textos, efectos de poción y números; nada está fijo en el código.",
-    thPhenomenon: "Fenómeno",
-    thDisasterWhat: "Qué hace (y qué se puede hacer con él)",
-    dTornado: "Un embudo avanza hacia los jugadores, arrastra a jugadores, mobs y objetos, los sube y los lanza. Arranca hierba, flores y copas de árboles a su paso (fuera de claims y zonas protegidas) y las repone a los dos minutos. Con otras partículas y escombros: remolino de fuego o de arena.",
-    dMeteor: "Bloques que caen en diagonal con estela y estallan cerca de los jugadores, con cráter visual. Con hielo y sin cráter: granizo.",
-    dAcid: "Daño o efectos a quien está a la intemperie, según la temperatura del bioma; un casco protege pero se desgasta. Con nieve o arena: ventisca o tormenta de arena.",
-    dQuake: "Sacudidas, grietas visuales y rocas que caen del techo en cuevas y casas. El único que también ocurre en el Nether y el End.",
-    disCombineTitle: "Combinar desastres",
-    disCombineBody:
-      "Un desastre puede listar varios fenómenos, y además {combine} suma los de otros desastres por id. Vienen de ejemplo el tornado, la tormenta de meteoritos, la lluvia ácida, el terremoto, la granizada, la ventisca, la tormenta de arena y el fin del mundo, que los combina. Todos los campos con su valor por defecto están en {reference}.",
-    disSafeTitle: "No rompen nada",
-    disSafeBody:
-      "Ningún desastre rompe ni pone bloques: las grietas y los cráteres solo los ve el cliente y se deshacen solos, y lo que cae desaparece al tocar el suelo. Nadie sufre nada cerca del spawn de cada mundo ({safe} en config.yml), y solo afectan a los modos de juego de {gamemodes}. Se ven igual en Java y en Bedrock.",
+    disMoved:
+      "Desde la 1.1.3 los desastres naturales son un plugin aparte: {plugin}. Con Seasons instalado, cada desastre sale solo en las estaciones que diga su archivo.",
 
     regionsTitle: "Regiones",
     regionsBody: "Una {region} es una simple caja (AABB, sin depender de WorldGuard) con un modo de override:",
@@ -212,9 +200,6 @@ const es = {
     cSetSeason: "Fuerza la estación de un mundo.",
     cAdvance: "Avanza a la siguiente estación del calendario de ese mundo.",
     cTrigger: "Dispara un evento mundial a mano.",
-    cDisStart: "Lanza un desastre ya; sin mundo, el tuyo. La intensidad es opcional.",
-    cDisStop: "Corta el desastre del mundo.",
-    cDisList: "Lista los desastres con su probabilidad diaria e intensidad.",
     cInfo: "Estación actual y, si sos jugador, la temperatura donde estás.",
     permNote: "Los comandos {admin} requieren {p1} (default: op); {use} requiere {p2} (default: true).",
   },
@@ -375,20 +360,8 @@ const en: AddonsCCopy = {
     eCommand: "Once per world (not per player).",
 
     disTitle: "Natural disasters",
-    disBody:
-      "Each file in {folder} is a disaster: one or more phenomena happening together for {duration} ticks. It starts on its own with its daily chance ({chance}) in the seasons listed in {seasons}, or by command. {intensity} multiplies the damage, push and frequency of all its phenomena. Everything is set in the YAML: particles, sounds, blocks, texts, potion effects and numbers; nothing is hard-coded.",
-    thPhenomenon: "Phenomenon",
-    thDisasterWhat: "What it does (and what you can build with it)",
-    dTornado: "A funnel moves towards players, drags players, mobs and items, lifts them and throws them. It rips up grass, flowers and treetops on its way (outside claims and protected areas) and puts them back two minutes later. With other particles and debris: a fire whirl or a dust devil.",
-    dMeteor: "Blocks fall diagonally with a trail and explode near players, leaving a visual crater. With ice and no crater: hail.",
-    dAcid: "Damage or effects for whoever is outdoors, by biome temperature; a helmet protects but wears out. With snow or sand: a blizzard or a sandstorm.",
-    dQuake: "Shaking, visual cracks and rocks falling from the ceiling in caves and houses. The only one that also happens in the Nether and the End.",
-    disCombineTitle: "Combining disasters",
-    disCombineBody:
-      "A disaster can list several phenomena, and {combine} adds those of other disasters by id. The examples are the tornado, meteor storm, acid rain, earthquake, hailstorm, blizzard, sandstorm and the end of the world, which combines them. Every field with its default value is in {reference}.",
-    disSafeTitle: "They break nothing",
-    disSafeBody:
-      "No disaster breaks or places blocks: cracks and craters are client-side only and undo themselves, and whatever falls disappears when it hits the ground. Nobody is hurt near each world's spawn ({safe} in config.yml), and they only affect the game modes in {gamemodes}. They look the same on Java and Bedrock.",
+    disMoved:
+      "From 1.1.3, natural disasters are a separate plugin: {plugin}. With Seasons installed, each disaster only happens in the seasons its file lists.",
 
     regionsTitle: "Regions",
     regionsBody: "A {region} is a simple box (AABB, with no WorldGuard dependency) with an override mode:",
@@ -432,9 +405,6 @@ const en: AddonsCCopy = {
     cSetSeason: "Forces a world's season.",
     cAdvance: "Advances to the next season in that world's calendar.",
     cTrigger: "Fires a world event by hand.",
-    cDisStart: "Starts a disaster now; without a world, yours. Intensity is optional.",
-    cDisStop: "Stops the world's disaster.",
-    cDisList: "Lists the disasters with their daily chance and intensity.",
     cInfo: "Current season and, if you are a player, the temperature where you stand.",
     permNote: "The {admin} commands require {p1} (default: op); {use} requires {p2} (default: true).",
   },
@@ -593,20 +563,8 @@ const pt: AddonsCCopy = {
     eCommand: "Uma vez por mundo (não por jogador).",
 
     disTitle: "Desastres naturais",
-    disBody:
-      "Cada arquivo de {folder} é um desastre: um ou vários fenômenos que acontecem juntos durante {duration} ticks. Acontece sozinho com sua chance diária ({chance}) nas estações de {seasons}, ou por comando. {intensity} multiplica o dano, o empurrão e a frequência de todos os seus fenômenos. Tudo é configurado no YAML: partículas, sons, blocos, textos, efeitos de poção e números; nada fica fixo no código.",
-    thPhenomenon: "Fenômeno",
-    thDisasterWhat: "O que faz (e o que dá para fazer com ele)",
-    dTornado: "Um funil avança até os jogadores, arrasta jogadores, mobs e itens, levanta e arremessa. Arranca grama, flores e copas de árvores pelo caminho (fora de claims e áreas protegidas) e as repõe dois minutos depois. Com outras partículas e destroços: redemoinho de fogo ou de areia.",
-    dMeteor: "Blocos caem na diagonal com rastro e explodem perto dos jogadores, com cratera visual. Com gelo e sem cratera: granizo.",
-    dAcid: "Dano ou efeitos em quem está ao ar livre, conforme a temperatura do bioma; um capacete protege, mas se desgasta. Com neve ou areia: nevasca ou tempestade de areia.",
-    dQuake: "Tremores, rachaduras visuais e pedras que caem do teto em cavernas e casas. O único que também acontece no Nether e no End.",
-    disCombineTitle: "Combinar desastres",
-    disCombineBody:
-      "Um desastre pode listar vários fenômenos, e {combine} soma os de outros desastres por id. Vêm de exemplo o tornado, a tempestade de meteoros, a chuva ácida, o terremoto, a chuva de granizo, a nevasca, a tempestade de areia e o fim do mundo, que combina todos. Todos os campos com o valor padrão estão em {reference}.",
-    disSafeTitle: "Não quebram nada",
-    disSafeBody:
-      "Nenhum desastre quebra ou coloca blocos: rachaduras e crateras só existem no cliente e se desfazem sozinhas, e o que cai some ao tocar o chão. Ninguém sofre nada perto do spawn de cada mundo ({safe} no config.yml), e só afetam os modos de jogo de {gamemodes}. Ficam iguais no Java e no Bedrock.",
+    disMoved:
+      "A partir da 1.1.3, os desastres naturais são um plugin separado: {plugin}. Com o Seasons instalado, cada desastre só acontece nas estações que o arquivo dele listar.",
 
     regionsTitle: "Regiões",
     regionsBody: "Uma {region} é uma caixa simples (AABB, sem depender do WorldGuard) com um modo de override:",
@@ -650,9 +608,6 @@ const pt: AddonsCCopy = {
     cSetSeason: "Força a estação de um mundo.",
     cAdvance: "Avança para a próxima estação do calendário desse mundo.",
     cTrigger: "Dispara um evento mundial manualmente.",
-    cDisStart: "Inicia um desastre agora; sem mundo, o seu. A intensidade é opcional.",
-    cDisStop: "Interrompe o desastre do mundo.",
-    cDisList: "Lista os desastres com sua chance diária e intensidade.",
     cInfo: "Estação atual e, se você for jogador, a temperatura onde está.",
     permNote: "Os comandos {admin} exigem {p1} (default: op); {use} exige {p2} (default: true).",
   },

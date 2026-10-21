@@ -30,6 +30,7 @@ import { Traps } from "./pages/Traps";
 import { Pass } from "./pages/Pass";
 import { Furniture } from "./pages/Furniture";
 import { Recipes } from "./pages/Recipes";
+import { Disasters } from "./pages/Disasters";
 import { Machines } from "./pages/Machines";
 import { Particles } from "./pages/Particles";
 import { Effects } from "./pages/Effects";
@@ -165,6 +166,8 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Effects onNavigate={onNavigate} />;
     case "magic":
       return <Magic onNavigate={onNavigate} />;
+    case "disasters":
+      return <Disasters onNavigate={onNavigate} />;
     case "seasons":
       return <Seasons onNavigate={onNavigate} />;
     case "fishing":

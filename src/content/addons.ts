@@ -59,6 +59,7 @@ export const addons: AddonMeta[] = [
   { slug: "rpgroll-effects", icon: HeartPulseIcon, blurb: "Motor de efectos de estado: stacking, inmunidades y componentes.", tone: "red" },
   { slug: "magic", icon: WandIcon, blurb: "Hechizos por pipeline de componentes, runas y grimorios.", tone: "violet" },
   { slug: "seasons", icon: LeafIcon, blurb: "Calendario, clima, temperatura y vegetación dinámica.", tone: "green" },
+  { slug: "disasters", icon: AlertTriangleIcon, blurb: "Tornados, terremotos, meteoritos y más: destrucción real que se regenera, con niveles y aviso.", tone: "red" },
   { slug: "fishing", icon: FishIcon, blurb: "Especies, cañas, carnadas y minijuego de forcejeo.", tone: "blue" },
   { slug: "sackresourcepack", icon: PackageIcon, blurb: "Pipeline de resource pack: fusión, build, distribución.", tone: "neutral" },
   { slug: "ranching", icon: RabbitIcon, blurb: "Genética, linaje, reproducción y bienestar animal.", tone: "green" },

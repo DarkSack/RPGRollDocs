@@ -32,6 +32,7 @@ export const PAGE_FILES: Record<string, string> = {
   "rpgroll-effects": "Effects.tsx",
   "magic": "Magic.tsx",
   "seasons": "Seasons.tsx",
+  "disasters": "Disasters.tsx",
   "fishing": "Fishing.tsx",
   "sackresourcepack": "SackResourcePack.tsx",
   "ranching": "Ranching.tsx",
