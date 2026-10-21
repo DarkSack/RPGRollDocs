@@ -39,7 +39,7 @@ const es = {
   dSinkhole:
     "El suelo se hunde en un pozo redondo cerca de un jugador, del centro hacia fuera, y lo de encima resbala dentro. El fondo puede quedar con agua, lava o magma.",
   dTsunami:
-    "Una ola gigante sale del mar, un lago o un río cercano y avanza hacia un jugador. Es un muro de agua de verdad: arrastra, golpea y quita el aire a lo que pilla, arranca plantas y hojas, y al pasar deja charcos que se secan solos. Los edificios la paran.",
+    "Una ola gigante sale del mar, un lago o un río cercano y avanza hacia un jugador. Es una ola de agua de verdad, con la cresta curvada hacia delante y el tubo debajo: arrastra, golpea y quita el aire a lo que pilla, arrasa árboles, madera, vallas y cristales lanzando escombros, y al pasar deja charcos que se secan solos. Contra la piedra se estrella.",
   dMobs:
     "Mobs que aparecen alrededor de los jugadores mientras dura: vanilla (con peso, más vida, daño, equipo, efectos y nombre) o de RPGRoll-Mobs con {rpgroll}. Por defecto se van al terminar.",
   examplesBody:
@@ -146,7 +146,7 @@ const en: DisastersCopy = {
   dSinkhole:
     "The ground caves into a round pit near a player, from the centre outwards, and whatever is on top slides in. The bottom can end up with water, lava or magma.",
   dTsunami:
-    "A giant wave rises from a nearby sea, lake or river and rolls towards a player. It is a real wall of water: it drags, hits and drowns whatever it catches, rips out plants and leaves, and leaves puddles behind that dry on their own. Buildings stop it.",
+    "A giant wave rises from a nearby sea, lake or river and rolls towards a player. It is a real wave of water, with its crest curling forward over a hollow tube: it drags, hits and drowns whatever it catches, smashes trees, wood, fences and glass into flying debris, and leaves puddles behind that dry on their own. Stone stops it.",
   dMobs:
     "Mobs that appear around players while it lasts: vanilla (weighted, with more health, damage, gear, effects and a name) or RPGRoll-Mobs ones with {rpgroll}. By default they leave when it ends.",
   examplesBody:
@@ -250,7 +250,7 @@ const pt: DisastersCopy = {
   dSinkhole:
     "O chão afunda num poço redondo perto de um jogador, do centro para fora, e o que está em cima escorrega para dentro. O fundo pode ficar com água, lava ou magma.",
   dTsunami:
-    "Uma onda gigante sai de um mar, lago ou rio próximo e avança até um jogador. É uma parede de água de verdade: arrasta, golpeia e afoga o que pega, arranca plantas e folhas, e ao passar deixa poças que secam sozinhas. Os prédios a param.",
+    "Uma onda gigante sai de um mar, lago ou rio próximo e avança até um jogador. É uma onda de água de verdade, com a crista curvada para a frente e o tubo embaixo: arrasta, golpeia e afoga o que pega, arrasa árvores, madeira, cercas e vidros lançando escombros, e ao passar deixa poças que secam sozinhas. A pedra a para.",
   dMobs:
     "Mobs que aparecem ao redor dos jogadores enquanto dura: vanilla (com peso, mais vida, dano, equipamento, efeitos e nome) ou do RPGRoll-Mobs com {rpgroll}. Por padrão vão embora no fim.",
   examplesBody:
