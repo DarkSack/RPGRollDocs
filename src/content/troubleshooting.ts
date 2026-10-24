@@ -35,6 +35,15 @@ export const diagnostics: Diagnostic[] = [
     slugs: ["ascension", "magic", "dungeons"],
   },
   {
+    id: "licencia-mal-empaquetada",
+    symptom: "Un addon dice «El jar no trae license/license.yml — build mal empaquetada» y se deshabilita",
+    causes: [
+      "Es RPGRoll-Disasters 1.1.5: ese jar salió sin license.yml, así que no crea plugins/RPGRoll-Disasters/license.yml para que pegues tu clave.",
+    ],
+    fix: "Actualizá a la 1.1.6 (está en Mis compras de la tienda). Si preferís seguir en la 1.1.5, creá a mano plugins/RPGRoll-Disasters/license.yml con una sola línea, key: seguida de tu clave entre comillas simples, y reiniciá.",
+    slugs: ["disasters"],
+  },
+  {
     id: "placeholders-crudos",
     symptom: "Los placeholders se muestran literales (%rpgroll_level% en vez del valor)",
     causes: [

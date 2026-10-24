@@ -22,6 +22,13 @@ const diagEn: Record<string, { symptom: string; causes: string[]; fix: string }>
     ],
     fix: "Check the startup console: Bukkit names the missing dependency. The full depend/softdepend list per addon is on the Integrations page.",
   },
+  "licencia-mal-empaquetada": {
+    symptom: "An addon says “El jar no trae license/license.yml — build mal empaquetada” and disables itself",
+    causes: [
+      "It is RPGRoll-Disasters 1.1.5: that jar shipped without license.yml, so it does not create plugins/RPGRoll-Disasters/license.yml for you to paste your key.",
+    ],
+    fix: "Update to 1.1.6 (it is in My purchases on the store). If you would rather stay on 1.1.5, create plugins/RPGRoll-Disasters/license.yml by hand with a single line, key: followed by your key in single quotes, and restart.",
+  },
   "placeholders-crudos": {
     symptom: "Placeholders show up literally (%rpgroll_level% instead of the value)",
     causes: [
@@ -254,6 +261,13 @@ const diagPt: Record<string, { symptom: string; causes: string[]; fix: string }>
       "Versão de Java incorreta: o ecossistema compila contra Java 25.",
     ],
     fix: "Verifique o console da inicialização: o Bukkit nomeia a dependência faltante. A lista completa de depend/softdepend por addon está na página de Integrações.",
+  },
+  "licencia-mal-empaquetada": {
+    symptom: "Um addon diz “El jar no trae license/license.yml — build mal empaquetada” e se desativa",
+    causes: [
+      "É o RPGRoll-Disasters 1.1.5: esse jar saiu sem license.yml, então não cria plugins/RPGRoll-Disasters/license.yml para você colar sua chave.",
+    ],
+    fix: "Atualize para a 1.1.6 (está em Minhas compras na loja). Se preferir ficar na 1.1.5, crie à mão plugins/RPGRoll-Disasters/license.yml com uma única linha, key: seguida da sua chave entre aspas simples, e reinicie.",
   },
   "placeholders-crudos": {
     symptom: "Os placeholders aparecem literais (%rpgroll_level% em vez do valor)",
