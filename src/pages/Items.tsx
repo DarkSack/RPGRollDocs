@@ -272,7 +272,7 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
       <SectionHeading id="comportamiento">Triggers, habilidades y condiciones</SectionHeading>
       <p>Un ítem tiene dos formas de reaccionar a eventos: <code>triggers</code> (acciones directas, sin condición extra) y <code>abilities</code> (con cooldown propio y condiciones, activas o pasivas).</p>
       <p>21 triggers disponibles: <code>EQUIP, UNEQUIP, RIGHT_CLICK, LEFT_CLICK, ENTITY_HIT, ENTITY_KILL, BLOCK_BREAK, BLOCK_PLACE, PLAYER_DAMAGE, SHIELD_BLOCK, PLAYER_DEATH, PLAYER_RESPAWN, PLAYER_MOVE, PLAYER_JUMP, PLAYER_SNEAK, PLAYER_SPRINT, PLAYER_INTERACT, CONSUME, THROW, PICKUP, DROP</code>.</p>
-      <p>Acciones incorporadas: <code>MESSAGE, COMMAND, SOUND, PARTICLE, EXPLOSION, DAMAGE, HEAL, FIRE, TITLE, BOSSBAR, SUMMON, PROJECTILE</code> — cinemáticas, abrir GUIs y scripts quedan como punto de extensión para otros addons.</p>
+      <p>Acciones incorporadas: <code>MESSAGE, COMMAND, SOUND, PARTICLE, EXPLOSION, DAMAGE, HEAL, FIRE, TITLE, BOSSBAR, SUMMON, PROJECTILE, SHOOT</code> — cinemáticas, abrir GUIs y scripts quedan como punto de extensión para otros addons.</p>
       <p>
         <code>MESSAGE</code> y <code>COMMAND</code> reemplazan <code>{"{player}"}</code> por el jugador,{" "}
         <code>{"{target}"}</code> por el objetivo si es un jugador y <code>{"{target_uuid}"}</code> por el UUID del
@@ -285,6 +285,59 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         <code>player.level/health/foodlevel</code>, <code>target.type/health</code>, <code>world</code>,{" "}
         <code>weather</code> — extensible vía registro de variables para otros addons.
       </p>
+
+      <SectionHeading id="armas-de-fuego">Armas de fuego: SHOOT</SectionHeading>
+      <p>
+        <code>SHOOT</code> dispara desde el cañón del arma, no desde los ojos. Sin <code>speed</code> el disparo
+        es instantáneo (un rayo con su estela). Con <code>speed</code> sale un proyectil con modelo que vuela tic a
+        tic, cae con <code>gravity</code> y explota o hace daño donde pegue. El daño y la explosión van a nombre del
+        tirador: no se hace daño a sí mismo y las protecciones (GriefPrevention, WorldGuard) deciden qué bloques se
+        rompen.
+      </p>
+      <Table>
+        <Thead>
+          <Th>Parámetro</Th>
+          <Th>Por defecto</Th>
+          <Th>Qué hace</Th>
+        </Thead>
+        <tbody>
+          <Tr><Td className="font-mono text-xs">amount</Td><Td>6</Td><Td>Daño a la criatura alcanzada.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">range</Td><Td>32</Td><Td>Alcance en bloques.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">speed</Td><Td>0</Td><Td>Bloques por tic. 0 = instantáneo.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">gravity</Td><Td>0</Td><Td>Caída por tic del proyectil.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">model</Td><Td>—</Td><Td>Modelo del proyectil (<code>item_model</code>, p. ej. <code>vanguardia:proyectil/cohete</code>).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">particle, color, size</Td><Td>CRIT, #FF3030, 0.8</Td><Td>Núcleo de la estela. <code>color</code> y <code>size</code> valen para DUST.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">particle2, color2, size2</Td><Td>—, #FFFFFF, 0.6</Td><Td>Segunda partícula de la estela.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">spiral</Td><Td>0</Td><Td>Radio con el que la segunda partícula se enrosca alrededor del núcleo.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">density</Td><Td>3</Td><Td>Puntos de estela por bloque.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">explosion</Td><Td>0</Td><Td>Potencia de la explosión al impactar (0 = ninguna; TNT es 4).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">break-blocks</Td><Td>false</Td><Td>Si la explosión rompe bloques.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">fire</Td><Td>false</Td><Td>Si la explosión prende fuego.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">muzzle-effect</Td><Td>—</Td><Td>Efecto de RPGRoll-FX en el cañón al disparar.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">hit-effect</Td><Td>—</Td><Td>Efecto de RPGRoll-FX donde pega.</Td></Tr>
+        </tbody>
+      </Table>
+      <CodeBlock
+        language="yaml"
+        filename="packs/vanguardia/lanzacohetes_de_impulso.yml (trigger RIGHT_CLICK)"
+        code={
+          "      - type: SHOOT\n" +
+          '        amount: "16"\n' +
+          '        range: "50"\n' +
+          '        speed: "1.0"\n' +
+          '        model: "vanguardia:proyectil/cohete"\n' +
+          "        particle: SMOKE\n" +
+          "        particle2: FLAME\n" +
+          '        explosion: "3.5"\n' +
+          '        break-blocks: "true"\n' +
+          "        muzzle-effect: vanguardia_fogonazo_cohete\n" +
+          "        hit-effect: vanguardia_explosion_de_impulso\n"
+        }
+      />
+      <Callout tone="info" title="En Bedrock">
+        Las texturas animadas de los modelos 3D se ven quietas (el primer fotograma): Bedrock no anima las
+        texturas de los ítems en la mano.
+      </Callout>
 
       <SectionHeading id="requisitos-de-uso">Requisitos de uso</SectionHeading>
       <p>Un ítem puede pedir nivel, raza, clase, profesión, skill, trait, permiso, o dinero mínimo.</p>
