@@ -341,9 +341,10 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <SectionHeading id="requisitos-de-uso">Requisitos de uso</SectionHeading>
       <p>Un ítem puede pedir nivel, raza, clase, profesión, skill, trait, permiso, o dinero mínimo.</p>
-      <Callout tone="warning" title="Son informativos, no bloquean nada">
-        <code>ItemRequirementChecker</code> solo devuelve la lista de razones incumplidas — el equipo real avisa
-        por chat al equipar un ítem que no cumples, pero <strong>no impide equiparlo ni usarlo</strong>. El campo{" "}
+      <Callout tone="warning" title="Bloquean las habilidades, no el equipo">
+        Desde la 1.1.7, las <code>abilities</code> activas de un ítem no se disparan si no cumples sus requisitos:
+        el chat te dice qué te falta. Equiparlo sigue permitido (solo avisa), y los <code>triggers</code> directos y
+        las habilidades pasivas no miran los requisitos. El campo{" "}
         <code>completed-quests</code> ni siquiera se evalúa todavía (se parsea del YAML pero ningún código lo
         consulta).
       </Callout>
