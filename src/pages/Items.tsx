@@ -315,6 +315,11 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr><Td className="font-mono text-xs">fire</Td><Td>false</Td><Td>Si la explosión prende fuego.</Td></Tr>
           <Tr><Td className="font-mono text-xs">muzzle-effect</Td><Td>—</Td><Td>Efecto de RPGRoll-FX en el cañón al disparar.</Td></Tr>
           <Tr><Td className="font-mono text-xs">hit-effect</Td><Td>—</Td><Td>Efecto de RPGRoll-FX donde pega.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">sound, volume, pitch</Td><Td>—, 1.0, 1.0</Td><Td>Sonido del disparo (nombre de <code>Sound</code>, p. ej. <code>ENTITY_BLAZE_SHOOT</code>).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">ammo</Td><Td>—</Td><Td>Munición que gasta cada disparo: id de un ítem de RPGRoll-Items (<code>celula_laser</code>) o <code>minecraft:&lt;material&gt;</code>. Sin ella no dispara. En creativo hace falta llevarla, pero no se gasta.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">ammo-amount</Td><Td>1</Td><Td>Cuántas gasta cada disparo.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">no-ammo-sound</Td><Td>BLOCK_DISPENSER_FAIL</Td><Td>Sonido al apretar el gatillo sin munición (vacío = ninguno).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">no-ammo-message</Td><Td>—</Td><Td>Aviso en la barra de acción sin munición (MiniMessage y placeholders).</Td></Tr>
         </tbody>
       </Table>
       <CodeBlock
@@ -332,6 +337,28 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
           '        break-blocks: "true"\n' +
           "        muzzle-effect: vanguardia_fogonazo_cohete\n" +
           "        hit-effect: vanguardia_explosion_de_impulso\n"
+        }
+      />
+      <Callout tone="info" title="Munición (1.1.8)">
+        Con <code>ammo</code>, un disparo sin munición no hace nada más que su sonido de vacío. Pon el sonido del
+        disparo en <code>sound</code> de la propia acción SHOOT y no en una acción SOUND aparte: las acciones de la
+        lista se ejecutan todas, así que una SOUND suelta sonaría aunque el arma esté vacía. Una munición vanilla
+        (<code>minecraft:paper</code>) no cuenta los ítems de RPGRoll hechos sobre ese material.
+      </Callout>
+      <CodeBlock
+        language="yaml"
+        filename="packs/vanguardia/rifle_laser.yml (trigger RIGHT_CLICK)"
+        code={
+          "      - type: SHOOT\n" +
+          '        amount: "9"\n' +
+          '        range: "48"\n' +
+          "        particle: DUST\n" +
+          '        color: "#FF2A2A"\n' +
+          "        particle2: END_ROD\n" +
+          "        sound: BLOCK_BEACON_DEACTIVATE\n" +
+          '        pitch: "1.8"\n' +
+          "        ammo: celula_laser\n" +
+          "        no-ammo-message: \"<red>Sin células láser\"\n"
         }
       />
       <Callout tone="info" title="En Bedrock">
