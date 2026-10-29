@@ -315,6 +315,7 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr><Td className="font-mono text-xs">fire</Td><Td>false</Td><Td>Si la explosión prende fuego.</Td></Tr>
           <Tr><Td className="font-mono text-xs">muzzle-effect</Td><Td>—</Td><Td>Efecto de RPGRoll-FX en el cañón al disparar.</Td></Tr>
           <Tr><Td className="font-mono text-xs">hit-effect</Td><Td>—</Td><Td>Efecto de RPGRoll-FX donde pega.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">sustain</Td><Td>0</Td><Td>Láser sostenido: tics que el rayo sigue encendido tras cada disparo (solo sin <code>speed</code>). Ver abajo.</Td></Tr>
           <Tr><Td className="font-mono text-xs">sound, volume, pitch</Td><Td>—, 1.0, 1.0</Td><Td>Sonido del disparo (nombre de <code>Sound</code>, p. ej. <code>ENTITY_BLAZE_SHOOT</code>).</Td></Tr>
           <Tr><Td className="font-mono text-xs">ammo</Td><Td>—</Td><Td>Munición que gasta cada disparo: id de un ítem de RPGRoll-Items (<code>celula_laser</code>) o <code>minecraft:&lt;material&gt;</code>. Sin ella no dispara. En creativo hace falta llevarla, pero no se gasta.</Td></Tr>
           <Tr><Td className="font-mono text-xs">ammo-amount</Td><Td>1</Td><Td>Cuántas gasta cada disparo.</Td></Tr>
@@ -359,6 +360,33 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
           '        pitch: "1.8"\n' +
           "        ammo: celula_laser\n" +
           "        no-ammo-message: \"<red>Sin células láser\"\n"
+        }
+      />
+      <SectionHeading id="laser-sostenido">Láser sostenido</SectionHeading>
+      <p>
+        Con <code>sustain</code> el rayo no es un fogonazo: se queda encendido y sigue la mira cada tic mientras
+        mantienes el clic derecho. Java repite el clic mantenido cada 4 tics, y cada repetición es un disparo
+        completo: gasta <code>ammo</code>, hace <code>amount</code> de daño y renueva el rayo. Son 5 pulsos por
+        segundo, así que <code>amount: "2"</code> son 10 de daño por segundo. Al soltar, el rayo dura{" "}
+        <code>sustain</code> tics más y se apaga (6 tapa el hueco entre pulsos). La invulnerabilidad tras un
+        golpe no frena los pulsos del rayo.
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="packs/vanguardia/haz_laser.yml (trigger RIGHT_CLICK)"
+        code={
+          "      - type: SHOOT\n" +
+          '        amount: "2"\n' +
+          '        range: "24"\n' +
+          '        sustain: "6"\n' +
+          "        particle: DUST\n" +
+          '        color: "#30C8FF"\n' +
+          '        size: "1.4"\n' +
+          "        particle2: ELECTRIC_SPARK\n" +
+          '        spiral: "0.25"\n' +
+          "        sound: BLOCK_BEACON_AMBIENT\n" +
+          '        pitch: "2.0"\n' +
+          "        ammo: celula_laser\n"
         }
       />
       <Callout tone="info" title="En Bedrock">
