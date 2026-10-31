@@ -13,60 +13,67 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { TAB_COPY, type TabCopy } from "./copy/tab";
 
-const profileFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_perfil", placeholder: "default" },
-  { key: "tablist", label: "Tablist (header/footer/playerlist)", type: "string", placeholder: "default" },
-  { key: "scoreboard", label: "Scoreboard (sidebar)", type: "string", placeholder: "default" },
-  { key: "nametag", label: "Nametag (multi-línea)", type: "string", placeholder: "default" },
-  { key: "belowname", label: "BelowName", type: "string", placeholder: "default" },
-  { key: "teams", label: "Teams (prefix/suffix/color)", type: "string", placeholder: "default" },
-  { key: "sorting", label: "Sorting", type: "string", placeholder: "default" },
-  { key: "bossbar", label: "BossBar (opcional)", type: "string", placeholder: "" },
-  { key: "layout", label: "Layout preset (opcional)", type: "string", placeholder: "" },
+const profileFields = (c: TabCopy): YamlField[] => [
+  { key: "id", label: c.pfId, type: "string", default: "nuevo_perfil", placeholder: "default" },
+  { key: "tablist", label: c.pfTablist, type: "string", placeholder: "default" },
+  { key: "scoreboard", label: c.pfScoreboard, type: "string", placeholder: "default" },
+  { key: "nametag", label: c.pfNametag, type: "string", placeholder: "default" },
+  { key: "belowname", label: c.pfBelowname, type: "string", placeholder: "default" },
+  { key: "teams", label: c.pfTeams, type: "string", placeholder: "default" },
+  { key: "sorting", label: c.pfSorting, type: "string", placeholder: "default" },
+  { key: "bossbar", label: c.pfBossbar, type: "string", placeholder: "" },
+  { key: "layout", label: c.pfLayout, type: "string", placeholder: "" },
 ];
 
-const contextFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_contexto", placeholder: "vip" },
-  { key: "priority", label: "Prioridad (gana el número más alto)", type: "number", default: "0" },
-  { key: "profile", label: "Perfil completo a aplicar (opcional)", type: "string", placeholder: "" },
-  { key: "tablist", label: "Override: solo tablist (opcional)", type: "string", placeholder: "" },
-  { key: "scoreboard", label: "Override: solo scoreboard (opcional)", type: "string", placeholder: "" },
-  { key: "nametag", label: "Override: solo nametag (opcional)", type: "string", placeholder: "" },
-  { key: "bossbar", label: "Override: solo bossbar (opcional)", type: "string", placeholder: "" },
+const contextFields = (c: TabCopy): YamlField[] => [
+  { key: "id", label: c.cfId, type: "string", default: "nuevo_contexto", placeholder: "vip" },
+  { key: "priority", label: c.cfPriority, type: "number", default: "0" },
+  { key: "profile", label: c.cfProfile, type: "string", placeholder: "" },
+  { key: "tablist", label: c.cfTablist, type: "string", placeholder: "" },
+  { key: "scoreboard", label: c.cfScoreboard, type: "string", placeholder: "" },
+  { key: "nametag", label: c.cfNametag, type: "string", placeholder: "" },
+  { key: "bossbar", label: c.cfBossbar, type: "string", placeholder: "" },
 ];
 
 export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = TAB_COPY[locale];
+
   return (
     <>
-      <PageHeader title="RPGRoll-TAB">
-        Personalización avanzada de TabList, Scoreboard, Nametags, BelowName y BossBars. El addon más grande del
-        ecosistema — no tiene ni una línea de lógica de RPG hardcodeada: todo lo que muestra sobre nivel, clase,
-        guild, job, etc. le llega vía <code>{"{placeholder}"}</code> registrado por el addon dueño de esa
-        información.
+      <PageHeader title={c.title}>
+        {fill(c.intro, { ph: <code>{"{placeholder}"}</code> })}
       </PageHeader>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, ProtocolLib, PlaceholderAPI]"} />
       <p>
-        Funciona completo sin ProtocolLib (header/footer, sorting, teams, nametag multi-línea, belowname,
-        sidebar, bossbars — todo vía API nativa de Paper/Adventure). Con ProtocolLib instalado se suma el control
-        de visibilidad del tablist <em>independiente</em> de la visibilidad real de la entidad (playerlist por
-        mundo a nivel de entradas, no solo de header/footer). Sin PlaceholderAPI, los placeholders internos (
-        <code>{"{player}"}</code>, <code>{"{ping}"}</code>, <code>{"{health}"}</code>...) y los que registre
-        cualquier addon vía la API pública siguen funcionando — solo se pierde el puente a expansiones{" "}
-        <code>{"%addon_x%"}</code> ya existentes de PlaceholderAPI.
+        {fill(c.reqBody, {
+          indep: <em>{c.indepWord}</em>,
+          internals: (
+            <>
+              <code>{"{player}"}</code>, <code>{"{ping}"}</code>, <code>{"{health}"}</code>...
+            </>
+          ),
+          ext: <code>{"%addon_x%"}</code>,
+        })}
       </p>
 
-      <SectionHeading id="filosofia">Filosofía: cero lógica de RPG hardcodeada</SectionHeading>
+      <SectionHeading id="filosofia">{c.philTitle}</SectionHeading>
       <p>
-        RPGRoll-TAB no sabe qué es una "guild" ni un "job". Todo concepto específico de otro addon se expresa como
-        un placeholder: internos vía <code>TABPlaceholderRegistry</code> (registro Java directo, funciona sin
-        PlaceholderAPI), o externos vía el puente automático a expansiones de PlaceholderAPI ya existentes
-        (Economy, Ascension, Mobs...). El único lugar donde esto se nota en el YAML es el Context Engine: las
-        condiciones "nativas" (<code>world</code>/<code>permission</code>/<code>gamemode</code>/
-        <code>dimension</code>/<code>weather</code>) se resuelven directo contra Bukkit; todo lo demás — guild,
-        party, dungeon, quest, región, combate — se expresa como condición <code>placeholder</code> genérica.
+        {fill(c.philBody, {
+          registry: <code>TABPlaceholderRegistry</code>,
+          native: (
+            <>
+              <code>world</code>/<code>permission</code>/<code>gamemode</code>/<code>dimension</code>/
+              <code>weather</code>
+            </>
+          ),
+          generic: <code>placeholder</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -84,54 +91,56 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <SectionHeading id="arquitectura">Arquitectura</SectionHeading>
+      <SectionHeading id="arquitectura">{c.archTitle}</SectionHeading>
       <p>
-        Cada jugador online tiene su propio <code>Scoreboard</code> individual (Bukkit no permite más de uno
-        activo por jugador a la vez, y ese único objeto determina tanto los colores de nametag que ve —vía
-        Teams— como su sidebar/belowname). Los Teams de <em>todos</em> los jugadores se espejan en el tablero de
-        cada viewer para que nadie pierda los colores de nametag del resto solo por tener su propio sidebar.
+        {fill(c.archBody, {
+          scoreboard: <code>Scoreboard</code>,
+          all: <em>{c.allWord}</em>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Elemento</Th>
-          <Th>Mecanismo</Th>
-          <Th>Requiere ProtocolLib</Th>
+          <Th>{c.thElement}</Th>
+          <Th>{c.thMechanism}</Th>
+          <Th>{c.thNeedsPL}</Th>
         </Thead>
         <tbody>
-          <Tr><Td>Header/Footer</Td><Td>Adventure <code>Player#sendPlayerListHeaderAndFooter</code></Td><Td><Badge tone="green">No</Badge></Td></Tr>
-          <Tr><Td>Nombre en el tablist</Td><Td><code>Player#playerListName</code></Td><Td><Badge tone="green">No</Badge></Td></Tr>
-          <Tr><Td>Orden visual + prefix/suffix/color</Td><Td>Team por jugador, nombre del Team codifica el rango (truco estándar de sorting)</Td><Td><Badge tone="green">No</Badge></Td></Tr>
-          <Tr><Td>Nametag multi-línea</Td><Td>Entidades <code>TextDisplay</code> montadas como pasajero, con offset por <code>Transformation</code></Td><Td><Badge tone="green">No</Badge></Td></Tr>
-          <Tr><Td>Nametag distinto para staff</Td><Td><code>Entity#setVisibleByDefault(false)</code> + <code>showEntity</code>/<code>hideEntity</code> por-viewer</Td><Td><Badge tone="green">No</Badge></Td></Tr>
-          <Tr><Td>BelowName</Td><Td><code>DisplaySlot.BELOW_NAME</code> en el tablero individual</Td><Td><Badge tone="green">No</Badge></Td></Tr>
-          <Tr><Td>Sidebar con líneas largas</Td><Td>Entradas invisibles (<code>§0</code>-<code>§f</code>) + Team prefix/suffix por línea</Td><Td><Badge tone="green">No</Badge></Td></Tr>
-          <Tr><Td>BossBars múltiples</Td><Td>Adventure <code>BossBar</code> nativo, uno por definición mostrado simultáneamente</Td><Td><Badge tone="green">No</Badge></Td></Tr>
-          <Tr><Td>Visibilidad del tablist por-viewer</Td><Td>Flag <code>UPDATE_LISTED</code> del paquete <code>PLAYER_INFO</code> — separa "aparece en la lista" de "existe en el mundo"</Td><Td><Badge tone="amber">Sí</Badge></Td></Tr>
+          <Tr><Td>{c.elHeaderFooter}</Td><Td>Adventure <code>Player#sendPlayerListHeaderAndFooter</code></Td><Td><Badge tone="green">{c.noWord}</Badge></Td></Tr>
+          <Tr><Td>{c.elTabName}</Td><Td><code>Player#playerListName</code></Td><Td><Badge tone="green">{c.noWord}</Badge></Td></Tr>
+          <Tr><Td>{c.elOrder}</Td><Td>{c.mOrder}</Td><Td><Badge tone="green">{c.noWord}</Badge></Td></Tr>
+          <Tr><Td>{c.elMultiline}</Td><Td>{fill(c.mMultiline, { display: <code>TextDisplay</code>, transform: <code>Transformation</code> })}</Td><Td><Badge tone="green">{c.noWord}</Badge></Td></Tr>
+          <Tr><Td>{c.elStaffTag}</Td><Td>{fill(c.mStaffTag, { api: <><code>Entity#setVisibleByDefault(false)</code> + <code>showEntity</code>/<code>hideEntity</code></> })}</Td><Td><Badge tone="green">{c.noWord}</Badge></Td></Tr>
+          <Tr><Td>{c.elBelowName}</Td><Td>{fill(c.mBelowName, { slot: <code>DisplaySlot.BELOW_NAME</code> })}</Td><Td><Badge tone="green">{c.noWord}</Badge></Td></Tr>
+          <Tr><Td>{c.elLongLines}</Td><Td>{fill(c.mLongLines, { range: <><code>§0</code>-<code>§f</code></> })}</Td><Td><Badge tone="green">{c.noWord}</Badge></Td></Tr>
+          <Tr><Td>{c.elBossBars}</Td><Td>{fill(c.mBossBars, { bossbar: <code>BossBar</code> })}</Td><Td><Badge tone="green">{c.noWord}</Badge></Td></Tr>
+          <Tr><Td>{c.elVisibility}</Td><Td>{fill(c.mVisibility, { flag: <code>UPDATE_LISTED</code>, packet: <code>PLAYER_INFO</code> })}</Td><Td><Badge tone="amber">{c.yesWord}</Badge></Td></Tr>
         </tbody>
       </Table>
-      <Callout tone="warning" title="Sobre 'Layout' y columnas">
-        El cliente vanilla decide por su cuenta en cuántas columnas mostrar el tablist (según cantidad de
-        jugadores y tamaño de ventana) — <strong>ningún plugin de servidor puede forzar un número de columnas
-        distinto</strong>, es puramente client-side. Lo que sí es 100% controlable es el <em>orden</em> (Sorting +
-        Teams) y agrupar visualmente por rango — los "layouts predefinidos" (classic/ranked/guild/dungeon/...) son
-        presets de Sorting + Teams, no una grilla arbitraria.
+      <Callout tone="warning" title={c.layoutTitle}>
+        {fill(c.layoutBody, {
+          noForce: <strong>{c.noForceWord}</strong>,
+          order: <em>{c.orderWord}</em>,
+        })}
       </Callout>
 
-      <SectionHeading id="motor-de-contexto">Context Engine y resolución de perfil</SectionHeading>
+      <SectionHeading id="motor-de-contexto">{c.ctxTitle}</SectionHeading>
       <p>
-        En cada evento relevante (join, cambio de mundo, comando admin, o cualquier addon llamando a{" "}
-        <code>TABAPI.get().player(p).refresh()</code>) se recorren los contextos de mayor a menor{" "}
-        <code>priority</code> y se aplica el primero cuyas condiciones se cumplan TODAS. Un contexto puede
-        reemplazar el <code>TABProfile</code> completo (<code>profile: dungeon</code>) o solo una parte (dejar{" "}
-        <code>profile</code> vacío y poner, por ejemplo, solo <code>scoreboard: combat</code> para cambiar
-        únicamente el sidebar durante combate, conservando tablist/nametag/belowname del perfil base). Nunca se
-        re-evalúa por tick — solo cuando algo pudo haber cambiado el resultado.
+        {fill(c.ctxBody, {
+          refresh: <code>TABAPI.get().player(p).refresh()</code>,
+          priority: <code>priority</code>,
+          profile: <code>TABProfile</code>,
+          profileDungeon: <code>profile: dungeon</code>,
+          profileField: <code>profile</code>,
+          sbCombat: <code>scoreboard: combat</code>,
+        })}
       </p>
 
-      <SectionHeading id="perfiles">Profiles</SectionHeading>
+      <SectionHeading id="perfiles">{c.profilesTitle}</SectionHeading>
       <p>
-        Un <code>TABProfile</code> agrupa referencias por id a cada sub-configuración. <strong>Siempre debe
-        existir un perfil con id <code>default</code></strong> — es el fallback final si ningún contexto matchea.
+        {fill(c.profilesBody, {
+          profile: <code>TABProfile</code>,
+          mustExist: <strong>{fill(c.mustExistWord, { d: <code>default</code> })}</strong>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -147,13 +156,13 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <YamlBuilder
-        title="Constructor visual: Profile"
-        description="Cada campo es el id de una definición del tipo correspondiente — déjalo vacío para no aplicar nada de ese tipo."
+        title={c.bProfile}
+        description={c.bProfileDesc}
         folder="profiles"
-        fields={profileFields}
+        fields={profileFields(c)}
       />
 
-      <SectionHeading id="contextos">Contexts</SectionHeading>
+      <SectionHeading id="contextos">{c.contextsTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="contexts/vip.yml"
@@ -170,19 +179,34 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <YamlBuilder
-        title="Constructor visual: Context"
-        description="Las condiciones (conditions) no están en este formulario simplificado — copia y adapta el ejemplo de arriba, o usa el Diseñador de TAB de abajo."
+        title={c.bContext}
+        description={c.bContextDesc}
         folder="contexts"
-        fields={contextFields}
+        fields={contextFields(c)}
       />
 
-      <SectionHeading id="tablist">TabList: header, footer y playerlist</SectionHeading>
+      <SectionHeading id="tablist">{c.tablistTitle}</SectionHeading>
       <p>
-        <code>header.animation</code>/<code>footer.animation</code> referencian una <code>AnimationDefinition</code>{" "}
-        (frames que ciclan cada <code>interval</code> ticks) — si se omiten, <code>lines</code> se muestra
-        estático. <code>player-format</code> resuelve <code>{"{prefix}"}</code>/<code>{"{suffix}"}</code> desde el
-        Team activo, <code>{"{ping_formatted}"}</code> desde los tramos de <code>ping</code>, y{" "}
-        <code>{"{gamemode_formatted}"}</code> si <code>gamemode.enabled: true</code>.
+        {fill(c.tablistBody, {
+          anims: (
+            <>
+              <code>header.animation</code>/<code>footer.animation</code>
+            </>
+          ),
+          animDef: <code>AnimationDefinition</code>,
+          interval: <code>interval</code>,
+          lines: <code>lines</code>,
+          playerFormat: <code>player-format</code>,
+          prefixSuffix: (
+            <>
+              <code>{"{prefix}"}</code>/<code>{"{suffix}"}</code>
+            </>
+          ),
+          pingFmt: <code>{"{ping_formatted}"}</code>,
+          ping: <code>ping</code>,
+          gmFmt: <code>{"{gamemode_formatted}"}</code>,
+          gmEnabled: <code>gamemode.enabled: true</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -230,19 +254,29 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <p>
-        Además de <code>FRAME</code>: <code>SCROLL</code> (ventana deslizante sobre un <code>text</code> largo,
-        precalculada a frames en el parseo) y <code>BLINK</code> (alterna <code>text</code>/vacío). El header/footer
-        animado se re-renderiza cada 10 ticks vía un scheduler dedicado y liviano — nunca recalcula sorting/teams
-        en esa pasada, eso sigue siendo estrictamente event-driven.
+        {fill(c.animBody, {
+          frame: <code>FRAME</code>,
+          scroll: <code>SCROLL</code>,
+          text: <code>text</code>,
+          blink: <code>BLINK</code>,
+          textEmpty: <code>text</code>,
+        })}
       </p>
 
-      <SectionHeading id="sorting">Sorting</SectionHeading>
+      <SectionHeading id="sorting">{c.sortingTitle}</SectionHeading>
       <p>
-        Forma corta (<code>priority</code>): una palabra por línea. <code>permission</code>/<code>ping</code>/
-        <code>world</code>/<code>online-time</code> son nativos; cualquier otra palabra se interpreta como el
-        nombre de un placeholder ya registrado por otro addon. Forma explícita (<code>rules</code>): mismo
-        resultado, pero permite <code>values</code> (lista de permisos ordenada) para <code>permission</code>, y{" "}
-        <code>numeric</code> para comparar placeholders como número en vez de texto.
+        {fill(c.sortingBody, {
+          priority: <code>priority</code>,
+          natives: (
+            <>
+              <code>permission</code>/<code>ping</code>/<code>world</code>/<code>online-time</code>
+            </>
+          ),
+          rules: <code>rules</code>,
+          values: <code>values</code>,
+          permission: <code>permission</code>,
+          numeric: <code>numeric</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -267,7 +301,7 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <SectionHeading id="teams-nametag">Teams y Nametag</SectionHeading>
+      <SectionHeading id="teams-nametag">{c.teamsTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="teams/default.yml"
@@ -299,18 +333,17 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
           '    - "{player}"\n'
         }
       />
-      <Callout tone="tip" title="¿Por qué solo un override de 'staff' y no 'mismo guild'?">
-        "¿Tiene el viewer permiso X?" se resuelve sin conocer a ningún otro addon. "¿Están el viewer y el subject
-        en la misma guild?" es una relación entre DOS jugadores — no algo que un placeholder de un solo jugador
-        pueda expresar. Para ese caso, el addon dueño de esa relación (ej. RPGRoll-Guilds) puede llamar
-        directamente a <code>NametagEngine</code> vía la API pública.
+      <Callout tone="tip" title={c.staffTitle}>
+        {fill(c.staffBody, { engine: <code>NametagEngine</code> })}
       </Callout>
 
-      <SectionHeading id="belowname">BelowName</SectionHeading>
+      <SectionHeading id="belowname">{c.belowTitle}</SectionHeading>
       <p>
-        Limitación de Minecraft, no del addon: solo se puede mostrar un <strong>número</strong> debajo del
-        nombre. <code>score</code> debe resolver a algo numérico, <code>label</code> es el texto/ícono que
-        aparece junto al número.
+        {fill(c.belowBody, {
+          number: <strong>{c.numberWord}</strong>,
+          score: <code>score</code>,
+          label: <code>label</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -318,13 +351,28 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
         code={'id: default\nscore: "{health}"\nlabel: "&c❤"\n'}
       />
 
-      <SectionHeading id="scoreboard">Scoreboard (sidebar)</SectionHeading>
+      <SectionHeading id="scoreboard">{c.sbTitle}</SectionHeading>
       <p>
-        Cada línea es <code>{"{text, condition}"}</code> — <code>condition</code> es opcional (soporta{" "}
-        <code>==</code>/<code>!=</code>/<code>&gt;</code>/<code>&gt;=</code>/<code>&lt;</code>/<code>&lt;=</code>,
-        compara numérico si ambos lados parsean como número). <code>extends</code> + <code>replacements</code>{" "}
-        implementan templates reutilizables: el hijo hereda <code>title</code>/<code>lines</code> del padre y
-        reemplaza placeholders literales del padre por sus propios valores.
+        {fill(c.sbBody, {
+          lineShape: <code>{"{text, condition}"}</code>,
+          condition: <code>condition</code>,
+          ops: (
+            <>
+              <code>==</code>/<code>!=</code>/<code>&gt;</code>/<code>&gt;=</code>/<code>&lt;</code>/
+              <code>&lt;=</code>
+            </>
+          ),
+          extends: (
+            <>
+              <code>extends</code> + <code>replacements</code>
+            </>
+          ),
+          inherited: (
+            <>
+              <code>title</code>/<code>lines</code>
+            </>
+          ),
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -355,12 +403,13 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <p>
-        Varios scoreboards pueden coexistir (default/combat/dungeon/boss/...) — el Context Engine decide cuál
-        está activo vía <code>profile.scoreboard</code> o un override parcial de contexto; <code>priority</code>{" "}
-        entra en juego cuando la resolución de contexto es ambigua.
+        {fill(c.sbMultiBody, {
+          profileSb: <code>profile.scoreboard</code>,
+          priority: <code>priority</code>,
+        })}
       </p>
 
-      <SectionHeading id="bossbars">BossBars</SectionHeading>
+      <SectionHeading id="bossbars">{c.bossTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="bossbars/example_event.yml"
@@ -373,13 +422,9 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "priority: 10\n"
         }
       />
-      <p>
-        No está activado por defecto (ningún perfil ni contexto lo referencia todavía) — sirve de plantilla. Un
-        jugador puede tener varias bossbars simultáneas si distintas fuentes (perfil + API de otro addon) las
-        muestran a la vez; cada una se identifica por su id y se puede ocultar individualmente.
-      </p>
+      <p>{c.bossBody}</p>
 
-      <SectionHeading id="api">API pública</SectionHeading>
+      <SectionHeading id="api">{c.apiTitle}</SectionHeading>
       <CodeBlock
         language="java"
         code={
@@ -396,46 +441,46 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "tab.deactivateEventProfile();\n"
         }
       />
-      <p>Eventos disponibles (todos en <code>com.sack.rpgroll.tab.event</code>):</p>
+      <p>{fill(c.eventsIntro, { pkg: <code>com.sack.rpgroll.tab.event</code> })}</p>
       <Table>
         <Thead>
-          <Th>Evento</Th>
-          <Th>Cuándo</Th>
+          <Th>{c.thEvent}</Th>
+          <Th>{c.thWhen}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">TabProfileChangeEvent</Td><Td>El perfil activo de un jugador cambió.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ScoreboardChangeEvent</Td><Td>El sidebar activo cambió.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">NametagUpdateEvent</Td><Td>Se re-renderizó el nametag de un jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PlayerVisibilityEvent</Td><Td>Cancelable — antes de mostrar/ocultar a alguien en un tablist ajeno.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PlaceholderRequestEvent</Td><Td>Informativo — un placeholder desconocido (ni interno ni registrado).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">LayoutChangeEvent</Td><Td>Cambió el layout/orden aplicado.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">BossBarCreateEvent / BossBarRemoveEvent</Td><Td>Se mostró/ocultó una bossbar.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TabProfileChangeEvent</Td><Td>{c.evProfile}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">ScoreboardChangeEvent</Td><Td>{c.evScoreboard}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">NametagUpdateEvent</Td><Td>{c.evNametag}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PlayerVisibilityEvent</Td><Td>{c.evVisibility}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PlaceholderRequestEvent</Td><Td>{c.evPlaceholder}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">LayoutChangeEvent</Td><Td>{c.evLayout}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">BossBarCreateEvent / BossBarRemoveEvent</Td><Td>{c.evBossBar}</Td></Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">/tabadmin reload</Td><Td>Recarga todo el contenido YAML (9 tipos) y refresca a todos los jugadores online.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/tabadmin list</Td><Td>Lista los perfiles definidos.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/tabadmin profile <jugador> <perfil>"}</Td><Td>Fuerza un perfil específico, ignorando el Context Engine hasta el próximo refresh real.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/tabadmin reload</Td><Td>{c.xReload}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/tabadmin list</Td><Td>{c.xList}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/tabadmin profile <jugador> <perfil>"}</Td><Td>{c.xProfile}</Td></Tr>
         </tbody>
       </Table>
-      <p>Todos requieren <Badge tone="amber">rpgrolltab.admin.*</Badge> (default: op), y funcionan desde consola.</p>
+      <p>{fill(c.permNote, { perm: <Badge tone="amber">rpgrolltab.admin.*</Badge> })}</p>
 
-      <Callout tone="info" title="Arma todo esto visualmente: Diseñador de TAB">
-        En vez de escribir a mano los 10 tipos de archivo de arriba, usa el{" "}
-        <a href="/tab-designer" className="underline">
-          Diseñador de TAB
-        </a>{" "}
-        — una herramienta en el navegador que arma perfiles, contextos, scoreboards, tablists, nametags, belowname,
-        bossbars, sorting, teams y animaciones con formularios, y te da el YAML exacto que lee cada{" "}
-        <code>*Parser.java</code> listo para copiar o descargar. No reemplaza ningún editor in-game (no existe uno
-        para TAB) — es la forma recomendada de armar el contenido sin memorizar el schema de cada archivo.
+      <Callout tone="info" title={c.designerTitle}>
+        {fill(c.designerBody, {
+          link: (
+            <a href="/tab-designer" className="underline">
+              {c.designerLink}
+            </a>
+          ),
+          parser: <code>*Parser.java</code>,
+        })}
       </Callout>
 
       <PrevNext current="tab" onNavigate={onNavigate} />
