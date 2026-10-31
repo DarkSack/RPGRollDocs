@@ -447,7 +447,7 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <YamlBuilder
         title="Constructor visual: Mob"
-        description="Identidad, modelo, stats/resistencias e IA básica. Skins, skills, triggers, phases, loot, bossbar, diálogos y spawn-rules son demasiado anidados para este formulario — usá /mobadmin editor o copia uno de los ejemplos de arriba."
+        description="Identidad, modelo, stats/resistencias e IA básica. Skins, skills, triggers, phases, loot, bossbar, diálogos y spawn-rules son demasiado anidados para este formulario — usa /mobadmin editor o copia uno de los ejemplos de arriba."
         folder="mobs"
         fields={mobFields}
       />

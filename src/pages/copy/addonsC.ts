@@ -57,7 +57,7 @@ const es = {
     npcTitle: "Integración con RPGRoll-NPCs",
     guiTitle: "GUI: navegador y editor para Quest y Region",
     guiBody:
-      "{browser} (por defecto {quests}) abre un navegador con botón “Crear nueva”. El editor de {quest} cubre nombre, categoría, dificultad, repetible, cooldown, nivel requerido y recompensas de dinero/experiencia, más alta/baja rápida de ids de etapa; el de {region} tiene botones “Fijar esquina mínima/máxima acá” que usan tu ubicación actual.",
+      "{browser} (por defecto {quests}) abre un navegador con botón “Crear nueva”. El editor de {quest} cubre nombre, categoría, dificultad, repetible, cooldown, nivel requerido y recompensas de dinero/experiencia, más alta/baja rápida de ids de etapa; el de {region} tiene botones “Fijar esquina mínima/máxima aquí” que usan tu ubicación actual.",
 
     yamlTitle: "Ejemplo de archivo YAML",
     refTitle: "Referencia completa: todos los campos en un solo archivo",
@@ -66,7 +66,7 @@ const es = {
 
     bQuest: "Constructor visual: Quest",
     bQuestDesc:
-      "Identidad, categoría/dificultad, cooldown, requisito de nivel y recompensas simples. Las etapas (stages) con objetivos/diálogo/ramas son demasiado anidadas para este formulario — usá uno de los ejemplos de arriba como base y editalo a mano, o construilas directamente en el editor in-game.",
+      "Identidad, categoría/dificultad, cooldown, requisito de nivel y recompensas simples. Las etapas (stages) con objetivos/diálogo/ramas son demasiado anidadas para este formulario — usa uno de los ejemplos de arriba como base y editalo a mano, o construilas directamente en el editor in-game.",
     fDisplayName: "Nombre visible",
     fCategory: "Categoría",
     fDifficulty: "Dificultad",
@@ -172,7 +172,7 @@ const es = {
 
     bSeason: "Constructor visual: identidad y duración de la estación",
     bSeasonDesc:
-      "Clima, subestaciones, modificadores de bioma, vegetación y mobs de temporada son demasiado variados para un formulario lineal — todos viven en pantallas propias dentro del editor in-game. Copia y adaptá uno de los ejemplos de arriba para esos campos.",
+      "Clima, subestaciones, modificadores de bioma, vegetación y mobs de temporada son demasiado variados para un formulario lineal — todos viven en pantallas propias dentro del editor in-game. Copia y adapta uno de los ejemplos de arriba para esos campos.",
     fId: "Id",
     fDisplayName: "Nombre visible",
     fIcon: "Ícono (Material)",

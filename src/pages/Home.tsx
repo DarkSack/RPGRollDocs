@@ -250,7 +250,7 @@ function iconWrapClass(tone: "violet" | "green" | "amber" | "red" | "blue" | "ne
   return base + tones[tone];
 }
 
-/** content/nav.ts tiene el label "lindo"; acá solo necesitamos algo corto para la card. */
+/** content/nav.ts tiene el label "lindo"; aquí solo necesitamos algo corto para la card. */
 function addonLabel(slug: string): string {
   const OVERRIDES: Record<string, string> = {
     "rpgroll-effects": "RPGRoll-Effects",

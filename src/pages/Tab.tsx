@@ -148,7 +148,7 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
       <YamlBuilder
         title="Constructor visual: Profile"
-        description="Cada campo es el id de una definición del tipo correspondiente — dejalo vacío para no aplicar nada de ese tipo."
+        description="Cada campo es el id de una definición del tipo correspondiente — déjalo vacío para no aplicar nada de ese tipo."
         folder="profiles"
         fields={profileFields}
       />
@@ -171,7 +171,7 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
       <YamlBuilder
         title="Constructor visual: Context"
-        description="Las condiciones (conditions) no están en este formulario simplificado — copia y adaptá el ejemplo de arriba, o usá el Diseñador de TAB de abajo."
+        description="Las condiciones (conditions) no están en este formulario simplificado — copia y adapta el ejemplo de arriba, o usa el Diseñador de TAB de abajo."
         folder="contexts"
         fields={contextFields}
       />
@@ -427,8 +427,8 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
       </Table>
       <p>Todos requieren <Badge tone="amber">rpgrolltab.admin.*</Badge> (default: op), y funcionan desde consola.</p>
 
-      <Callout tone="info" title="Armá todo esto visualmente: Diseñador de TAB">
-        En vez de escribir a mano los 10 tipos de archivo de arriba, usá el{" "}
+      <Callout tone="info" title="Arma todo esto visualmente: Diseñador de TAB">
+        En vez de escribir a mano los 10 tipos de archivo de arriba, usa el{" "}
         <a href="/tab-designer" className="underline">
           Diseñador de TAB
         </a>{" "}

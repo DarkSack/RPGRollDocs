@@ -86,7 +86,7 @@ const es = {
 
     bTitle: "Constructor visual: identidad, costo básico y progresión del hechizo",
     bDesc:
-      "El pipeline de componentes es demasiado variado para un formulario lineal (cada tipo tiene sus propios params) — copiá y adaptá uno de los ejemplos de arriba, o usá /magicadmin browser para armarlo paso a paso desde el chat en el juego.",
+      "El pipeline de componentes es demasiado variado para un formulario lineal (cada tipo tiene sus propios params) — copia y adapta uno de los ejemplos de arriba, o usa /magicadmin browser para armarlo paso a paso desde el chat en el juego.",
 
     guiTitle: "GUI: Magic Studio",
     guiBody:
@@ -145,7 +145,7 @@ const es = {
       "(opcional) — sin el core, las condiciones {conds} no se cumplen; {hasItem} y todas las acciones funcionan igual.",
     liQuests: "(opcional) — acciones y condiciones de misión.",
     buildTip:
-      "Compilá con {cmd} — el jar queda en {jar} (no el {plain}). Igual que {core}, usa Shadow para empaquetar OkHttp (necesario para hablar con la API de MineSkin); Gson queda afuera porque Paper ya lo trae. Ya no hace falta ProtocolLib.",
+      "Compila con {cmd} — el jar queda en {jar} (no el {plain}). Igual que {core}, usa Shadow para empaquetar OkHttp (necesario para hablar con la API de MineSkin); Gson queda afuera porque Paper ya lo trae. Ya no hace falta ProtocolLib.",
 
     howTitle: "Cómo funcionan los NPCs",
     howBody:
@@ -174,7 +174,7 @@ const es = {
     sPose: "Pose",
     s5: "Click en {pos} → reasigna la ubicación a donde estés parado.",
     sPos: "Posición",
-    s6: "Click en {actions} → agregá/quitá acciones (formato {fmt} por chat).",
+    s6: "Click en {actions} → agrega/quita acciones (formato {fmt} por chat).",
     sActions: "Acciones",
     s7: "Guardar (deshabilitado hasta tener nombre y posición).",
     editNote:
@@ -185,7 +185,7 @@ const es = {
 
     bNpc: "Constructor visual: NPC",
     bNpcDesc:
-      "El id, nombre, pose y ubicación de un NPC. La lista de actions (mensajes, sonidos, condicionales, abrir menú...) es demasiado variada para un formulario — agregala luego con /npc edit o copiando un ejemplo de arriba.",
+      "El id, nombre, pose y ubicación de un NPC. La lista de actions (mensajes, sonidos, condicionales, abrir menú...) es demasiado variada para un formulario — agrégala luego con /npc edit o copiando un ejemplo de arriba.",
 
     actionsTitle: "Acciones (MenuAction)",
     actionsIntro:
@@ -272,7 +272,7 @@ const es = {
     fSkin: "Skin (opcional)",
     fTexture: "Textura (base64)",
     fTextureHelp:
-      "En el editor in-game se resuelve solo pegando un link/id de mineskin.org — acá hay que pegarla a mano.",
+      "En el editor in-game se resuelve solo pegando un link/id de mineskin.org — aquí hay que pegarla a mano.",
     fSignature: "Firma (base64)",
     mId: "Id",
     mTitle: "Título",

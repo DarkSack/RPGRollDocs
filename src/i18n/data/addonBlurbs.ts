@@ -40,6 +40,7 @@ const en: BlurbMap = {
   furniture: "3D-model furniture: seats, storage, light, a carpenter and wood and colour versions.",
   recipes: "JEI-style recipe book: how everything is made and what it's for, from any plugin.",
   machines: "Tiered furnaces, spawners with upgrades and stacking, and quarries that dig on their own.",
+  worldforge: "Multiverse-style worlds, Terralith-style terrains, new dimensions and regeneration with backups. No RPGRoll-Lib needed.",
 };
 
 const pt: BlurbMap = {
@@ -71,6 +72,7 @@ const pt: BlurbMap = {
   furniture: "Móveis com modelo 3D: assentos, armazenamento, luz, carpinteiro e versões por madeira e cor.",
   recipes: "Livro de receitas no estilo JEI: como tudo é feito e para que serve, de qualquer plugin.",
   machines: "Fornalhas por níveis, spawners com melhorias e empilhamento, e pedreiras que escavam sozinhas.",
+  worldforge: "Mundos como no Multiverse, terrenos no estilo Terralith, dimensões novas e regeneração com backup. Sem RPGRoll-Lib.",
 };
 
 const BLURBS: Partial<Record<Locale, BlurbMap>> = { en, pt };

@@ -23,7 +23,7 @@ const es = {
 
   addonsTitle: "Explorá los {n} addons oficiales",
   addonsLead:
-    "Cada addon es un plugin separado que depende de la librería compartida ({depend}) y se instala dejando su propio jar en {dir}. Ninguno es obligatorio — instalá solo los que necesite tu servidor. Salvo Ascension y Magic, tampoco exigen el núcleo: sin él funcionan igual, solo que sin datos de personaje.",
+    "Cada addon es un plugin separado que depende de la librería compartida ({depend}) y se instala dejando su propio jar en {dir}. Ninguno es obligatorio — instala solo los que necesite tu servidor. Salvo Ascension y Magic, tampoco exigen el núcleo: sin él funcionan igual, solo que sin datos de personaje.",
 
   archTitle: "Arquitectura en breve",
   archBody:

@@ -53,7 +53,7 @@ const es = {
 
     libTitle: "RPGRoll-Lib: la librería compartida",
     libBody:
-      "{common} se distribuye como un plugin propio, {lib}: gratis, sin licencia, y en el {depend} de todos los módulos. Paper deja que un plugin vea las clases de los que declara en depend/softdepend, así que en runtime todo el ecosistema usa la misma copia — un solo {listener} y un solo registro de menús abiertos.",
+      "{common} se distribuye como un plugin propio, {lib}: gratis, sin licencia, y en el {depend} de todos los módulos salvo WorldForge, que no la usa. Paper deja que un plugin vea las clases de los que declara en depend/softdepend, así que en runtime todo el ecosistema usa la misma copia — un solo {listener} y un solo registro de menús abiertos.",
     libModules:
       "Gracias a eso los módulos ya no compilan contra el core. Lo que necesitan del personaje lo leen con {characters}, que queda vacío si el core no está; la economía la toman de Vault con {vault}; y las subidas de nivel las escuchan como {event}. Solo Ascension y Magic, que trabajan sobre el personaje en sí (prestigio, maná y stats de combate), siguen con el core en depend.",
     libWithoutCore:
@@ -96,7 +96,7 @@ const es = {
 
     setupTitle: "Configurar tu addon",
     s1: "Declará {depend} en tu {pluginYml}, para garantizar que RPGRoll cargue antes que tu addon.",
-    s2: "Agregá RPGRoll como dependencia {compileOnly} (vía {gradle} desde el proyecto de RPGRoll, o referenciando el jar compilado directamente).",
+    s2: "Agrega RPGRoll como dependencia {compileOnly} (vía {gradle} desde el proyecto de RPGRoll, o referenciando el jar compilado directamente).",
     s3: "Llamá {get} únicamente desde {onEnable} en adelante — nunca desde el constructor de tu plugin ni desde inicializadores estáticos, porque RPGRoll podría no estar listo todavía.",
 
     methodsTitle: "Métodos disponibles",
@@ -123,7 +123,7 @@ const es = {
 
     noCoreTitle: "Addons que no dependen del core",
     noCoreBody:
-      "Si tu addon solo necesita leer el personaje, no hace falta atarlo al core: declará {depend} y {soft} en tu {pluginYml}, compilá contra {common} y pedí los datos a RPGRoll-Lib. Si el core no está instalado, {get} devuelve vacío y tu addon sigue funcionando.",
+      "Si tu addon solo necesita leer el personaje, no hace falta atarlo al core: declará {depend} y {soft} en tu {pluginYml}, compila contra {common} y pide los datos a RPGRoll-Lib. Si el core no está instalado, {get} devuelve vacío y tu addon sigue funcionando.",
     noCoreIface: "Lo que expone {iface} (todo por UUID; sin personaje devuelve valores neutros: 0, vacío o false):",
     rBonusService: "suma los bonos de EXP del jugador (ver abajo)",
     expTitle: "Bonos de experiencia",
@@ -189,7 +189,7 @@ const en: DevelopersCopy = {
 
     libTitle: "RPGRoll-Lib: the shared library",
     libBody:
-      "{common} ships as a plugin of its own, {lib}: free, unlicensed, and in the {depend} of every module. Paper lets a plugin see the classes of the ones it declares in depend/softdepend, so at runtime the whole ecosystem uses the same copy — a single {listener} and a single registry of open menus.",
+      "{common} ships as a plugin of its own, {lib}: free, unlicensed, and in the {depend} of every module except WorldForge, which does not use it. Paper lets a plugin see the classes of the ones it declares in depend/softdepend, so at runtime the whole ecosystem uses the same copy — a single {listener} and a single registry of open menus.",
     libModules:
       "Thanks to that, modules no longer compile against the core. What they need from the character they read with {characters}, which is empty when the core is not installed; they take the economy from Vault with {vault}; and they listen to level-ups as {event}. Only Ascension and Magic, which work on the character itself (prestige, mana and combat stats), keep the core in depend.",
     libWithoutCore:
@@ -323,7 +323,7 @@ const pt: DevelopersCopy = {
 
     libTitle: "RPGRoll-Lib: a biblioteca compartilhada",
     libBody:
-      "{common} é distribuído como um plugin próprio, {lib}: grátis, sem licença, e no {depend} de todos os módulos. O Paper deixa um plugin ver as classes dos que ele declara em depend/softdepend, então em runtime todo o ecossistema usa a mesma cópia — um só {listener} e um só registro de menus abertos.",
+      "{common} é distribuído como um plugin próprio, {lib}: grátis, sem licença, e no {depend} de todos os módulos exceto WorldForge, que não a usa. O Paper deixa um plugin ver as classes dos que ele declara em depend/softdepend, então em runtime todo o ecossistema usa a mesma cópia — um só {listener} e um só registro de menus abertos.",
     libModules:
       "Graças a isso os módulos não compilam mais contra o núcleo. O que precisam do personagem eles leem com {characters}, que fica vazio se o núcleo não estiver; a economia vem do Vault com {vault}; e as subidas de nível eles escutam como {event}. Só Ascension e Magic, que trabalham sobre o próprio personagem (prestígio, mana e stats de combate), continuam com o núcleo em depend.",
     libWithoutCore:

@@ -53,7 +53,7 @@ const es = {
     thResolves: "Resuelve a",
     tSelf: "El jugador que disparó el efecto ({caster}).",
     tTarget: "La entidad/ubicación objetivo, si el contexto tiene una — si no, cae a SELF.",
-    tLocation: "Todavía cae a la ubicación del caster (no tiene coordenadas propias configurables desde acá).",
+    tLocation: "Todavía cae a la ubicación del caster (no tiene coordenadas propias configurables desde aquí).",
     tNearby: "Solo para SOUND/TITLE/ACTIONBAR/BOSSBAR — todos los jugadores dentro de {radius} alrededor de {around}.",
 
     yamlTitle: "Ejemplos de archivo YAML",
@@ -62,7 +62,7 @@ const es = {
 
     builderTitle: "Constructor visual: identidad del efecto",
     builderDesc:
-      "id/nombre/descripción. La lista de steps es demasiado variada para un formulario lineal (cada tipo tiene sus propios params) — copia y adaptá uno de los ejemplos de arriba, o usá /rpgfx browser para armarlo paso a paso desde el chat en el juego.",
+      "id/nombre/descripción. La lista de steps es demasiado variada para un formulario lineal (cada tipo tiene sus propios params) — copia y adapta uno de los ejemplos de arriba, o usa /rpgfx browser para armarlo paso a paso desde el chat en el juego.",
     fId: "Id",
     fDisplayName: "Nombre visible",
     fDescription: "Descripción",

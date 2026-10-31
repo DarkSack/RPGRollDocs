@@ -274,7 +274,7 @@ export function Magic({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "trigger: HOLD\n" +
           "tree-parent: fireball\n" +
           "tree-tier: 1\n" +
-          'description: "Canalizá 3 segundos quieto para invocar una explosión devastadora a tus pies."\n' +
+          'description: "Canaliza 3 segundos quieto para invocar una explosión devastadora a tus pies."\n' +
           "\n" +
           "cost:\n" +
           "  mana: 50\n" +

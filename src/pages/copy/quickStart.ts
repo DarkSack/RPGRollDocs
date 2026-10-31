@@ -4,7 +4,7 @@ import type { Locale } from "../../i18n";
  * Texto de la página "Primeros pasos", por idioma.
  *
  * Patrón para traducir contenido: el componente queda con la estructura
- * (tablas, bloques de código, callouts) y todo el texto sale de acá. Se
+ * (tablas, bloques de código, callouts) y todo el texto sale de aquí. Se
  * traduce prosa, no marcado — los identificadores que aparecen en medio de
  * una oración (`/rpg create`, `plugins/`, nombres de archivo) quedan fuera
  * del diccionario porque no se traducen y romperían el string si se mezclaran.
@@ -34,19 +34,19 @@ const es = {
   },
 
   s2: {
-    title: "Instalá el núcleo",
+    title: "Instala el núcleo",
     lead1: "Todo el ecosistema se instala dejando jars en",
-    lead2: "Para empezar alcanzan dos: RPGRoll-Lib, la librería compartida que necesitan todos los módulos (gratis), y el núcleo. Los addons vienen después, y ninguno es necesario para arrancar.",
-    libComment: "la librería compartida — la piden todos los módulos",
+    lead2: "Para empezar alcanzan dos: RPGRoll-Lib, la librería compartida que necesitan todos los módulos salvo WorldForge (gratis), y el núcleo. Los addons vienen después, y ninguno es necesario para arrancar.",
+    libComment: "la librería compartida — la piden todos los módulos salvo WorldForge",
     comment: "el núcleo — con esto alcanza por ahora",
     calloutTitle: "Empezá solo con el núcleo",
     calloutBody:
-      "Es tentador copiar los 24 addons de una. No lo hagas en la primera vuelta: si algo falla, con un solo jar sabés exactamente dónde mirar. Los addons se suman en el paso 06.",
+      "Es tentador copiar los 24 addons de una. No lo hagas en la primera vuelta: si algo falla, con un solo jar sabes exactamente dónde mirar. Los addons se suman en el paso 06.",
   },
 
   s3: {
     title: "Arrancá el servidor y verificá",
-    lead: "Iniciá el servidor como lo hacés siempre. En el primer arranque el núcleo crea sus archivos de configuración y el contenido de ejemplo (razas, clases y trabajos), así que no hay nada que configurar para que cargue.",
+    lead: "Iniciá el servidor como lo haces siempre. En el primer arranque el núcleo crea sus archivos de configuración y el contenido de ejemplo (razas, clases y trabajos), así que no hay nada que configurar para que cargue.",
     checksLead: "Para confirmar que quedó activo, dos comprobaciones:",
     thCheck: "Comprobación",
     thExpect: "Qué deberías ver",
@@ -59,7 +59,7 @@ const es = {
 
   s4: {
     title: "Ajustá la configuración",
-    lead: "El núcleo genera tres archivos. Para una primera puesta en marcha solo vas a tocar el tercero, y solo si querés cambiar los valores por defecto:",
+    lead: "El núcleo genera tres archivos. Para una primera puesta en marcha solo vas a tocar el tercero, y solo si quieres cambiar los valores por defecto:",
     thFile: "Archivo",
     thControls: "Qué controla",
     configRow: "Idioma de los mensajes y modo debug.",
@@ -75,27 +75,27 @@ const es = {
   },
 
   s5: {
-    title: "Creá tu primer personaje",
+    title: "Crea tu primer personaje",
     lead: "Entrá al servidor como jugador. Este es el recorrido mínimo para comprobar que el ciclo completo funciona de punta a punta:",
     thCommand: "Comando",
     thDoes: "Qué hace",
-    create: "Abre la creación de personaje: elegís raza y clase.",
+    create: "Abre la creación de personaje: eliges raza y clase.",
     stats: "Tus seis atributos al estilo D&D.",
     mystats: "Vista detallada: puntos sin gastar, salud y maná, armadura, evasión y crítico.",
     skills: "Habilidades aprendidas, con su costo de maná y cooldown.",
-    adminLead1: "Para ver la progresión sin tener que farmear, usá los comandos de administrador —",
+    adminLead1: "Para ver la progresión sin tener que farmear, usa los comandos de administrador —",
     adminLead2: "sube experiencia y",
     adminLead3:
       "fuerza un intento de subida sobre vos mismo, que es la forma rápida de probar las recompensas de nivel. Con puntos disponibles, gastalos con",
-    calloutTitle: "Si llegaste hasta acá, está funcionando",
+    calloutTitle: "Si llegaste hasta aquí, está funcionando",
     calloutBody:
-      "Tenés un personaje con raza, clase, atributos asignables y un pool de salud y maná independiente de los corazones de Minecraft. El resto es contenido y addons.",
+      "Tienes un personaje con raza, clase, atributos asignables y un pool de salud y maná independiente de los corazones de Minecraft. El resto es contenido y addons.",
   },
 
   s6: {
     title: "Próximos pasos",
     lead: "Según lo que quieras hacer ahora:",
-    thWant: "Si querés…",
+    thWant: "Si quieres…",
     thGo: "Andá a",
     content: "Crear razas, clases, trabajos o habilidades propias",
     contentGo: "o el editor con GUI,",
@@ -133,8 +133,8 @@ const en: QuickStartCopy = {
   s2: {
     title: "Install the core",
     lead1: "The whole ecosystem installs by dropping jars into",
-    lead2: "Two are enough to start: RPGRoll-Lib, the shared library every module needs (free), and the core. Addons come later, and none of them are needed to start.",
-    libComment: "the shared library — every module asks for it",
+    lead2: "Two are enough to start: RPGRoll-Lib, the shared library every module except WorldForge needs (free), and the core. Addons come later, and none of them are needed to start.",
+    libComment: "the shared library — every module but WorldForge asks for it",
     comment: "the core — this is all you need for now",
     calloutTitle: "Start with the core alone",
     calloutBody:
@@ -227,8 +227,8 @@ const pt: QuickStartCopy = {
   s2: {
     title: "Instale o núcleo",
     lead1: "Todo o ecossistema se instala colocando jars em",
-    lead2: "Para começar bastam dois: o RPGRoll-Lib, a biblioteca compartilhada que todos os módulos precisam (grátis), e o núcleo. Os addons vêm depois, e nenhum é necessário para iniciar.",
-    libComment: "a biblioteca compartilhada — todos os módulos a pedem",
+    lead2: "Para começar bastam dois: o RPGRoll-Lib, a biblioteca compartilhada que todos os módulos exceto WorldForge precisam (grátis), e o núcleo. Os addons vêm depois, e nenhum é necessário para iniciar.",
+    libComment: "a biblioteca compartilhada — todos os módulos exceto WorldForge a pedem",
     comment: "o núcleo — isto é tudo o que você precisa por agora",
     calloutTitle: "Comece só com o núcleo",
     calloutBody:

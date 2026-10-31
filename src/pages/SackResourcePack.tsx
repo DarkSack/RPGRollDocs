@@ -347,7 +347,7 @@ export function SackResourcePack({
       <p>
         <code>http.public-url</code> (config) es la URL efectiva que se le manda
         al jugador, sea que la sirva el host embebido o un CDN/proxy externo
-        completamente distinto — dejalo vacío para usar el host embebido
+        completamente distinto — déjalo vacío para usar el host embebido
         directo, o completalo si tienes el pack hosteado en otro lado.
       </p>
 

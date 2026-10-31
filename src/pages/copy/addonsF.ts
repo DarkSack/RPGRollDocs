@@ -166,7 +166,7 @@ const es = {
 
     bTitle: "Constructor visual: Trap (campos simples)",
     bDesc:
-      "Trigger básico + metadata. actions/conditions/chain/block/disguise son demasiado anidados para este formulario — copia y adaptá uno de los 5 ejemplos incluidos.",
+      "Trigger básico + metadata. actions/conditions/chain/block/disguise son demasiado anidados para este formulario — copia y adapta uno de los 5 ejemplos incluidos.",
 
     fId: "Id",
     fDisplayName: "Nombre visible",
@@ -282,7 +282,7 @@ const es = {
 
     bTitle: "Constructor visual: profesión",
     bDesc:
-      "Identidad, horario y salario de una profesión. Las reglas de IA (ai-rules) son demasiado estructuradas para este formulario — copia y adaptá el ejemplo de arriba para esas.",
+      "Identidad, horario y salario de una profesión. Las reglas de IA (ai-rules) son demasiado estructuradas para este formulario — copia y adapta el ejemplo de arriba para esas.",
 
     skinsTitle: "Skins de jugador",
     skinsBody:

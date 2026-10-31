@@ -257,7 +257,7 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
       />
       <YamlBuilder
         title="Constructor visual: Structure (metadata)"
-        description="Identidad y fuente de una estructura. anchor/palette/layers (CUSTOM) son demasiado anidados para este formulario — copia y adaptá uno de los 4 ejemplos incluidos. Para NATIVE ni siquiera hace falta escribir YAML: usá /dungeonadmin structure import."
+        description="Identidad y fuente de una estructura. anchor/palette/layers (CUSTOM) son demasiado anidados para este formulario — copia y adapta uno de los 4 ejemplos incluidos. Para NATIVE ni siquiera hace falta escribir YAML: usa /dungeonadmin structure import."
         folder="structures"
         fields={structureFields}
       />
@@ -268,7 +268,7 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
         filename="dungeons/trial_of_ash.yml"
         code={
           "# Ejemplo mínimo: solo \"id\" es obligatorio, todo lo demás usa sus valores\n" +
-          "# por defecto salvo lo que se especifique acá.\n" +
+          "# por defecto salvo lo que se especifique aquí.\n" +
           "id: trial_of_ash\n" +
           "category: trial\n" +
           'display-name: "&6Prueba de Ceniza"\n' +
@@ -397,7 +397,7 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
 
       <YamlBuilder
         title="Constructor visual: Dungeon"
-        description="Identidad, límites de tiempo/jugadores, lobby y bounds. Rooms, waves, difficulties, checkpoints, revive, loot y triggers son demasiado anidados para un formulario lineal — el editor in-game los separa en pantallas propias (RoomsEditorGUI, WavesEditorGUI, DifficultiesEditorGUI...); acá lo más práctico es copiar y adaptar uno de los ejemplos de arriba."
+        description="Identidad, límites de tiempo/jugadores, lobby y bounds. Rooms, waves, difficulties, checkpoints, revive, loot y triggers son demasiado anidados para un formulario lineal — el editor in-game los separa en pantallas propias (RoomsEditorGUI, WavesEditorGUI, DifficultiesEditorGUI...); aquí lo más práctico es copiar y adaptar uno de los ejemplos de arriba."
         folder="dungeons"
         fields={dungeonFields}
       />

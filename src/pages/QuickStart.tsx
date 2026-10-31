@@ -17,7 +17,7 @@ import { pagePath } from "../content/seo";
  * duplicarlo.
  *
  * Es además la primera página traducida: el texto vive en copy/quickStart.ts
- * y acá solo queda la estructura. Ver ese archivo para el patrón.
+ * y aquí solo queda la estructura. Ver ese archivo para el patrón.
  */
 export function QuickStart({ onNavigate }: { onNavigate: (slug: string) => void }) {
   const { t, locale } = useI18n();

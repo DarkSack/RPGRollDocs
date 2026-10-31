@@ -582,7 +582,7 @@ export function Effects({
 
       <YamlBuilder
         title="Constructor visual: identidad del efecto"
-        description="Metadata, tags y conflictos. Conditions, components y stacking son demasiado variados para un formulario lineal — el editor in-game los separa en pantallas propias (EffectConditionsEditorGUI, EffectComponentsEditorGUI, EffectStackingEditorGUI); acá lo más práctico es copiar y adaptar uno de los ejemplos de arriba."
+        description="Metadata, tags y conflictos. Conditions, components y stacking son demasiado variados para un formulario lineal — el editor in-game los separa en pantallas propias (EffectConditionsEditorGUI, EffectComponentsEditorGUI, EffectStackingEditorGUI); aquí lo más práctico es copiar y adaptar uno de los ejemplos de arriba."
         folder="effects"
         fields={effectFields}
       />

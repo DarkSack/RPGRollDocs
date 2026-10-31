@@ -215,7 +215,7 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
 
       <YamlBuilder
         title="Constructor visual: Race Evolution"
-        description="Armá el YAML de una evolución de raza y descargalo en evolutions/<id>.yml. El árbol de talentos no aplica acá — es de Class Specialization."
+        description="Arma el YAML de una evolución de raza y descargalo en evolutions/<id>.yml. El árbol de talentos no aplica aquí — es de Class Specialization."
         folder="evolutions"
         fields={raceEvolutionFields}
       />
@@ -347,7 +347,7 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
 
       <YamlBuilder
         title="Constructor visual: Class Specialization"
-        description="Arma la identidad, requisitos, bono de stats, restricciones y equipo exclusivo. El árbol de talentos (talents:) es demasiado anidado para este formulario — copialo de un ejemplo de arriba y editalo a mano."
+        description="Arma la identidad, requisitos, bono de stats, restricciones y equipo exclusivo. El árbol de talentos (talents:) es demasiado anidado para este formulario — cópialo de un ejemplo de arriba y editalo a mano."
         folder="specializations"
         fields={classSpecializationFields}
       />
@@ -620,7 +620,7 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
         </Thead>
         <tbody>
           <Tr><Td className="font-mono text-xs">{"/ascend race <id>"}</Td><Td>Evoluciona tu raza si cumples los requisitos.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/ascend specialize <id>"}</Td><Td>Elegí una especialización de tu clase (borra talentos previos).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/ascend specialize <id>"}</Td><Td>Elige una especialización de tu clase (borra talentos previos).</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/ascend talent <id>"}</Td><Td>Desbloquea un nodo del árbol de talentos de tu especialización.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/ascend prestige</Td><Td>Reinicia tu nivel a cambio de bono de exp acumulativo.</Td></Tr>
           <Tr><Td className="font-mono text-xs">/ascend affinity</Td><Td>Lista tu experiencia y nivel en cada afinidad.</Td></Tr>

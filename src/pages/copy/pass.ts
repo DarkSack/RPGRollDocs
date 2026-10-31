@@ -31,7 +31,7 @@ const es = {
   rCommand: "Un comando de consola; {player} es el nombre del jugador y {uuid} su UUID.",
   rewardsWarnTitle: "Si falta el addon, la recompensa se salta",
   rewardsWarnBody:
-    "Una llave sin RPGRoll-Crates, un ítem sin RPGRoll-Items o dinero sin economía no rompen nada: esa recompensa no se entrega y la consola lo avisa. Revisá los logs después de cambiar las recompensas.",
+    "Una llave sin RPGRoll-Crates, un ítem sin RPGRoll-Items o dinero sin economía no rompen nada: esa recompensa no se entrega y la consola lo avisa. Revisa los logs después de cambiar las recompensas.",
 
   seasonTitle: "Temporadas",
   seasonBody:

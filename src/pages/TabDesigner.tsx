@@ -6,7 +6,7 @@ export function TabDesigner({ onNavigate }: { onNavigate: (slug: string) => void
   return (
     <>
       <PageHeader title="Diseñador de TAB" icon={TableListIcon} eyebrow="Herramienta">
-        Armá perfiles, contextos, scoreboards, tablists, nametags, belowname, bossbars, sorting, teams y
+        Arma perfiles, contextos, scoreboards, tablists, nametags, belowname, bossbars, sorting, teams y
         animaciones para{" "}
         <a href="/tab" className="underline">
           RPGRoll-TAB
@@ -16,7 +16,7 @@ export function TabDesigner({ onNavigate }: { onNavigate: (slug: string) => void
       </PageHeader>
 
       <Callout tone="info" title="100% en el navegador">
-        Esta herramienta corre entera acá en la página — no habla con ningún servidor. Lo que produce es texto
+        Esta herramienta corre entera aquí en la página — no habla con ningún servidor. Lo que produce es texto
         YAML: lo copias o descargas, y lo pegas en la carpeta correspondiente bajo{" "}
         <code>plugins/RPGRoll-TAB/tab/&lt;carpeta&gt;/</code> (ej. <code>profiles/</code>, <code>contexts/</code>,{" "}
         <code>scoreboards/</code>...). Es el mismo formato que ya leen los <code>*Parser.java</code> de cada tipo,
@@ -25,9 +25,9 @@ export function TabDesigner({ onNavigate }: { onNavigate: (slug: string) => void
 
       <SectionHeading id="como-usar">Cómo usarlo</SectionHeading>
       <ol>
-        <li>Elegí una pestaña arriba (Perfiles, Contextos, Scoreboards, Tablists...) — cada una es una carpeta distinta de contenido.</li>
+        <li>Elige una pestaña arriba (Perfiles, Contextos, Scoreboards, Tablists...) — cada una es una carpeta distinta de contenido.</li>
         <li>
-          Agregá una entrada nueva o elegí una de la lista de la izquierda. Los campos que referencian otro
+          Agrega una entrada nueva o elige una de la lista de la izquierda. Los campos que referencian otro
           contenido (ej. el <code>tablist</code> de un Perfil) tienen autocompletado con los ids que ya creaste en
           esa pestaña.
         </li>

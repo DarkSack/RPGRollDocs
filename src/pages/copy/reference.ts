@@ -52,12 +52,12 @@ const es = {
     causes: "Causas posibles",
     fix: "Solución",
     see: "Ver",
-    consoleTitle: "Antes que nada, mirá la consola del arranque",
+    consoleTitle: "Antes que nada, mira la consola del arranque",
     consoleBody:
       "Cuando falta una dependencia dura, Bukkit nombra exactamente cuál al cargar los plugins. Eso resuelve la mayoría de los casos de “el addon no aparece” sin tener que revisar configuración.",
     behavioursTitle: "Comportamientos documentados",
     behavioursLead:
-      "No son fallas: son decisiones de diseño o limitaciones conocidas que ya están explicadas en la página de cada sistema, reunidas acá para poder revisarlas de una. Cada una enlaza a su página de origen.",
+      "No son fallas: son decisiones de diseño o limitaciones conocidas que ya están explicadas en la página de cada sistema, reunidas aquí para poder revisarlas de una. Cada una enlaza a su página de origen.",
     filter: "Filtrar",
     all: "Todos",
   },

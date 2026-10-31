@@ -26,7 +26,7 @@ const es = {
 
   installTitle: "Qué se instala",
   installLead:
-    "Todo se instala dejando jars en {dir}. {lib} es obligatorio para todos los módulos: es la librería compartida, gratis y sin licencia. El núcleo aporta los personajes y solo es obligatorio para Ascension y Magic; el resto de addons funciona con o sin él. Cada addon es independiente y opcional.",
+    "Todo se instala dejando jars en {dir}. {lib} es obligatorio para todos los módulos salvo WorldForge: es la librería compartida, gratis y sin licencia. El núcleo aporta los personajes y solo es obligatorio para Ascension y Magic; el resto de addons funciona con o sin él. Cada addon es independiente y opcional.",
   cLib: "librería compartida — obligatoria",
   cCore: "núcleo — personajes; obligatorio para Ascension y Magic",
   cAddons: "addons — cualquier combinación",
@@ -76,7 +76,7 @@ const en: RequirementsCopy = {
 
   installTitle: "What gets installed",
   installLead:
-    "Everything installs by dropping jars into {dir}. {lib} is mandatory for every module: it is the shared library, free and unlicensed. The core provides characters and is only mandatory for Ascension and Magic; the other addons work with or without it. Every addon is independent and optional.",
+    "Everything installs by dropping jars into {dir}. {lib} is mandatory for every module except WorldForge: it is the shared library, free and unlicensed. The core provides characters and is only mandatory for Ascension and Magic; the other addons work with or without it. Every addon is independent and optional.",
   cLib: "shared library — mandatory",
   cCore: "core — characters; mandatory for Ascension and Magic",
   cAddons: "addons — any combination",
@@ -124,7 +124,7 @@ const pt: RequirementsCopy = {
 
   installTitle: "O que se instala",
   installLead:
-    "Tudo se instala colocando jars em {dir}. {lib} é obrigatório para todos os módulos: é a biblioteca compartilhada, grátis e sem licença. O núcleo fornece os personagens e só é obrigatório para Ascension e Magic; os demais addons funcionam com ou sem ele. Cada addon é independente e opcional.",
+    "Tudo se instala colocando jars em {dir}. {lib} é obrigatório para todos os módulos exceto WorldForge: é a biblioteca compartilhada, grátis e sem licença. O núcleo fornece os personagens e só é obrigatório para Ascension e Magic; os demais addons funcionam com ou sem ele. Cada addon é independente e opcional.",
   cLib: "biblioteca compartilhada — obrigatória",
   cCore: "núcleo — personagens; obrigatório para Ascension e Magic",
   cAddons: "addons — qualquer combinação",

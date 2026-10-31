@@ -39,7 +39,7 @@ const es = {
 
     builderTitle: "Constructor visual: Crate",
     builderDesc:
-      "Identidad, llave y holograma. Las recompensas (rewards) son una lista de objetos con sus propias acciones — copia y adaptá las de un ejemplo de arriba, o usá /crate browser para agregarlas de a una.",
+      "Identidad, llave y holograma. Las recompensas (rewards) son una lista de objetos con sus propias acciones — copia y adapta las de un ejemplo de arriba, o usa /crate browser para agregarlas de a una.",
     fId: "Id",
     fDisplayName: "Nombre visible",
     fGuiTitle: "Título de la ruleta",

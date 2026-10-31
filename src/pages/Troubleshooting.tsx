@@ -24,7 +24,7 @@ import { pagePath } from "../content/seo";
  *   las páginas. Son comportamientos reales que sorprenden, no errores.
  *
  * No hay logs simulados ni mensajes de error inventados: si el repo no
- * documenta el texto exacto que imprime el plugin, acá no aparece.
+ * documenta el texto exacto que imprime el plugin, aquí no aparece.
  */
 export function Troubleshooting({ onNavigate }: { onNavigate: (slug: string) => void }) {
   const { locale } = useI18n();

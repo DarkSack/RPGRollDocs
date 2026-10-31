@@ -28,7 +28,7 @@ const es = {
     thFile: "Archivo",
     thWhat: "Qué hace",
     tipBody:
-      "Para agregar tu propia migración: creá {file} en {dir}, y registrala en {call} con {register}. Las migraciones se ejecutan en orden y nunca se re-corren una vez aplicadas.",
+      "Para agregar tu propia migración: crea {file} en {dir}, y registrala en {call} con {register}. Las migraciones se ejecutan en orden y nunca se re-corren una vez aplicadas.",
     schemaTitle: "Esquema actual (tablas principales)",
     connTitle: "Configuración de conexión",
     connBody: "Ver {file} en",

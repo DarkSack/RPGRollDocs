@@ -338,7 +338,7 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
           "});\n" +
           "\n" +
           "// Pensado en primer lugar para un futuro objetivo de RPGRoll-Quests\n" +
-          "// (\"contratá 5 trabajadores\") — la consulta ya funciona, solo falta\n" +
+          "// (\"contrata 5 trabajadores\") — la consulta ya funciona, solo falta\n" +
           "// que Quests defina el tipo de objetivo que la llame.\n" +
           "List<Worker> misWorkers = WorkersAPI.get().getEmployedWorkers(player.getUniqueId());\n"
         }

@@ -27,7 +27,7 @@ const es = {
 
     bStat: "Constructor visual: stat",
     bStatDesc:
-      "Identidad y límites de un stat. decay/regeneration/consumption/thresholds son demasiado anidados para este formulario — copia y adaptá el ejemplo de arriba para esos bloques.",
+      "Identidad y límites de un stat. decay/regeneration/consumption/thresholds son demasiado anidados para este formulario — copia y adapta el ejemplo de arriba para esos bloques.",
     sfId: "Id",
     sfEnabled: "Habilitado",
     sfMax: "Máximo",
@@ -74,7 +74,7 @@ const es = {
 
     consumeTitle: "Consumption hooks",
     consumeBody:
-      "Sprint (al empezar a correr, no continuo), salto, ataque y minado se detectan automáticamente vía eventos vanilla. Pesca, farming y habilidades de otros addons NO se detectan acá a propósito — le corresponde a cada addon reportar su propia acción llamando a {call} (o el nombre de acción que corresponda), la misma superficie pública que usa el hook interno de minado.",
+      "Sprint (al empezar a correr, no continuo), salto, ataque y minado se detectan automáticamente vía eventos vanilla. Pesca, farming y habilidades de otros addons NO se detectan aquí a propósito — le corresponde a cada addon reportar su propia acción llamando a {call} (o el nombre de acción que corresponda), la misma superficie pública que usa el hook interno de minado.",
 
     condTitle: "Conditions: estados custom",
     condBody1:
@@ -83,7 +83,7 @@ const es = {
       "— se mantiene como un motor de estados simple y standalone en vez de acoplarse al sistema de efectos completo (stacking, inmunidades, componentes de aura...), que resuelve un problema más grande del que Extras necesita.",
     bCondition: "Constructor visual: condition",
     bConditionDesc:
-      "Duración, daño y potion effects de un estado. on-apply/on-tick/on-expire (acciones) son demasiado anidados para este formulario — copia y adaptá el ejemplo de arriba.",
+      "Duración, daño y potion effects de un estado. on-apply/on-tick/on-expire (acciones) son demasiado anidados para este formulario — copia y adapta el ejemplo de arriba.",
     cfDuration: "Duración en ticks (-1 = indefinida)",
     cfDamage: "Daño periódico",
     cfInterval: "Intervalo en ticks",
@@ -101,11 +101,11 @@ const es = {
 
     modTitle: "Modificadores desde raza/clase/job",
     modBody:
-      "Un {set} (id + tipo RACE/CLASS/JOB + mapa de valores) aporta bonos a los sistemas de Extras sin que RPGRoll-Core sepa que este addon existe: {resolver} lee la raza/clase/jobs ACTIVOS del jugador vía la API pública de Core y busca acá un set con ese mismo id. Las claves {keys} son multiplicadores — {strong}, así que un valor de {v1} da 130% y un valor de {v2} da 80%. Cualquier otra clave es un bono aditivo simple, a interpretar por quien la lea (hoy, ningún sistema además de stats consume claves arbitrarias).",
+      "Un {set} (id + tipo RACE/CLASS/JOB + mapa de valores) aporta bonos a los sistemas de Extras sin que RPGRoll-Core sepa que este addon existe: {resolver} lee la raza/clase/jobs ACTIVOS del jugador vía la API pública de Core y busca aquí un set con ese mismo id. Las claves {keys} son multiplicadores — {strong}, así que un valor de {v1} da 130% y un valor de {v2} da 80%. Cualquier otra clave es un bono aditivo simple, a interpretar por quien la lea (hoy, ningún sistema además de stats consume claves arbitrarias).",
     modStrong: "el motor calcula {formula}",
     bModifier: "Constructor visual: modifier",
     bModifierDesc:
-      "Id y tipo de fuente. Las claves de 'values' (ej. stamina_max, thirst_rate) son libres — copia y adaptá el ejemplo de arriba.",
+      "Id y tipo de fuente. Las claves de 'values' (ej. stamina_max, thirst_rate) son libres — copia y adapta el ejemplo de arriba.",
     mfId: "Id (debe coincidir con el id en RPGRoll-Core)",
     mfType: "Tipo",
 
@@ -238,7 +238,7 @@ const es = {
 
     bSpecies: "Constructor visual: especie de pez",
     bSpeciesDesc:
-      "Identidad, clasificación y condiciones básicas de captura. Campos de listas van separados por comas; dejalos vacíos para 'sin restricción'.",
+      "Identidad, clasificación y condiciones básicas de captura. Campos de listas van separados por comas; déjalos vacíos para 'sin restricción'.",
     bRod: "Constructor visual: caña de pescar",
     fId: "Id",
     fDisplayName: "Nombre visible",

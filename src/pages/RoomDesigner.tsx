@@ -15,7 +15,7 @@ export function RoomDesigner({ onNavigate }: { onNavigate: (slug: string) => voi
       </PageHeader>
 
       <Callout tone="info" title="100% en el navegador">
-        Esta herramienta corre entera acá en la página — no habla con ningún servidor. Lo que produce es texto
+        Esta herramienta corre entera aquí en la página — no habla con ningún servidor. Lo que produce es texto
         YAML: lo copias o descargas, y lo pegas en <code>plugins/RPGRoll-Dungeons/structures/</code> en tu
         servidor. Es el mismo formato CUSTOM que ya lee <code>StructureParser.java</code>, así que no hace falta
         cambiar nada del lado del plugin.
@@ -24,19 +24,19 @@ export function RoomDesigner({ onNavigate }: { onNavigate: (slug: string) => voi
       <SectionHeading id="como-usar">Cómo usarlo</SectionHeading>
       <ol>
         <li>
-          Elegí el tamaño (ancho/alto/profundidad) — puedes cambiarlo después, se preserva lo que ya pintaste
+          Elige el tamaño (ancho/alto/profundidad) — puedes cambiarlo después, se preserva lo que ya pintaste
           donde entra.
         </li>
         <li>
-          Agregá materiales a la paleta (con el buscador curado o escribiendo cualquier Material a mano) y
-          elegí uno como pincel activo.
+          Agrega materiales a la paleta (con el buscador curado o escribiendo cualquier Material a mano) y
+          elige uno como pincel activo.
         </li>
         <li>
           Pintá capa por capa: subes/bajas con las flechas, click y arrastras para pintar varias celdas de una.
           El piso es la capa y=0.
         </li>
         <li>
-          Marcá el punto de pegado ("Fijar ancla") — normalmente el centro del piso, así al pegar en el juego te
+          Marca el punto de pegado ("Fijar ancla") — normalmente el centro del piso, así al pegar en el juego te
           paras donde quieres el centro de la sala.
         </li>
         <li>Mira el resultado en 3D (arrastrar rota, la rueda hace zoom) y copia o descargá el YAML de abajo.</li>
@@ -60,7 +60,7 @@ export function RoomDesigner({ onNavigate }: { onNavigate: (slug: string) => voi
           Pegar una estructura
         </a>{" "}
         de la documentación de Dungeons para el detalle completo (incluye la alternativa con Structure Block
-        vanilla, para construir a mano en el juego en vez de acá).
+        vanilla, para construir a mano en el juego en vez de aquí).
       </p>
 
       <PrevNext current="room-designer" onNavigate={onNavigate} />

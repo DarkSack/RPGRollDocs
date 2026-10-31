@@ -5,7 +5,7 @@ import { DEV_COPY } from "./copy/developers";
 
 const CAVEAT_TITLE = "get() lanza una excepción si RPGRoll no está listo";
 const CAVEAT_BODY =
-  "RPGRollAPI.get() lanza IllegalStateException si se llama antes de que RPGRoll termine de arrancar. Si tu addon quiere integrarse de forma opcional (sin depend obligatorio), usá RPGRollAPI.isReady() para chequear en runtime antes de llamar a get().";
+  "RPGRollAPI.get() lanza IllegalStateException si se llama antes de que RPGRoll termine de arrancar. Si tu addon quiere integrarse de forma opcional (sin depend obligatorio), usa RPGRollAPI.isReady() para chequear en runtime antes de llamar a get().";
 
 export function Api({ onNavigate }: { onNavigate: (slug: string) => void }) {
   const { locale } = useI18n();

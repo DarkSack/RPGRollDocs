@@ -654,7 +654,7 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
 
       <YamlBuilder
         title="Constructor visual: Item"
-        description="Identidad, lore, rareza, stats/atributos, requisitos, durabilidad y economía. Encantamientos, triggers, abilities, sockets, skins, upgrades y recipes son demasiado anidados para este formulario — usá /itemadmin editor o copia uno de los ejemplos de arriba."
+        description="Identidad, lore, rareza, stats/atributos, requisitos, durabilidad y economía. Encantamientos, triggers, abilities, sockets, skins, upgrades y recipes son demasiado anidados para este formulario — usa /itemadmin editor o copia uno de los ejemplos de arriba."
         folder="items"
         fields={itemFields}
       />

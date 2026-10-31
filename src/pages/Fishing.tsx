@@ -486,7 +486,7 @@ export function Fishing({
         filename="OtroAddon.java"
         code={
           "// Pensado en primer lugar para un futuro RPGRoll-Quests objective\n" +
-          '// ("capturá 15 peces legendarios") o RPGRoll-Cooking.\n' +
+          '// ("captura 15 peces legendarios") o RPGRoll-Cooking.\n' +
           'boolean yaLoConoce = FishingAPI.get().hasCaught(player, "leviathan");\n' +
           'int vecesCapturado = FishingAPI.get().getCaughtCount(player, "river_trout");\n' +
           "\n" +

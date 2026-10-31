@@ -635,7 +635,7 @@ export function Crafting({
             <Td>Mesa de Cartografía</Td>
             <Td className="font-mono text-xs">CartographyEngine</Td>
             <Td>
-              Bukkit no tiene evento "prepare" acá — Paper sí,{" "}
+              Bukkit no tiene evento "prepare" aquí — Paper sí,{" "}
               <code>CartographyItemEvent</code> —{" "}
               <code>CartographyRecipeDefinition</code>.
             </Td>
