@@ -14,206 +14,230 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { ENCHANTMENTS_COPY, type EnchantmentsCopy } from "./copy/enchantments";
 
-const enchantmentFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_encantamiento", placeholder: "frost" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&bFrost" },
+const enchantmentFields = (c: EnchantmentsCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: "nuevo_encantamiento", placeholder: "frost" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&bFrost" },
   {
     key: "rarity",
-    label: "Rareza",
+    label: c.fRarity,
     type: "select",
     options: ["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY", "MYTHIC", "DIVINE"],
   },
-  { key: "max-level", label: "Nivel máximo", type: "number", default: "1" },
+  { key: "max-level", label: c.fMaxLevel, type: "number", default: "1" },
   {
     key: "categories",
-    label: "Categorías permitidas",
+    label: c.fCategories,
     type: "list",
     placeholder: "ARMOR, WEAPON, TOOLS, BOW",
   },
-  { key: "trigger", label: "Triggers", type: "list", placeholder: "ENTITY_DAMAGE, PLAYER_ATTACK" },
-  { key: "conditions", label: "Condiciones", type: "list", placeholder: "player.health < 10" },
-  { key: "conflicts", label: "Conflictos (ids)", type: "list", placeholder: "thunder" },
-  { key: "chance", label: "Probabilidad", type: "string", placeholder: "100% (opcional, ej. 15%)" },
+  { key: "trigger", label: c.fTrigger, type: "list", placeholder: "ENTITY_DAMAGE, PLAYER_ATTACK" },
+  { key: "conditions", label: c.fConditions, type: "list", placeholder: "player.health < 10" },
+  { key: "conflicts", label: c.fConflicts, type: "list", placeholder: "thunder" },
+  { key: "chance", label: c.fChance, type: "string", placeholder: c.fChancePh },
 ];
 
 export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ENCHANTMENTS_COPY[locale];
+
   return (
     <>
-      <PageHeader title="Encantamientos (RPGRoll-Enchantments)">
-        Sistema de encantamientos 100% personalizado — no son <code>org.bukkit.enchantments.Enchantment</code>{" "}
-        reales, sino datos propios guardados en el PDC del ítem, con triggers, condiciones y efectos configurables
-        en YAML.
+      <PageHeader title={c.title}>
+        {fill(c.intro, { ench: <code>org.bukkit.enchantments.Enchantment</code> })}
       </PageHeader>
 
-      <Callout tone="warning" title="No pasa por la mesa de encantar, el yunque, ni el grindstone">
-        No hay ningún listener para <code>PrepareItemEnchantEvent</code>, <code>EnchantItemEvent</code> ni{" "}
-        <code>PrepareAnvilEvent</code>. Un encantamiento propio solo se aplica de dos formas: con{" "}
-        <Kbd>/renchant apply|give</Kbd>, o programáticamente desde otro addon (así lo hace RPGRoll-Items).
+      <Callout tone="warning" title={c.noVanillaTitle}>
+        {fill(c.noVanillaBody, {
+          events: (
+            <>
+              <code>PrepareItemEnchantEvent</code>, <code>EnchantItemEvent</code> &amp;{" "}
+              <code>PrepareAnvilEvent</code>
+            </>
+          ),
+          cmd: <Kbd>/renchant apply|give</Kbd>,
+        })}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, PlaceholderAPI]"} />
       <p>
-        La relación con RPGRoll-Items es al revés: es <strong>Items</strong> quien opcionalmente depende de este
-        addon (<code>softdepend: [RPGRoll-Enchantments, Vault]</code> en su <code>plugin.yml</code>), nunca al
-        contrario — Encantamientos no sabe que Items existe.
+        {fill(c.reqBody, {
+          items: <strong>{c.itemsWord}</strong>,
+          soft: <code>softdepend: [RPGRoll-Enchantments, Vault]</code>,
+          pluginYml: <code>plugin.yml</code>,
+        })}
       </p>
 
-      <SectionHeading id="modelo">Cómo se guarda un encantamiento en el ítem</SectionHeading>
+      <SectionHeading id="modelo">{c.modelTitle}</SectionHeading>
       <p>
-        <code>EnchantmentItem</code> escribe los datos directamente en el <code>PersistentDataContainer</code> del{" "}
-        <code>ItemStack</code>, bajo una clave propia (<code>id:nivel</code> separados por <code>;</code> para
-        varios encantamientos en el mismo ítem) más un contador de cuántas líneas de lore ocupa el bloque de
-        encantamientos — así puede reescribirlo sin pisar lore agregado por otro sistema (RPGRoll-Items, una
-        crate, etc).
+        {fill(c.modelBody, {
+          enchItem: <code>EnchantmentItem</code>,
+          pdc: <code>PersistentDataContainer</code>,
+          stack: <code>ItemStack</code>,
+          key: <code>id:nivel</code>,
+          sep: <code>;</code>,
+        })}
       </p>
 
-      <SectionHeading id="categorias">Categorías y restricción de ítem</SectionHeading>
+      <SectionHeading id="categorias">{c.catTitle}</SectionHeading>
       <p>
-        Cada definición puede restringir en qué ítems es válida vía <code>categories</code> (una o más de{" "}
-        <code>WEAPON, ARMOR, HELMET, CHESTPLATE, LEGGINGS, BOOTS, TOOLS, BOW, CROSSBOW, TRIDENT, FISHING_ROD, SWORD, PICKAXE, AXE, SHOVEL, HOE, SHIELD, ANY</code>
-        , cada una con su propia lógica de qué <code>Material</code> matchea) o, si necesitas algo más específico,
-        una lista explícita de <code>allowed-items</code> que tiene prioridad sobre las categorías.
+        {fill(c.catBody, {
+          categories: <code>categories</code>,
+          list: (
+            <code>
+              WEAPON, ARMOR, HELMET, CHESTPLATE, LEGGINGS, BOOTS, TOOLS, BOW, CROSSBOW, TRIDENT,
+              FISHING_ROD, SWORD, PICKAXE, AXE, SHOVEL, HOE, SHIELD, ANY
+            </code>
+          ),
+          material: <code>Material</code>,
+          allowed: <code>allowed-items</code>,
+        })}
       </p>
 
-      <SectionHeading id="niveles">Niveles: tabla de overrides, no fórmula</SectionHeading>
+      <SectionHeading id="niveles">{c.levelsTitle}</SectionHeading>
       <p>
-        No hay ninguna fórmula de escalado — cada nivel define su propio bloque <code>levels: &lt;n&gt;:</code>{" "}
-        con pares <code>clave: número</code> libres, y los efectos referencian esos valores con{" "}
-        <code>{"\"{clave}\""}</code>. Si un nivel no tiene bloque propio, cada placeholder cae a su valor por
-        defecto hardcodeado en el efecto (no hay interpolación entre niveles vecinos).
+        {fill(c.levelsBody, {
+          block: <code>levels: &lt;n&gt;:</code>,
+          pairs: <code>clave: número</code>,
+          ph: <code>{'"{clave}"'}</code>,
+        })}
       </p>
 
-      <SectionHeading id="triggers">Triggers</SectionHeading>
-      <p>Fijos en un enum — no hay forma de sumar triggers custom sin tocar el código del addon:</p>
+      <SectionHeading id="triggers">{c.triggersTitle}</SectionHeading>
+      <p>{c.triggersIntro}</p>
       <Table>
         <Thead>
-          <Th>Trigger</Th>
-          <Th>Evento de Bukkit/Paper</Th>
+          <Th>{c.thTrigger}</Th>
+          <Th>{c.thEvent}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">PLAYER_ATTACK</Td><Td>EntityDamageByEntityEvent (el jugador es quien pega)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ENTITY_DAMAGE</Td><Td>EntityDamageEvent (el jugador es quien recibe)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">BLOCK_BREAK</Td><Td>BlockBreakEvent</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PLAYER_JUMP</Td><Td>PlayerJumpEvent (Paper)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PLAYER_MOVE</Td><Td>PlayerMoveEvent, filtrado a cambios de bloque real (ignora solo mirar alrededor)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PLAYER_DEATH</Td><Td>PlayerDeathEvent (objetivo = quien mató)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ENTITY_KILL</Td><Td>EntityDeathEvent, si el asesino es un jugador</Td></Tr>
-          <Tr><Td className="font-mono text-xs">BLOCK_INTERACT</Td><Td>PlayerInteractEvent: clic derecho a un bloque con la mano principal</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SHIELD_BLOCK</Td><Td>EntityDamageEvent cuando el escudo del jugador para el golpe (objetivo = el atacante, o quien disparó el proyectil)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SHIELD_DISABLE</Td><Td>PlayerShieldDisableEvent (Paper): un hacha le desactiva el escudo</Td></Tr>
-          <Tr><Td className="font-mono text-xs">EXP_PICKUP</Td><Td>PlayerExpChangeEvent al recoger experiencia (lo que sobra tras la Reparación vanilla)</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PLAYER_ATTACK</Td><Td>{c.ePlayerAttack}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">ENTITY_DAMAGE</Td><Td>{c.eEntityDamage}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">BLOCK_BREAK</Td><Td>{c.eBlockBreak}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PLAYER_JUMP</Td><Td>{c.ePlayerJump}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PLAYER_MOVE</Td><Td>{c.ePlayerMove}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PLAYER_DEATH</Td><Td>{c.ePlayerDeath}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">ENTITY_KILL</Td><Td>{c.eEntityKill}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">BLOCK_INTERACT</Td><Td>{c.eBlockInteract}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SHIELD_BLOCK</Td><Td>{c.eShieldBlock}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SHIELD_DISABLE</Td><Td>{c.eShieldDisable}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">EXP_PICKUP</Td><Td>{c.eExpPickup}</Td></Tr>
         </tbody>
       </Table>
       <p>
-        En cada uno de estos eventos, el addon revisa mano principal, offhand, casco, pechera, piernas y botas del
-        jugador en busca de encantamientos propios, y por cada uno: tira <code>chance</code>, evalúa{" "}
-        <code>conditions</code>, y si todo pasa ejecuta sus <code>effects</code>. Los efectos reciben además el
-        evento, el ítem encantado y su ranura: los de herramienta solo actúan si el ítem está en la mano principal.
+        {fill(c.scanBody, {
+          chance: <code>chance</code>,
+          conditions: <code>conditions</code>,
+          effects: <code>effects</code>,
+        })}
       </p>
 
-      <SectionHeading id="condiciones">Condiciones</SectionHeading>
+      <SectionHeading id="condiciones">{c.condTitle}</SectionHeading>
       <p>
-        No es un lenguaje de expresiones completo — solo dos formas soportadas: una llamada a función (en la
-        práctica, solo existe <code>player.hasPermission(perm)</code>), o una comparación{" "}
-        <code>izquierda operador derecha</code> contra una tabla fija de variables:
+        {fill(c.condBody, {
+          fn: <code>player.hasPermission(perm)</code>,
+          cmp: <code>izquierda operador derecha</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Variable</Th>
-          <Th>Tipo</Th>
+          <Th>{c.thVariable}</Th>
+          <Th>{c.thType}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">player.health</Td><Td>número</Td></Tr>
-          <Tr><Td className="font-mono text-xs">player.level</Td><Td>número (nivel de RPGRoll, igual que en Quests e Items)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">player.xplevel</Td><Td>número (nivel de XP vanilla)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">player.foodlevel</Td><Td>número</Td></Tr>
-          <Tr><Td className="font-mono text-xs">player.sneaking</Td><Td>texto (true / false)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">player.shieldticks</Td><Td>número: ticks que lleva el escudo levantado (sin escudo, la condición falla)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">world</Td><Td>texto (nombre del mundo)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">weather</Td><Td>texto (STORM / RAIN / CLEAR)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">target.type</Td><Td>texto (tipo de entidad del objetivo)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">target.health</Td><Td>número</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.health</Td><Td>{c.tNumber}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.level</Td><Td>{c.tLevel}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.xplevel</Td><Td>{c.tXpLevel}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.foodlevel</Td><Td>{c.tNumber}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.sneaking</Td><Td>{c.tSneaking}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.shieldticks</Td><Td>{c.tShieldTicks}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">world</Td><Td>{c.tWorld}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">weather</Td><Td>{c.tWeather}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">target.type</Td><Td>{c.tTargetType}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">target.health</Td><Td>{c.tNumber}</Td></Tr>
         </tbody>
       </Table>
       <p>
-        Comparaciones numéricas admiten <code>{"== != < <= > >="}</code>; las de texto solo{" "}
-        <code>{"== !="}</code> (sin distinguir mayúsculas). Todas las condiciones de la lista se combinan con Y
-        (todas deben cumplirse) — una lista vacía siempre pasa, y cualquier variable no reconocida hace fallar la
-        condición en silencio (sin log de error).
+        {fill(c.cmpBody, {
+          num: <code>{"== != < <= > >="}</code>,
+          txt: <code>{"== !="}</code>,
+        })}
       </p>
 
-      <SectionHeading id="efectos">Efectos</SectionHeading>
+      <SectionHeading id="efectos">{c.effectsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">DAMAGE</Td><Td>Daña al objetivo (no hace nada sin objetivo).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">HEAL</Td><Td>Cura al jugador, sin pasar su vida máxima.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">LIGHTNING</Td><Td>Rayo real (daña) o solo visual, según <code>damage</code>.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">POTION</Td><Td>Aplica un efecto de poción al jugador o al objetivo (<code>apply-to</code>), con duración/amplificador por nivel.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">FIRE</Td><Td>Prende fuego al jugador o al objetivo por N ticks.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">EXPLOSION</Td><Td>Explosión con potencia configurable (nunca rompe bloques con fuego).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TELEPORT</Td><Td>Al objetivo, o al spawn del mundo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">COMMAND</Td><Td>Ejecutado como consola — soporta <code>{"{player}"}</code>/<code>{"{target}"}</code>.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">MESSAGE</Td><Td>Mensaje al jugador con color legacy (<code>&amp;</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PARTICLE</Td><Td>Partícula en la ubicación del objetivo o del jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SOUND</Td><Td>Sonido reproducido al jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PICKUP_ITEMS</Td><Td>Absorbe ítems dropeados en un radio cúbico hacia el inventario del jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PARTICLES</Td><Td>Efecto completo de RPGRoll-FX por id (<code>effect-id</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">VEIN_MINE</Td><Td>Rompe la veta entera de la mena golpeada, hasta <code>max</code> bloques (también las menas de RPGRoll-Items).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TREE_FELL</Td><Td>Tala los troncos conectados hacia arriba (<code>max</code>) y, con <code>leaves: true</code>, deshace sus hojas. Solo si el tronco toca hojas naturales: no se come casas de madera.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">AREA_MINE</Td><Td>Martillo: rompe un cuadrado de lado <code>2·radius+1</code> de cara al jugador. Nada más duro que lo golpeado ni bloques con contenido.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">AUTO_SMELT</Td><Td>Lo que suelta el bloque sale fundido (recetas de horno del servidor) con su experiencia. Respeta Fortuna. Un ítem propio solo se funde con una receta exacta para él.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TILL_AREA</Td><Td>Con BLOCK_INTERACT labra un cuadrado de <code>radius</code>; con BLOCK_BREAK sobre un cultivo maduro cosecha los de alrededor y, con <code>replant: true</code>, replanta con semillas del inventario o de lo que cayó.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">REPAIR</Td><Td>Con EXP_PICKUP: repara <code>ratio</code> de durabilidad por punto de experiencia y gasta solo lo usado; <code>equipment: 1</code> reparte por todo el equipo puesto.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">DAMAGE_BONUS</Td><Td>Suma <code>amount</code> (y multiplica por <code>multiplier</code>) el daño del golpe, escalado por la carga del ataque.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">KNOCKBACK</Td><Td>Empuja al objetivo lejos del jugador (<code>strength</code>, <code>vertical</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">REFLECT</Td><Td>Con SHIELD_BLOCK: devuelve flechas y bolas de fuego a quien las disparó, con el mismo daño (<code>chance</code> en %, <code>speed</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SHIELD_COOLDOWN</Td><Td>Con SHIELD_DISABLE: multiplica el tiempo que el hacha deja el escudo desactivado por <code>factor</code>; 0 lo evita.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">DAMAGE</Td><Td>{c.fDamage}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">HEAL</Td><Td>{c.fHeal}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">LIGHTNING</Td><Td>{fill(c.fLightning, { damage: <code>damage</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">POTION</Td><Td>{fill(c.fPotion, { applyTo: <code>apply-to</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">FIRE</Td><Td>{c.fFire}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">EXPLOSION</Td><Td>{c.fExplosion}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TELEPORT</Td><Td>{c.fTeleport}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">COMMAND</Td><Td>{fill(c.fCommand, { ph: <><code>{"{player}"}</code>/<code>{"{target}"}</code></> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">MESSAGE</Td><Td>{fill(c.fMessage, { amp: <code>&amp;</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PARTICLE</Td><Td>{c.fParticle}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SOUND</Td><Td>{c.fSound}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PICKUP_ITEMS</Td><Td>{c.fPickupItems}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PARTICLES</Td><Td>{fill(c.fParticles, { effectId: <code>effect-id</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">VEIN_MINE</Td><Td>{fill(c.fVeinMine, { max: <code>max</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TREE_FELL</Td><Td>{fill(c.fTreeFell, { max: <code>max</code>, leaves: <code>leaves: true</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">AREA_MINE</Td><Td>{fill(c.fAreaMine, { side: <code>2·radius+1</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">AUTO_SMELT</Td><Td>{c.fAutoSmelt}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TILL_AREA</Td><Td>{fill(c.fTillArea, { radius: <code>radius</code>, replant: <code>replant: true</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">REPAIR</Td><Td>{fill(c.fRepair, { ratio: <code>ratio</code>, equipment: <code>equipment: 1</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">DAMAGE_BONUS</Td><Td>{fill(c.fDamageBonus, { amount: <code>amount</code>, multiplier: <code>multiplier</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">KNOCKBACK</Td><Td>{fill(c.fKnockback, { params: <><code>strength</code>, <code>vertical</code></> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">REFLECT</Td><Td>{fill(c.fReflect, { chance: <code>chance</code>, speed: <code>speed</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SHIELD_COOLDOWN</Td><Td>{fill(c.fShieldCooldown, { factor: <code>factor</code> })}</Td></Tr>
         </tbody>
       </Table>
+      <p>{c.breakBody}</p>
       <p>
-        Los efectos que rompen varios bloques lo hacen como si los rompiera el jugador, uno a uno: cada bloque lanza
-        su BlockBreakEvent, así que lo respetan GriefPrevention y WorldGuard, lo registra CoreProtect, gasta la
-        herramienta (nunca hasta romperla: siempre le deja 2 usos) y aplica Fortuna.
-      </p>
-      <p>
-        Los parámetros numéricos aceptan tanto un número literal como <code>{"\"{clave}\""}</code> para leerlo del
-        bloque <code>levels</code> del nivel actual.
+        {fill(c.paramsBody, { ph: <code>{'"{clave}"'}</code>, levels: <code>levels</code> })}
       </p>
 
-      <SectionHeading id="incluidos">Encantamientos incluidos</SectionHeading>
+      <SectionHeading id="incluidos">{c.includedTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Id</Th>
-          <Th>Para</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thId}</Th>
+          <Th>{c.thFor}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">veinminer</Td><Td>pico</Td><Td>Minero de vetas I–III (12/24/48 bloques). Agachado no se activa.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">timber</Td><Td>hacha</Td><Td>Leñador I–III (24/64/160 troncos), deshace las hojas. Agachado no se activa.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">autosmelt</Td><Td>pico, hacha, pala</Td><Td>Autofundición.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">hammer</Td><Td>pico, pala</Td><Td>Martillo I–II (3x3 y 5x5). Choca con el minero de vetas.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">tiller</Td><Td>azada</Td><Td>Azada amplia I–II (3x3 y 5x5): labra, cosecha y replanta.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">advanced_mending</Td><Td>cualquiera</Td><Td>Reparación avanzada I–III (3, 4 y 4 de durabilidad por punto; el III repara todo el equipo).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">advanced_sharpness</Td><Td>espada, hacha</Td><Td>Filo avanzado I–V: +1 a +5 de daño encima del Filo vanilla.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">shield_reflect</Td><Td>escudo</Td><Td>Reflejo I–III (25/50/80 %).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">shield_parry</Td><Td>escudo</Td><Td>Parada I–III: un golpe en el primer medio segundo de bloqueo aturde y empuja al atacante.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">shield_bash</Td><Td>escudo</Td><Td>Embestida I–II: cada golpe parado empuja al atacante.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">shield_temper</Td><Td>escudo</Td><Td>Temple I–III: el hacha desactiva el escudo un 60 %, un 30 % o nada del tiempo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">shield_aegis</Td><Td>escudo</Td><Td>Égida I–III: un 30 % de las veces, parar un golpe da corazones de absorción.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">veinminer</Td><Td>{c.wPickaxe}</Td><Td>{c.iVeinminer}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">timber</Td><Td>{c.wAxe}</Td><Td>{c.iTimber}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">autosmelt</Td><Td>{c.wPickaxe}, {c.wAxe}, {c.wShovel}</Td><Td>{c.iAutosmelt}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">hammer</Td><Td>{c.wPickaxe}, {c.wShovel}</Td><Td>{c.iHammer}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">tiller</Td><Td>{c.wHoe}</Td><Td>{c.iTiller}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">advanced_mending</Td><Td>{c.wAny}</Td><Td>{c.iMending}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">advanced_sharpness</Td><Td>{c.wSword}, {c.wAxe}</Td><Td>{c.iSharpness}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">shield_reflect</Td><Td>{c.wShield}</Td><Td>{c.iReflect}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">shield_parry</Td><Td>{c.wShield}</Td><Td>{c.iParry}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">shield_bash</Td><Td>{c.wShield}</Td><Td>{c.iBash}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">shield_temper</Td><Td>{c.wShield}</Td><Td>{c.iTemper}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">shield_aegis</Td><Td>{c.wShield}</Td><Td>{c.iAegis}</Td></Tr>
         </tbody>
       </Table>
       <p>
-        Además vienen <code>lifesteal</code>, <code>frost</code>, <code>magnet</code>, <code>poison</code> y{" "}
-        <code>thunder</code>. Todos funcionan igual en Java y en Bedrock: viven en el servidor.
+        {fill(c.extraBody, {
+          ids: (
+            <>
+              <code>lifesteal</code>, <code>frost</code>, <code>magnet</code>, <code>poison</code> &amp;{" "}
+              <code>thunder</code>
+            </>
+          ),
+        })}
       </p>
 
-      <SectionHeading id="formato-yaml">Ejemplos de archivo YAML</SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="enchantments/frost.yml"
@@ -275,14 +299,15 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
         }
       />
       <Callout tone="tip">
-        <code>effects</code> admite tanto la forma corta <code>- LIGHTNING</code> (sin parámetros) como la forma
-        detallada <code>{"- type: ... "}</code> — se pueden mezclar en la misma lista, como en el ejemplo de
-        arriba.
+        {fill(c.shortFormTip, {
+          effects: <code>effects</code>,
+          short: <code>- LIGHTNING</code>,
+          long: <code>{"- type: ... "}</code>,
+        })}
       </Callout>
 
-      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
-        <code>enchantments/reference_full.yml</code> (incluido en el jar) usa absolutamente todos los campos
-        disponibles.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, { file: <code>enchantments/reference_full.yml</code> })}
       </Callout>
       <CodeBlock
         language="yaml"
@@ -347,71 +372,75 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
       />
 
       <YamlBuilder
-        title="Constructor visual: Custom Enchantment"
-        description="Identidad, rareza, categorías, triggers y condiciones. Effects y levels quedan afuera del formulario — son listas de objetos anidados, copia uno de los ejemplos de arriba y editalo a mano (es exactamente lo que hace el editor in-game también)."
+        title={c.bTitle}
+        description={c.bDesc}
         folder="enchantments"
-        fields={enchantmentFields}
+        fields={enchantmentFields(c)}
       />
 
-      <SectionHeading id="integracion-items">Integración con RPGRoll-Items</SectionHeading>
+      <SectionHeading id="integracion-items">{c.itemsTitle}</SectionHeading>
       <p>
-        <code>ItemDefinition</code> tiene dos mapas separados: <code>vanilla-enchantments</code> (encantamientos
-        reales de Bukkit, aplicados directamente por Items sin pasar por este addon) y{" "}
-        <code>custom-enchantments</code> (<code>id: nivel</code>, resueltos contra este addon). Al crear el ítem,
-        Items comprueba en runtime si <code>RPGRoll-Enchantments</code> está instalado — si no lo está, esa parte
-        simplemente no hace nada; si lo está, busca cada definición por id y llama al mismo{" "}
-        <code>EnchantmentItem.apply(...)</code> que usa <code>/renchant</code>.
+        {fill(c.itemsBody, {
+          def: <code>ItemDefinition</code>,
+          vanilla: <code>vanilla-enchantments</code>,
+          custom: <code>custom-enchantments</code>,
+          idLevel: <code>id: nivel</code>,
+          plugin: <code>RPGRoll-Enchantments</code>,
+          apply: <code>EnchantmentItem.apply(...)</code>,
+          cmd: <code>/renchant</code>,
+        })}
       </p>
 
-      <SectionHeading id="gui">GUI: navegador y editor</SectionHeading>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
       <p>
-        <Kbd>/renchant browser</Kbd> abre un navegador con todos los encantamientos definidos y un botón "Crear
-        nuevo". El editor cubre identidad, rareza, una grilla de 9 categorías y otra de 9 triggers (toggle por
-        click), y la lista de efectos con alta rápida por chat (<code>{"TIPO;clave=valor,clave2=valor2"}</code>).
+        {fill(c.guiBody, {
+          browser: <Kbd>/renchant browser</Kbd>,
+          fmt: <code>{"TIPO;clave=valor,clave2=valor2"}</code>,
+        })}
       </p>
       <Callout tone="info">
-        Además, la GUI de Items (<code>EnchantmentsEditorGUI</code>) tiene su <strong>propio</strong> editor, pero
-        solo permite asignar <code>id</code>+nivel a un ítem existente — no crea definiciones nuevas. Para eso
-        siempre hace falta <code>/renchant browser</code>.
+        {fill(c.guiNote, {
+          gui: <code>EnchantmentsEditorGUI</code>,
+          own: <strong>{c.ownWord}</strong>,
+          idLevel: <code>id</code>,
+          cmd: <code>/renchant browser</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/renchant apply <id> <nivel>"}</Td><Td>Aplica el encantamiento al ítem en tu mano principal.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/renchant remove <id>"}</Td><Td>Lo quita del ítem en tu mano.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/renchant give <jugador> <id> <nivel>"}</Td><Td>Se lo aplica a otro jugador (funciona desde consola).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/renchant list</Td><Td>Lista todos los encantamientos definidos.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/renchant info <id>"}</Td><Td>Muestra rareza, nivel máximo, triggers, probabilidad y conflictos.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/renchant browser</Td><Td>Abre el navegador gráfico (crear/editar definiciones).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/renchant reload</Td><Td>Recarga las definiciones desde disco.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/renchant apply <id> <nivel>"}</Td><Td>{c.xApply}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/renchant remove <id>"}</Td><Td>{c.xRemove}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/renchant give <jugador> <id> <nivel>"}</Td><Td>{c.xGive}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/renchant list</Td><Td>{c.xList}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/renchant info <id>"}</Td><Td>{c.xInfo}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/renchant browser</Td><Td>{c.xBrowser}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/renchant reload</Td><Td>{c.xReload}</Td></Tr>
         </tbody>
       </Table>
       <p>
-        Todos requieren <Badge tone="amber">rpgrollenchantments.admin.*</Badge> (default: op) — chequeado una sola
-        vez al principio del comando, no por subcomando.
+        {fill(c.permNote, { perm: <Badge tone="amber">rpgrollenchantments.admin.*</Badge> })}
       </p>
-      <Callout tone="warning" title="apply/remove no pueden fallar por conflicto silenciosamente">
-        Si el encantamiento excede su nivel máximo, choca con uno ya presente en el ítem (vía{" "}
-        <code>conflicts</code>), o el ítem no pertenece a una categoría permitida, <code>/renchant apply</code>{" "}
-        responde con el motivo exacto en vez de aplicarlo a medias.
+      <Callout tone="warning" title={c.failTitle}>
+        {fill(c.failBody, { conflicts: <code>conflicts</code>, apply: <code>/renchant apply</code> })}
       </Callout>
 
-      <SectionHeading id="placeholders">Placeholders (PlaceholderAPI)</SectionHeading>
-      <p>Expansión <Badge tone="violet">rpgrollenchantments</Badge> — todos leen el ítem en la mano principal.</p>
+      <SectionHeading id="placeholders">{c.phTitle}</SectionHeading>
+      <p>{fill(c.phIntro, { exp: <Badge tone="violet">rpgrollenchantments</Badge> })}</p>
       <Table>
         <Thead>
-          <Th>Placeholder</Th>
-          <Th>Valor</Th>
+          <Th>{c.thPlaceholder}</Th>
+          <Th>{c.thValue}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">%rpgrollenchantments_helditem_count%</Td><Td>Cantidad de encantamientos custom en el ítem.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"%rpgrollenchantments_helditem_<id>_level%"}</Td><Td>Nivel de ese encantamiento en el ítem (0 si no lo tiene).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"%rpgrollenchantments_helditem_has_<id>%"}</Td><Td><code>si</code>/<code>no</code>.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">%rpgrollenchantments_helditem_count%</Td><Td>{c.pCount}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"%rpgrollenchantments_helditem_<id>_level%"}</Td><Td>{c.pLevel}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"%rpgrollenchantments_helditem_has_<id>%"}</Td><Td>{fill(c.pHas, { yesno: <><code>si</code>/<code>no</code></> })}</Td></Tr>
         </tbody>
       </Table>
 
