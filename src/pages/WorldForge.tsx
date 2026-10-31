@@ -11,6 +11,8 @@ import {
   Kbd,
   PrevNext,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { WORLDFORGE_COPY } from "./copy/worldforge";
 
 const PRESET_YAML =
   "schema: 1\n" +
@@ -59,142 +61,73 @@ const TERRAIN_YAML =
   "aquifers: true\n" +
   "ore-veins: true\n";
 
-const presets: [string, string][] = [
-  ["vanilla", "Minecraft sin cambios."],
-  ["amplified", "Tipo amplificado de vanilla."],
-  ["empty", "Ni un bloque."],
-  ["void-platform", "Vacío con una plataforma de piedra de 5×5 en la aparición."],
-  ["flat", "Capas planas (bedrock, tierra, hierba)."],
-  ["resource-rich", "Terreno vanilla con venas extra de carbón, hierro, oro y diamante."],
-  ["custom", "Base para el tuyo: duplícalo y edítalo."],
-  ["nether, end", "Un Nether o un End aparte, con su propia semilla."],
-  ["montanas", "Cordilleras altas con el motor de terreno de WorldForge."],
-];
-
-const providers: [string, string, string, string, string, string][] = [
-  ["vanilla", "Minecraft (normal, amplificado, biomas grandes)", "—", "—", "—", "sí/no"],
-  ["empty", "nada", "—", "sí", "sí", "—"],
-  ["flat", "capas del preset", "sí", "sí", "sí", "—"],
-  ["hybrid", "Minecraft", "sí", "sí", "sí", "sí/no"],
-  ["terrain", "el motor de WorldForge con un terreno de terrains/", "sí", "sí", "por altura y clima", "sí/no"],
-  ["plugin", "el generador de otro plugin (Terra, Iris…)", "—", "—", "—", "lo que haga ese plugin"],
-];
-
-const terrains: [string, string, string][] = [
-  ["suave", "Colinas bajas, cómodas para construir.", "overworld"],
-  ["continentes", "Continentes tres veces más anchos, biomas grandes.", "overworld"],
-  ["archipielago", "Islas y estrechos.", "overworld"],
-  ["montanas", "Cordilleras casi el doble de altas.", "towering"],
-  ["extremo", "Relieve 2,4 veces más alto, picos muy dentados y continentes anchos.", "towering"],
-];
-
-const folia: [string, string][] = [
-  ["Presets, exportar e importar, zonas protegidas, plantillas, diagnóstico, menú", "Igual que en Paper."],
-  [
-    "Mundo principal con un preset (bukkit.yml): vacío, plano, plantillas, menas, el motor de terreno",
-    "Sí; los chunks se generan en paralelo por regiones.",
-  ],
-  ["Dimensiones por datapack, también con terreno y tipo towering", "Sí, al reiniciar."],
-  ["Regenerar", "Siempre al reiniciar, antes de abrir los mundos."],
-  ["/wf world tp a otro mundo cargado", "Sí."],
-  ["/wf world create, load, unload, import", "No: el comando explica por qué y propone una dimensión por datapack."],
-  ["Mundos administrados creados antes en Paper", "No se cargan; el registro lo avisa."],
-  ["Nether y End aparte, provider: plugin, gravedad por mundo", "No: dependen de crear mundos en caliente."],
-];
-
-const commands: [string, string][] = [
-  ["/wf help · status · gui", "worlds.view"],
-  ["/wf diagnostics", "diagnostics"],
-  ["/wf reload-config", "reload"],
-  ["/wf world list · inspect <mundo>", "worlds.view"],
-  ["/wf world create <nombre> <preset>", "worlds.create"],
-  ["/wf world load|unload <mundo>", "worlds.manage"],
-  ["/wf world import <nombre> <preset>", "worlds.create"],
-  ["/wf world tp <mundo> [jugador]", "worlds.teleport (otro jugador: worlds.teleport.others)"],
-  ["/wf preset list · info · validate <id>", "presets.view"],
-  ["/wf preset create|duplicate|seed|publish", "presets.edit"],
-  ["/wf preset export <id> · import <archivo.yml>", "presets.export · presets.import"],
-  ["/wf generation validate|preview · apply <mundo> <preset>", "generation.validate · generation.apply"],
-  ["/wf regen plan|restore · confirm|accept · cancel · list|info", "regeneration.plan · execute · cancel · view"],
-  ["/wf dimension list · create|remove", "dimensions.view · dimensions.create"],
-  ["/wf terrain list · main <terreno|vanilla>", "dimensions.view · terrain.main"],
-  ["/wf structure list|info · save", "templates.view · templates.save"],
-  ["/wf protection list · add|remove", "protection.view · protection.manage"],
-];
-
-const troubles: [string, string][] = [
-  [
-    "El servidor se para al arrancar y el registro dice «Se para el servidor»",
-    "Las líneas de antes dicen si falta la licencia o qué preset de bukkit.yml falla.",
-  ],
-  ["«tiene errores» al publicar", "/wf preset validate <id> lista cada campo con su problema."],
-  ["Un mundo administrado no carga al arrancar", "El registro dice por qué (preset con errores, carpeta que falta, plantilla que falta)."],
-  ["«Regeneración BLOQUEADA» en el diagnóstico", "protections.yml mal escrito: arréglalo y /wf reload-config."],
-  ["Un trabajo en NEEDS_RECOVERY", "/wf regen info, luego restore o accept."],
-  ["«✘ Plantilla …: esa regla no se aplica»", "Falta o está rota structures/<nombre>.nbt."],
-  [
-    "El servidor no arranca tras terrain main",
-    "Borra world/datapacks/worldforge/data/minecraft/worldgen/noise_settings/overworld.json y arranca.",
-  ],
-  ["«ya está escrito en el datapack con otros valores»", "Editaste un terreno que ya usa una dimensión: guárdalo con otro id."],
-];
-
 const mono = "font-mono text-xs";
 
 export function WorldForge({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = WORLDFORGE_COPY[locale];
+
   return (
     <>
-      <PageHeader title="WorldForge (RPGRoll-WorldForge)" slug="worldforge">
-        Generación y administración de mundos: mundos vacíos, planos, vanilla o híbridos a partir de presets
-        versionados; varios mundos a la vez como con Multiverse; terrenos al estilo Tectonic o Terralith (más altos,
-        más llanos, continentes enormes, archipiélagos); menas y plantillas en los chunks nuevos; dimensiones nuevas
-        por datapack; y regeneración de chunks con plan, confirmación, respaldo y recuperación. Todo desde comandos o
-        desde un menú en el juego.
+      <PageHeader title={c.title} slug="worldforge">
+        {c.intro}
       </PageHeader>
 
-      <Callout tone="info" title="Versión 1.0.0">
-        Todo lo que describe esta página está probado en un servidor real, en Paper 26.1.2 y en Folia 26.1.2, con
-        jugadores de prueba conectados. Lo que no está probado lo dice <a href="#limites">Límites</a>.
+      <Callout tone="info" title={c.versionTitle}>
+        {fill(c.versionBody, { limits: <a href="#limites">{c.limitsLink}</a> })}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <Table>
         <tbody>
-          <Tr><Td>Servidor</Td><Td>Paper 26.1.2 (probado con el build 74) o Folia 26.1.2 (build 8; ver <a href="#folia">Folia</a>)</Td></Tr>
-          <Tr><Td>Java</Td><Td>25</Td></Tr>
-          <Tr><Td>Dependencias</Td><Td>Ninguna: SQLite y YAML vienen con Paper.</Td></Tr>
+          <Tr>
+            <Td>{c.rServer}</Td>
+            <Td>{fill(c.rServerVal, { folia: <a href="#folia">{c.foliaLink}</a> })}</Td>
+          </Tr>
+          <Tr><Td>{c.rJava}</Td><Td>25</Td></Tr>
+          <Tr><Td>{c.rDeps}</Td><Td>{c.rDepsVal}</Td></Tr>
         </tbody>
       </Table>
-      <Callout tone="tip" title="No necesita RPGRoll-Lib">
-        WorldForge funciona solo: no depende de RPGRoll-Lib ni de RPGRoll. Puedes instalarlo en un servidor sin nada
-        más de RPGRoll.
+      <Callout tone="tip" title={c.noLibTitle}>
+        {c.noLibBody}
       </Callout>
 
-      <SectionHeading id="instalacion">Instalación</SectionHeading>
+      <SectionHeading id="instalacion">{c.installTitle}</SectionHeading>
       <ol>
-        <li>Copia <code>RPGRoll-WorldForge-&lt;versión&gt;.jar</code> en <code>plugins/</code>.</li>
+        <li>{fill(c.i1, { jar: <code>RPGRoll-WorldForge-&lt;versión&gt;.jar</code>, dir: <code>plugins/</code> })}</li>
         <li>
-          Arranca el servidor una vez. Se crea <code>plugins/RPGRoll-WorldForge/license.yml</code>: pega ahí tu clave
-          (empieza por <code>RPGR-</code>) en lugar de <code>%%__LICENSE__%%</code> y vuelve a arrancar. Sin una clave
-          válida, WorldForge se desactiva.
+          {fill(c.i2, {
+            file: <code>plugins/RPGRoll-WorldForge/license.yml</code>,
+            prefix: <code>RPGR-</code>,
+            placeholder: <code>%%__LICENSE__%%</code>,
+          })}
         </li>
         <li>
-          Con la licencia se crean también <code>config.yml</code>, <code>messages.yml</code>,{" "}
-          <code>protections.yml</code>, la base de datos <code>worldforge.db</code>, los presets de serie en{" "}
-          <code>presets/</code> y las carpetas <code>drafts/</code>, <code>imports/</code> y <code>exports/</code>;{" "}
-          <code>structures/</code> y <code>backups/</code> aparecen la primera vez que hacen falta.
+          {fill(c.i3, {
+            files: (
+              <>
+                <code>config.yml</code>, <code>messages.yml</code>, <code>protections.yml</code>
+              </>
+            ),
+            db: <code>worldforge.db</code>,
+            presets: <code>presets/</code>,
+            dirs: (
+              <>
+                <code>drafts/</code>, <code>imports/</code>, <code>exports/</code>
+              </>
+            ),
+            lazy: (
+              <>
+                <code>structures/</code>, <code>backups/</code>
+              </>
+            ),
+          })}
         </li>
-        <li>
-          <code>/wf diagnostics</code> dice si todo está en orden: plataforma, base de datos, presets, zonas
-          protegidas, trabajos pendientes y dimensiones.
-        </li>
+        <li>{fill(c.i4, { cmd: <code>/wf diagnostics</code> })}</li>
       </ol>
-      <p>
-        WorldForge carga en <code>STARTUP</code>: así puede generar también el mundo principal y aplicar
-        regeneraciones pendientes antes de que el servidor abra los mundos.
-      </p>
+      <p>{fill(c.startupBody, { startup: <code>STARTUP</code> })}</p>
 
-      <SectionHeading id="primeros-pasos">Primeros pasos</SectionHeading>
+      <SectionHeading id="primeros-pasos">{c.firstStepsTitle}</SectionHeading>
       <CodeBlock
         language="text"
         code={
@@ -204,53 +137,46 @@ export function WorldForge({ onNavigate }: { onNavigate: (slug: string) => void 
           "/wf gui                                 lo mismo con menús"
         }
       />
-      <p>
-        Para que el <strong>mundo principal</strong> use un preset, ponlo en <code>bukkit.yml</code> y reinicia:
-      </p>
+      <p>{fill(c.mainWorldBody, { main: <strong>{c.mainWorldWord}</strong>, bukkit: <code>bukkit.yml</code> })}</p>
       <CodeBlock language="yaml" filename="bukkit.yml" code={"worlds:\n  world:\n    generator: RPGRoll-WorldForge:void-platform"} />
-      <Callout tone="warning" title="Si no puede generarlo, para el servidor">
-        Si al arrancar WorldForge no puede dar ese generador (no hay licencia válida, o el preset no existe o tiene
-        errores), para el servidor antes de abrir los mundos y el registro dice por qué. Si siguiera, Minecraft
-        generaría ese mundo con su terreno normal y después habría que regenerar esos chunks. Arréglalo, o quita la
-        línea <code>generator:</code>, y vuelve a arrancar. La licencia aguanta 7 días sin poder hablar con la tienda
-        desde la última vez que se comprobó.
+      <Callout tone="warning" title={c.stopTitle}>
+        {fill(c.stopBody, { generator: <code>generator:</code> })}
       </Callout>
 
-      <SectionHeading id="presets">Presets</SectionHeading>
+      <SectionHeading id="presets">{c.presetsTitle}</SectionHeading>
       <p>
-        Un preset dice cómo es un mundo. Los publicados viven en <code>presets/</code> y los borradores en{" "}
-        <code>drafts/</code>. Un borrador no crea mundos: se publica con <code>/wf preset publish</code>, que lo valida
-        antes. Cada preset tiene una <strong>versión</strong> (el hash de su texto) y un mundo recuerda con qué
-        versión se creó.
+        {fill(c.presetsBody, {
+          presets: <code>presets/</code>,
+          drafts: <code>drafts/</code>,
+          publish: <code>/wf preset publish</code>,
+          version: <strong>{c.versionWord}</strong>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Preset de serie</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thPreset}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          {presets.map(([id, what]) => (
+          {c.presets.map(([id, what]) => (
             <Tr key={id}><Td className={mono}>{id}</Td><Td>{what}</Td></Tr>
           ))}
         </tbody>
       </Table>
 
-      <SectionHeading id="proveedores" level={3}>Proveedores</SectionHeading>
-      <p>
-        Cada preset elige un proveedor. Un campo que el proveedor no controla es un <strong>error</strong> al validar:
-        nunca se ignora en silencio.
-      </p>
+      <SectionHeading id="proveedores" level={3}>{c.providersTitle}</SectionHeading>
+      <p>{fill(c.providersBody, { error: <strong>{c.errorWord}</strong> })}</p>
       <Table>
         <Thead>
-          <Th>Proveedor</Th>
-          <Th>Terreno</Th>
-          <Th>Menas</Th>
-          <Th>Plantillas</Th>
-          <Th>Biomas a elegir</Th>
-          <Th>Estructuras vanilla</Th>
+          <Th>{c.thProvider}</Th>
+          <Th>{c.thTerrain}</Th>
+          <Th>{c.thOres}</Th>
+          <Th>{c.thTemplates}</Th>
+          <Th>{c.thBiomes}</Th>
+          <Th>{c.thVanillaStructures}</Th>
         </Thead>
         <tbody>
-          {providers.map(([id, ...cols]) => (
+          {c.providers.map(([id, ...cols]) => (
             <Tr key={id}>
               <Td className={mono}>{id}</Td>
               {cols.map((v, i) => <Td key={i}>{v}</Td>)}
@@ -259,31 +185,38 @@ export function WorldForge({ onNavigate }: { onNavigate: (slug: string) => void 
         </tbody>
       </Table>
 
-      <SectionHeading id="formato" level={3}>Formato</SectionHeading>
+      <SectionHeading id="formato" level={3}>{c.formatTitle}</SectionHeading>
       <CodeBlock language="yaml" filename="presets/mi-mundo.yml" code={PRESET_YAML} />
       <Callout tone="warning">
-        Menas, plantillas y biomas <strong>solo afectan a chunks que se generan a partir de ahora</strong>. Lo ya
-        generado no cambia; para eso está la <a href="#regeneracion">regeneración</a>.
+        {fill(c.newChunksWarn, {
+          only: <strong>{c.onlyNewChunks}</strong>,
+          regen: <a href="#regeneracion">{c.regenLink}</a>,
+        })}
       </Callout>
 
-      <SectionHeading id="editar-exportar" level={3}>Editar, exportar, importar</SectionHeading>
+      <SectionHeading id="editar-exportar" level={3}>{c.editTitle}</SectionHeading>
       <ul>
         <li>
-          <code>/wf preset duplicate &lt;origen&gt; &lt;nuevo&gt;</code> crea un borrador;{" "}
-          <code>/wf preset seed &lt;borrador&gt; &lt;número&gt;</code> le fija la semilla; edítalo en{" "}
-          <code>drafts/</code> si quieres más y publícalo con <code>/wf preset publish &lt;borrador&gt;</code>.
+          {fill(c.e1, {
+            duplicate: <code>/wf preset duplicate &lt;origen&gt; &lt;nuevo&gt;</code>,
+            seed: <code>/wf preset seed &lt;borrador&gt; &lt;número&gt;</code>,
+            drafts: <code>drafts/</code>,
+            publish: <code>/wf preset publish &lt;borrador&gt;</code>,
+          })}
         </li>
+        <li>{fill(c.e2, { export: <code>/wf preset export &lt;id&gt;</code>, dir: <code>exports/</code> })}</li>
         <li>
-          <code>/wf preset export &lt;id&gt;</code> escribe el preset en <code>exports/</code> con un manifiesto
-          SHA-256.
-        </li>
-        <li>
-          Un <code>.yml</code> en <code>imports/</code> entra con <code>/wf preset import &lt;archivo.yml&gt;</code>,{" "}
-          <strong>siempre como borrador</strong> (tamaño máximo en <code>config.yml</code>, por defecto 256 KB).
+          {fill(c.e3, {
+            yml: <code>.yml</code>,
+            dir: <code>imports/</code>,
+            import: <code>/wf preset import &lt;archivo.yml&gt;</code>,
+            always: <strong>{c.alwaysDraft}</strong>,
+            config: <code>config.yml</code>,
+          })}
         </li>
       </ul>
 
-      <SectionHeading id="varios-mundos">Varios mundos (como Multiverse)</SectionHeading>
+      <SectionHeading id="varios-mundos">{c.multiTitle}</SectionHeading>
       <CodeBlock
         language="text"
         code={
@@ -293,327 +226,319 @@ export function WorldForge({ onNavigate }: { onNavigate: (slug: string) => void 
         }
       />
       <ul>
-        <li>Cada mundo creado vuelve solo al reiniciar, con su preset.</li>
+        <li>{c.m1}</li>
         <li>
-          <code>import</code> no toca los bloques: solo pasa a administrar la carpeta (
-          <code>world/dimensions/minecraft/&lt;nombre&gt;/</code>, el formato de 26.1). Una carpeta del formato de
-          antes (<code>level.dat</code> suelto) se rechaza: hay que abrirla antes con Paper 26.1 para que la
-          convierta.
+          {fill(c.m2, {
+            import: <code>import</code>,
+            path: <code>world/dimensions/minecraft/&lt;nombre&gt;/</code>,
+            levelDat: <code>level.dat</code>,
+          })}
         </li>
         <li>
-          <code>player-gravity</code> cambia la gravedad de los <strong>jugadores</strong> (salto y caída; la caída
-          segura se ajusta a la par) al entrar, al cambiar de mundo y al reaparecer. A los mobs no les afecta.
+          {fill(c.m3, { gravity: <code>player-gravity</code>, players: <strong>{c.playersWord}</strong> })}
         </li>
         <li>
-          <code>provider: plugin</code> usa el generador de otro plugin igual que <code>bukkit.yml</code> o el{" "}
-          <code>-g</code> de Multiverse; si ese plugin no está, el preset no se publica. WorldForge no mete sus menas
-          ni plantillas dentro de un generador ajeno.
+          {fill(c.m4, {
+            provider: <code>provider: plugin</code>,
+            bukkit: <code>bukkit.yml</code>,
+            dashG: <code>-g</code>,
+          })}
         </li>
       </ul>
 
-      <SectionHeading id="plantillas">Plantillas (estructuras y mazmorras)</SectionHeading>
+      <SectionHeading id="plantillas">{c.templatesTitle}</SectionHeading>
       <ol>
         <li>
-          Construye en un mundo. Los cofres pueden llevar tabla de botín con el comando de vanilla:{" "}
-          <code>{'/data merge block <x> <y> <z> {LootTable:"minecraft:chests/simple_dungeon"}'}</code>.
+          {fill(c.t1, {
+            cmd: <code>{'/data merge block <x> <y> <z> {LootTable:"minecraft:chests/simple_dungeon"}'}</code>,
+          })}
         </li>
         <li>
-          <code>{"/wf structure save <nombre> <x1> <y1> <z1> <x2> <y2> <z2> [mundo]"}</code> guarda esa caja (esquinas
-          incluidas, sin entidades) en <code>structures/&lt;nombre&gt;.nbt</code>. Como mucho{" "}
-          <strong>32×64×32</strong>, y la zona tiene que estar cargada.
+          {fill(c.t2, {
+            cmd: <code>{"/wf structure save <nombre> <x1> <y1> <z1> <x2> <y2> <z2> [mundo]"}</code>,
+            path: <code>structures/&lt;nombre&gt;.nbt</code>,
+            max: <strong>32×64×32</strong>,
+          })}
         </li>
-        <li>Úsala en un preset (<code>templates:</code>), publícalo y crea un mundo con él.</li>
+        <li>{fill(c.t3, { templates: <code>templates:</code> })}</li>
       </ol>
       <ul>
-        <li>Un cofre con tabla de botín la conserva en cada copia colocada; el botín se sortea al abrirlo.</li>
+        <li>{c.tl1}</li>
+        <li>{fill(c.tl2, { noOverwrite: <strong>{c.noOverwrite}</strong> })}</li>
+        <li>{fill(c.tl3, { nbt: <code>.nbt</code>, dir: <code>structures/</code> })}</li>
         <li>
-          Una plantilla guardada <strong>no se sobrescribe</strong>: guarda otra con otro nombre. Así un preset
-          publicado sigue generando lo mismo.
+          {fill(c.tl4, {
+            surface: <Kbd>surface</Kbd>,
+            underground: <Kbd>underground</Kbd>,
+            minY: <code>min-y</code>,
+            maxY: <code>max-y</code>,
+          })}
         </li>
-        <li>
-          Sirve cualquier <code>.nbt</code> de Minecraft (el formato de los bloques de estructura) de hasta 2 MB y
-          32×64×32: déjalo en <code>structures/</code>.
-        </li>
-        <li>
-          <Kbd>surface</Kbd> la pone sobre el primer bloque sólido desde arriba (atraviesa hojas, troncos y plantas;
-          nunca sobre agua o lava). <Kbd>underground</Kbd> la pone con la base a una altura al azar entre{" "}
-          <code>min-y</code> y <code>max-y</code>; con los dos iguales, a una altura fija (sirve para islas en el
-          vacío).
-        </li>
-        <li>
-          <code>/wf world inspect &lt;mundo&gt;</code> dice cuántas ha colocado cada regla desde que se cargó el mundo
-          y dónde fueron las últimas.
-        </li>
-        <li>Crear o cargar un mundo vuelve a comprobar sus plantillas: si falta el archivo, no sigue.</li>
+        <li>{fill(c.tl5, { cmd: <code>/wf world inspect &lt;mundo&gt;</code> })}</li>
+        <li>{c.tl6}</li>
       </ul>
 
-      <SectionHeading id="dimensiones">Dimensiones</SectionHeading>
+      <SectionHeading id="dimensiones">{c.dimTitle}</SectionHeading>
       <CodeBlock language="text" code="/wf dimension create minas tall overworld" />
       <p>
-        Escribe la dimensión en el datapack <code>worldforge</code> del mundo principal.{" "}
-        <strong>Minecraft solo lee dimensiones nuevas al arrancar</strong>: tras reiniciar aparece como el mundo{" "}
-        <code>world_worldforge_minas</code> (entra con <code>/execute in worldforge:minas run tp @s 0 100 0</code>).
+        {fill(c.dimBody, {
+          datapack: <code>worldforge</code>,
+          onlyOnBoot: <strong>{c.onlyOnBoot}</strong>,
+          world: <code>world_worldforge_minas</code>,
+          cmd: <code>/execute in worldforge:minas run tp @s 0 100 0</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>Cómo es</Th>
-          <Th>Generador</Th>
-          <Th>Qué genera</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thHow}</Th>
+          <Th>{c.thGenerator}</Th>
+          <Th>{c.thGenerates}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className={mono}>overworld</Td><Td>cielo, día y noche, −64 a 319</Td><Td className={mono}>void</Td><Td>vacío (bioma the_void)</Td></Tr>
-          <Tr><Td className={mono}>caves</Td><Td>con techo, sin cielo</Td><Td className={mono}>flat</Td><Td>capas planas</Td></Tr>
-          <Tr><Td className={mono}>tall</Td><Td>como el normal pero hasta 383</Td><Td className={mono}>overworld</Td><Td>terreno normal</Td></Tr>
-          <Tr><Td className={mono}>towering</Td><Td>como el normal pero hasta 575</Td><Td className={mono}>amplified</Td><Td>terreno amplificado</Td></Tr>
-          <Tr><Td className={mono}>nether</Td><Td>como el Nether, 0 a 255</Td><Td className={mono}>nether, end</Td><Td>solo con su tipo</Td></Tr>
-          <Tr><Td className={mono}>end</Td><Td>como el End</Td><Td className={mono}>{"terrain:<id>"}</Td><Td>un <a href="#terrenos">terreno</a> (tipos del normal)</Td></Tr>
+          <Tr><Td className={mono}>overworld</Td><Td>{c.dOverworld}</Td><Td className={mono}>void</Td><Td>{c.dOverworldGen}</Td></Tr>
+          <Tr><Td className={mono}>caves</Td><Td>{c.dCaves}</Td><Td className={mono}>flat</Td><Td>{c.dCavesGen}</Td></Tr>
+          <Tr><Td className={mono}>tall</Td><Td>{c.dTall}</Td><Td className={mono}>overworld</Td><Td>{c.dTallGen}</Td></Tr>
+          <Tr><Td className={mono}>towering</Td><Td>{c.dTowering}</Td><Td className={mono}>amplified</Td><Td>{c.dToweringGen}</Td></Tr>
+          <Tr><Td className={mono}>nether</Td><Td>{c.dNether}</Td><Td className={mono}>nether, end</Td><Td>{c.dNetherGen}</Td></Tr>
+          <Tr>
+            <Td className={mono}>end</Td>
+            <Td>{c.dEnd}</Td>
+            <Td className={mono}>{"terrain:<id>"}</Td>
+            <Td>{fill(c.dEndGen, { terrain: <a href="#terrenos">{c.terrainLink}</a> })}</Td>
+          </Tr>
         </tbody>
       </Table>
       <p>
-        <code>/wf dimension remove &lt;id&gt;</code> quita la definición: deja de cargarse al reiniciar y{" "}
-        <strong>la carpeta se conserva</strong>. Una dimensión de datapack usa el generador de Minecraft, así que las
-        menas y plantillas de WorldForge no se aplican ahí.
+        {fill(c.dimRemoveBody, {
+          cmd: <code>/wf dimension remove &lt;id&gt;</code>,
+          kept: <strong>{c.folderKept}</strong>,
+        })}
       </p>
 
-      <SectionHeading id="terrenos">Terrenos</SectionHeading>
+      <SectionHeading id="terrenos">{c.terrainsTitle}</SectionHeading>
       <p>
-        Un terreno cambia la <strong>forma</strong> del mundo, como Tectonic, Terralith o Stratos: más alto o más
-        llano, continentes más anchos, picos más afilados, biomas más grandes. Viven en <code>terrains/*.yml</code>;
-        los de serie se copian ahí la primera vez y sirven de ejemplo (<code>/wf terrain list</code>).
+        {fill(c.terrainsBody, {
+          shape: <strong>{c.shapeWord}</strong>,
+          dir: <code>terrains/*.yml</code>,
+          cmd: <code>/wf terrain list</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>De serie</Th>
-          <Th>Cómo es</Th>
-          <Th>Tipo</Th>
+          <Th>{c.thStock}</Th>
+          <Th>{c.thHow}</Th>
+          <Th>{c.thType}</Th>
         </Thead>
         <tbody>
-          {terrains.map(([id, what, type]) => (
+          {c.terrains.map(([id, what, type]) => (
             <Tr key={id}><Td className={mono}>{id}</Td><Td>{what}</Td><Td className={mono}>{type}</Td></Tr>
           ))}
         </tbody>
       </Table>
       <CodeBlock language="yaml" filename="terrains/mio.yml" code={TERRAIN_YAML} />
 
-      <SectionHeading id="usar-terrenos" level={3}>Tres maneras de usarlo</SectionHeading>
+      <SectionHeading id="usar-terrenos" level={3}>{c.useTerrainTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Dónde</Th>
-          <Th>Cómo</Th>
-          <Th>Qué genera</Th>
+          <Th>{c.thWhere}</Th>
+          <Th>{c.thHowUse}</Th>
+          <Th>{c.thGenerates}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td>Una dimensión nueva</Td>
-            <Td><code>/wf dimension create alpes towering terrain:montanas</code> y reiniciar</Td>
-            <Td>El generador de Minecraft con los números cambiados: sus cuevas, acuíferos, biomas y estructuras.</Td>
+            <Td>{c.uNewDim}</Td>
+            <Td>{fill(c.uNewDimHow, { cmd: <code>/wf dimension create alpes towering terrain:montanas</code> })}</Td>
+            <Td>{c.uNewDimGen}</Td>
           </Tr>
           <Tr>
-            <Td>El mundo normal</Td>
-            <Td><code>/wf terrain main montanas</code> y reiniciar (<code>vanilla</code> lo deshace)</Td>
-            <Td>Lo mismo, en el mundo principal, como hace Terralith.</Td>
+            <Td>{c.uMain}</Td>
+            <Td>{fill(c.uMainHow, { cmd: <code>/wf terrain main montanas</code>, vanilla: <code>vanilla</code> })}</Td>
+            <Td>{c.uMainGen}</Td>
           </Tr>
           <Tr>
-            <Td>Un mundo creado en caliente</Td>
-            <Td>Un preset con <code>provider: terrain</code> y <code>terrain: montanas</code></Td>
-            <Td>El motor propio de WorldForge (abajo).</Td>
+            <Td>{c.uHot}</Td>
+            <Td>{fill(c.uHotHow, { provider: <code>provider: terrain</code>, terrain: <code>terrain: montanas</code> })}</Td>
+            <Td>{c.uHotGen}</Td>
           </Tr>
         </tbody>
       </Table>
       <p>
-        <strong>Por datapack</strong> (dimensión y mundo normal): WorldForge copia el <em>noise router</em> de vanilla
-        del propio jar del servidor y cambia sus números. Con todo a 1 sale igual que el generador normal (dos
-        generaciones del mismo sitio pueden diferir en algún bloque suelto de la frontera entre chunks). Para alturas
-        por encima de y≈240 hace falta un tipo más alto: <code>/wf dimension create</code> avisa si las cimas se van
-        a cortar. Un terreno ya escrito no se pisa: si lo editas, guárdalo con otro id.
+        {fill(c.datapackBody, {
+          byDatapack: <strong>{c.byDatapack}</strong>,
+          noiseRouter: <em>{c.noiseRouter}</em>,
+          cmd: <code>/wf dimension create</code>,
+        })}
       </p>
       <p>
-        <code>height-scale</code> estira la forma grande del terreno (continentes, valles, montañas y su dentado). El
-        detalle 3D de vanilla, que talla salientes y agujas, conserva su tamaño: las agujas más altas no salen al
-        doble. Con <code>height-scale: 2</code>, medido: el doble de piedra sobre y=64 y el suelo ×1,94 columna a
-        columna (mediana). Con <code>height-scale: 3</code> y <code>height-offset: 96</code> en un tipo{" "}
-        <code>towering</code>, el suelo llega a y=395, algo que el mundo normal no permite.
+        {fill(c.heightScaleBody, {
+          heightScale: <code>height-scale</code>,
+          hs2: <code>height-scale: 2</code>,
+          hs3: <code>height-scale: 3</code>,
+          offset: <code>height-offset: 96</code>,
+          towering: <code>towering</code>,
+        })}
       </p>
-      <Callout tone="warning" title="terrain main cambia el mundo normal">
-        Cambia <code>minecraft:overworld</code>, así que también lo usan los mundos con proveedor{" "}
-        <code>vanilla</code> y las dimensiones con generador <code>overworld</code>. Solo afecta a chunks nuevos:
-        donde lo nuevo toque lo ya generado habrá un corte. Otro datapack que también lo cambie (Terralith) compite
-        con él; el comando lo avisa. Pruébalo antes en una copia del mundo.
+      <Callout tone="warning" title={c.mainWarnTitle}>
+        {fill(c.mainWarnBody, {
+          overworld: <code>minecraft:overworld</code>,
+          vanilla: <code>vanilla</code>,
+          overworldGen: <code>overworld</code>,
+        })}
       </Callout>
       <p>
-        <strong>El motor propio</strong> (<code>provider: terrain</code>) es para mundos creados sin reiniciar, donde
-        Minecraft no deja usar un datapack: los mismos ajustes, con su propia forma (no idéntica a vanilla). Encima
-        Minecraft pone su superficie, cuevas, decoración y estructuras (bedrock, pizarra profunda, carbón, pueblos);
-        los biomas los elige el motor por altura y clima (picos arriba, océanos en el mar). Las cimas se comprimen al
-        acercarse al techo del mundo (y=319) en vez de cortarse.
+        {fill(c.engineBody, { ownEngine: <strong>{c.ownEngine}</strong>, provider: <code>provider: terrain</code> })}
       </p>
       <p>
-        <strong>Con Terralith instalado</strong>: las dimensiones y el motor de WorldForge no heredan su terreno
-        (salen del jar del servidor); el generador <code>overworld</code> sí. En Paper sin el mod lithostitched, los
-        biomas de Terralith solo aparecen en el mundo principal.
+        {fill(c.terralithBody, {
+          withTerralith: <strong>{c.withTerralith}</strong>,
+          overworldGen: <code>overworld</code>,
+        })}
       </p>
 
-      <SectionHeading id="regeneracion">Regeneración</SectionHeading>
-      <Callout tone="danger" title="Regenerar borra lo que hay en esos chunks">
-        Por eso siempre sigue los mismos cuatro pasos, y WorldForge nunca borra un respaldo.
+      <SectionHeading id="regeneracion">{c.regenTitle}</SectionHeading>
+      <Callout tone="danger" title={c.regenDangerTitle}>
+        {c.regenDangerBody}
       </Callout>
       <ol>
         <li>
-          <strong>Plan</strong>: <code>{"/wf regen plan <mundo> radius <x> <z> <radio>"}</code> (o{" "}
-          <code>{"area <x1> <z1> <x2> <z2>"}</code>, o <code>all</code>). Dice cuántos chunks, cuántos se saltan por
-          estar protegidos o sin generar, cuánto ocupa el respaldo y cuándo se aplicará. No toca nada.
+          {fill(c.r1, {
+            plan: <strong>{c.planWord}</strong>,
+            cmd: <code>{"/wf regen plan <mundo> radius <x> <z> <radio>"}</code>,
+            area: <code>{"area <x1> <z1> <x2> <z2>"}</code>,
+            all: <code>all</code>,
+          })}
         </li>
         <li>
-          <strong>Confirmación</strong> con el código del plan: <code>{"/wf regen confirm <trabajo> <código>"}</code>.
-          Caduca a los 15 minutos (<code>regeneration.confirm-minutes</code>).
+          {fill(c.r2, {
+            confirm: <strong>{c.confirmWord}</strong>,
+            cmd: <code>{"/wf regen confirm <trabajo> <código>"}</code>,
+            setting: <code>regeneration.confirm-minutes</code>,
+          })}
         </li>
+        <li>{fill(c.r3, { backup: <strong>{c.backupWord}</strong>, dir: <code>backups/</code> })}</li>
         <li>
-          <strong>Respaldo</strong> de los archivos de región afectados en <code>backups/</code>, comprobado con
-          SHA-256 justo antes de editar.
-        </li>
-        <li>
-          <strong>Ejecución</strong>: un mundo secundario se descarga, se edita y se vuelve a cargar al momento (los
-          jugadores que haya dentro se mueven al mundo principal). El mundo principal se aplica en el{" "}
-          <strong>próximo arranque</strong>, antes de abrir los mundos.
+          {fill(c.r4, { exec: <strong>{c.execWord}</strong>, nextBoot: <strong>{c.nextBoot}</strong> })}
         </li>
       </ol>
+      <p>{fill(c.undoBody, { cmd: <code>/wf regen restore &lt;trabajo&gt;</code> })}</p>
+
+      <SectionHeading id="zonas-protegidas" level={3}>{c.protTitle}</SectionHeading>
       <p>
-        Deshacer: <code>/wf regen restore &lt;trabajo&gt;</code> planifica una restauración de ese respaldo, que sigue
-        el mismo camino (plan, código y respaldo de lo actual).
+        {fill(c.protBody, {
+          file: <code>plugins/RPGRoll-WorldForge/protections.yml</code>,
+          cmd: <code>/wf protection add|remove|list</code>,
+          setting: <code>spawn-radius-chunks</code>,
+          blocked: <strong>{c.blockedWord}</strong>,
+        })}
       </p>
 
-      <SectionHeading id="zonas-protegidas" level={3}>Zonas protegidas</SectionHeading>
+      <SectionHeading id="recuperacion" level={3}>{c.recoveryTitle}</SectionHeading>
       <p>
-        <code>plugins/RPGRoll-WorldForge/protections.yml</code> (o <code>/wf protection add|remove|list</code>): la
-        regeneración nunca toca un chunk protegido, ni al planificar ni al ejecutar. Alrededor de la aparición de cada
-        mundo hay una zona protegida de <code>spawn-radius-chunks</code> chunks (por defecto 2; 0 la quita). Si el
-        archivo no se puede leer, la regeneración queda <strong>bloqueada</strong> hasta arreglarlo.
+        {fill(c.recoveryBody, {
+          state: <code>NEEDS_RECOVERY</code>,
+          info: <code>/wf regen info &lt;trabajo&gt;</code>,
+          restore: <code>/wf regen restore</code>,
+          accept: <code>/wf regen accept</code>,
+        })}
       </p>
 
-      <SectionHeading id="recuperacion" level={3}>Si el servidor se apaga a mitad</SectionHeading>
+      <SectionHeading id="menu">{c.menuTitle}</SectionHeading>
       <p>
-        Un trabajo que estaba ejecutándose queda en <code>NEEDS_RECOVERY</code> y bloquea ese mundo: no se reanuda
-        solo. <code>/wf regen info &lt;trabajo&gt;</code> dice qué pasó; puedes restaurar su respaldo (
-        <code>/wf regen restore</code>) o aceptarlo tal como quedó (<code>/wf regen accept</code>).
+        {fill(c.menuBody, {
+          cmd: <code>/wf gui</code>,
+          worldImport: <code>world import</code>,
+          worldTp: <code>world tp</code>,
+        })}
       </p>
 
-      <SectionHeading id="menu">Menú</SectionHeading>
-      <p>
-        <code>/wf gui</code> abre mundos (cargar, descargar, inspeccionar, cambiar de preset, regenerar o proteger
-        alrededor de ti), presets (validar, duplicar, semilla, publicar, exportar, crear mundo), regeneración
-        (confirmar, cancelar, restaurar, aceptar), zonas protegidas y diagnóstico. Cada botón pide su permiso al
-        pulsarlo, lo destructivo pide confirmación y, si otro admin cambia lo que estás viendo, el menú no guarda
-        encima. Plantillas, dimensiones, terrenos, <code>world import</code> y <code>world tp</code> van solo por
-        comandos.
-      </p>
-
-      <SectionHeading id="folia">Folia</SectionHeading>
-      <p>
-        Probado en <strong>Folia 26.1.2 build 8</strong> con un jugador conectado. Folia no deja crear, cargar ni
-        descargar mundos con el servidor en marcha, así que todo lo que cambia mundos pasa por el arranque:
-      </p>
+      <SectionHeading id="folia">{c.foliaTitle}</SectionHeading>
+      <p>{fill(c.foliaBody, { build: <strong>{c.foliaBuild}</strong> })}</p>
       <Table>
         <Thead>
-          <Th>Qué</Th>
-          <Th>En Folia</Th>
+          <Th>{c.thWhatF}</Th>
+          <Th>{c.thInFolia}</Th>
         </Thead>
         <tbody>
-          {folia.map(([what, how]) => (
+          {c.folia.map(([what, how]) => (
             <Tr key={what}><Td>{what}</Td><Td>{how}</Td></Tr>
           ))}
         </tbody>
       </Table>
-      <p>
-        Folia no tiene <code>save-all</code>: lo recién generado llega a disco en el autoguardado o al parar, y un plan
-        de regeneración lo avisa si toca chunks que todavía no están guardados.
-      </p>
+      <p>{fill(c.foliaSaveBody, { saveAll: <code>save-all</code> })}</p>
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <p>
-        Todos van con <code>/wf</code>. El permiso de cada uno lleva delante <code>worldforge.</code>
+        {fill(c.cmdIntro, { wf: <code>/wf</code>, prefix: <code>worldforge.</code> })}
       </p>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Permiso</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thPermission}</Th>
         </Thead>
         <tbody>
-          {commands.map(([cmd, perm]) => (
+          {c.commands.map(([cmd, perm]) => (
             <Tr key={cmd}><Td className={mono}>{cmd}</Td><Td className={mono}>{perm}</Td></Tr>
           ))}
         </tbody>
       </Table>
 
-      <SectionHeading id="permisos">Permisos</SectionHeading>
+      <SectionHeading id="permisos">{c.permTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Permiso</Th>
-          <Th>Qué permite</Th>
+          <Th>{c.thPermission}</Th>
+          <Th>{c.thAllows}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className={mono}>worldforge.admin (op)</Td><Td>Todo.</Td></Tr>
-          <Tr>
-            <Td className={mono}>worldforge.operator</Td>
-            <Td>
-              Preparar sin ejecutar nada destructivo: editar borradores, exportar, validar, planificar regeneraciones,
-              guardar plantillas.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td className={mono}>worldforge.viewer</Td>
-            <Td>Solo lectura: mundos, presets, dimensiones, zonas, trabajos, plantillas, diagnóstico.</Td>
-          </Tr>
+          <Tr><Td className={mono}>worldforge.admin (op)</Td><Td>{c.pAdmin}</Td></Tr>
+          <Tr><Td className={mono}>worldforge.operator</Td><Td>{c.pOperator}</Td></Tr>
+          <Tr><Td className={mono}>worldforge.viewer</Td><Td>{c.pViewer}</Td></Tr>
         </tbody>
       </Table>
       <p>
-        Sueltos: <code>{"worldforge.worlds.{view,create,manage,teleport,teleport.others}"}</code>,{" "}
-        <code>worldforge.terrain.main</code> (solo admin), <code>{"worldforge.presets.{view,edit,import,export}"}</code>,{" "}
-        <code>{"worldforge.generation.{validate,apply}"}</code>,{" "}
-        <code>{"worldforge.regeneration.{view,plan,execute,cancel}"}</code>,{" "}
-        <code>{"worldforge.protection.{view,manage}"}</code>, <code>{"worldforge.dimensions.{view,create}"}</code>,{" "}
-        <code>{"worldforge.templates.{view,save}"}</code>, <code>worldforge.diagnostics</code> y{" "}
-        <code>worldforge.reload</code>. La consola también pasa por los permisos.
+        {fill(c.permLooseBody, {
+          list: (
+            <>
+              <code>{"worldforge.worlds.{view,create,manage,teleport,teleport.others}"}</code>,{" "}
+              <code>worldforge.terrain.main</code> ({c.adminOnly}),{" "}
+              <code>{"worldforge.presets.{view,edit,import,export}"}</code>,{" "}
+              <code>{"worldforge.generation.{validate,apply}"}</code>,{" "}
+              <code>{"worldforge.regeneration.{view,plan,execute,cancel}"}</code>,{" "}
+              <code>{"worldforge.protection.{view,manage}"}</code>, <code>{"worldforge.dimensions.{view,create}"}</code>,{" "}
+              <code>{"worldforge.templates.{view,save}"}</code>, <code>worldforge.diagnostics</code>,{" "}
+              <code>worldforge.reload</code>
+            </>
+          ),
+        })}
       </p>
 
-      <SectionHeading id="limites">Límites</SectionHeading>
+      <SectionHeading id="limites">{c.limitsTitle}</SectionHeading>
       <ul>
-        <li>Menas, plantillas y biomas de un preset solo se aplican a <strong>chunks nuevos</strong>.</li>
-        <li>Crear, cargar y descargar mundos en caliente es solo de Paper.</li>
-        <li>Dimensiones nuevas solo al reiniciar (así funciona Minecraft) y con el generador de Minecraft.</li>
-        <li>
-          Las plantillas se colocan sin entidades (soportes de armadura, marcos…); los bloques con datos (cofres,
-          generadores de monstruos, carteles) sí van. Como mucho 32×64×32. Cada chunk decide la suya sin mirar a los
-          vecinos, así que dos plantillas grandes pueden solaparse: súbeles <code>rarity</code>.
-        </li>
-        <li>
-          No hay estructuras «registradas» de Minecraft (jigsaw, <code>/locate</code>): las plantillas son de
-          WorldForge.
-        </li>
-        <li>
-          La gravedad por mundo es solo de los jugadores. Sin física ni bloques nuevos: WorldForge solo usa lo que
-          Minecraft ya trae.
-        </li>
-        <li>
-          Terrenos por datapack: solo en dimensiones nuevas y en el mundo principal, al reiniciar. El mundo principal
-          no puede cambiar de altura (−64 a 319).
-        </li>
-        <li>Biomas nuevos no: los terrenos y el motor reparten los que ya existen (también los de datapacks).</li>
+        <li>{fill(c.l1, { newChunks: <strong>{c.newChunksWord}</strong> })}</li>
+        <li>{c.l2}</li>
+        <li>{c.l3}</li>
+        <li>{fill(c.l4, { rarity: <code>rarity</code> })}</li>
+        <li>{fill(c.l5, { locate: <code>/locate</code> })}</li>
+        <li>{c.l6}</li>
+        <li>{c.l7}</li>
+        <li>{c.l8}</li>
       </ul>
-      <Callout tone="info" title="Sin probar todavía">
-        <code>provider: plugin</code> se probó con un generador de prueba, no con Terra ni Iris. Tampoco están
-        probados en Folia <code>terrain main</code> ni el proveedor <code>hybrid</code>, ni el servidor con muchos
-        jugadores a la vez.
+      <Callout tone="info" title={c.untestedTitle}>
+        {fill(c.untestedBody, {
+          provider: <code>provider: plugin</code>,
+          terrainMain: <code>terrain main</code>,
+          hybrid: <code>hybrid</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="problemas">Problemas frecuentes</SectionHeading>
+      <SectionHeading id="problemas">{c.troublesTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Síntoma</Th>
-          <Th>Qué mirar</Th>
+          <Th>{c.thSymptom}</Th>
+          <Th>{c.thLook}</Th>
         </Thead>
         <tbody>
-          {troubles.map(([sym, fix]) => (
+          {c.troubles.map(([sym, fix]) => (
             <Tr key={sym}><Td>{sym}</Td><Td>{fix}</Td></Tr>
           ))}
         </tbody>
