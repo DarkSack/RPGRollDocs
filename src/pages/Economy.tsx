@@ -112,6 +112,14 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         destino bloqueado) revierte automáticamente el retiro — nunca queda plata "perdida" a mitad de camino.
       </p>
 
+      <Callout tone="info" title="Correcciones preparadas para la próxima actualización">
+        Los abonos que superen el saldo máximo se rechazarán completos; las transferencias fallidas
+        devolverán el dinero al emisor. Una compra en tienda de jugador se cancelará si el vendedor
+        no puede cobrar. En subastas, el pago y el objeto quedarán retenidos hasta poder liquidar la
+        venta, sin volver a cobrar al comprador; tampoco se sustituirá una puja si no se puede devolver
+        la anterior. Al disolver una empresa, la tesorería que no se pueda abonar seguirá guardada
+        para reintentar después de liberar saldo.
+      </Callout>
       <SectionHeading id="bancos-prestamos">Bancos y préstamos</SectionHeading>
       <p>
         A diferencia del wallet (uno por jugador), un jugador puede tener varias <code>BankAccount</code>:
@@ -573,7 +581,7 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
       <Callout tone="warning" title="Si tienes otro plugin de economía (EssentialsX, CMI) instalado">
         Vault deja el registro de mayor prioridad activo — con la misma prioridad, gana el que se registró
         último. Para que RPGRoll-Economy sea el que manda, desinstalá el otro plugin de economía o subile la
-        prioridad acá si hace falta convivir con ambos.
+        prioridad aquí si hace falta convivir con ambos.
       </Callout>
 
       <SectionHeading id="placeholders">Placeholders (PlaceholderAPI)</SectionHeading>

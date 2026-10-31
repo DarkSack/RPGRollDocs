@@ -2,7 +2,6 @@ import {
   AddButton,
   CheckboxField,
   IdDataList,
-  idListId,
   LinesField,
   NumberField,
   PlaceholderDataList,
@@ -11,6 +10,7 @@ import {
   SelectField,
   TextField,
 } from "./fields";
+import { idListId } from "./ids";
 import {
   ANIMATION_TYPES,
   BOSSBAR_COLORS,

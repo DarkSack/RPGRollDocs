@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { idListId } from "./ids";
 
 const INPUT_CLASS =
   "w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100";
@@ -127,10 +128,6 @@ export function LinesField({
       />
     </Field>
   );
-}
-
-export function idListId(kind: string): string {
-  return `tabdesigner-ids-${kind}`;
 }
 
 export function IdDataList({ kind, ids }: { kind: string; ids: string[] }) {

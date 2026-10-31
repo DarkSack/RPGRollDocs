@@ -28,6 +28,7 @@ import {
   AlertTriangleIcon,
   CalendarIcon,
   FactoryIcon,
+  GridIcon,
 } from "../components/icons/Icon";
 
 export interface AddonMeta {
@@ -73,6 +74,7 @@ export const addons: AddonMeta[] = [
   { slug: "furniture", icon: ArmchairIcon, blurb: "Muebles con modelo 3D: asientos, almacén, luz, carpintero y versiones por madera y color.", tone: "amber" },
   { slug: "recipes", icon: BookIcon, blurb: "Recetario al estilo JEI: cómo se hace y para qué sirve todo, de cualquier plugin.", tone: "violet" },
   { slug: "machines", icon: FactoryIcon, blurb: "Hornos por niveles, spawners con mejoras y pila, y canteras que excavan solas.", tone: "neutral" },
+  { slug: "worldforge", icon: GridIcon, blurb: "Mundos como Multiverse, terrenos al estilo Terralith, dimensiones nuevas y regeneración con respaldo. Sin RPGRoll-Lib.", tone: "green" },
 ];
 
 export function addonMeta(slug: string): AddonMeta | undefined {

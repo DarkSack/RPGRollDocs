@@ -65,6 +65,7 @@ export const nav: NavSection[] = [
       { slug: "furniture", label: "Muebles" },
       { slug: "recipes", label: "Recetario" },
       { slug: "machines", label: "Máquinas" },
+      { slug: "worldforge", label: "WorldForge" },
     ],
   },
   {
