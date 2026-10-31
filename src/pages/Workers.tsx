@@ -14,78 +14,87 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { ADDONS_F_COPY, type AddonsFCopy } from "./copy/addonsF";
 
-const professionFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_profesion", placeholder: "miner" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&7Minero" },
-  { key: "icon", label: "Ícono (Material)", type: "string", default: "VILLAGER_SPAWN_EGG" },
-  { key: "description", label: "Descripción", type: "string" },
-  { key: "entity-type", label: "EntityType vanilla", type: "string", default: "VILLAGER" },
-  { key: "skills", label: "Habilidades", type: "list", placeholder: "mining_speed, vein_detection" },
-  { key: "schedule", label: "Id de horario (vacío = ninguno)", type: "string" },
-  { key: "wage-amount", label: "Salario", type: "number", default: "0" },
-  { key: "wage-type", label: "Tipo de pago", type: "select", options: ["HOURLY", "PER_TASK"], default: "PER_TASK" },
-  { key: "tool-material", label: "Herramienta requerida (vacío = ninguna)", type: "string" },
+type WorkersCopy = AddonsFCopy["workers"];
+
+const professionFields = (c: WorkersCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: "nueva_profesion", placeholder: "miner" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&7Minero" },
+  { key: "icon", label: c.fIcon, type: "string", default: "VILLAGER_SPAWN_EGG" },
+  { key: "description", label: c.fDescription, type: "string" },
+  { key: "entity-type", label: c.fEntityType, type: "string", default: "VILLAGER" },
+  { key: "skills", label: c.fSkills, type: "list", placeholder: "mining_speed, vein_detection" },
+  { key: "schedule", label: c.fSchedule, type: "string" },
+  { key: "wage-amount", label: c.fWage, type: "number", default: "0" },
+  { key: "wage-type", label: c.fWageType, type: "select", options: ["HOURLY", "PER_TASK"], default: "PER_TASK" },
+  { key: "tool-material", label: c.fTool, type: "string" },
   {
     key: "reskin",
-    label: "Reskin visual (opcional)",
+    label: c.fReskin,
     type: "group",
     fields: [
-      { key: "material", label: "Material base", type: "string", placeholder: "PAPER" },
-      { key: "custom-model-data", label: "Custom model data", type: "number", placeholder: "100001" },
-      { key: "scale", label: "Escala del display", type: "number", default: "1.0" },
+      { key: "material", label: c.fMaterial, type: "string", placeholder: "PAPER" },
+      { key: "custom-model-data", label: c.fCmd, type: "number", placeholder: "100001" },
+      { key: "scale", label: c.fScale, type: "number", default: "1.0" },
     ],
   },
 ];
 
 export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ADDONS_F_COPY[locale].workers;
+
   return (
     <>
-      <PageHeader title="Workers (RPGRoll-Workers)" slug="workers">
-        Trabajadores autónomos con profesión, habilidades, inventario, necesidades, personalidad, horario y una
-        IA por reglas configurable — habitantes del mundo que trabajan incluso cuando ningún jugador los está
-        mirando, no minions que generan recursos por arte de magia.
+      <PageHeader title={c.title} slug="workers">
+        {c.intro}
       </PageHeader>
 
-      <Callout tone="info" title="El 'árbol de comportamiento' es una lista de reglas ordenadas, no nodos visuales">
-        Un editor de nodos de verdad no es viable en una GUI de inventario de Bukkit. En su lugar, cada{" "}
-        <code>Profession</code> tiene una lista de <code>AiRule</code> (condición→acción→prioridad) — la primera
-        regla cuya condición matchea gana. Si ninguna matchea, cae al horario de la profesión, y si tampoco tiene
-        uno, a <code>WORK</code> por defecto.
+      <Callout tone="info" title={c.treeTitle}>
+        {fill(c.treeBody, {
+          profession: <code>Profession</code>,
+          aiRule: <code>AiRule</code>,
+          work: <code>WORK</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, RPGRoll-Effects, RPGRoll-Seasons, RPGRoll-Ranching, RPGRoll-Fishing, RPGRoll-Guilds, Vault, SackResourcePack]"}
       />
       <p>
-        De todos los addons que el diseño original nombraba como integración (Ranching/Fishing/Mining/Blacksmith/
-        Housing/Magic/Quests/Guilds/Teams), solo{" "}
+        {c.reqBody1}{" "}
         <a href="/ranching" className="text-violet-600 underline dark:text-violet-400">
           RPGRoll-Ranching
         </a>
-        , RPGRoll-Fishing, RPGRoll-Seasons, RPGRoll-Quests, RPGRoll-Guilds y RPGRoll-Magic existen en este proyecto
-        — RPGRoll-Mining, RPGRoll-Blacksmith y "Housing" como addon separado no existen. Sin Vault + un plugin de
-        economía real, los salarios simplemente no se cobran (el resto de la simulación sigue igual). Sin{" "}
+        {c.reqBody2}{" "}
         <a href="/sackresourcepack" className="text-violet-600 underline dark:text-violet-400">
           SackResourcePack
         </a>
-        , el <a href="#reskin" onClick={(e) => e.preventDefault()}>reskin visual</a> de una profesión simplemente
-        no aparece configurado (no rompe nada — el worker se ve con su <code>entity-type</code> vanilla normal).
+        {fill(c.reqBody3, {
+          reskin: (
+            <a href="#reskin" onClick={(e) => e.preventDefault()}>
+              {c.reskinLink}
+            </a>
+          ),
+          entityType: <code>entity-type</code>,
+        })}
       </p>
 
-      <SectionHeading id="reskin">Reskin visual por profesión (sin ModelEngine/BetterModel)</SectionHeading>
+      <SectionHeading id="reskin">{c.reskinTitle}</SectionHeading>
       <p>
-        Minecraft no tiene ningún equivalente a <code>CustomModelData</code> para entidades vivas — no hay forma
-        de re-texturizar un worker vanilla solo con un resource pack. RPGRoll-Workers usa el mismo mecanismo que
-        RPGRoll-Ranching (y, con listas, RPGRoll-Mobs): la entidad vanilla real sigue siendo la que trabaja/camina
-        (comportamiento intacto), pero se le monta una entidad <code>ItemDisplay</code> como pasajero real,
-        portando un ítem con <code>custom-model-data</code>.
+        {fill(c.reskinBody, {
+          cmd: <code>CustomModelData</code>,
+          display: <code>ItemDisplay</code>,
+          cmdLower: <code>custom-model-data</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
-        filename="professions/reference_full.yml (fragmento)"
+        filename={c.reskinFragFile}
         code={
           "reskin:\n" +
           "  material: PAPER\n" +
@@ -95,40 +104,39 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
         }
       />
       <p>
-        Es un único reskin fijo por profesión (no una lista sorteada, a diferencia de Mobs). El material y el
-        número de <code>custom-model-data</code> los define un resource pack real — el mismo pipeline que ya usa
-        RPGRoll-Items: pon el modelo/textura en{" "}
-        <code>plugins/RPGRoll-Workers/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code> y, si
-        SackResourcePack está instalado, se sincroniza solo al arrancar el plugin.
+        {fill(c.reskinBody2, {
+          cmd: <code>custom-model-data</code>,
+          path: (
+            <code>
+              plugins/RPGRoll-Workers/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...
+            </code>
+          ),
+        })}
       </p>
-      <Callout tone="warning" title="Solo verificado por compilación, no probado en juego">
-        Igual que en Mobs/Ranching, esta primera versión del reskin no fue probada visualmente contra un cliente
-        real de Minecraft (sin servidor Paper disponible en el entorno de desarrollo).
+      <Callout tone="warning" title={c.untestedTitle}>
+        {c.untestedBody}
       </Callout>
 
-      <SectionHeading id="ia">IA por reglas</SectionHeading>
+      <SectionHeading id="ia">{c.aiTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Condición</Th>
-          <Th>Se activa cuando...</Th>
+          <Th>{c.thCondition}</Th>
+          <Th>{c.thActivates}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">HUNGRY / TIRED / SLEEPY / STRESSED</Td><Td>Alguna necesidad cruza un umbral (hambre/energía/sueño bajos, o estrés alto).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">INVENTORY_FULL</Td><Td>El inventario cargado del worker llega a su capacidad.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">RAINING / NIGHT</Td><Td>Clima/hora real del mundo (<code>World#hasStorm()</code> / <code>World#getTime()</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">LOW_HAPPINESS</Td><Td>Felicidad por debajo de un umbral.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ALWAYS</Td><Td>Siempre — pensada como regla de respaldo al final de la lista.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">HUNGRY / TIRED / SLEEPY / STRESSED</Td><Td>{c.iNeeds}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">INVENTORY_FULL</Td><Td>{c.iInvFull}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">RAINING / NIGHT</Td><Td>{fill(c.iWeather, { api: <><code>World#hasStorm()</code> / <code>World#getTime()</code></> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">LOW_HAPPINESS</Td><Td>{c.iHappiness}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">ALWAYS</Td><Td>{c.iAlways}</Td></Tr>
         </tbody>
       </Table>
       <p>
-        La acción <code>EAT</code> es autosuficiente: si el worker tiene un hogar asignado y todavía no llegó,
-        camina hacia él; al llegar (o si no tiene hogar), come. Una sola regla{" "}
-        <code>HUNGRY → EAT</code> alcanza para todo el flujo "buscar comida → comer → volver al trabajo" del
-        diseño original, sin necesitar un rastreador de estado de varios pasos.
+        {fill(c.eatBody, { eat: <code>EAT</code>, rule: <code>HUNGRY → EAT</code> })}
       </p>
       <CodeBlock
         language="yaml"
-        filename="professions/miner.yml (fragmento ai-rules)"
+        filename={c.aiFragFile}
         code={
           "ai-rules:\n" +
           "  - condition: HUNGRY\n" +
@@ -149,106 +157,92 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
         }
       />
 
-      <SectionHeading id="necesidades-personalidad">Necesidades y personalidad</SectionHeading>
-      <p>
-        Cada worker tiene 7 necesidades (0-100): hambre, energía, sueño, estrés (invertido — alto es malo),
-        motivación, salud y felicidad. Decaen solas cada chequeo periódico salvo mientras el worker está
-        durmiendo, que las restaura. Felicidad/motivación se arrastran hacia el promedio de las demás — ignorar
-        las necesidades básicas las termina bajando solas, sin un chequeo aparte.
-      </p>
-      <p>
-        Cada worker tiene UN rasgo de personalidad dominante (no una combinación), que modula velocidad de
-        trabajo, resistencia al estrés, y chance de error:
-      </p>
+      <SectionHeading id="necesidades-personalidad">{c.needsTitle}</SectionHeading>
+      <p>{c.needsBody}</p>
+      <p>{c.traitBody}</p>
       <Table>
         <Thead>
-          <Th>Rasgo</Th>
-          <Th>Efecto</Th>
+          <Th>{c.thTrait}</Th>
+          <Th>{c.thEffect}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">LAZY</Td><Td>x0.7 velocidad, menos estrés.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">FAST</Td><Td>x1.3 velocidad.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">RESPONSIBLE / AMBITIOUS</Td><Td>x1.1-1.15 velocidad.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">CLUMSY</Td><Td>x2.0 chance de error (desperdicia el intento de trabajo).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SMART / RESPONSIBLE</Td><Td>x0.5 chance de error.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SOCIAL / COWARD / etc.</Td><Td>Resto de rasgos (SMART, SOCIAL, LONER, BRAVE, COWARD) — flavor sin modificador mecánico propio en esta pasada.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">LAZY</Td><Td>{c.pLazy}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">FAST</Td><Td>{c.pFast}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">RESPONSIBLE / AMBITIOUS</Td><Td>{c.pResponsible}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">CLUMSY</Td><Td>{c.pClumsy}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SMART / RESPONSIBLE</Td><Td>{c.pSmart}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SOCIAL / COWARD / etc.</Td><Td>{c.pOther}</Td></Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="profesiones-habilidades">Profesiones y habilidades</SectionHeading>
+      <SectionHeading id="profesiones-habilidades">{c.profTitle}</SectionHeading>
       <p>
-        Una <code>Profession</code> define identidad, qué entidad vanilla la representa, sus reglas de IA, su
-        horario, su salario, y opcionalmente una herramienta requerida. El comportamiento físico real de
-        "trabajar" NO vive en la profesión — lo resuelve un <code>ProfessionBehavior</code> registrado por id.
+        {fill(c.profBody, {
+          profession: <code>Profession</code>,
+          behavior: <code>ProfessionBehavior</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Profesión de ejemplo</Th>
-          <Th>Comportamiento real</Th>
+          <Th>{c.thProfession}</Th>
+          <Th>{c.thBehavior}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">miner</Td><Td>Busca la veta más cercana, evita bloques adyacentes a lava, rompe y carga el mineral (sin durabilidad de herramienta ni tiempo de rotura real).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">farmer</Td><Td>Cosecha el cultivo maduro más cercano y resetea su edad a 0 (replantado instantáneo).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">lumberjack</Td><Td>Corta el tronco más cercano — no reforesta de verdad (plantar un árbol completo excede el alcance de esta pasada).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">rancher</Td><Td><strong>Integración real</strong> — busca un animal de Ranching cercano y lo alimenta vía <code>RanchingAPI.feedAnimal(...)</code>.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">fisherman</Td><Td>Busca agua cercana y saca un pez vanilla genérico — ver el aviso de abajo.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">miner</Td><Td>{c.bMiner}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">farmer</Td><Td>{c.bFarmer}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">lumberjack</Td><Td>{c.bLumberjack}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">rancher</Td><Td>{fill(c.bRancher, { real: <strong>{c.realIntegration}</strong>, api: <code>RanchingAPI.feedAnimal(...)</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">fisherman</Td><Td>{c.bFisherman}</Td></Tr>
         </tbody>
       </Table>
-      <Callout tone="warning" title="El pescador NO usa FishingAPI de verdad">
-        <code>FishingAPI.forceCatch(...)</code> exige un <code>Player</code> real (lo necesita para chequear
-        el nivel de personaje en peces legendarios), y un worker no es un jugador. Simularlo con un jugador falso
-        sería frágil y engañoso, así que <code>FishingBehavior</code> se queda con una captura vanilla simple en
-        vez de la genética/calidad rica de{" "}
+      <Callout tone="warning" title={c.fishTitle}>
+        {fill(c.fishBody1, {
+          forceCatch: <code>FishingAPI.forceCatch(...)</code>,
+          player: <code>Player</code>,
+          behavior: <code>FishingBehavior</code>,
+        })}{" "}
         <a href="/fishing" className="text-violet-600 underline dark:text-violet-400">
           RPGRoll-Fishing
         </a>
-        . Una profesión sin ningún behavior registrado sigue "trabajando" a efectos de horario/salario/experiencia,
-        solo que sin ninguna interacción física real (fallback silencioso, no un error).
+        {c.fishBody2}
       </Callout>
 
-      <SectionHeading id="inventario-logistica">Inventario y logística</SectionHeading>
+      <SectionHeading id="inventario-logistica">{c.invTitle}</SectionHeading>
       <p>
-        El inventario cargado de un worker es un mapa (material → cantidad), no un <code>Inventory</code> real de
-        27 slots — no necesita preservar metadata de ítems individuales, solo saber cuánto lleva de qué. Un
-        almacén no es contenido admin-creado como una especie o un gen: es un cofre/baúl real marcado en el mundo
-        con el Designador de Almacén (<Kbd>/workersadmin designator</Kbd>). Todos los almacenes designados viven
-        en un único <code>warehouses.yml</code> — no tiene sentido "reusar" la ubicación de un cofre puntual como
-        contenido reusable.
+        {fill(c.invBody, {
+          inventory: <code>Inventory</code>,
+          designator: <Kbd>/workersadmin designator</Kbd>,
+          warehouses: <code>warehouses.yml</code>,
+        })}
       </p>
 
-      <SectionHeading id="vivienda">Vivienda</SectionHeading>
-      <p>
-        Fijar el hogar de un worker es un botón en su ficha ("Fijar hogar en mi ubicación"), no una herramienta
-        de marcar camas — simplemente guarda la ubicación del jugador que lo gestiona. Dormir ahí (o en cualquier
-        lado, mientras la acción sea <code>SLEEP</code>) restaura energía/sueño en vez de decaerlos.
-      </p>
+      <SectionHeading id="vivienda">{c.houseTitle}</SectionHeading>
+      <p>{fill(c.houseBody, { sleep: <code>SLEEP</code> })}</p>
 
-      <SectionHeading id="economia">Economía: salarios, contratos y moral</SectionHeading>
+      <SectionHeading id="economia">{c.ecoTitle}</SectionHeading>
       <p>
-        El worker en sí no tiene cuenta — "cobrar" es, en la práctica, un costo de mantenimiento que el empleador
-        paga con su saldo real de Vault (vía <code>VaultEconomy</code> de RPGRoll-Lib, sea cual sea el proveedor —
-        no se inventó una economía propia). <code>HOURLY</code> se cobra en un tick
-        periódico; <code>PER_TASK</code> se cobra en el momento exacto de entregar en un almacén.
+        {fill(c.ecoBody, {
+          vault: <code>VaultEconomy</code>,
+          hourly: <code>HOURLY</code>,
+          perTask: <code>PER_TASK</code>,
+        })}
       </p>
-      <p>
-        La moral general (promedio de las 7 necesidades) modula la velocidad de trabajo y, si está muy baja
-        durante mucho tiempo, una chance periódica de que el worker renuncie a su contrato solo.
-      </p>
+      <p>{c.moralBody}</p>
 
-      <SectionHeading id="eventos">Eventos de worker</SectionHeading>
+      <SectionHeading id="eventos">{c.eventsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>Cuándo se sortea</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thWhen}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">ILLNESS / ACCIDENT / STRIKE</Td><Td>Solo con moral baja — aplican un estado activo con duración y multiplicador de velocidad de trabajo (0% en huelga = no trabaja nada).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">VACATION</Td><Td>En cualquier momento, si está empleado.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PROMOTION</Td><Td>Solo con moral alta — a diferencia de los demás, aplica sus bonos al instante, sin un estado temporal.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">ILLNESS / ACCIDENT / STRIKE</Td><Td>{c.eIllness}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">VACATION</Td><Td>{c.eVacation}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PROMOTION</Td><Td>{c.ePromotion}</Td></Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="formato-yaml">Ejemplo de archivo YAML</SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="professions/rancher.yml"
@@ -303,41 +297,36 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
         }
       />
 
-      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
-        <code>professions/reference_full.yml</code> (incluido en el jar) usa las 10 condiciones y las 9 acciones de
-        IA — el ejemplo de arriba solo usa 4 de cada una.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, { file: <code>professions/reference_full.yml</code> })}
       </Callout>
 
       <YamlBuilder
-        title="Constructor visual: profesión"
-        description="Identidad, horario y salario de una profesión. Las reglas de IA (ai-rules) son demasiado estructuradas para este formulario — copia y adaptá el ejemplo de arriba para esas."
+        title={c.bTitle}
+        description={c.bDesc}
         folder="professions"
-        fields={professionFields}
+        fields={professionFields(c)}
       />
 
-      <SectionHeading id="skins">Skins de jugador</SectionHeading>
-      <p>
-        Un worker puede llevar skin de jugador, como los NPCs. Como tiene que seguir siendo un mob para caminar
-        (usa el pathfinder), el mob se vuelve invisible y callado y un maniquí con la skin lo sigue a cada tick: se
-        coloca en su sitio, mira hacia donde mira él, lleva la herramienta de su profesión y la balancea al trabajar.
-        Pegarle al maniquí es pegarle al worker, y el maniquí acusa los golpes. No se guarda con el mundo: se
-        vuelve a crear al cargar el chunk, y al quitar la skin (o el plugin) el mob vuelve a verse.
-      </p>
-      <Callout tone="tip" title="De dónde sale la skin">
-        Un enlace de MineSkin (<code>mineskin.org/...</code>), <code>mineskin:&lt;id&gt;</code> o el uuid de una skin de
-        MineSkin; o el nombre de un jugador de Minecraft, cuya skin se copia tal como la lleva hoy. Se guarda en
-        <code>workers/&lt;uuid&gt;.yml</code> (<code>skin.value</code> y <code>skin.signature</code>).
+      <SectionHeading id="skins">{c.skinsTitle}</SectionHeading>
+      <p>{c.skinsBody}</p>
+      <Callout tone="tip" title={c.skinSrcTitle}>
+        {fill(c.skinSrcBody, {
+          link: <code>mineskin.org/...</code>,
+          id: <code>mineskin:&lt;id&gt;</code>,
+          path: <code>workers/&lt;uuid&gt;.yml</code>,
+          fields: (
+            <>
+              <code>skin.value</code> / <code>skin.signature</code>
+            </>
+          ),
+        })}
       </Callout>
 
-      <SectionHeading id="gui">GUI: Worker Studio</SectionHeading>
-      <p>
-        <Kbd>/workersadmin browser</Kbd> abre un hub que enlaza a 4 navegadores (Profesiones, Habilidades,
-        Horarios, Eventos) más el Explorador de Workers. La ficha de un worker muestra necesidades/habilidades/
-        contrato en texto (mismo criterio de "sin preview visual real" que otros módulos de este proyecto) y
-        expone Renombrar, Contratar, Despedir y Fijar hogar.
-      </p>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
+      <p>{fill(c.guiBody, { browser: <Kbd>/workersadmin browser</Kbd> })}</p>
 
-      <SectionHeading id="api">API para addons — WorkersAPI</SectionHeading>
+      <SectionHeading id="api">{c.apiTitle}</SectionHeading>
       <CodeBlock
         language="java"
         filename="OtroAddon.java"
@@ -355,40 +344,35 @@ export function Workers({ onNavigate }: { onNavigate: (slug: string) => void }) 
         }
       />
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">/workersadmin browser</Td><Td>Abre el Worker Studio.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/workersadmin reload</Td><Td>Recarga todas las definiciones desde disco.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/workersadmin spawn <profesion> [nombre]"}</Td><Td>Spawnea un worker en tu ubicación.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/workersadmin designator</Td><Td>Te da el Designador de Almacén.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/workersadmin skin <mineskin|jugador|quitar>"}</Td><Td>Pone al worker que miras la skin de un enlace o id de MineSkin, o la de un jugador; <code>quitar</code> le devuelve el aspecto de su profesión. También desde su ficha (botón Skin, solo staff).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/workers inspect</Td><Td>Abre la ficha del worker al que estás mirando.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/workers hire</Td><Td>Contrata al worker al que estás mirando (salario por defecto de su profesión).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/workers fire</Td><Td>Despide al worker al que estás mirando (si es tuyo, o de tu gremio).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/workers list</Td><Td>Lista tus trabajadores contratados.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/workersadmin browser</Td><Td>{c.wBrowser}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/workersadmin reload</Td><Td>{c.wReload}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/workersadmin spawn <profesion> [nombre]"}</Td><Td>{c.wSpawn}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/workersadmin designator</Td><Td>{c.wDesignator}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/workersadmin skin <mineskin|jugador|quitar>"}</Td><Td>{fill(c.wSkin, { remove: <code>quitar</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/workers inspect</Td><Td>{c.wInspect}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/workers hire</Td><Td>{c.wHire}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/workers fire</Td><Td>{c.wFire}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/workers list</Td><Td>{c.wList}</Td></Tr>
         </tbody>
       </Table>
       <p>
-        <code>/workersadmin</code> requiere <Badge tone="amber">rpgrollworkers.admin.*</Badge> (default: op);{" "}
-        <code>/workers</code> requiere <Badge tone="blue">rpgrollworkers.use</Badge> (default: true). Con
-        RPGRoll-Guilds instalado, cualquier miembro del mismo gremio que el empleador también puede despedir su
-        worker — "los gremios pueden compartir trabajadores" del diseño original, resuelto como gestión
-        compartida. Nadie más puede renombrar ni despedir un worker ajeno sin{" "}
-        <Badge tone="amber">rpgrollworkers.admin.*</Badge>, y mover su hogar requiere{" "}
-        <Badge tone="amber">rpgrollworkers.sethome</Badge> (default: op).
+        {fill(c.permNote, {
+          admin: <code>/workersadmin</code>,
+          p1: <Badge tone="amber">rpgrollworkers.admin.*</Badge>,
+          use: <code>/workers</code>,
+          p2: <Badge tone="blue">rpgrollworkers.use</Badge>,
+          p1b: <Badge tone="amber">rpgrollworkers.admin.*</Badge>,
+          p3: <Badge tone="amber">rpgrollworkers.sethome</Badge>,
+        })}
       </p>
-      <p>
-        Un worker trabaja alrededor de su hogar —el sitio donde se creó— y solo en chunks cargados. Antes de
-        cambiar un bloque lanza el mismo evento que un aldeano al cosechar, así que WorldGuard puede impedirlo y
-        CoreProtect lo registra; en el territorio protegido de un gremio solo trabajan los workers de sus
-        miembros. El leñador solo tala troncos coronados por hojas naturales: la madera de una casa no la toca.
-        GriefPrevention no frena a los mobs dentro de sus claims, por eso mover el hogar es de admin.
-      </p>
+      <p>{c.regionsBody}</p>
       <PrevNext current="workers" onNavigate={onNavigate} />
     </>
   );

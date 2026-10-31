@@ -63,6 +63,8 @@ const MODULES = {
   pass: "pass",
   furniture: "furniture",
   recipes: "recipes",
+  disasters: "disasters",
+  machines: "machines",
 };
 
 const localIndex = process.argv.indexOf("--local");

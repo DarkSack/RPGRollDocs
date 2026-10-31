@@ -14,20 +14,24 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { ADDONS_F_COPY, type AddonsFCopy } from "./copy/addonsF";
 
-const trapFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_trampa", placeholder: "spike_corridor" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&cPasillo de Pinchos" },
-  { key: "description", label: "Descripción", type: "string" },
-  { key: "icon", label: "Ícono (Material)", type: "string", default: "TRIPWIRE_HOOK" },
+type TrapsCopy = AddonsFCopy["traps"];
+
+const trapFields = (c: TrapsCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: "nueva_trampa", placeholder: "spike_corridor" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&cPasillo de Pinchos" },
+  { key: "description", label: c.fDescription, type: "string" },
+  { key: "icon", label: c.fIcon, type: "string", default: "TRIPWIRE_HOOK" },
   {
     key: "trigger",
-    label: "Trigger",
+    label: c.fTrigger,
     type: "group",
     fields: [
       {
         key: "type",
-        label: "Tipo",
+        label: c.fType,
         type: "select",
         default: "PRESSURE",
         options: [
@@ -37,121 +41,157 @@ const trapFields: YamlField[] = [
       },
     ],
   },
-  { key: "radius", label: "Radio (bloques)", type: "number", default: "1.5" },
-  { key: "cooldown-millis", label: "Cooldown (ms)", type: "number", default: "0" },
-  { key: "charges", label: "Cargas (-1 = infinitas)", type: "number", default: "-1" },
+  { key: "radius", label: c.fRadius, type: "number", default: "1.5" },
+  { key: "cooldown-millis", label: c.fCooldown, type: "number", default: "0" },
+  { key: "charges", label: c.fCharges, type: "number", default: "-1" },
 ];
 
 export function Traps({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ADDONS_F_COPY[locale].traps;
+
   return (
     <>
-      <PageHeader title="Traps &amp; Defenses (RPGRoll-Traps)">
-        Motor genérico de trampas/mecanismos configurable por YAML: bloques reforzados con llave, minas, pinchos,
-        explosiones custom, puertas secretas/paredes falsas, runas mágicas, teletransporte, cadenas de mecanismos
-        e integración con redstone — con un state machine propio (IDLE→ARMED→TRIGGERED→COOLDOWN→DEPLETED) para que
-        cada instancia colocada en el mundo se comporte de forma consistente y persistente entre reinicios.
-      </PageHeader>
+      <PageHeader title={c.title}>{c.intro}</PageHeader>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-Items, RPGRoll-Effects, RPGRoll-Mobs, RPGRoll-FX, RPGRoll-Guilds, PlaceholderAPI, SackResourcePack]"} />
       <p>
-        RPGRoll-Items es opcional: si está instalado, <code>required-item-id</code> reconoce ítems custom por id
-        (vía <code>ItemInstanceService</code>); si no, cae a un <code>Material</code> vanilla directo en la mano.
-        RPGRoll-Effects también es opcional: sin él, la acción <Kbd>EFFECT</Kbd> simplemente no hace nada (con un
-        warning en consola) en vez de crashear. SackResourcePack también es opcional: si está instalado, los modelos
-        de fábrica de torretas, munición y trampas se registran en el pack (aplica con <Kbd>/srp rebuild</Kbd>); sin
-        él cada ítem se ve con su material vanilla.
+        {fill(c.reqBody, {
+          reqItem: <code>required-item-id</code>,
+          iis: <code>ItemInstanceService</code>,
+          material: <code>Material</code>,
+          effect: <Kbd>EFFECT</Kbd>,
+          srp: <Kbd>/srp rebuild</Kbd>,
+        })}
       </p>
 
-      <SectionHeading id="modelo">Definición vs. instancia colocada</SectionHeading>
+      <SectionHeading id="modelo">{c.modelTitle}</SectionHeading>
       <p>
-        Igual que en Crates o Dungeons: un <code>TrapDefinition</code> (YAML en <code>traps/*.yml</code>) es un{" "}
-        <strong>tipo</strong> de trampa reusable (comportamiento), y un <code>PlacedTrap</code> es una{" "}
-        <strong>instancia</strong> física en el mundo (persistida en <code>locations.yml</code>, recreada al
-        reiniciar). Varias instancias pueden compartir la misma definición.
+        {fill(c.modelBody, {
+          def: <code>TrapDefinition</code>,
+          dir: <code>traps/*.yml</code>,
+          type: <strong>{c.typeWord}</strong>,
+          placed: <code>PlacedTrap</code>,
+          instance: <strong>{c.instanceWord}</strong>,
+          locations: <code>locations.yml</code>,
+        })}
       </p>
-      <Callout tone="info" title="Sin comando de jugador">
-        Todo el addon es admin-configurado vía <Kbd>/trapadmin</Kbd> — no hay un comando <code>/trap</code> de
-        jugador en esta versión. Los jugadores solo interactúan con las trampas ya puestas en el mundo.
+      <Callout tone="info" title={c.noPlayerTitle}>
+        {fill(c.noPlayerBody, { trapadmin: <Kbd>/trapadmin</Kbd>, trap: <code>/trap</code> })}
       </Callout>
 
-      <SectionHeading id="triggers">Triggers</SectionHeading>
+      <SectionHeading id="triggers">{c.triggersTitle}</SectionHeading>
       <p>
-        Los primeros ocho son dirigidos por evento vanilla (un listener los detecta al instante).{" "}
-        <Badge tone="amber">PROXIMITY</Badge>, <Badge tone="amber">LINE_OF_SIGHT</Badge> y{" "}
-        <Badge tone="amber">TIMER</Badge> no tienen evento equivalente, así que el motor los re-evalúa en un tick
-        periódico propio (<code>config.yml: engine.tick-interval-ticks</code>, 20 por defecto).{" "}
-        <Badge tone="violet">COMMAND</Badge> y <Badge tone="violet">CUSTOM_EVENT</Badge> nunca se disparan solos —
-        solo vía <Kbd>/trapadmin forcetrigger</Kbd> o la acción <code>TRIGGER_TRAP</code> de otra trampa.
+        {fill(c.triggersBody, {
+          proximity: <Badge tone="amber">PROXIMITY</Badge>,
+          los: <Badge tone="amber">LINE_OF_SIGHT</Badge>,
+          timer: <Badge tone="amber">TIMER</Badge>,
+          tick: <code>config.yml: engine.tick-interval-ticks</code>,
+          command: <Badge tone="violet">COMMAND</Badge>,
+          customEvent: <Badge tone="violet">CUSTOM_EVENT</Badge>,
+          force: <Kbd>/trapadmin forcetrigger</Kbd>,
+          triggerTrap: <code>TRIGGER_TRAP</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Trigger</Th>
-          <Th>Qué detecta</Th>
+          <Th>{c.thTrigger}</Th>
+          <Th>{c.thDetects}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">PRESSURE</Td><Td>Un jugador pisa el bloque exacto de la trampa.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">MOVEMENT</Td><Td>Un jugador se mueve dentro del radio configurado (sin exigir que esté parado encima).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PROXIMITY</Td><Td>Hay un jugador dentro del radio — re-evaluado en el tick periódico.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">LINE_OF_SIGHT</Td><Td>Un jugador tiene visión directa hacia la trampa — también por tick.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">INTERACTION</Td><Td>Click derecho sobre el bloque (la base de puertas secretas con llave).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">BLOCK_BREAK / BLOCK_PLACE</Td><Td>Alguien rompe o coloca el bloque de la trampa.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PROJECTILE</Td><Td>Un proyectil impacta el bloque (<code>ProjectileHitEvent</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ENTITY</Td><Td>Cualquier <code>LivingEntity</code> no-jugador entra en la zona (mobs, animales).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">REDSTONE</Td><Td>El bloque recibe señal de redstone (flanco de subida).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TIMER</Td><Td>Se dispara sola cada tanto, sin necesitar un jugador cerca.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">COMMAND / CUSTOM_EVENT</Td><Td>Solo por API/comando — nunca automático.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PRESSURE</Td><Td>{c.tPressure}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">MOVEMENT</Td><Td>{c.tMovement}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PROXIMITY</Td><Td>{c.tProximity}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">LINE_OF_SIGHT</Td><Td>{c.tLos}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">INTERACTION</Td><Td>{c.tInteraction}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">BLOCK_BREAK / BLOCK_PLACE</Td><Td>{c.tBlock}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PROJECTILE</Td><Td>{fill(c.tProjectile, { ev: <code>ProjectileHitEvent</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">ENTITY</Td><Td>{fill(c.tEntity, { le: <code>LivingEntity</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">REDSTONE</Td><Td>{c.tRedstone}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TIMER</Td><Td>{c.tTimer}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">COMMAND / CUSTOM_EVENT</Td><Td>{c.tCommand}</Td></Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="acciones">Acciones</SectionHeading>
+      <SectionHeading id="acciones">{c.actionsTitle}</SectionHeading>
       <p>
-        Cada trampa tiene una lista de <code>actions</code> (se ejecutan todas, en orden, cuando el motor decide
-        disparar). Formato YAML: <code>{"{ type: TIPO, params: { ... } }"}</code>.
+        {fill(c.actionsBody, {
+          actions: <code>actions</code>,
+          fmt: <code>{"{ type: TIPO, params: { ... } }"}</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Acción</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thAction}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">MESSAGE</Td><Td>Mensaje al jugador que disparó (soporta <code>{"{player}"}</code>/<code>{"{trap}"}</code> y color/formato <code>&amp;</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SOUND / PARTICLE</Td><Td>Sonido o partícula vanilla en la ubicación de la trampa.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">DAMAGE</Td><Td>Daño directo al objetivo — jugador <strong>o mob</strong> (torretas apuntando a hostiles).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">HEAL</Td><Td>Restaura vida al objetivo (<code>amount</code>) — la base de una torreta "de sanación" apuntada solo a jugadores.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">EXPLOSION</Td><Td>Explosión custom (<code>power</code>/<code>fire</code>/<code>break-blocks</code>) — no usa TNT real, así que puedes dañar sin romper estructuras.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">FIRE</Td><Td>Prende fuego al jugador por N ticks.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TELEPORT</Td><Td>Teletransporta al jugador a coordenadas fijas (o a su mundo actual si no especificas <code>world</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">EFFECT</Td><Td>Aplica un efecto de estado de RPGRoll-Effects por id (veneno, sangrado, quemadura...) al objetivo — jugador <strong>o mob</strong>. No hace nada si el addon no está instalado.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PROJECTILE</Td><Td>Ráfaga fija de N flechas hacia el jugador que disparó (<code>amount</code>/<code>spread</code>/<code>interval-ticks</code>/<code>speed</code>) — pensada para trampas ("le llueven flechas al pisar la placa").</Td></Tr>
-          <Tr><Td className="font-mono text-xs">CUSTOM_PROJECTILE</Td><Td>Un solo disparo instantáneo hacia el objetivo — <code>projectile-type</code> elige entre <code>ARROW</code> (default), <code>SPECTRAL_ARROW</code>, <code>SNOWBALL</code>, <code>EGG</code>, <code>ENDER_PEARL</code>, <code>FIREBALL</code>, <code>SMALL_FIREBALL</code>, <code>WITHER_SKULL</code>, <code>DRAGON_FIREBALL</code>, <code>TRIDENT</code>, <code>SHULKER_BULLET</code> o <code>POTION</code> (una poción arrojadiza real: no hace daño de impacto, solo aplica los efectos de <code>effects</code> — formato <code>{"TIPO:duración-ticks:amplificador;TIPO2:..."}</code>, ej. <code>SLOWNESS:200:1;WEAKNESS:200:0</code>). Es la acción por defecto de una torreta.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SONIC_BOOM</Td><Td>Aproximación del ataque a distancia del Warden: daño instantáneo (<code>damage</code>) + partícula/sonido interpolados entre el origen y el objetivo. No reimplementa el hitbox-piercing real del Warden (vive en código de servidor no expuesto por la API pública).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">COMMAND / COMMAND_AS_PLAYER</Td><Td>Ejecuta un comando por consola o como el jugador (necesario para comandos propios de RPGRoll que exigen un jugador real).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TRIGGER_TRAP</Td><Td>Fuerza el disparo de otra instancia colocada por su <code>placement-id</code> — la base de las cadenas de mecanismos. Sin efecto si se usa desde una torreta (no hay cadena de trampas que forzar).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">REDSTONE_PULSE</Td><Td>Coloca un <code>REDSTONE_BLOCK</code> temporal en una posición relativa y lo revierte tras N ticks (Trap → Redstone).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TOGGLE_BLOCKS</Td><Td>Alterna una lista de bloques reales entre material "cerrado"/"abierto" — la base de puertas secretas y paredes falsas, con animación <code>INSTANT</code> o <code>SLIDE</code> (progresiva, bloque por bloque).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">MESSAGE</Td><Td>{fill(c.aMessage, { ph: <><code>{"{player}"}</code>/<code>{"{trap}"}</code></>, amp: <code>&amp;</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SOUND / PARTICLE</Td><Td>{c.aSound}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">DAMAGE</Td><Td>{fill(c.aDamage, { orMob: <strong>{c.orMob}</strong> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">HEAL</Td><Td>{fill(c.aHeal, { amount: <code>amount</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">EXPLOSION</Td><Td>{fill(c.aExplosion, { params: <><code>power</code>/<code>fire</code>/<code>break-blocks</code></> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">FIRE</Td><Td>{c.aFire}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TELEPORT</Td><Td>{fill(c.aTeleport, { world: <code>world</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">EFFECT</Td><Td>{fill(c.aEffect, { orMob: <strong>{c.orMob}</strong> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PROJECTILE</Td><Td>{fill(c.aProjectile, { params: <><code>amount</code>/<code>spread</code>/<code>interval-ticks</code>/<code>speed</code></> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">CUSTOM_PROJECTILE</Td><Td>{fill(c.aCustomProjectile, {
+            ptype: <code>projectile-type</code>,
+            types: (
+              <>
+                <code>ARROW</code> (default), <code>SPECTRAL_ARROW</code>, <code>SNOWBALL</code>, <code>EGG</code>,{" "}
+                <code>ENDER_PEARL</code>, <code>FIREBALL</code>, <code>SMALL_FIREBALL</code>, <code>WITHER_SKULL</code>,{" "}
+                <code>DRAGON_FIREBALL</code>, <code>TRIDENT</code>, <code>SHULKER_BULLET</code>, <code>POTION</code>
+              </>
+            ),
+            effects: <code>effects</code>,
+            fmt: <code>{"TIPO:duraci\u00f3n-ticks:amplificador;TIPO2:..."}</code>,
+            ex: <code>SLOWNESS:200:1;WEAKNESS:200:0</code>,
+          })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SONIC_BOOM</Td><Td>{fill(c.aSonicBoom, { damage: <code>damage</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">COMMAND / COMMAND_AS_PLAYER</Td><Td>{c.aCommand}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TRIGGER_TRAP</Td><Td>{fill(c.aTriggerTrap, { placementId: <code>placement-id</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">REDSTONE_PULSE</Td><Td>{fill(c.aRedstonePulse, { rb: <code>REDSTONE_BLOCK</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TOGGLE_BLOCKS</Td><Td>{fill(c.aToggleBlocks, { instant: <code>INSTANT</code>, slide: <code>SLIDE</code> })}</Td></Tr>
         </tbody>
       </Table>
-      <Callout tone="tip" title="Las mismas acciones sirven para trampas Y torretas">
-        Torretas y trampas ejecutan acciones a través del mismo <code>TrapActionRegistry</code> — cualquier acción
-        nueva que se agregue queda disponible para ambas sin cableado aparte. Una trampa custom puede usar{" "}
-        <code>CUSTOM_PROJECTILE</code>/<code>SONIC_BOOM</code> en su propia lista de <code>actions</code> igual que
-        una torreta las usa como su <code>impact</code>.
+      <Callout tone="tip" title={c.sameActionsTitle}>
+        {fill(c.sameActionsBody, {
+          registry: <code>TrapActionRegistry</code>,
+          cp: (
+            <>
+              <code>CUSTOM_PROJECTILE</code>/<code>SONIC_BOOM</code>
+            </>
+          ),
+          actions: <code>actions</code>,
+          impact: <code>impact</code>,
+        })}
       </Callout>
-      <Callout tone="warning" title="Sin camuflaje por-jugador">
-        El "camuflaje" de este addon es <strong>swap de bloque real</strong> (<code>TOGGLE_BLOCKS</code>/
-        <code>disguise</code>), visible igual para todos los jugadores — no hay un sistema de bloques falsos
-        por-paquete (requeriría ProtocolLib + block-change packets, sin precedente en el repo). Igual sirve para
-        la mayoría de los casos: una pared falsa se ve como pared normal hasta que se activa el mecanismo.
+      <Callout tone="warning" title={c.noCamoTitle}>
+        {fill(c.noCamoBody, {
+          swap: <strong>{c.blockSwap}</strong>,
+          toggle: (
+            <>
+              <code>TOGGLE_BLOCKS</code>/<code>disguise</code>
+            </>
+          ),
+        })}
       </Callout>
 
-      <SectionHeading id="condiciones">Condiciones</SectionHeading>
+      <SectionHeading id="condiciones">{c.condTitle}</SectionHeading>
       <p>
-        Mismo mini-lenguaje que <code>MobConditionEvaluator</code> (Mobs) y otros evaluadores del ecosistema:{" "}
-        <code>ruta operador valor</code>, con <code>==</code>, <code>!=</code>, <code>&lt;</code>,{" "}
-        <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>. Si la trampa se dispara sin un jugador en
-        contexto (ej. por TIMER/REDSTONE lejos de cualquiera), cualquier condición <code>player.*</code> se evalúa
-        como no cumplida.
+        {fill(c.condBody, {
+          evaluator: <code>MobConditionEvaluator</code>,
+          syntax: <code>ruta operador valor</code>,
+          ops: (
+            <>
+              <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>,{" "}
+              <code>&gt;=</code>
+            </>
+          ),
+          playerStar: <code>player.*</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -159,37 +199,48 @@ export function Traps({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
       <Table>
         <Thead>
-          <Th>Ruta</Th>
-          <Th>Valor</Th>
+          <Th>{c.thPath}</Th>
+          <Th>{c.thValue}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">player.level</Td><Td>Nivel del jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">player.health</Td><Td>Vida actual — acepta <code>%</code> (ej. <code>&lt; 50%</code>) para comparar contra el máximo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">player.sneaking</Td><Td><code>true</code>/<code>false</code>.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">player.foodlevel</Td><Td>Nivel de hambre (0-20).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">world</Td><Td>Nombre del mundo del jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">weather</Td><Td><code>CLEAR</code>/<code>RAIN</code>/<code>STORM</code>.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">night</Td><Td><code>true</code>/<code>false</code> según la hora del mundo.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.level</Td><Td>{c.cLevel}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.health</Td><Td>{fill(c.cHealth, { pct: <code>%</code>, ex: <code>&lt; 50%</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.sneaking</Td><Td>{fill(c.cSneaking, { tf: <><code>true</code>/<code>false</code></> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">player.foodlevel</Td><Td>{c.cFood}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">world</Td><Td>{c.cWorld}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">weather</Td><Td>{fill(c.cWeather, { vals: <><code>CLEAR</code>/<code>RAIN</code>/<code>STORM</code></> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">night</Td><Td>{fill(c.cNight, { tf: <><code>true</code>/<code>false</code></> })}</Td></Tr>
         </tbody>
       </Table>
       <Callout tone="tip">
-        <code>TrapConditionRegistry</code> queda abierto para que código Java sume sus propias rutas (ej. otro
-        addon registrando <code>guild.rank</code>) — no hay una API pública todavía porque en v1 ningún otro addon
-        depende de RPGRoll-Traps.
+        {fill(c.condTip, {
+          registry: <code>TrapConditionRegistry</code>,
+          guildRank: <code>guild.rank</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="bloques-protegidos">Bloques protegidos y llaves</SectionHeading>
+      <SectionHeading id="bloques-protegidos">{c.blocksTitle}</SectionHeading>
       <p>
-        La sección opcional <code>block</code> de una definición convierte su bloque colocado en{" "}
-        <strong>protegido</strong>: <code>breakable: false</code> cancela cualquier intento de romperlo,{" "}
-        <code>required-item-id</code> exige tener ese ítem en la mano (custom de RPGRoll-Items o Material vanilla)
-        para poder romperlo, y <code>explosion-immune</code>/<code>piston-immune</code> lo excluyen de{" "}
-        <code>EntityExplodeEvent</code>/<code>BlockExplodeEvent</code>/pistones por completo — sin este sistema,
-        TNT/creepers/pistones tratarían el bloque como cualquier otro.
+        {fill(c.blocksBody, {
+          block: <code>block</code>,
+          protectedWord: <strong>{c.protectedWord}</strong>,
+          breakable: <code>breakable: false</code>,
+          reqItem: <code>required-item-id</code>,
+          immune: (
+            <>
+              <code>explosion-immune</code>/<code>piston-immune</code>
+            </>
+          ),
+          events: (
+            <>
+              <code>EntityExplodeEvent</code>/<code>BlockExplodeEvent</code>
+            </>
+          ),
+        })}
       </p>
       <CodeBlock
         language="yaml"
-        filename="traps/reinforced_vault_door.yml (fragmento)"
+        filename={c.fragFile}
         code={
           "block:\n" +
           "  material: IRON_DOOR\n" +
@@ -200,48 +251,57 @@ export function Traps({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <SectionHeading id="cadenas">Cadenas de mecanismos</SectionHeading>
+      <SectionHeading id="cadenas">{c.chainsTitle}</SectionHeading>
       <p>
-        El campo <code>chain</code> de una definición dispara (vía <code>TrapEngine#forceTrigger</code>) otras
-        instancias colocadas apenas esta se activa — pero cada trampa encadenada sigue respetando sus{" "}
-        <strong>propias</strong> condiciones, cooldown y cargas, no las salta. Lo mismo logra la acción{" "}
-        <code>TRIGGER_TRAP</code> dentro de <code>actions</code>, para encadenar desde un punto específico de la
-        secuencia en vez de solo al final.
+        {fill(c.chainsBody, {
+          chain: <code>chain</code>,
+          force: <code>TrapEngine#forceTrigger</code>,
+          own: <strong>{c.ownWord}</strong>,
+          triggerTrap: <code>TRIGGER_TRAP</code>,
+          actions: <code>actions</code>,
+        })}
       </p>
 
-      <SectionHeading id="estados">Estados (state machine)</SectionHeading>
-      <p>
-        Cada <code>PlacedTrap</code> tiene su propio estado, persistido junto a su posición:
-      </p>
+      <SectionHeading id="estados">{c.statesTitle}</SectionHeading>
+      <p>{fill(c.statesBody, { placed: <code>PlacedTrap</code> })}</p>
       <CodeBlock language="text" code={"IDLE/ARMED → TRIGGERED → (COOLDOWN → ARMED) | DEPLETED"} />
       <p>
-        Con <code>cooldown-millis {">"} 0</code> vuelve a <code>ARMED</code> cuando expira (revisado en el tick
-        periódico del motor); con <code>charges</code> agotadas cae en <code>DEPLETED</code> y no vuelve a
-        dispararse. <code>charges: -1</code> (default) es infinito.
+        {fill(c.statesAfter, {
+          cooldown: <code>cooldown-millis {">"} 0</code>,
+          armed: <code>ARMED</code>,
+          charges: <code>charges</code>,
+          depleted: <code>DEPLETED</code>,
+          infinite: <code>charges: -1</code>,
+        })}
       </p>
 
-      <SectionHeading id="torretas">Torretas</SectionHeading>
+      <SectionHeading id="torretas">{c.turretsTitle}</SectionHeading>
       <p>
-        Un subsistema paralelo a las trampas, en vez de una variante — una torreta no reacciona a un evento
-        puntual como una <code>TrapDefinition</code>: reevalúa objetivo <strong>continuamente</strong> en su
-        propio tick (<code>config.yml: engine.turret-tick-interval-ticks</code>, 5 por defecto — más frecuente
-        que el de trampas para que el apuntado se sienta fluido), apunta un cañón visual (un{" "}
-        <code>ItemDisplay</code> real, sin animación por-paquete) hacia el objetivo más cercano dentro de su
-        radio, y ejecuta su <code>impact</code> — la MISMA acción configurable que usan las trampas (ver la
-        tabla de Acciones más arriba) — mientras haya alguien en rango.
+        {fill(c.turretsBody, {
+          def: <code>TrapDefinition</code>,
+          continuously: <strong>{c.continuouslyWord}</strong>,
+          tick: <code>config.yml: engine.turret-tick-interval-ticks</code>,
+          display: <code>ItemDisplay</code>,
+          impact: <code>impact</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Campo</Th>
-          <Th>Qué controla</Th>
+          <Th>{c.thField}</Th>
+          <Th>{c.thControls}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">radius</Td><Td>Radio de detección en bloques.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">target-players / target-hostile-mobs</Td><Td>Si apunta a jugadores (en SURVIVAL/ADVENTURE) y/o a mobs hostiles (<code>Monster</code> vanilla o cualquier mob custom de RPGRoll-Mobs, si está instalado).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">conditions</Td><Td>Mismo evaluador que las trampas — solo se aplican a objetivos jugador (un mob no tiene <code>player.*</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">fire-interval-ticks</Td><Td>Cada cuántos ticks vuelve a ejecutar <code>impact</code> mientras haya objetivo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">impact</Td><Td>La acción que dispara contra el objetivo — <code>{"{ type: TIPO, params: {...} }"}</code>, igual formato que una entrada de <code>actions</code> de trampa. Default: <code>CUSTOM_PROJECTILE</code> con <code>projectile-type: ARROW</code>.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">model.material / model.custom-model-data</Td><Td>Apariencia del cañón (el <code>ItemDisplay</code>).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">radius</Td><Td>{c.uRadius}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">target-players / target-hostile-mobs</Td><Td>{fill(c.uTarget, { monster: <code>Monster</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">conditions</Td><Td>{fill(c.uConditions, { playerStar: <code>player.*</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">fire-interval-ticks</Td><Td>{fill(c.uFireInterval, { impact: <code>impact</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">impact</Td><Td>{fill(c.uImpact, {
+            fmt: <code>{"{ type: TIPO, params: {...} }"}</code>,
+            actions: <code>actions</code>,
+            default: <code>CUSTOM_PROJECTILE</code>,
+            ptype: <code>projectile-type: ARROW</code>,
+          })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">model.material / model.custom-model-data</Td><Td>{fill(c.uModel, { display: <code>ItemDisplay</code> })}</Td></Tr>
         </tbody>
       </Table>
       <CodeBlock
@@ -264,39 +324,46 @@ export function Traps({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "  material: CROSSBOW"
         }
       />
-      <p>
-        Cambiar el comportamiento de disparo de una torreta es solo cambiar su <code>impact</code>, sin tocar
-        nada más de la definición — 3 ejemplos incluidos que lo muestran:
-      </p>
+      <p>{fill(c.impactBody, { impact: <code>impact</code> })}</p>
       <Table>
         <Thead>
-          <Th>Archivo</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thFile}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">turrets/sentry_turret.yml</Td><Td>Flecha simple (<code>CUSTOM_PROJECTILE</code> + <code>projectile-type: ARROW</code>) contra jugadores y mobs hostiles.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">turrets/warden_turret.yml</Td><Td>Sonic boom instantáneo (<code>SONIC_BOOM</code>) en vez de un proyectil que viaja.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">turrets/healing_turret.yml</Td><Td>Cura en vez de dañar (<code>HEAL</code>) — <code>target-hostile-mobs: false</code>, apuntada solo a jugadores.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">turrets/alchemist_turret.yml</Td><Td>Pociones arrojadizas reales (<code>CUSTOM_PROJECTILE</code> + <code>projectile-type: POTION</code>) que no dañan al impactar, solo ralentizan y debilitan.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">turrets/sentry_turret.yml</Td><Td>{fill(c.tSentry, { cp: <code>CUSTOM_PROJECTILE</code>, ptype: <code>projectile-type: ARROW</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">turrets/warden_turret.yml</Td><Td>{fill(c.tWarden, { sb: <code>SONIC_BOOM</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">turrets/healing_turret.yml</Td><Td>{fill(c.tHealing, { heal: <code>HEAL</code>, flag: <code>target-hostile-mobs: false</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">turrets/alchemist_turret.yml</Td><Td>{fill(c.tAlchemist, { cp: <code>CUSTOM_PROJECTILE</code>, ptype: <code>projectile-type: POTION</code> })}</Td></Tr>
         </tbody>
       </Table>
-      <Callout tone="info" title="Estado de apuntado no persistido">
-        El objetivo actual y el cooldown de disparo de una torreta viven en memoria (no en{" "}
-        <code>turret-locations.yml</code>) — al reiniciar el server simplemente vuelve a adquirir objetivo en el
-        próximo tick. El <code>ItemDisplay</code> visual sí es una entidad real y persiste solo, como cualquier
-        entidad del mundo.
+      <Callout tone="info" title={c.aimTitle}>
+        {fill(c.aimBody, {
+          yml: <code>turret-locations.yml</code>,
+          display: <code>ItemDisplay</code>,
+        })}
       </Callout>
       <p>
-        <Kbd>/trapadmin turret place</Kbd>/<Kbd>remove</Kbd>/<Kbd>edit</Kbd>/<Kbd>browser</Kbd>/<Kbd>list</Kbd>{" "}
-        siguen exactamente el mismo patrón que los comandos de trampa — ver la tabla de comandos más abajo.
+        {fill(c.turretCmds, {
+          cmds: (
+            <>
+              <Kbd>/trapadmin turret place</Kbd>/<Kbd>remove</Kbd>/<Kbd>edit</Kbd>/<Kbd>browser</Kbd>/
+              <Kbd>list</Kbd>
+            </>
+          ),
+        })}
       </p>
 
-      <SectionHeading id="ejemplos">Ejemplos de archivo YAML</SectionHeading>
+      <SectionHeading id="ejemplos">{c.examplesTitle}</SectionHeading>
       <p>
-        El addon incluye 5 trampas de ejemplo en <code>traps/</code> (copiadas a disco al primer arranque):{" "}
-        <code>landmine</code> (PRESSURE + EXPLOSION + EFFECT), <code>spike_corridor</code> (PROXIMITY + DAMAGE),{" "}
-        <code>reinforced_vault_door</code> (bloque protegido + llave + TOGGLE_BLOCKS),{" "}
-        <code>arrow_corridor</code> (INTERACTION + PROJECTILE) y <code>poison_gas_room</code> (TIMER + EFFECT).
+        {fill(c.examplesBody, {
+          dir: <code>traps/</code>,
+          landmine: <code>landmine</code>,
+          spike: <code>spike_corridor</code>,
+          vault: <code>reinforced_vault_door</code>,
+          arrow: <code>arrow_corridor</code>,
+          gas: <code>poison_gas_room</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -323,39 +390,37 @@ export function Traps({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <SectionHeading id="comandos">Comandos — /trapadmin</SectionHeading>
-      <p>
-        Único comando de v1, todo bajo el permiso <code>rpgrolltraps.admin.*</code>.
-      </p>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
+      <p>{fill(c.cmdIntro, { perm: <code>rpgrolltraps.admin.*</code> })}</p>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/trapadmin create <id>"}</Td><Td>Crea una definición vacía (trigger PRESSURE por defecto) y la guarda.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/trapadmin edit <id>"}</Td><Td>Abre el editor GUI de esa definición.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/trapadmin browser</Td><Td>Navegador de todas las definiciones, con acceso directo a crear/editar.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/trapadmin reload</Td><Td>Recarga definiciones desde disco (las instancias colocadas no se pierden).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/trapadmin place <id> [zone]"}</Td><Td>Coloca una instancia en el bloque que estás mirando — <code>zone</code> abre el editor de 2 esquinas para una trampa de área.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/trapadmin remove <placementId>"}</Td><Td>Elimina una instancia colocada.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/trapadmin list</Td><Td>Lista todas las instancias colocadas con su estado actual.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/trapadmin info <placementId>"}</Td><Td>Detalle: estado, cargas restantes, posición.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/trapadmin forcetrigger <placementId>"}</Td><Td>Fuerza el disparo saltando la detección de evento (sigue respetando condiciones/cooldown/cargas).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/trapadmin turret create <id>"}</Td><Td>Crea una definición de torreta vacía.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/trapadmin turret edit <id>"}</Td><Td>Abre el editor GUI de esa torreta.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/trapadmin turret browser</Td><Td>Navegador de todas las torretas.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/trapadmin turret place <id>"}</Td><Td>Coloca una instancia en el bloque que estás mirando.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/trapadmin turret remove <placementId>"}</Td><Td>Elimina una instancia colocada (y su ItemDisplay visual).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/trapadmin turret list</Td><Td>Lista todas las torretas colocadas.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin create <id>"}</Td><Td>{c.xCreate}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin edit <id>"}</Td><Td>{c.xEdit}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/trapadmin browser</Td><Td>{c.xBrowser}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/trapadmin reload</Td><Td>{c.xReload}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin place <id> [zone]"}</Td><Td>{fill(c.xPlace, { zone: <code>zone</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin remove <placementId>"}</Td><Td>{c.xRemove}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/trapadmin list</Td><Td>{c.xList}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin info <placementId>"}</Td><Td>{c.xInfo}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin forcetrigger <placementId>"}</Td><Td>{c.xForce}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin turret create <id>"}</Td><Td>{c.xTCreate}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin turret edit <id>"}</Td><Td>{c.xTEdit}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/trapadmin turret browser</Td><Td>{c.xTBrowser}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin turret place <id>"}</Td><Td>{c.xTPlace}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin turret remove <placementId>"}</Td><Td>{c.xTRemove}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/trapadmin turret list</Td><Td>{c.xTList}</Td></Tr>
         </tbody>
       </Table>
 
       <YamlBuilder
-        title="Constructor visual: Trap (campos simples)"
-        description="Trigger básico + metadata. actions/conditions/chain/block/disguise son demasiado anidados para este formulario — copia y adaptá uno de los 5 ejemplos incluidos."
+        title={c.bTitle}
+        description={c.bDesc}
         folder="traps"
-        fields={trapFields}
+        fields={trapFields(c)}
       />
 
       <PrevNext current="traps" onNavigate={onNavigate} />
