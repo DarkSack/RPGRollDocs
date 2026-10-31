@@ -14,139 +14,51 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { RANCHING_COPY, type RanchingCopy } from "./copy/ranching";
 
-const speciesFields: YamlField[] = [
-  {
-    key: "id",
-    label: "Id",
-    type: "string",
-    default: "nueva_especie",
-    placeholder: "cow",
-  },
-  {
-    key: "display-name",
-    label: "Nombre visible",
-    type: "string",
-    placeholder: "&fVaca",
-  },
-  {
-    key: "icon",
-    label: "Ícono (Material)",
-    type: "string",
-    default: "COW_SPAWN_EGG",
-  },
-  { key: "description", label: "Descripción", type: "string" },
+const mono = "font-mono text-xs";
+
+const speciesFields = (c: RanchingCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewSpecies, placeholder: "cow" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: c.phCow },
+  { key: "icon", label: c.fIcon, type: "string", default: "COW_SPAWN_EGG" },
+  { key: "description", label: c.fDescription, type: "string" },
   {
     key: "entity-type",
-    label: "EntityType vanilla",
+    label: c.fEntityType,
     type: "string",
     default: "COW",
-    help: "COW, CHICKEN, SHEEP, PIG, HORSE...",
+    help: c.fEntityTypeHelp,
   },
-  {
-    key: "product-types",
-    label: "Tipos de producto",
-    type: "list",
-    placeholder: "milk, meat, leather",
-  },
-  {
-    key: "base-weight-min",
-    label: "Peso mín. (kg)",
-    type: "number",
-    default: "100",
-  },
-  {
-    key: "base-weight-max",
-    label: "Peso máx. (kg)",
-    type: "number",
-    default: "300",
-  },
-  {
-    key: "baby-stage-duration-ticks",
-    label: "Duración cría (ticks)",
-    type: "number",
-    default: "6000",
-  },
-  {
-    key: "juvenile-stage-duration-ticks",
-    label: "Duración juvenil (ticks)",
-    type: "number",
-    default: "12000",
-  },
-  {
-    key: "elder-threshold-ticks",
-    label: "Umbral anciano (ticks)",
-    type: "number",
-    default: "240000",
-  },
-  {
-    key: "gestation-duration-ticks",
-    label: "Gestación (ticks, 0 = nace directo)",
-    type: "number",
-    default: "24000",
-  },
-  {
-    key: "min-litter-size",
-    label: "Camada mín.",
-    type: "number",
-    default: "1",
-  },
-  {
-    key: "max-litter-size",
-    label: "Camada máx.",
-    type: "number",
-    default: "1",
-  },
-  {
-    key: "base-fertility",
-    label: "Fertilidad base (0-1)",
-    type: "number",
-    default: "0.5",
-  },
-  {
-    key: "diet-tags",
-    label: "Tags de dieta",
-    type: "list",
-    placeholder: "grain, hay",
-  },
+  { key: "product-types", label: c.fProductTypes, type: "list", placeholder: "milk, meat, leather" },
+  { key: "base-weight-min", label: c.fWeightMin, type: "number", default: "100" },
+  { key: "base-weight-max", label: c.fWeightMax, type: "number", default: "300" },
+  { key: "baby-stage-duration-ticks", label: c.fBabyDur, type: "number", default: "6000" },
+  { key: "juvenile-stage-duration-ticks", label: c.fJuvenileDur, type: "number", default: "12000" },
+  { key: "elder-threshold-ticks", label: c.fElder, type: "number", default: "240000" },
+  { key: "gestation-duration-ticks", label: c.fGestation, type: "number", default: "24000" },
+  { key: "min-litter-size", label: c.fLitterMin, type: "number", default: "1" },
+  { key: "max-litter-size", label: c.fLitterMax, type: "number", default: "1" },
+  { key: "base-fertility", label: c.fFertility, type: "number", default: "0.5" },
+  { key: "diet-tags", label: c.fDietTags, type: "list", placeholder: "grain, hay" },
 ];
 
-const geneFields: YamlField[] = [
-  {
-    key: "id",
-    label: "Id",
-    type: "string",
-    default: "nuevo_gen",
-    placeholder: "milk_production",
-  },
-  {
-    key: "display-name",
-    label: "Nombre visible",
-    type: "string",
-    placeholder: "Producción de leche",
-  },
-  { key: "description", label: "Descripción", type: "string" },
-  {
-    key: "attribute-key",
-    label: "attribute-key",
-    type: "string",
-    placeholder: "milk_production",
-  },
+const geneFields = (c: RanchingCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewGene, placeholder: "milk_production" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: c.phMilkProduction },
+  { key: "description", label: c.fDescription, type: "string" },
+  { key: "attribute-key", label: c.fAttrKey, type: "string", placeholder: "milk_production" },
   {
     key: "dominance",
-    label: "Dominancia",
+    label: c.fDominanceLabel,
     type: "select",
     options: ["DOMINANT", "RECESSIVE", "MIXED"],
     default: "MIXED",
   },
-  { key: "min-value", label: "Mínimo", type: "number", default: "0" },
-  { key: "max-value", label: "Máximo", type: "number", default: "100" },
-  {
-    key: "applicable-species",
-    label: "Especies (vacío = cualquiera)",
-    type: "list",
-    placeholder: "cow",
-  },
+  { key: "min-value", label: c.fMin, type: "number", default: "0" },
+  { key: "max-value", label: c.fMax, type: "number", default: "100" },
+  { key: "applicable-species", label: c.fSpeciesList, type: "list", placeholder: "cow" },
 ];
 
 export function Ranching({
@@ -154,28 +66,20 @@ export function Ranching({
 }: {
   onNavigate: (slug: string) => void;
 }) {
+  const { locale } = useI18n();
+  const c = RANCHING_COPY[locale];
+
   return (
     <>
-      <PageHeader title="Ranching (RPGRoll-Ranching)" slug="ranching">
-        Ganadería como simulación viva — cada animal tiene su propio ADN, con
-        genes heredables, dominancia real, mutaciones raras y un linaje
-        congelado que persigue la endogamia. Criar no es acumular: es
-        seleccionar reproductores, mejorar generaciones, y cuidar
-        salud/nutrición/bienestar para que la producción valga la pena.
+      <PageHeader title={c.title} slug="ranching">
+        {c.intro}
       </PageHeader>
 
-      <Callout
-        tone="info"
-        title="El corazón del addon: Genetics & Bloodline Engine"
-      >
-        Cada gen es un porcentaje continuo (0-100), no un rasgo discreto "A/a"
-        de libro de texto — más fiel a ejemplos como "Producción de leche: 92%"
-        que al cuadro de Punnett clásico. Cada animal tiene DOS alelos por gen;
-        la <code>dominance</code> del gen decide cómo se combinan en el valor
-        final expresado.
+      <Callout tone="info" title={c.heartTitle}>
+        {fill(c.heartBody, { dominance: <code>dominance</code> })}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         code={
@@ -183,202 +87,141 @@ export function Ranching({
         }
       />
       <p>
-        Sin{" "}
-        <a href="/seasons" className="text-violet-600 underline dark:text-violet-400">
-          RPGRoll-Seasons
-        </a>
-        , el factor climático de bienestar/fertilidad/producción simplemente no
-        aplica (el resto funciona igual). RPGRoll-Farming, RPGRoll-Cooking y
-        RPGRoll-Alchemy no existen, así que Ranching no se integra con ellos —
-        esas integraciones del diseño original quedan sin usar como métodos genéricos en{" "}
-        <code>RanchingAPI</code>. Sin{" "}
-        <a href="/sackresourcepack" className="text-violet-600 underline dark:text-violet-400">
-          SackResourcePack
-        </a>
-        , el <a href="#reskin" onClick={(e) => e.preventDefault()}>reskin visual por raza</a> simplemente no
-        aparece configurado (el animal se ve vanilla normal, nada se rompe).
-        Sin Vault el mercado de animales avisa y no cobra; sin FreeMinecraftModels
-        los animales usan su aspecto vanilla (o el reskin).
+        {fill(c.reqBody, {
+          seasons: (
+            <a href="/seasons" className="text-violet-600 underline dark:text-violet-400">
+              RPGRoll-Seasons
+            </a>
+          ),
+          api: <code>RanchingAPI</code>,
+          srp: (
+            <a href="/sackresourcepack" className="text-violet-600 underline dark:text-violet-400">
+              SackResourcePack
+            </a>
+          ),
+          reskinLink: (
+            <a href="#reskin" onClick={(e) => e.preventDefault()}>
+              {c.reskinLinkText}
+            </a>
+          ),
+        })}
       </p>
 
-      <SectionHeading id="genetica">
-        Genética: alelos y dominancia
-      </SectionHeading>
+      <SectionHeading id="genetica">{c.geneticsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Dominancia</Th>
-          <Th>Cómo se resuelve el fenotipo</Th>
+          <Th>{c.thDominance}</Th>
+          <Th>{c.thPhenotype}</Th>
         </Thead>
         <tbody>
-          <Tr>
-            <Td className="font-mono text-xs">DOMINANT</Td>
-            <Td>
-              El alelo más alto domina — un solo padre con una copia fuerte
-              alcanza para expresarla.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">RECESSIVE</Td>
-            <Td>
-              El alelo más bajo domina — hacen falta AMBAS copias fuertes para
-              expresarse del todo.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">MIXED</Td>
-            <Td>
-              Codominancia/mezcla — el fenotipo es el promedio de los dos
-              alelos.
-            </Td>
-          </Tr>
+          <Tr><Td className={mono}>DOMINANT</Td><Td>{c.dDominant}</Td></Tr>
+          <Tr><Td className={mono}>RECESSIVE</Td><Td>{c.dRecessive}</Td></Tr>
+          <Tr><Td className={mono}>MIXED</Td><Td>{c.dMixed}</Td></Tr>
         </tbody>
       </Table>
       <p>
-        Tres modos de herencia, elegibles en <code>config.yml</code> (
-        <code>genetics-mode</code>):
+        {fill(c.modesBody, { config: <code>config.yml</code>, key: <code>genetics-mode</code> })}
       </p>
       <Table>
         <Thead>
-          <Th>Modo</Th>
-          <Th>Cómo concibe una cría</Th>
+          <Th>{c.thMode}</Th>
+          <Th>{c.thHowConceives}</Th>
         </Thead>
         <tbody>
-          <Tr>
-            <Td className="font-mono text-xs">SIMPLE</Td>
-            <Td>
-              Promedio de ambos padres +/- una pequeña variación al azar — sin
-              alelos separados.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">ADVANCED</Td>
-            <Td>
-              Segregación mendeliana real: un alelo al azar de cada padre,
-              resuelto por la dominancia del gen.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">PROBABILISTIC</Td>
-            <Td>
-              Igual que ADVANCED, pero el Breeding Planner puede simular 500
-              crías virtuales antes de aparear y mostrar la distribución
-              (mín/prom/máx) por chat.
-            </Td>
-          </Tr>
+          <Tr><Td className={mono}>SIMPLE</Td><Td>{c.mSimple}</Td></Tr>
+          <Tr><Td className={mono}>ADVANCED</Td><Td>{c.mAdvanced}</Td></Tr>
+          <Tr><Td className={mono}>PROBABILISTIC</Td><Td>{c.mProbabilistic}</Td></Tr>
         </tbody>
       </Table>
-      <Callout
-        tone="tip"
-        title="Las mutaciones viven DENTRO del gen, no son un tipo de contenido propio"
-      >
-        Cada <code>Gene</code> puede declarar una lista de{" "}
-        <code>mutations</code> — variantes raras (<code>MULTIPLY</code> el
-        fenotipo, <code>OVERRIDE</code>lo a un valor fijo, o puramente{" "}
-        <code>COSMETIC_TAG</code> como "Lana dorada") con su propia chance. No
-        tienen su propio navegador en el Ranch Studio porque no tienen sentido
-        sin el gen al que decoran.
+      <Callout tone="tip" title={c.mutTitle}>
+        {fill(c.mutBody, {
+          gene: <code>Gene</code>,
+          mutations: <code>mutations</code>,
+          multiply: <code>MULTIPLY</code>,
+          override: <code>OVERRIDE</code>,
+          cosmetic: <code>COSMETIC_TAG</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="linaje">Linaje y endogamia</SectionHeading>
+      <SectionHeading id="linaje">{c.lineageTitle}</SectionHeading>
       <p>
-        Al nacer, una cría congela una copia (id, nombre, especie) de sus dos
-        padres y de los ancestros que ya tenían —{" "}
-        <strong>nunca vuelve a resolver un animal real más tarde</strong>, así
-        que el linaje se puede mostrar completo incluso mucho después de que un
-        ancestro murió o fue vendido. El Breeding Planner chequea{" "}
-        <code>inbreeding-warning-generations</code> generaciones hacia atrás
-        antes de aparear y avisa (no bloquea) si dos candidatos comparten sangre
-        reciente.
+        {fill(c.lineageBody, {
+          never: <strong>{c.neverResolves}</strong>,
+          setting: <code>inbreeding-warning-generations</code>,
+        })}
       </p>
 
-      <SectionHeading id="especies-razas">Especies y razas</SectionHeading>
+      <SectionHeading id="especies-razas">{c.speciesTitle}</SectionHeading>
       <p>
-        Una <code>Species</code> ata la simulación a un <code>EntityType</code>{" "}
-        vanilla real (COW, CHICKEN, SHEEP...) y define cuánto pesa, cuánto dura
-        cada etapa de vida, si gesta o no, y qué produce. Una <code>Breed</code>{" "}
-        siempre pertenece a una sola especie y aplica multiplicadores sobre esa
-        base (producción/peso/fertilidad/resistencia) más un{" "}
-        <code>temperament</code> puramente descriptivo.
+        {fill(c.speciesBody, {
+          species: <code>Species</code>,
+          entityType: <code>EntityType</code>,
+          breed: <code>Breed</code>,
+          temperament: <code>temperament</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Etapa de vida</Th>
-          <Th>Qué la activa</Th>
+          <Th>{c.thStage}</Th>
+          <Th>{c.thTrigger}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td className="font-mono text-xs">BABY → JUVENILE</Td>
-            <Td>
-              Pasadas <code>baby-stage-duration-ticks</code>.
-            </Td>
+            <Td className={mono}>BABY → JUVENILE</Td>
+            <Td>{fill(c.stBaby, { ticks: <code>baby-stage-duration-ticks</code> })}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">JUVENILE → ADULT</Td>
-            <Td>
-              Pasadas <code>juvenile-stage-duration-ticks</code> más.
-            </Td>
+            <Td className={mono}>JUVENILE → ADULT</Td>
+            <Td>{fill(c.stJuvenile, { ticks: <code>juvenile-stage-duration-ticks</code> })}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">ADULT → ELDER</Td>
-            <Td>
-              Pasado <code>elder-threshold-ticks</code> como adulto — producción
-              y peso caen un poco, la fertilidad baja a 40%.
-            </Td>
+            <Td className={mono}>ADULT → ELDER</Td>
+            <Td>{fill(c.stAdult, { ticks: <code>elder-threshold-ticks</code> })}</Td>
           </Tr>
         </tbody>
       </Table>
 
-      <p>
-        El plugin trae 7 especies con 3 razas cada una, cada raza con su modelo
-        3D:
-      </p>
+      <p>{c.stockBody}</p>
       <Table>
         <Thead>
-          <Th>Especie</Th>
-          <Th>Razas</Th>
+          <Th>{c.thSpecies}</Th>
+          <Th>{c.thBreeds}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">cow</Td><Td>holstein, jersey, angus</Td></Tr>
-          <Tr><Td className="font-mono text-xs">sheep</Td><Td>merino, suffolk, jacob</Td></Tr>
-          <Tr><Td className="font-mono text-xs">chicken</Td><Td>leghorn, rhode_island, silkie</Td></Tr>
-          <Tr><Td className="font-mono text-xs">pig</Td><Td>yorkshire, berkshire, mangalica</Td></Tr>
-          <Tr><Td className="font-mono text-xs">rabbit</Td><Td>californian, rex, angora (da pelo)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">duck</Td><Td>pekin, mallard, khaki_campbell (entidad CHICKEN)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">goat</Td><Td>saanen, boer, nubian</Td></Tr>
+          <Tr><Td className={mono}>cow</Td><Td>holstein, jersey, angus</Td></Tr>
+          <Tr><Td className={mono}>sheep</Td><Td>merino, suffolk, jacob</Td></Tr>
+          <Tr><Td className={mono}>chicken</Td><Td>leghorn, rhode_island, silkie</Td></Tr>
+          <Tr><Td className={mono}>pig</Td><Td>yorkshire, berkshire, mangalica</Td></Tr>
+          <Tr><Td className={mono}>rabbit</Td><Td>{c.bRabbit}</Td></Tr>
+          <Tr><Td className={mono}>duck</Td><Td>{c.bDuck}</Td></Tr>
+          <Tr><Td className={mono}>goat</Td><Td>saanen, boer, nubian</Td></Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="modelos-animales">Modelos 3D de animales (FreeMinecraftModels)</SectionHeading>
+      <SectionHeading id="modelos-animales">{c.modelsAnimalsTitle}</SectionHeading>
       <p>
-        Con FreeMinecraftModels instalado, cada raza lleva su propio modelo
-        (clave <code>model</code> de la raza, p. ej.{" "}
-        <code>model: ranching_holstein</code>). Los modelos de las especies
-        vanilla copian la forma del animal original y cambian colores y
-        detalles (cuernos, manchas, crestas, lana). El plugin copia sus{" "}
-        <code>.bbmodel</code> a <code>plugins/FreeMinecraftModels/models/</code>{" "}
-        al arrancar; si editas uno en Blockbench, no se vuelve a sobrescribir.
-        Tras la primera instalación hay que reiniciar (o <code>/fmm reload</code>)
-        para que FMM los cargue.
+        {fill(c.modelsAnimalsBody, {
+          key: <code>model</code>,
+          example: <code>model: ranching_holstein</code>,
+          bbmodel: <code>.bbmodel</code>,
+          dir: <code>plugins/FreeMinecraftModels/models/</code>,
+          reload: <code>/fmm reload</code>,
+        })}
       </p>
-      <p>
-        El modelo solo se pone a los adultos; las crías se ven vanilla. El
-        animal vanilla sigue debajo, invisible, y los clics sobre el modelo le
-        llegan igual: ordeñar, esquilar, alimentar, curar y poner en celo con
-        su comida funcionan como siempre.
-      </p>
-      <Callout tone="info" title="Clic derecho con la mano vacía">
-        FreeMinecraftModels no envía al servidor un clic derecho sin ítem sobre
-        un modelo. Para ver el precio o el dueño de un animal ajeno, golpéalo
-        (clic izquierdo): no le hace daño y muestra el aviso.
+      <p>{c.modelsAdultsBody}</p>
+      <Callout tone="info" title={c.emptyHandTitle}>
+        {c.emptyHandBody}
       </Callout>
 
-      <SectionHeading id="reskin">Reskin visual por raza (sin ModelEngine/BetterModel)</SectionHeading>
+      <SectionHeading id="reskin">{c.reskinTitle}</SectionHeading>
       <p>
-        Minecraft no tiene ningún <code>CustomModelData</code> para entidades vivas — no hay forma de
-        re-texturizar una vaca u oveja solo con un resource pack. Cada <code>Breed</code> puede declarar una
-        sección <code>reskin</code> opcional que usa el mismo mecanismo que RPGRoll-Mobs: la entidad vanilla real
-        sigue siendo la que camina/produce/se reproduce (comportamiento intacto), pero se le monta una entidad{" "}
-        <code>ItemDisplay</code> como pasajero real portando un ítem con <code>custom-model-data</code>.
+        {fill(c.reskinBody, {
+          cmd: <code>CustomModelData</code>,
+          breed: <code>Breed</code>,
+          reskin: <code>reskin</code>,
+          display: <code>ItemDisplay</code>,
+          cmdKey: <code>custom-model-data</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -392,182 +235,111 @@ export function Ranching({
         }
       />
       <p>
-        La escala del reskin se reduce automáticamente a la mitad mientras el animal está en etapa{" "}
-        <code>BABY</code>, igual que ya hace vanilla con el tamaño reducido nativo — no hace falta declarar nada
-        aparte para eso. Sin <code>reskin.material</code> configurado, el animal se ve exactamente igual que
-        antes: vanilla normal, sin ningún cambio. El material/textura los define un resource pack real — mismo
-        pipeline que RPGRoll-Items: archivos en{" "}
-        <code>plugins/RPGRoll-Ranching/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code>,
-        sincronizados solos hacia SackResourcePack (si está instalado) al arrancar el plugin.
+        {fill(c.reskinScaleBody, {
+          baby: <code>BABY</code>,
+          material: <code>reskin.material</code>,
+          path: (
+            <code>
+              plugins/RPGRoll-Ranching/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...
+            </code>
+          ),
+        })}
       </p>
-      <Callout tone="warning" title="Solo verificado por compilación, no probado en juego">
-        Igual que en RPGRoll-Mobs, esta primera versión del reskin no fue probada visualmente contra un cliente
-        real (sin servidor Paper disponible en el entorno de desarrollo).
+      <Callout tone="warning" title={c.reskinWarnTitle}>
+        {c.reskinWarnBody}
       </Callout>
 
-      <SectionHeading id="reproduccion">Reproducción y embarazo</SectionHeading>
-      <Callout
-        tone="tip"
-        title="El apareamiento reutiliza el modo vanilla de siempre"
-      >
-        Alimentá a dos animales adultos de sexo opuesto y misma especie con su
-        comida de cría (trigo, semillas, zanahorias...) — Minecraft ya sabe
-        ponerlos en "modo amor". Ranching intercepta ese resultado (
-        <code>EntityBreedEvent</code>), cancela el bebé instantáneo de vanilla,
-        tira la fertilidad de la madre, y si prende: nace directo si la especie
-        no gesta (<code>gestation-duration-ticks: 0</code>, ej. gallinas), o
-        arranca una gestación real con el tamaño de camada, sexo y genética de
-        la cría <strong>ya congelados</strong> desde el momento de la concepción
-        — el nacimiento no depende de que el padre siga vivo cuando termine.
+      <SectionHeading id="reproduccion">{c.breedingTitle}</SectionHeading>
+      <Callout tone="tip" title={c.breedingTipTitle}>
+        {fill(c.breedingTipBody, {
+          event: <code>EntityBreedEvent</code>,
+          gestation: <code>gestation-duration-ticks: 0</code>,
+          frozen: <strong>{c.frozenWord}</strong>,
+        })}
       </Callout>
       <p>
-        Durante la gestación la hembra no produce y su fertilidad recalculada
-        baja a 0 hasta que nace la camada.{" "}
-        <strong>
-          Un reinicio del servidor a mitad de gestación cancela el embarazo
-        </strong>{" "}
-        (no se persiste el estado — una simplificación deliberada para no
-        serializar genotipos/fenotipos de crías pendientes).
+        {fill(c.gestationBody, { restart: <strong>{c.restartWarning}</strong> })}
       </p>
 
-      <SectionHeading id="bienestar">Nutrición y bienestar</SectionHeading>
+      <SectionHeading id="bienestar">{c.welfareTitle}</SectionHeading>
       <p>
-        Un <code>Feed</code> se da con click derecho y suma salud/felicidad/un
-        bono temporal de producción, multiplicado por su <code>quality</code>{" "}
-        (Común/Buena/Premium/Orgánica/Legendaria) — si no coincide con la dieta
-        de la especie (<code>diet-tags</code>), el efecto se reduce a 40%. El
-        bienestar se recalcula solo, acercándose gradualmente a un "objetivo"
-        ambiental. El <code>nutrition-value</code> llena la saciedad del animal
-        (0–100, se vacía en un día de Minecraft): lleno, rechaza la comida y el
-        ítem no se gasta. El bono de producción que se acumula comiendo tiene
-        tope: como mucho duplica la siguiente producción.
+        {fill(c.welfareBody, {
+          feed: <code>Feed</code>,
+          quality: <code>quality</code>,
+          dietTags: <code>diet-tags</code>,
+          nutrition: <code>nutrition-value</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Factor</Th>
-          <Th>Cómo se mide</Th>
+          <Th>{c.thFactor}</Th>
+          <Th>{c.thHowMeasured}</Th>
         </Thead>
         <tbody>
-          <Tr>
-            <Td>Luz</Td>
-            <Td>
-              Nivel de luz del bloque — oscuro penaliza, iluminado da un bono.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>Agua cercana</Td>
-            <Td>Escaneo simple de bloques de agua en un radio chico.</Td>
-          </Tr>
-          <Tr>
-            <Td>Compañía / hacinamiento</Td>
-            <Td>
-              Cuenta animales de la misma especie cerca — 1 a 5 da bono, 0
-              penaliza (soledad), 9+ penaliza (hacinamiento).
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>Clima</Td>
-            <Td>
-              Vía RPGRoll-Seasons (si está instalado) — calor/frío extremo
-              penaliza.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>Salud</Td>
-            <Td>Salud baja arrastra la felicidad hacia abajo también.</Td>
-          </Tr>
+          <Tr><Td>{c.fLight}</Td><Td>{c.fLightBody}</Td></Tr>
+          <Tr><Td>{c.fWater}</Td><Td>{c.fWaterBody}</Td></Tr>
+          <Tr><Td>{c.fCompany}</Td><Td>{c.fCompanyBody}</Td></Tr>
+          <Tr><Td>{c.fWeather}</Td><Td>{c.fWeatherBody}</Td></Tr>
+          <Tr><Td>{c.fHealth}</Td><Td>{c.fHealthBody}</Td></Tr>
         </tbody>
       </Table>
-      <Callout
-        tone="warning"
-        title="La 'limpieza' del diseño original no tiene equivalente real en Bukkit"
-      >
-        No existe ninguna noción de "corral sucio" para medir — ese factor se
-        reemplazó por luz + agua + hacinamiento, que sí son medibles de verdad
-        contra el mundo. Felicidad y salud alimentan directo a fertilidad y
-        producción, así que "un animal feliz produce más" sigue siendo
-        literalmente cierto.
+      <Callout tone="warning" title={c.cleanTitle}>
+        {c.cleanBody}
       </Callout>
 
-      <SectionHeading id="salud">
-        Enfermedades, vacunas y medicina
-      </SectionHeading>
+      <SectionHeading id="salud">{c.healthTitle}</SectionHeading>
       <p>
-        Las enfermedades se contagian entre animales sanos cercanos de la misma
-        especie (chance propia por enfermedad, mayor cuanto peor esté la salud
-        del blanco) y también pueden aparecer solas si el bienestar de un animal
-        está muy descuidado. Mientras dura, penalizan salud/felicidad/producción
-        por igual en cada chequeo periódico. Una <code>Vaccine</code> no da
-        inmunidad binaria: reduce el riesgo de contagio un{" "}
-        <code>risk-reduction</code> mientras esté activa (temporal o
-        permanente). Una <code>Medicine</code>{" "}
-        (Antibiótico/Vitamina/Analgésico/Antiparasitario) puede curar al
-        instante con una chance, o acortar la duración restante si no.
+        {fill(c.healthBody, {
+          vaccine: <code>Vaccine</code>,
+          reduction: <code>risk-reduction</code>,
+          medicine: <code>Medicine</code>,
+        })}
       </p>
 
-      <SectionHeading id="produccion">Producción y calidad</SectionHeading>
+      <SectionHeading id="produccion">{c.prodTitle}</SectionHeading>
       <p>
-        Cada especie declara sus productos (<code>product-types</code>) y una
-        cantidad base por unidad (<code>base-production</code>). La cantidad y
-        calidad final de cada ordeñada/esquilada/huevo/carne dependen de
-        genética (busca un gen cuyo <code>attribute-key</code> contenga el
-        nombre del producto), raza, etapa de vida, felicidad, salud, clima y
-        enfermedad activa — tal como pide el diseño original.
+        {fill(c.prodBody, {
+          types: <code>product-types</code>,
+          base: <code>base-production</code>,
+          attrKey: <code>attribute-key</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Producto</Th>
-          <Th>Se obtiene reutilizando...</Th>
+          <Th>{c.thProduct}</Th>
+          <Th>{c.thObtained}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td className="font-mono text-xs">milk</Td>
-            <Td>
-              Click con balde vacío (<code>PlayerInteractEntityEvent</code>) —
-              entrega un balde de leche con calidad.
-            </Td>
+            <Td className={mono}>milk</Td>
+            <Td>{fill(c.pMilk, { event: <code>PlayerInteractEntityEvent</code> })}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">wool</Td>
-            <Td>
-              Esquilar (<code>PlayerShearEntityEvent</code>) — respeta el color
-              real de la oveja.
-            </Td>
+            <Td className={mono}>wool</Td>
+            <Td>{fill(c.pWool, { event: <code>PlayerShearEntityEvent</code> })}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">eggs</Td>
-            <Td>
-              La puesta automática de huevos de una gallina (
-              <code>EntityDropItemEvent</code>).
-            </Td>
+            <Td className={mono}>eggs</Td>
+            <Td>{fill(c.pEggs, { event: <code>EntityDropItemEvent</code> })}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">meat / leather / etc.</Td>
-            <Td>
-              Se agregan como drops extra al morir el animal (
-              <code>EntityDeathEvent</code>), sumados a los drops vanilla
-              normales.
-            </Td>
+            <Td className={mono}>meat / leather / etc.</Td>
+            <Td>{fill(c.pMeat, { event: <code>EntityDeathEvent</code> })}</Td>
           </Tr>
         </tbody>
       </Table>
-      <p>
-        Cada ítem de producción sale etiquetado con su calidad (Común → Buena →
-        Premium → Orgánica → Legendaria) en el lore — listo para que un futuro
-        RPGRoll-Cooking le dé un uso real a esa diferencia.
-      </p>
+      <p>{c.qualityBody}</p>
 
-      <SectionHeading id="modelos">Modelos 3D e ítems</SectionHeading>
+      <SectionHeading id="modelos">{c.modelsTitle}</SectionHeading>
       <p>
-        Los piensos, medicinas y vacunas aceptan la clave <code>model</code>{" "}
-        (componente item_model, 1.21.4+), y el plugin trae modelos de fábrica
-        para todo su contenido con ids como{" "}
-        <code>rpgroll_ranching:feed/hay</code>. Los productos no tienen YAML
-        propio: su modelo sale de <code>product-models</code> en el{" "}
-        <code>config.yml</code>, por tipo de producto y, si quieres, por
-        calidad. El pack de Java va dentro del jar y se registra solo en
-        SackResourcePack; en <code>blockbench/</code> están los .bbmodel y en{" "}
-        <code>bedrock/</code> el pack y el mapeo de Geyser.
+        {fill(c.modelsBody, {
+          key: <code>model</code>,
+          example: <code>rpgroll_ranching:feed/hay</code>,
+          productModels: <code>product-models</code>,
+          config: <code>config.yml</code>,
+          bbDir: <code>blockbench/</code>,
+          bedrockDir: <code>bedrock/</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -585,76 +357,56 @@ export function Ranching({
         }
       />
 
-      <SectionHeading id="duenos">Dueños, mercado y corral</SectionHeading>
+      <SectionHeading id="duenos">{c.ownersTitle}</SectionHeading>
       <p>
-        Cada animal tiene dueño: quien lo spawnea, lo compra o lo reclama, y
-        las crías heredan el de la madre (o el del padre). Solo el dueño puede
-        ordeñarlo, esquilarlo, alimentarlo, curarlo, criarlo, atarlo o hacerle
-        daño (<Badge tone="amber">rpgrollranching.bypass-owner</Badge> se lo
-        salta). Los animales de antes de esta versión no tienen dueño: con{" "}
-        <code>/ranching reclamar</code> se hacen tuyos.
+        {fill(c.ownersBody, {
+          perm: <Badge tone="amber">rpgrollranching.bypass-owner</Badge>,
+          cmd: <code>/ranching reclamar</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Qué</Th>
-          <Th>Cómo</Th>
+          <Th>{c.thWhat}</Th>
+          <Th>{c.thHow}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td>Mis animales</Td>
+            <Td>{c.oMine}</Td>
+            <Td>{fill(c.oMineBody, { cmd: <code>/ranching animales</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td>{c.oCall}</Td>
+            <Td>{fill(c.oCallBody, { cmd: <code>/ranching llamar [id|todos]</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td>{c.oPen}</Td>
             <Td>
-              <code>/ranching animales</code>: clic izquierdo lo llama,
-              derecho lo manda al corral, shift+izquierdo abre su ficha,
-              shift+derecho lo pone o quita de la venta. Abajo: llamar a todos,
-              todos al corral, fijar el corral aquí y el mercado.
+              {fill(c.oPenBody, {
+                fix: <code>/ranching corral fijar</code>,
+                send: <code>/ranching corral enviar [id|todos]</code>,
+              })}
             </Td>
           </Tr>
           <Tr>
-            <Td>Llamar</Td>
+            <Td>{c.oSell}</Td>
             <Td>
-              <code>/ranching llamar [id|todos]</code> trae al animal a tus
-              pies aunque esté en un chunk descargado u otro mundo. Si su
-              entidad ya no existe (la borró un comando o un plugin de
-              limpieza), se crea otra con sus mismos datos.
+              {fill(c.oSellBody, {
+                cmd: <code>/ranching vender &lt;precio&gt;</code>,
+                buy: <code>[Comprar]</code>,
+              })}
             </Td>
           </Tr>
           <Tr>
-            <Td>Corral</Td>
-            <Td>
-              <code>/ranching corral fijar</code> guarda tu posición;{" "}
-              <code>/ranching corral enviar [id|todos]</code> los manda allí.
-            </Td>
+            <Td>{c.oMarket}</Td>
+            <Td>{fill(c.oMarketBody, { cmd: <code>/ranching mercado</code> })}</Td>
           </Tr>
           <Tr>
-            <Td>Vender a otro jugador</Td>
-            <Td>
-              <code>/ranching vender &lt;precio&gt;</code> mirando al animal (o
-              con su id). Quien lo toque ve el precio y un botón{" "}
-              <code>[Comprar]</code>; también sale en el mercado.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>Mercado</Td>
-            <Td>
-              <code>/ranching mercado</code>: pestañas de animales de
-              jugadores, tienda del servidor (fundadores nuevos que aparecen a
-              tus pies) y vender al servidor. Toda compra pide confirmación.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>Vender al servidor</Td>
-            <Td>
-              <code>/ranching vender servidor [id]</code>: paga el precio base
-              de la especie por su calidad (POOR ×0,5, COMMON ×1, GOOD ×1,5,
-              EXCELLENT ×2,5, EXCEPTIONAL ×5) y el animal desaparece.
-            </Td>
+            <Td>{c.oSellServer}</Td>
+            <Td>{fill(c.oSellServerBody, { cmd: <code>/ranching vender servidor [id]</code> })}</Td>
           </Tr>
         </tbody>
       </Table>
-      <p>
-        El id de un animal son los primeros caracteres de su UUID, como sale en
-        su ficha (<code>#8c93ce76</code>). El dinero va por Vault.
-      </p>
+      <p>{fill(c.idBody, { example: <code>#8c93ce76</code> })}</p>
       <CodeBlock
         language="yaml"
         filename="config.yml"
@@ -679,14 +431,13 @@ export function Ranching({
         }
       />
 
-      <SectionHeading id="huevo-secreto">El huevo fosilizado (secreto)</SectionHeading>
+      <SectionHeading id="huevo-secreto">{c.eggTitle}</SectionHeading>
       <p>
-        Muy de vez en cuando una gallina o un pato del rancho pone un{" "}
-        <strong>huevo fosilizado</strong> en lugar de un huevo, y a veces lo
-        desentierra un sniffer. Usado sobre un bloque, se incuba unos segundos
-        y nace un mini T-Rex del jugador (especie <code>trex</code>, raza{" "}
-        <code>tiranosaurio</code>, con su modelo). No se anuncia en el juego:
-        es para que lo descubran los jugadores.
+        {fill(c.eggBody, {
+          egg: <strong>{c.eggWord}</strong>,
+          species: <code>trex</code>,
+          breed: <code>tiranosaurio</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -700,9 +451,7 @@ export function Ranching({
         }
       />
 
-      <SectionHeading id="formato-yaml">
-        Ejemplos de archivo YAML
-      </SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="species/cow.yml"
@@ -771,42 +520,22 @@ export function Ranching({
         }
       />
 
-      <Callout
-        tone="tip"
-        title="Referencia completa: todos los campos en un solo archivo"
-      >
-        <code>species/reference_full.yml</code> (incluido en el jar) usa todos
-        los campos de una especie con una camada múltiple (2 a 6 crías) — la
-        vaca de ejemplo siempre tiene 1, así que no muestra ese caso.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, { file: <code>species/reference_full.yml</code> })}
       </Callout>
 
       <YamlBuilder
-        title="Constructor visual: especie"
-        description="Identidad, ciclo de vida y reproducción de una especie. 'base-production' (mapa clave=valor) se edita mejor copiando el ejemplo de arriba."
+        title={c.builderSpecies}
+        description={c.builderSpeciesDesc}
         folder="species"
-        fields={speciesFields}
+        fields={speciesFields(c)}
       />
-      <YamlBuilder
-        title="Constructor visual: gen"
-        folder="genes"
-        fields={geneFields}
-      />
+      <YamlBuilder title={c.builderGene} folder="genes" fields={geneFields(c)} />
 
-      <SectionHeading id="gui">GUI: Ranch Studio</SectionHeading>
-      <p>
-        <Kbd>/ranchingadmin browser</Kbd> abre un hub que enlaza a 7 navegadores
-        de contenido (Especies, Razas, Genes, Alimentos, Enfermedades, Vacunas,
-        Medicinas) más el Explorador de Animales, el Planificador de Cría, y
-        Veterinaria. El Explorador de Animales lista cada animal rastreado y
-        abre una ficha de solo lectura con su genética expresada, linaje y
-        estado. El Planificador de Cría deja elegir dos animales, previsualizar
-        la distribución probable de la cría (modo PROBABILISTIC) por chat, y —
-        como atajo administrativo — forzar el apareamiento sin pasar por el
-        minijuego de alimentar. Veterinaria lista solo los animales enfermos con
-        cura de un click.
-      </p>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
+      <p>{fill(c.guiBody, { cmd: <Kbd>/ranchingadmin browser</Kbd> })}</p>
 
-      <SectionHeading id="api">API para addons — RanchingAPI</SectionHeading>
+      <SectionHeading id="api">{c.apiTitle}</SectionHeading>
       <CodeBlock
         language="java"
         filename="OtroAddon.java"
@@ -822,94 +551,60 @@ export function Ranching({
           "RanchingAPI.get().attemptBreeding(animalA, animalB, location);\n"
         }
       />
-      <Callout
-        tone="tip"
-        title="Las acciones de cuidado programáticas no son solo un atajo interno"
-      >
-        Son la misma lógica que corre cuando un jugador da click derecho con un
-        ítem — expuestas a propósito para que un futuro RPGRoll-Workers
-        (pastor/veterinario/alimentador automatizados) las llame directo, sin
-        que Ranching necesite saber que "Workers" existe.
+      <Callout tone="tip" title={c.apiTipTitle}>
+        {c.apiTipBody}
       </Callout>
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhatDoes}</Th>
         </Thead>
         <tbody>
+          <Tr><Td className={mono}>/ranchingadmin browser</Td><Td>{c.a1}</Td></Tr>
+          <Tr><Td className={mono}>/ranchingadmin reload</Td><Td>{c.a2}</Td></Tr>
           <Tr>
-            <Td className="font-mono text-xs">/ranchingadmin browser</Td>
-            <Td>Abre el Ranch Studio.</Td>
+            <Td className={mono}>{"/ranchingadmin spawn <especie> [raza|-] [dueno|-] [macho|hembra]"}</Td>
+            <Td>{fill(c.a3, { dash: <code>-</code> })}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">/ranchingadmin reload</Td>
-            <Td>Recarga todas las definiciones desde disco.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">
-              {"/ranchingadmin spawn <especie> [raza|-] [dueño|-] [macho|hembra]"}
-            </Td>
-            <Td>
-              Spawnea un animal fundador (sin padres) en tu ubicación. El dueño
-              por defecto es quien lo spawnea (<code>-</code> = sin dueño); el
-              sexo, al azar si no se indica.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">
+            <Td className={mono}>
               {"/ranchingadmin givefeed|givemedicine|givevaccine <id> [cantidad] [jugador]"}
             </Td>
-            <Td>
-              Da un pienso, medicina o vacuna. Sin jugador, a quien lo pide;
-              desde la consola hay que indicar cantidad y jugador.
+            <Td>{c.a4}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>{"/ranchingadmin giveproduct <tipo> [calidad] [cantidad] [jugador]"}</Td>
+            <Td>{c.a5}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>{"/ranchingadmin setowner <jugador|ninguno>"}</Td>
+            <Td>{c.a6}</Td>
+          </Tr>
+          <Tr><Td className={mono}>/ranchingadmin givedinoegg [jugador]</Td><Td>{c.a7}</Td></Tr>
+          <Tr><Td className={mono}>/ranching inspect</Td><Td>{c.a8}</Td></Tr>
+          <Tr><Td className={mono}>/ranching animales | mercado | reclamar</Td><Td>{c.a9}</Td></Tr>
+          <Tr>
+            <Td className={mono}>{"/ranching vender <precio>|cancelar|servidor [id]"}</Td>
+            <Td>{c.a10}</Td>
+          </Tr>
+          <Tr><Td className={mono}>{"/ranching comprar <id>"}</Td><Td>{c.a11}</Td></Tr>
+          <Tr>
+            <Td className={mono}>
+              {"/ranching llamar [id|todos] \u00b7 corral [fijar|quitar|enviar [id|todos]]"}
             </Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">
-              {"/ranchingadmin giveproduct <tipo> [calidad] [cantidad] [jugador]"}
-            </Td>
-            <Td>
-              Da un producto (leche, lana, huevos, carne...) de la calidad
-              indicada (COMMON por defecto), igual que el que da un animal.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">{"/ranchingadmin setowner <jugador|ninguno>"}</Td>
-            <Td>Cambia el dueño del animal al que miras.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">/ranchingadmin givedinoegg [jugador]</Td>
-            <Td>Da el huevo fosilizado.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">/ranching inspect</Td>
-            <Td>Abre la ficha del animal al que estás mirando.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">/ranching animales | mercado | reclamar</Td>
-            <Td>Tus animales, el mercado y reclamar uno sin dueño.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">{"/ranching vender <precio>|cancelar|servidor [id]"}</Td>
-            <Td>Ponerlo en venta, quitarlo o vendérselo al servidor.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">{"/ranching comprar <id>"}</Td>
-            <Td>Comprar un animal en venta.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">{"/ranching llamar [id|todos] · corral [fijar|quitar|enviar [id|todos]]"}</Td>
-            <Td>Traer tus animales o mandarlos al corral.</Td>
+            <Td>{c.a12}</Td>
           </Tr>
         </tbody>
       </Table>
       <p>
-        <code>/ranchingadmin</code> requiere{" "}
-        <Badge tone="amber">rpgrollranching.admin.*</Badge> (default: op);{" "}
-        <code>/ranching</code> requiere{" "}
-        <Badge tone="blue">rpgrollranching.use</Badge> (default: true).
+        {fill(c.permBody, {
+          admin: <code>/ranchingadmin</code>,
+          adminPerm: <Badge tone="amber">rpgrollranching.admin.*</Badge>,
+          use: <code>/ranching</code>,
+          usePerm: <Badge tone="blue">rpgrollranching.use</Badge>,
+        })}
       </p>
       <PrevNext current="ranching" onNavigate={onNavigate} />
     </>
