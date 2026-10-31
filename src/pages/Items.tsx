@@ -14,101 +14,104 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { ITEMS_COPY, type ItemsCopy } from "./copy/items";
 
-const itemFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_item", placeholder: "dragon_slayer" },
-  { key: "category", label: "Categoría", type: "string", default: "misc", placeholder: "sword" },
-  { key: "material", label: "Material (Bukkit)", type: "string", placeholder: "NETHERITE_SWORD" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&4Dragon Slayer" },
-  { key: "lore", label: "Lore", type: "list", placeholder: "Forjada para matar dragones." },
-  { key: "rarity", label: "Rareza (id)", type: "string", default: "common", placeholder: "mythic" },
-  { key: "glow", label: "Brillo forzado", type: "boolean" },
-  { key: "stats", label: "Stats propios", type: "map", placeholder: "damage=14, critical_chance=20" },
-  { key: "attributes", label: "Atributos vanilla", type: "map", placeholder: "GENERIC_ATTACK_DAMAGE=2" },
+const mono = "font-mono text-xs";
+
+const itemFields = (c: ItemsCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewItem, placeholder: "dragon_slayer" },
+  { key: "category", label: c.fCategory, type: "string", default: "misc", placeholder: "sword" },
+  { key: "material", label: c.fMaterial, type: "string", placeholder: "NETHERITE_SWORD" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&4Dragon Slayer" },
+  { key: "lore", label: c.fLore, type: "list", placeholder: c.phLore },
+  { key: "rarity", label: c.fRarity, type: "string", default: "common", placeholder: "mythic" },
+  { key: "glow", label: c.fGlow, type: "boolean" },
+  { key: "stats", label: c.fStats, type: "map", placeholder: "damage=14, critical_chance=20" },
+  { key: "attributes", label: c.fAttributes, type: "map", placeholder: "GENERIC_ATTACK_DAMAGE=2" },
   {
     key: "requirements",
-    label: "Requisitos",
+    label: c.fRequirements,
     type: "group",
     fields: [
-      { key: "level", label: "Nivel", type: "number", default: "0" },
-      { key: "class", label: "Clase", type: "string" },
+      { key: "level", label: c.fLevel, type: "number", default: "0" },
+      { key: "class", label: c.fClass, type: "string" },
     ],
   },
   {
     key: "durability",
-    label: "Durabilidad",
+    label: c.fDurability,
     type: "group",
     fields: [
-      { key: "max", label: "Máxima", type: "number", default: "0" },
-      { key: "repairable", label: "Reparable", type: "boolean", default: "true" },
-      { key: "degrade-per-use", label: "Degradación por uso", type: "number", default: "1" },
+      { key: "max", label: c.fMax, type: "number", default: "0" },
+      { key: "repairable", label: c.fRepairable, type: "boolean", default: "true" },
+      { key: "degrade-per-use", label: c.fDegrade, type: "number", default: "1" },
     ],
   },
   {
     key: "economy",
-    label: "Economía",
+    label: c.fEconomy,
     type: "group",
     fields: [
-      { key: "sell", label: "Precio de venta", type: "number", default: "0" },
-      { key: "buy", label: "Precio de compra", type: "number", default: "0" },
+      { key: "sell", label: c.fSell, type: "number", default: "0" },
+      { key: "buy", label: c.fBuy, type: "number", default: "0" },
     ],
   },
 ];
 
-const rarityFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_rareza", placeholder: "epic" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "Épica" },
-  { key: "color", label: "Color", type: "string", placeholder: "light_purple" },
-  { key: "glow", label: "Brillo", type: "boolean" },
-  { key: "sound", label: "Sonido al obtenerlo", type: "string", placeholder: "ENTITY_ILLUSIONER_CAST_SPELL" },
-  { key: "particle", label: "Partícula", type: "string", placeholder: "FLAME" },
+const rarityFields = (c: ItemsCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewRarity, placeholder: "epic" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: c.phEpic },
+  { key: "color", label: c.fColor, type: "string", placeholder: "light_purple" },
+  { key: "glow", label: c.fGlowPlain, type: "boolean" },
+  { key: "sound", label: c.fSound, type: "string", placeholder: "ENTITY_ILLUSIONER_CAST_SPELL" },
+  { key: "particle", label: c.fParticle, type: "string", placeholder: "FLAME" },
 ];
 
-const gemFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_gema", placeholder: "ruby" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&cRubí" },
-  { key: "type", label: "Tipo de socket aceptado", type: "string", default: "GENERIC", placeholder: "FIRE" },
-  { key: "material", label: "Ítem base", type: "string", default: "EMERALD", placeholder: "EMERALD" },
-  { key: "item-model", label: "Modelo del resource pack", type: "string", placeholder: "miserver:rubi" },
-  { key: "stats", label: "Bono de stats", type: "map", placeholder: "damage=3" },
+const gemFields = (c: ItemsCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewGem, placeholder: "ruby" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: c.phRuby },
+  { key: "type", label: c.fSocketType, type: "string", default: "GENERIC", placeholder: "FIRE" },
+  { key: "material", label: c.fBaseItem, type: "string", default: "EMERALD", placeholder: "EMERALD" },
+  { key: "item-model", label: c.fItemModel, type: "string", placeholder: "miserver:rubi" },
+  { key: "stats", label: c.fStatBonus, type: "map", placeholder: "damage=3" },
 ];
 
 export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ITEMS_COPY[locale];
+
   return (
     <>
-      <PageHeader title="Ítems (RPGRoll-Items)">
-        Motor de ítems completamente personalizados: rareza, stats propios + atributos vanilla reales, sockets
-        con gemas, skins, mejoras (+1, +2...), durabilidad propia, encantamientos, habilidades activas/pasivas y
-        recetas — todo con editor gráfico completo.
-      </PageHeader>
+      <PageHeader title={c.title}>{c.intro}</PageHeader>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, RPGRoll-Enchantments, Vault, PlaceholderAPI, SackResourcePack]"} />
 
-      <SectionHeading id="rareza">Rareza</SectionHeading>
+      <SectionHeading id="rareza">{c.rarityTitle}</SectionHeading>
       <p>
-        No es un enum cerrado — es un contenido más, cargado desde{" "}
-        <code>rarities/*.yml</code>. Cada rareza define color, si brilla, y opcionalmente un sonido/partícula.
-        El brillo se implementa con el truco clásico: agrega el encantamiento vanilla{" "}
-        <code>luck_of_the_sea</code> nivel 1 (si el ítem no tiene ya otros encantamientos) más el flag{" "}
-        <code>HIDE_ENCHANTS</code> para que no se vea en el tooltip.
+        {fill(c.rarityBody, {
+          dir: <code>rarities/*.yml</code>,
+          ench: <code>luck_of_the_sea</code>,
+          flag: <code>HIDE_ENCHANTS</code>,
+        })}
       </p>
       <Table>
         <Thead>
           <Th>id</Th>
-          <Th>Color</Th>
-          <Th>Brillo</Th>
+          <Th>{c.thColor}</Th>
+          <Th>{c.thGlow}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">common</Td><Td>blanco</Td><Td>no</Td></Tr>
-          <Tr><Td className="font-mono text-xs">uncommon</Td><Td>verde</Td><Td>no</Td></Tr>
-          <Tr><Td className="font-mono text-xs">rare</Td><Td>aqua</Td><Td>no</Td></Tr>
-          <Tr><Td className="font-mono text-xs">epic</Td><Td>violeta</Td><Td>sí</Td></Tr>
-          <Tr><Td className="font-mono text-xs">legendary</Td><Td>dorado</Td><Td>sí</Td></Tr>
-          <Tr><Td className="font-mono text-xs">mythic</Td><Td>rojo</Td><Td>sí</Td></Tr>
-          <Tr><Td className="font-mono text-xs">divine</Td><Td>amarillo</Td><Td>sí</Td></Tr>
-          <Tr><Td className="font-mono text-xs">celestial</Td><Td>#00FFFF</Td><Td>sí</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ancient</Td><Td>#8B5A2B</Td><Td>sí</Td></Tr>
+          <Tr><Td className={mono}>common</Td><Td>{c.cWhite}</Td><Td>{c.no}</Td></Tr>
+          <Tr><Td className={mono}>uncommon</Td><Td>{c.cGreen}</Td><Td>{c.no}</Td></Tr>
+          <Tr><Td className={mono}>rare</Td><Td>{c.cAqua}</Td><Td>{c.no}</Td></Tr>
+          <Tr><Td className={mono}>epic</Td><Td>{c.cPurple}</Td><Td>{c.yes}</Td></Tr>
+          <Tr><Td className={mono}>legendary</Td><Td>{c.cGold}</Td><Td>{c.yes}</Td></Tr>
+          <Tr><Td className={mono}>mythic</Td><Td>{c.cRed}</Td><Td>{c.yes}</Td></Tr>
+          <Tr><Td className={mono}>divine</Td><Td>{c.cYellow}</Td><Td>{c.yes}</Td></Tr>
+          <Tr><Td className={mono}>celestial</Td><Td>#00FFFF</Td><Td>{c.yes}</Td></Tr>
+          <Tr><Td className={mono}>ancient</Td><Td>#8B5A2B</Td><Td>{c.yes}</Td></Tr>
         </tbody>
       </Table>
       <CodeBlock
@@ -134,42 +137,65 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "particle: FLAME\n"
         }
       />
-      <YamlBuilder title="Constructor visual: Rarity" folder="rarities" fields={rarityFields} />
+      <YamlBuilder title={c.builderRarity} folder="rarities" fields={rarityFields(c)} />
 
-      <SectionHeading id="stats">Dos sistemas de números: stats propios vs. atributos vanilla</SectionHeading>
+      <SectionHeading id="stats">{c.statsTitle}</SectionHeading>
       <p>
-        <code>attributes:</code> son atributos <strong>reales</strong> de Bukkit (<code>GENERIC_ATTACK_DAMAGE</code>,{" "}
-        <code>GENERIC_ARMOR</code>, etc.) — se ven en el tooltip nativo salvo que ocultes con{" "}
-        <code>HIDE_ATTRIBUTES</code>. <code>stats:</code> son números propios de RPGRoll sin significado nativo
-        para Minecraft — solo importan porque el motor de stats y los listeners de combate los leen por nombre.
+        {fill(c.statsBody, {
+          attributes: <code>attributes:</code>,
+          real: <strong>{c.realWord}</strong>,
+          dmg: <code>GENERIC_ATTACK_DAMAGE</code>,
+          armor: <code>GENERIC_ARMOR</code>,
+          hide: <code>HIDE_ATTRIBUTES</code>,
+          stats: <code>stats:</code>,
+        })}
       </p>
-      <Callout tone="info" title="Solo 2 stats propios tienen efecto automático">
-        <code>health</code> se suma a <code>GENERIC_MAX_HEALTH</code> y <code>speed</code> a{" "}
-        <code>GENERIC_MOVEMENT_SPEED</code> (÷100) en cuanto el ítem se equipa. El resto (<code>damage</code>,{" "}
-        <code>defense</code>, <code>critical_chance</code>, <code>critical_damage</code>, <code>resistance</code>
-        , etc.) los lee directamente el listener de combate al calcular el golpe — no son atributos vanilla, así
-        que no aparecen en ningún tooltip nativo.
+      <Callout tone="info" title={c.statsCalloutTitle}>
+        {fill(c.statsCalloutBody, {
+          health: <code>health</code>,
+          maxHealth: <code>GENERIC_MAX_HEALTH</code>,
+          speed: <code>speed</code>,
+          moveSpeed: <code>GENERIC_MOVEMENT_SPEED</code>,
+          others: (
+            <>
+              <code>damage</code>, <code>defense</code>, <code>critical_chance</code>,{" "}
+              <code>critical_damage</code>, <code>resistance</code>
+            </>
+          ),
+        })}
       </Callout>
+      <p>{fill(c.pollingBody, { polling: <strong>{c.pollingWord}</strong> })}</p>
       <p>
-        La detección de equipar/desequipar es <strong>por polling</strong>, cada 10 ticks, sobre las 6 ranuras
-        relevantes (mano, offhand, casco, pechera, piernas, botas) — Bukkit no tiene un solo evento que cubra
-        todos los casos (comandos, dispensadores, clicks de inventario...).
+        {fill(c.statsListBody, {
+          list: (
+            <code>
+              health, mana, defense, damage, speed, strength, dexterity, intelligence, agility, luck, resistance,
+              armor_penetration, critical_chance, critical_damage, attack_speed, magic_power, magic_resistance,
+              mining_speed, fishing_luck
+            </code>
+          ),
+        })}
       </p>
-      <p>18 stats conocidos de fábrica: <code>health, mana, defense, damage, speed, strength, dexterity, intelligence, agility, luck, resistance, armor_penetration, critical_chance, critical_damage, attack_speed, magic_power, magic_resistance, mining_speed, fishing_luck</code> — otros addons pueden sumar más.</p>
 
-      <SectionHeading id="sockets">Sockets y gemas</SectionHeading>
+      <SectionHeading id="sockets">{c.socketsTitle}</SectionHeading>
       <p>
-        Un ítem declara ranuras (<code>sockets:</code>, con <code>id</code> y tipos aceptados opcionales) y una
-        gema se inserta con <Kbd>{"/item socket <id>"}</Kbd>, tomando la gema de tu <strong>offhand</strong> y
-        consumiéndola si encaja. El bono de stats de cada gema insertada se suma al de la definición base +
-        mejoras.
+        {fill(c.socketsBody, {
+          sockets: <code>sockets:</code>,
+          id: <code>id</code>,
+          cmd: <Kbd>{"/item socket <id>"}</Kbd>,
+          offhand: <strong>offhand</strong>,
+        })}
       </p>
       <p>
-        La gema es un <code>EMERALD</code> con lore salvo que su YAML diga otra cosa: <code>material</code> cambia
-        el ítem base e <code>item-model</code> le da su propio modelo del resource pack (ver{" "}
-        <a href="#texturas-propias">Texturas propias</a>). Para repartirlas, cualquier sitio que acepte un id de ítem
-        acepta también <code>{"gem:<id>"}</code>: <Kbd>{"/itemadmin give <jugador> gem:ruby"}</Kbd>, o{" "}
-        <code>reference: gem:ruby</code> en el botín de RPGRoll-Mobs y RPGRoll-Dungeons.
+        {fill(c.gemsBody, {
+          emerald: <code>EMERALD</code>,
+          material: <code>material</code>,
+          itemModel: <code>item-model</code>,
+          link: <a href="#texturas-propias">{c.texturesLink}</a>,
+          gemRef: <code>{"gem:<id>"}</code>,
+          cmd: <Kbd>{"/itemadmin give <jugador> gem:ruby"}</Kbd>,
+          ref: <code>reference: gem:ruby</code>,
+        })}
       </p>
       <CodeBlock language="yaml" filename="gems/ruby.yml" code={'id: ruby\ndisplay-name: "&cRubí"\ntype: FIRE\nstats:\n  damage: 3\n'} />
       <CodeBlock
@@ -177,150 +203,242 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         filename="gems/sapphire.yml"
         code={'id: sapphire\ndisplay-name: "&9Zafiro"\ntype: GENERIC\nstats:\n  intelligence: 4\n  magic_power: 2\n'}
       />
-      <YamlBuilder title="Constructor visual: Gem" folder="gems" fields={gemFields} />
+      <YamlBuilder title={c.builderGem} folder="gems" fields={gemFields(c)} />
 
-      <SectionHeading id="skins-mejoras-durabilidad">Skins, mejoras y durabilidad</SectionHeading>
+      <SectionHeading id="skins-mejoras-durabilidad">{c.skinsTitle}</SectionHeading>
       <ul>
-        <li><strong>Skins</strong> (<Kbd>/item skin</Kbd>) — cicla entre apariencias alternativas (material/nombre/CMD distintos), 100% cosmético, nunca toca stats.</li>
-        <li><strong>Mejoras</strong> (<Kbd>/item upgrade</Kbd>) — niveles <code>+1, +2...</code> definidos en YAML, cada uno con su propio bono de stats aditivo y costo (dinero vía Vault y/o un material del inventario). Puede fallar por <code>MAX_LEVEL</code>, <code>NO_UPGRADE_DEFINED</code> (hueco en la lista de niveles), <code>CANT_AFFORD_MONEY</code> o <code>MISSING_MATERIAL</code>.</li>
-        <li><strong>Durabilidad</strong> — sistema propio, independiente del daño vanilla del ítem (se crea sin daño real; el contador vive aparte). Se degrada en golpes/romper bloques, se puede reparar manualmente o automáticamente (cada minuto, si <code>auto-repair-per-minute &gt; 0</code>); al llegar a 0 el ítem se consume.</li>
+        <li>
+          {fill(c.skinsItem, { skins: <strong>{c.skinsWord}</strong>, cmd: <Kbd>/item skin</Kbd> })}
+        </li>
+        <li>
+          {fill(c.upgradesItem, {
+            upgrades: <strong>{c.upgradesWord}</strong>,
+            cmd: <Kbd>/item upgrade</Kbd>,
+            levels: <code>+1, +2...</code>,
+            e1: <code>MAX_LEVEL</code>,
+            e2: <code>NO_UPGRADE_DEFINED</code>,
+            e3: <code>CANT_AFFORD_MONEY</code>,
+            e4: <code>MISSING_MATERIAL</code>,
+          })}
+        </li>
+        <li>
+          {fill(c.durabilityItem, {
+            dur: <strong>{c.durabilityWord}</strong>,
+            auto: <code>auto-repair-per-minute &gt; 0</code>,
+          })}
+        </li>
       </ul>
 
-      <SectionHeading id="texturas-propias">Texturas propias: item-model</SectionHeading>
+      <SectionHeading id="texturas-propias">{c.texturesTitle}</SectionHeading>
       <p>
-        <code>item-model: "miserver:espada_de_mitrilo"</code> pone el componente <code>item_model</code> (1.21.4+)
-        en el ítem: el cliente dibuja ese modelo en lugar del del material base. Vale en la definición y en cada
-        skin. Si no se pone el namespace se asume <code>minecraft:</code>.
+        {fill(c.texturesBody, {
+          example: <code>item-model: "miserver:espada_de_mitrilo"</code>,
+          component: <code>item_model</code>,
+          mc: <code>minecraft:</code>,
+        })}
       </p>
       <p>
-        El resource pack tiene que traer <code>assets/miserver/items/espada_de_mitrilo.json</code> (la definición
-        del ítem), su modelo y su textura; con SackResourcePack basta con un módulo de contenido que los
-        incluya. Quien rechace el pack ve el material base, así que conviene que el material tenga sentido por sí
-        solo.
+        {fill(c.texturesPackBody, {
+          path: <code>assets/miserver/items/espada_de_mitrilo.json</code>,
+        })}
       </p>
-      <Callout tone="info" title="El mismo identificador sirve para Bedrock">
-        Los mappings de ítems de Geyser (formato 2) reconocen un ítem por su material de Java y su{" "}
-        <code>item_model</code>. Una definición con <code>{'"model": "miserver:espada_de_mitrilo"'}</code> bajo{" "}
-        <code>minecraft:iron_sword</code> en <code>custom_mappings/</code>, más un <code>.mcpack</code> con la
-        textura en <code>packs/</code>, hace que los jugadores de Bedrock vean lo mismo.
+      <Callout tone="info" title={c.bedrockTitle}>
+        {fill(c.bedrockBody, {
+          component: <code>item_model</code>,
+          model: <code>{'"model": "miserver:espada_de_mitrilo"'}</code>,
+          ironSword: <code>minecraft:iron_sword</code>,
+          dir: <code>custom_mappings/</code>,
+          mcpack: <code>.mcpack</code>,
+          packs: <code>packs/</code>,
+        })}
       </Callout>
 
       <p>
-        <code>equipment-model: "miserver:mitrilo"</code> hace lo mismo con cómo se ve una armadura{" "}
-        <strong>puesta</strong>: apunta a <code>assets/miserver/equipment/mitrilo.json</code>, que a su vez
-        nombra las capas <code>textures/entity/equipment/humanoid/mitrilo.png</code> y{" "}
-        <code>humanoid_leggings/mitrilo.png</code> (64x32, el mapa de siempre). Solo cuenta en materiales que se
-        equipan en la cabeza, el pecho, las piernas o los pies; en Bedrock hace falta además un{" "}
-        <em>attachable</em> en el <code>.mcpack</code>.
+        {fill(c.equipmentBody, {
+          example: <code>equipment-model: "miserver:mitrilo"</code>,
+          worn: <strong>{c.wornWord}</strong>,
+          path: <code>assets/miserver/equipment/mitrilo.json</code>,
+          layer1: <code>textures/entity/equipment/humanoid/mitrilo.png</code>,
+          layer2: <code>humanoid_leggings/mitrilo.png</code>,
+          attachable: <em>attachable</em>,
+          mcpack: <code>.mcpack</code>,
+        })}
       </p>
       <p>
-        <code>equipment-model: none</code> deja la pieza sin aspecto de armadura. En la cabeza, el cliente pinta
-        entonces el <strong>modelo del ítem</strong> con su transformación <code>display.head</code>: así se lleva un
-        casco con modelo 3D propio (cuernos, crestas, visores), igual que una calabaza tallada.
+        {fill(c.equipmentNoneBody, {
+          none: <code>equipment-model: none</code>,
+          itemModel: <strong>{c.itemModelWord}</strong>,
+          display: <code>display.head</code>,
+        })}
       </p>
 
-      <SectionHeading id="menas">Menas propias</SectionHeading>
-      <p>
-        Minecraft no deja añadir bloques desde un plugin, así que una mena es un estado de bloque vanilla que el
-        resource pack dibuja como otra cosa. Cada archivo de <code>ores/</code> dice qué estado usa, qué suelta,
-        cuánto cuesta picarla y dónde aparece:
-      </p>
+      <SectionHeading id="menas">{c.oresTitle}</SectionHeading>
+      <p>{fill(c.oresBody, { dir: <code>ores/</code> })}</p>
       <CodeBlock language="yaml" filename="ores/mena_de_mitrilo.yml" code={"id: mena_de_mitrilo\ndisplay-name: \"&bMena de Mitrilo\"\nblocks:\n  stone: \"minecraft:note_block[instrument=zombie,note=2,powered=false]\"\n  deepslate: \"minecraft:note_block[instrument=zombie,note=3,powered=false]\"\ndrop:\n  item: mitrilo_en_bruto      # o gem:<id>\n  min: 1\n  max: 1\n  fortune: true\nxp: [2, 4]\nhardness: 4.0                 # como la de vanilla: la del diamante es 3\nrequired-tier: 3              # pico de diamante o mejor\ngeneration:\n  - worlds: [recursos, overworld]\n    min-y: -32\n    max-y: 32\n    veins-per-chunk: 4         # 0.25 = una veta cada cuatro chunks\n    vein-size: [3, 6]\n    replace:\n      STONE: stone\n      DEEPSLATE: deepslate\n"} />
       <ul>
         <li>
-          <strong>El disfraz</strong>: bloques musicales con instrumento de cabeza (<code>zombie</code>,{" "}
-          <code>skeleton</code>...), 25 notas cada uno. Con{" "}
-          <code>block-updates.disable-noteblock-updates: true</code> en <code>config/paper-global.yml</code> un
-          bloque musical colocado a mano se queda siempre en arpa y nadie puede fabricar una mena; el plugin lo
-          comprueba igualmente al colocar. Los bloques musicales normales dejan de cambiar de instrumento según el
-          bloque de abajo.
+          {fill(c.oDisguise, {
+            label: <strong>{c.oDisguiseLabel}</strong>,
+            zombie: <code>zombie</code>,
+            skeleton: <code>skeleton</code>,
+            setting: <code>block-updates.disable-noteblock-updates: true</code>,
+            file: <code>config/paper-global.yml</code>,
+          })}
         </li>
         <li>
-          <strong>Picarla</strong>: el cliente cree que pica un bloque musical, así que mientras se pica una mena
-          se ajusta el atributo <code>block_break_speed</code> del jugador para que tarde lo que dice{" "}
-          <code>hardness</code> con el pico que lleve. Sin pico, o con uno de nivel menor que{" "}
-          <code>required-tier</code>, tarda más de tres veces y no suelta nada. Fortuna multiplica el drop como en
-          vanilla; Toque de seda no cambia nada (suelta el mineral igual).
+          {fill(c.oMine, {
+            label: <strong>{c.oMineLabel}</strong>,
+            attr: <code>block_break_speed</code>,
+            hardness: <code>hardness</code>,
+            tier: <code>required-tier</code>,
+          })}
         </li>
         <li>
-          <strong>Nivel de pico</strong>: madera y oro 0, piedra y cobre 1, hierro 2, diamante 3, netherita 4. Un
-          pico de RPGRoll puede declarar otro con <code>custom-data: {"{"} mining-tier: "5", mining-speed: "8.5"{" "}
-          {"}"}</code>; <code>mining-speed</code> es su velocidad contra las menas (la del diamante es 8).
+          {fill(c.oTier, {
+            label: <strong>{c.oTierLabel}</strong>,
+            data: <code>{'custom-data: { mining-tier: "5", mining-speed: "8.5" }'}</code>,
+            speed: <code>mining-speed</code>,
+          })}
         </li>
         <li>
-          <strong>Generación</strong>: al cargar un chunk nuevo en los mundos de <code>worlds</code>, cada veta
-          sustituye los bloques de <code>replace</code> por la variante que diga. En los mundos de{" "}
-          <code>ores.retrogen-worlds</code> (<code>config.yml</code>) también se siembran los chunks que ya
-          existían, una sola vez por mena: pensado para un mundo de recursos, nunca para uno con construcciones.
+          {fill(c.oGen, {
+            label: <strong>{c.oGenLabel}</strong>,
+            worlds: <code>worlds</code>,
+            replace: <code>replace</code>,
+            retrogen: <code>ores.retrogen-worlds</code>,
+            config: <code>config.yml</code>,
+          })}
         </li>
-        <li>
-          No suena ni se afina, no arde, y una explosión la rompe soltando su mineral.{" "}
-          <Kbd>/itemadmin ores</Kbd> lista las menas y cuántos bloques se han sembrado desde el arranque.
-        </li>
+        <li>{fill(c.oMisc, { cmd: <Kbd>/itemadmin ores</Kbd> })}</li>
       </ul>
-      <Callout tone="warning" title="No cambies el estado de una mena que ya está en el mundo">
-        El mundo guarda el estado del bloque, no el id de la mena. Si le das a una mena otro estado, las ya
-        generadas se quedan como bloques musicales sueltos (o pasan a ser otra mena).
+      <Callout tone="warning" title={c.oreWarnTitle}>
+        {c.oreWarnBody}
       </Callout>
-      <Callout tone="info" title="Para Bedrock">
-        Geyser dibuja esos estados con un mapeo de bloques en <code>custom_mappings/</code>
-        (<code>minecraft:note_block</code> con <code>only_override_states: true</code> y un{" "}
-        <code>state_overrides</code> por estado, cada uno con su textura de <code>terrain_texture.json</code>) y el
-        tiempo de picado de <code>destructible_by_mining</code>.
+      <Callout tone="info" title={c.oreBedrockTitle}>
+        {fill(c.oreBedrockBody, {
+          dir: <code>custom_mappings/</code>,
+          noteblock: <code>minecraft:note_block</code>,
+          override: <code>only_override_states: true</code>,
+          states: <code>state_overrides</code>,
+          texture: <code>terrain_texture.json</code>,
+          mining: <code>destructible_by_mining</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="comportamiento">Triggers, habilidades y condiciones</SectionHeading>
-      <p>Un ítem tiene dos formas de reaccionar a eventos: <code>triggers</code> (acciones directas, sin condición extra) y <code>abilities</code> (con cooldown propio y condiciones, activas o pasivas).</p>
-      <p>21 triggers disponibles: <code>EQUIP, UNEQUIP, RIGHT_CLICK, LEFT_CLICK, ENTITY_HIT, ENTITY_KILL, BLOCK_BREAK, BLOCK_PLACE, PLAYER_DAMAGE, SHIELD_BLOCK, PLAYER_DEATH, PLAYER_RESPAWN, PLAYER_MOVE, PLAYER_JUMP, PLAYER_SNEAK, PLAYER_SPRINT, PLAYER_INTERACT, CONSUME, THROW, PICKUP, DROP</code>.</p>
-      <p>Acciones incorporadas: <code>MESSAGE, COMMAND, SOUND, PARTICLE, EXPLOSION, DAMAGE, HEAL, FIRE, TITLE, BOSSBAR, SUMMON, PROJECTILE, SHOOT</code> — cinemáticas, abrir GUIs y scripts quedan como punto de extensión para otros addons.</p>
+      <SectionHeading id="comportamiento">{c.behaviorTitle}</SectionHeading>
       <p>
-        <code>MESSAGE</code> y <code>COMMAND</code> reemplazan <code>{"{player}"}</code> por el jugador,{" "}
-        <code>{"{target}"}</code> por el objetivo si es un jugador y <code>{"{target_uuid}"}</code> por el UUID del
-        objetivo sea lo que sea. Este último es el que sirve contra mobs:{" "}
-        <code>{"effect give {target_uuid} minecraft:slowness 4 2"}</code>.
+        {fill(c.behaviorBody, { triggers: <code>triggers</code>, abilities: <code>abilities</code> })}
       </p>
       <p>
-        Las condiciones de una <em>ability</em> son expresiones simples (<code>player.level &gt;= 20</code>,{" "}
-        <code>player.health &lt; 50%</code>, <code>player.hasPermission(perm)</code>) resueltas contra{" "}
-        <code>player.level/health/foodlevel</code>, <code>target.type/health</code>, <code>world</code>,{" "}
-        <code>weather</code> — extensible vía registro de variables para otros addons.
+        {fill(c.triggersBody, {
+          list: (
+            <code>
+              EQUIP, UNEQUIP, RIGHT_CLICK, LEFT_CLICK, ENTITY_HIT, ENTITY_KILL, BLOCK_BREAK, BLOCK_PLACE,
+              PLAYER_DAMAGE, SHIELD_BLOCK, PLAYER_DEATH, PLAYER_RESPAWN, PLAYER_MOVE, PLAYER_JUMP, PLAYER_SNEAK,
+              PLAYER_SPRINT, PLAYER_INTERACT, CONSUME, THROW, PICKUP, DROP
+            </code>
+          ),
+        })}
+      </p>
+      <p>
+        {fill(c.actionsBody, {
+          list: (
+            <code>
+              MESSAGE, COMMAND, SOUND, PARTICLE, EXPLOSION, DAMAGE, HEAL, FIRE, TITLE, BOSSBAR, SUMMON,
+              PROJECTILE, SHOOT
+            </code>
+          ),
+        })}
+      </p>
+      <p>
+        {fill(c.placeholdersBody, {
+          message: <code>MESSAGE</code>,
+          command: <code>COMMAND</code>,
+          player: <code>{"{player}"}</code>,
+          target: <code>{"{target}"}</code>,
+          targetUuid: <code>{"{target_uuid}"}</code>,
+          example: <code>{"effect give {target_uuid} minecraft:slowness 4 2"}</code>,
+        })}
+      </p>
+      <p>
+        {fill(c.conditionsBody, {
+          ability: <em>ability</em>,
+          e1: <code>player.level &gt;= 20</code>,
+          e2: <code>player.health &lt; 50%</code>,
+          e3: <code>player.hasPermission(perm)</code>,
+          v1: <code>player.level/health/foodlevel</code>,
+          v2: <code>target.type/health</code>,
+          v3: <code>world</code>,
+          v4: <code>weather</code>,
+        })}
       </p>
 
-      <SectionHeading id="armas-de-fuego">Armas de fuego: SHOOT</SectionHeading>
+      <SectionHeading id="armas-de-fuego">{c.shootTitle}</SectionHeading>
       <p>
-        <code>SHOOT</code> dispara desde el cañón del arma, no desde los ojos. Sin <code>speed</code> el disparo
-        es instantáneo (un rayo con su estela). Con <code>speed</code> sale un proyectil con modelo que vuela tic a
-        tic, cae con <code>gravity</code> y explota o hace daño donde pegue. El daño y la explosión van a nombre del
-        tirador: no se hace daño a sí mismo y las protecciones (GriefPrevention, WorldGuard) deciden qué bloques se
-        rompen.
+        {fill(c.shootBody, {
+          shoot: <code>SHOOT</code>,
+          speed: <code>speed</code>,
+          speed2: <code>speed</code>,
+          gravity: <code>gravity</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Parámetro</Th>
-          <Th>Por defecto</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thParam}</Th>
+          <Th>{c.thDefault}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">amount</Td><Td>6</Td><Td>Daño a la criatura alcanzada.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">range</Td><Td>32</Td><Td>Alcance en bloques.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">speed</Td><Td>0</Td><Td>Bloques por tic. 0 = instantáneo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">gravity</Td><Td>0</Td><Td>Caída por tic del proyectil.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">model</Td><Td>—</Td><Td>Modelo del proyectil (<code>item_model</code>, p. ej. <code>vanguardia:proyectil/cohete</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">particle, color, size</Td><Td>CRIT, #FF3030, 0.8</Td><Td>Núcleo de la estela. <code>color</code> y <code>size</code> valen para DUST.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">particle2, color2, size2</Td><Td>—, #FFFFFF, 0.6</Td><Td>Segunda partícula de la estela.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">spiral</Td><Td>0</Td><Td>Radio con el que la segunda partícula se enrosca alrededor del núcleo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">density</Td><Td>3</Td><Td>Puntos de estela por bloque.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">explosion</Td><Td>0</Td><Td>Potencia de la explosión al impactar (0 = ninguna; TNT es 4).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">break-blocks</Td><Td>false</Td><Td>Si la explosión rompe bloques.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">fire</Td><Td>false</Td><Td>Si la explosión prende fuego.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">muzzle-effect</Td><Td>—</Td><Td>Efecto de RPGRoll-FX en el cañón al disparar.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">hit-effect</Td><Td>—</Td><Td>Efecto de RPGRoll-FX donde pega.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">sustain</Td><Td>0</Td><Td>Láser sostenido: tics que el rayo sigue encendido tras cada disparo (solo sin <code>speed</code>). Ver abajo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">sound, volume, pitch</Td><Td>—, 1.0, 1.0</Td><Td>Sonido del disparo (nombre de <code>Sound</code>, p. ej. <code>ENTITY_BLAZE_SHOOT</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ammo</Td><Td>—</Td><Td>Munición que gasta cada disparo: id de un ítem de RPGRoll-Items (<code>celula_laser</code>) o <code>minecraft:&lt;material&gt;</code>. Sin ella no dispara. En creativo hace falta llevarla, pero no se gasta.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ammo-amount</Td><Td>1</Td><Td>Cuántas gasta cada disparo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">no-ammo-sound</Td><Td>BLOCK_DISPENSER_FAIL</Td><Td>Sonido al apretar el gatillo sin munición (vacío = ninguno).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">no-ammo-message</Td><Td>—</Td><Td>Aviso en la barra de acción sin munición (MiniMessage y placeholders).</Td></Tr>
+          <Tr><Td className={mono}>amount</Td><Td>6</Td><Td>{c.sAmount}</Td></Tr>
+          <Tr><Td className={mono}>range</Td><Td>32</Td><Td>{c.sRange}</Td></Tr>
+          <Tr><Td className={mono}>speed</Td><Td>0</Td><Td>{c.sSpeed}</Td></Tr>
+          <Tr><Td className={mono}>gravity</Td><Td>0</Td><Td>{c.sGravity}</Td></Tr>
+          <Tr>
+            <Td className={mono}>model</Td>
+            <Td>—</Td>
+            <Td>
+              {fill(c.sModel, {
+                component: <code>item_model</code>,
+                example: <code>vanguardia:proyectil/cohete</code>,
+              })}
+            </Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>particle, color, size</Td>
+            <Td>CRIT, #FF3030, 0.8</Td>
+            <Td>{fill(c.sParticle, { color: <code>color</code>, size: <code>size</code> })}</Td>
+          </Tr>
+          <Tr><Td className={mono}>particle2, color2, size2</Td><Td>—, #FFFFFF, 0.6</Td><Td>{c.sParticle2}</Td></Tr>
+          <Tr><Td className={mono}>spiral</Td><Td>0</Td><Td>{c.sSpiral}</Td></Tr>
+          <Tr><Td className={mono}>density</Td><Td>3</Td><Td>{c.sDensity}</Td></Tr>
+          <Tr><Td className={mono}>explosion</Td><Td>0</Td><Td>{c.sExplosion}</Td></Tr>
+          <Tr><Td className={mono}>break-blocks</Td><Td>false</Td><Td>{c.sBreak}</Td></Tr>
+          <Tr><Td className={mono}>fire</Td><Td>false</Td><Td>{c.sFire}</Td></Tr>
+          <Tr><Td className={mono}>muzzle-effect</Td><Td>—</Td><Td>{c.sMuzzle}</Td></Tr>
+          <Tr><Td className={mono}>hit-effect</Td><Td>—</Td><Td>{c.sHit}</Td></Tr>
+          <Tr>
+            <Td className={mono}>sustain</Td>
+            <Td>0</Td>
+            <Td>{fill(c.sSustain, { speed: <code>speed</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>sound, volume, pitch</Td>
+            <Td>—, 1.0, 1.0</Td>
+            <Td>{fill(c.sSound, { sound: <code>Sound</code>, example: <code>ENTITY_BLAZE_SHOOT</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>ammo</Td>
+            <Td>—</Td>
+            <Td>
+              {fill(c.sAmmo, {
+                cell: <code>celula_laser</code>,
+                mc: <code>minecraft:&lt;material&gt;</code>,
+              })}
+            </Td>
+          </Tr>
+          <Tr><Td className={mono}>ammo-amount</Td><Td>1</Td><Td>{c.sAmmoAmount}</Td></Tr>
+          <Tr><Td className={mono}>no-ammo-sound</Td><Td>BLOCK_DISPENSER_FAIL</Td><Td>{c.sNoAmmoSound}</Td></Tr>
+          <Tr><Td className={mono}>no-ammo-message</Td><Td>—</Td><Td>{c.sNoAmmoMessage}</Td></Tr>
         </tbody>
       </Table>
       <CodeBlock
@@ -340,11 +458,12 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "        hit-effect: vanguardia_explosion_de_impulso\n"
         }
       />
-      <Callout tone="info" title="Munición (1.1.8)">
-        Con <code>ammo</code>, un disparo sin munición no hace nada más que su sonido de vacío. Pon el sonido del
-        disparo en <code>sound</code> de la propia acción SHOOT y no en una acción SOUND aparte: las acciones de la
-        lista se ejecutan todas, así que una SOUND suelta sonaría aunque el arma esté vacía. Una munición vanilla
-        (<code>minecraft:paper</code>) no cuenta los ítems de RPGRoll hechos sobre ese material.
+      <Callout tone="info" title={c.ammoTitle}>
+        {fill(c.ammoBody, {
+          ammo: <code>ammo</code>,
+          sound: <code>sound</code>,
+          paper: <code>minecraft:paper</code>,
+        })}
       </Callout>
       <CodeBlock
         language="yaml"
@@ -362,14 +481,15 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "        no-ammo-message: \"<red>Sin células láser\"\n"
         }
       />
-      <SectionHeading id="laser-sostenido">Láser sostenido</SectionHeading>
+      <SectionHeading id="laser-sostenido">{c.laserTitle}</SectionHeading>
       <p>
-        Con <code>sustain</code> el rayo no es un fogonazo: se queda encendido y sigue la mira cada tic mientras
-        mantienes el clic derecho. Java repite el clic mantenido cada 4 tics, y cada repetición es un disparo
-        completo: gasta <code>ammo</code>, hace <code>amount</code> de daño y renueva el rayo. Son 5 pulsos por
-        segundo, así que <code>amount: "2"</code> son 10 de daño por segundo. Al soltar, el rayo dura{" "}
-        <code>sustain</code> tics más y se apaga (6 tapa el hueco entre pulsos). La invulnerabilidad tras un
-        golpe no frena los pulsos del rayo.
+        {fill(c.laserBody, {
+          sustain: <code>sustain</code>,
+          ammo: <code>ammo</code>,
+          amount: <code>amount</code>,
+          example: <code>amount: "2"</code>,
+          sustain2: <code>sustain</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -389,35 +509,48 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "        ammo: celula_laser\n"
         }
       />
-      <Callout tone="info" title="En Bedrock">
-        Las texturas animadas de los modelos 3D se ven quietas (el primer fotograma): Bedrock no anima las
-        texturas de los ítems en la mano.
+      <Callout tone="info" title={c.laserBedrockTitle}>
+        {c.laserBedrockBody}
       </Callout>
 
-      <SectionHeading id="requisitos-de-uso">Requisitos de uso</SectionHeading>
-      <p>Un ítem puede pedir nivel, raza, clase, profesión, skill, trait, permiso, o dinero mínimo.</p>
-      <Callout tone="warning" title="Bloquean las habilidades, no el equipo">
-        Desde la 1.1.7, las <code>abilities</code> activas de un ítem no se disparan si no cumples sus requisitos:
-        el chat te dice qué te falta. Equiparlo sigue permitido (solo avisa), y los <code>triggers</code> directos y
-        las habilidades pasivas no miran los requisitos. El campo{" "}
-        <code>completed-quests</code> ni siquiera se evalúa todavía (se parsea del YAML pero ningún código lo
-        consulta).
+      <SectionHeading id="requisitos-de-uso">{c.useReqTitle}</SectionHeading>
+      <p>{c.useReqBody}</p>
+      <Callout tone="warning" title={c.useReqWarnTitle}>
+        {fill(c.useReqWarnBody, {
+          abilities: <code>abilities</code>,
+          triggers: <code>triggers</code>,
+          field: <code>completed-quests</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="recetas">Recetas</SectionHeading>
+      <SectionHeading id="recetas">{c.recipesTitle}</SectionHeading>
       <p>
-        <code>SHAPED</code>, <code>SHAPELESS</code>, <code>FURNACE</code> y <code>STONECUTTER</code> se registran
-        como recetas reales de Bukkit al arrancar. <code>SMITHING</code> usa la plantilla de netherite (con
-        try/catch para versiones de servidor más viejas). <code>NPC</code>, <code>PROFESSION</code> y{" "}
-        <code>QUEST</code> son solo datos — no se registran como receta de crafteo; quedan disponibles vía{" "}
-        <code>sourceId</code> para que otro addon (una tienda de NPC, un sistema de trabajos, misiones) decida
-        cuándo entregar el ítem.
+        {fill(c.recipesBody, {
+          types: (
+            <>
+              <code>SHAPED</code>, <code>SHAPELESS</code>, <code>FURNACE</code>, <code>STONECUTTER</code>
+            </>
+          ),
+          smithing: <code>SMITHING</code>,
+          dataOnly: (
+            <>
+              <code>NPC</code>, <code>PROFESSION</code>, <code>QUEST</code>
+            </>
+          ),
+          sourceId: <code>sourceId</code>,
+        })}
       </p>
       <p>
-        Un ingrediente puede ser otro ítem de RPGRoll-Items con <code>{"item:<id>"}</code>, en el{" "}
-        <code>key</code> de una <code>SHAPED</code> o en <code>ingredients</code>. <code>amount</code> dice cuántos
-        da la receta (por defecto 1, hasta 64). En <code>FURNACE</code> y <code>STONECUTTER</code> la entrada es
-        el primer ingrediente o, si no hay, <code>base-material</code>.
+        {fill(c.ingredientsBody, {
+          itemRef: <code>{"item:<id>"}</code>,
+          key: <code>key</code>,
+          shaped: <code>SHAPED</code>,
+          ingredients: <code>ingredients</code>,
+          amount: <code>amount</code>,
+          furnace: <code>FURNACE</code>,
+          stonecutter: <code>STONECUTTER</code>,
+          baseMaterial: <code>base-material</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -433,29 +566,25 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <p>
-        Bukkit solo compara materiales, así que la receta se registra con el material del ítem y el plugin
-        comprueba al preparar el resultado que de verdad sea ese ítem. Con{" "}
-        <code>recipes.protect-custom-items: true</code> (por defecto, en <code>config.yml</code>) además un ítem
-        de RPGRoll no sirve como su material en recetas vanilla ni en las que piden el material pelado, y no se
-        quema como combustible: un lingote de mitrilo hecho sobre un fragmento de prismarina no fabrica
-        prismarina, y un bastón hecho de palo no es leña.
+        {fill(c.protectBody, {
+          setting: <code>recipes.protect-custom-items: true</code>,
+          config: <code>config.yml</code>,
+        })}
       </p>
-      <Callout tone="warning" title="Dos recetas con la misma forma y los mismos materiales chocan">
-        Si una receta tuya coincide en forma y materiales con una vanilla (un lingote sobre{" "}
-        <code>IRON_INGOT</code> en forma de espada) o con otra tuya, el servidor elige una de las dos y la otra no
-        sale nunca. Da a cada ítem que uses como ingrediente un material base que no aparezca en esa forma.
+      <Callout tone="warning" title={c.clashTitle}>
+        {fill(c.clashBody, { ingot: <code>IRON_INGOT</code> })}
       </Callout>
 
-      <SectionHeading id="gui">GUI: navegador y editor</SectionHeading>
-      <p><Kbd>/itemadmin browser</Kbd> abre un grid paginado con la apariencia real de cada ítem como ícono, filtro por categoría, y búsqueda. Click izquierdo te da el ítem; click derecho abre el editor completo — un botón por componente:</p>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
+      <p>{fill(c.guiBody, { cmd: <Kbd>/itemadmin browser</Kbd> })}</p>
       <ul>
-        <li>Apariencia, Stats y Atributos, Reglas (requisitos+durabilidad+economía)</li>
-        <li>Encantamientos (vanilla + RPGRoll-Enchantments), Efectos, Sockets, Skins</li>
-        <li>Mejoras, Comportamiento (triggers), Habilidades, Recetas, Datos custom</li>
+        <li>{c.gui1}</li>
+        <li>{c.gui2}</li>
+        <li>{c.gui3}</li>
       </ul>
-      <p>Todos los sub-editores comparten la misma sesión de edición — los cambios se acumulan hasta apretar Guardar, sin importar cuánto navegues entre pantallas.</p>
+      <p>{c.guiSessionBody}</p>
 
-      <SectionHeading id="formato-yaml">Ejemplos de archivo YAML</SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="items/sword/dragon_slayer.yml"
@@ -531,9 +660,8 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
-        <code>items/example/reference_full.yml</code> (incluido en el jar) usa absolutamente todos los campos que
-        soporta un ítem — pensado para copiar/pegar secciones, no para dar in-game tal cual.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, { file: <code>items/example/reference_full.yml</code> })}
       </Callout>
       <CodeBlock
         language="yaml"
@@ -653,59 +781,67 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
 
       <YamlBuilder
-        title="Constructor visual: Item"
-        description="Identidad, lore, rareza, stats/atributos, requisitos, durabilidad y economía. Encantamientos, triggers, abilities, sockets, skins, upgrades y recipes son demasiado anidados para este formulario — usa /itemadmin editor o copia uno de los ejemplos de arriba."
+        title={c.builderItem}
+        description={c.builderItemDesc}
         folder="items"
-        fields={itemFields}
+        fields={itemFields(c)}
       />
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/itemadmin give <jugador> <id|gem:id> [cantidad]"}</Td><Td>Entrega un ítem o una gema de engaste, con overflow al piso.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/itemadmin ores</Td><Td>Lista las menas, su nivel de pico y cuántos bloques se han sembrado desde el arranque.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/itemadmin list</Td><Td>Lista todos los ítems con su pack y rareza.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/itemadmin reload</Td><Td>Recarga todas las definiciones.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/itemadmin create <id> [pack]"}</Td><Td>Crea un ítem base y abre el editor directo (sin [pack], eliges/creas uno desde un menú).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/itemadmin browser</Td><Td>Abre el navegador gráfico.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/itemadmin editor <id>"}</Td><Td>Abre el editor gráfico directo.</Td></Tr>
+          <Tr><Td className={mono}>{"/itemadmin give <jugador> <id|gem:id> [cantidad]"}</Td><Td>{c.a1}</Td></Tr>
+          <Tr><Td className={mono}>/itemadmin ores</Td><Td>{c.a2}</Td></Tr>
+          <Tr><Td className={mono}>/itemadmin list</Td><Td>{c.a3}</Td></Tr>
+          <Tr><Td className={mono}>/itemadmin reload</Td><Td>{c.a4}</Td></Tr>
+          <Tr><Td className={mono}>{"/itemadmin create <id> [pack]"}</Td><Td>{c.a5}</Td></Tr>
+          <Tr><Td className={mono}>/itemadmin browser</Td><Td>{c.a6}</Td></Tr>
+          <Tr><Td className={mono}>{"/itemadmin editor <id>"}</Td><Td>{c.a7}</Td></Tr>
         </tbody>
       </Table>
-      <p>Requiere <Badge tone="amber">rpgrollitems.admin.*</Badge> (default: op).</p>
+      <p>{fill(c.adminPermBody, { perm: <Badge tone="amber">rpgrollitems.admin.*</Badge> })}</p>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">/item info</Td><Td>Nombre, pack, rareza, nivel de mejora y durabilidad del ítem en tu mano.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/item upgrade</Td><Td>Sube un nivel de mejora si puedes pagarlo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/item skin</Td><Td>Cicla su skin.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/item socket <id>"}</Td><Td>Inserta la gema de tu offhand en esa ranura.</Td></Tr>
+          <Tr><Td className={mono}>/item info</Td><Td>{c.u1}</Td></Tr>
+          <Tr><Td className={mono}>/item upgrade</Td><Td>{c.u2}</Td></Tr>
+          <Tr><Td className={mono}>/item skin</Td><Td>{c.u3}</Td></Tr>
+          <Tr><Td className={mono}>{"/item socket <id>"}</Td><Td>{c.u4}</Td></Tr>
         </tbody>
       </Table>
       <Callout tone="info">
-        <code>/item</code> no tiene permiso declarado — cualquier jugador puede usarlo sobre el ítem que tenga en
-        la mano.
+        {fill(c.noPermBody, { cmd: <code>/item</code> })}
       </Callout>
 
-      <SectionHeading id="placeholders">Placeholders (PlaceholderAPI)</SectionHeading>
-      <p>Expansión <Badge tone="violet">rpgrollitems</Badge>. <code>stat_*</code> lee el motor de stats agregados del jugador; <code>helditem_*</code> lee solo la mano principal.</p>
+      <SectionHeading id="placeholders">{c.phTitle}</SectionHeading>
+      <p>
+        {fill(c.phBody, {
+          exp: <Badge tone="violet">rpgrollitems</Badge>,
+          stat: <code>stat_*</code>,
+          held: <code>helditem_*</code>,
+        })}
+      </p>
       <Table>
         <Thead>
-          <Th>Placeholder</Th>
-          <Th>Valor</Th>
+          <Th>{c.thPlaceholder}</Th>
+          <Th>{c.thValue}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"%rpgrollitems_stat_<nombre>%"}</Td><Td>Total de ese stat sumando armadura + mano principal/secundaria + gemas.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollitems_helditem_name%</Td><Td>Nombre del ítem en mano, o <code>-</code> si no es un ítem de RPGRoll.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollitems_helditem_rarity%</Td><Td>Id de rareza del ítem en mano.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollitems_helditem_upgrade_level%</Td><Td>Nivel de mejora actual.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollitems_helditem_durability% / _durability_max</Td><Td>Durabilidad propia (no la barra vanilla).</Td></Tr>
+          <Tr><Td className={mono}>{"%rpgrollitems_stat_<nombre>%"}</Td><Td>{c.ph1}</Td></Tr>
+          <Tr>
+            <Td className={mono}>%rpgrollitems_helditem_name%</Td>
+            <Td>{fill(c.ph2, { dash: <code>-</code> })}</Td>
+          </Tr>
+          <Tr><Td className={mono}>%rpgrollitems_helditem_rarity%</Td><Td>{c.ph3}</Td></Tr>
+          <Tr><Td className={mono}>%rpgrollitems_helditem_upgrade_level%</Td><Td>{c.ph4}</Td></Tr>
+          <Tr><Td className={mono}>%rpgrollitems_helditem_durability% / _durability_max</Td><Td>{c.ph5}</Td></Tr>
         </tbody>
       </Table>
 
