@@ -14,34 +14,36 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { DUNGEONS_COPY, type DungeonsCopy } from "./copy/dungeons";
 
-const structureFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_estructura", placeholder: "watchtower" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "Torre de Vigía" },
-  { key: "description", label: "Descripción", type: "string" },
-  { key: "icon", label: "Ícono (Material)", type: "string", default: "STONE_BRICKS" },
-  { key: "source", label: "Fuente", type: "select", options: ["CUSTOM", "NATIVE"], default: "CUSTOM" },
+const structureFields = (c: DungeonsCopy): YamlField[] => [
+  { key: "id", label: c.sfId, type: "string", default: "nueva_estructura", placeholder: "watchtower" },
+  { key: "display-name", label: c.sfDisplayName, type: "string", placeholder: "Torre de Vigía" },
+  { key: "description", label: c.sfDescription, type: "string" },
+  { key: "icon", label: c.sfIcon, type: "string", default: "STONE_BRICKS" },
+  { key: "source", label: c.sfSource, type: "select", options: ["CUSTOM", "NATIVE"], default: "CUSTOM" },
 ];
 
-const dungeonFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_mazmorra", placeholder: "trial_of_ash" },
-  { key: "category", label: "Categoría", type: "string", default: "misc", placeholder: "trial" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&6Prueba de Ceniza" },
-  { key: "icon", label: "Ícono (Material)", type: "string", default: "STONE_BRICKS" },
-  { key: "description", label: "Descripción", type: "string" },
-  { key: "recommended-level", label: "Nivel recomendado", type: "number", default: "1" },
-  { key: "estimated-minutes", label: "Minutos estimados", type: "number", default: "15" },
-  { key: "min-players", label: "Jugadores mínimos", type: "number", default: "1" },
-  { key: "max-players", label: "Jugadores máximos", type: "number", default: "5" },
-  { key: "cooldown", label: "Cooldown", type: "string", placeholder: "1h" },
-  { key: "repeatable", label: "Repetible", type: "boolean", default: "true" },
-  { key: "tags", label: "Tags", type: "list", placeholder: "trial, solo" },
+const dungeonFields = (c: DungeonsCopy): YamlField[] => [
+  { key: "id", label: c.dfId, type: "string", default: "nueva_mazmorra", placeholder: "trial_of_ash" },
+  { key: "category", label: c.dfCategory, type: "string", default: "misc", placeholder: "trial" },
+  { key: "display-name", label: c.dfDisplayName, type: "string", placeholder: "&6Prueba de Ceniza" },
+  { key: "icon", label: c.dfIcon, type: "string", default: "STONE_BRICKS" },
+  { key: "description", label: c.dfDescription, type: "string" },
+  { key: "recommended-level", label: c.dfLevel, type: "number", default: "1" },
+  { key: "estimated-minutes", label: c.dfMinutes, type: "number", default: "15" },
+  { key: "min-players", label: c.dfMinPlayers, type: "number", default: "1" },
+  { key: "max-players", label: c.dfMaxPlayers, type: "number", default: "5" },
+  { key: "cooldown", label: c.dfCooldown, type: "string", placeholder: "1h" },
+  { key: "repeatable", label: c.dfRepeatable, type: "boolean", default: "true" },
+  { key: "tags", label: c.dfTags, type: "list", placeholder: "trial, solo" },
   {
     key: "lobby",
-    label: "Punto de lobby",
+    label: c.dfLobby,
     type: "group",
     fields: [
-      { key: "world", label: "Mundo", type: "string", default: "world" },
+      { key: "world", label: c.dfWorld, type: "string", default: "world" },
       { key: "x", label: "X", type: "number", default: "0" },
       { key: "y", label: "Y", type: "number", default: "64" },
       { key: "z", label: "Z", type: "number", default: "0" },
@@ -51,10 +53,10 @@ const dungeonFields: YamlField[] = [
   },
   {
     key: "bounds",
-    label: "Límites (bounds)",
+    label: c.dfBounds,
     type: "group",
     fields: [
-      { key: "world", label: "Mundo", type: "string", default: "world" },
+      { key: "world", label: c.dfWorld, type: "string", default: "world" },
       { key: "min-x", label: "Min X", type: "number", default: "0" },
       { key: "min-y", label: "Min Y", type: "number", default: "0" },
       { key: "min-z", label: "Min Z", type: "number", default: "0" },
@@ -66,150 +68,174 @@ const dungeonFields: YamlField[] = [
 ];
 
 export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = DUNGEONS_COPY[locale];
+
   return (
     <>
-      <PageHeader title="Dungeons (RPGRoll-Dungeons)">
-        Motor de mazmorras instanciadas: salas encadenadas, oleadas de mobs (vía RPGRoll-Mobs), jefes, objetivos,
-        dificultades con multiplicadores, checkpoints/revive, loot y triggers por evento — con ranking de mejores
-        tiempos, y una Biblioteca de Estructuras para pegar los edificios físicos en el mundo.
-      </PageHeader>
+      <PageHeader title={c.title}>{c.intro}</PageHeader>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         code={"depend: [RPGRoll-Lib, RPGRoll-Mobs, RPGRoll-Guilds]\nsoftdepend: [RPGRoll, Vault, RPGRoll-Items, RPGRoll-Quests, PlaceholderAPI, WorldEdit]"}
       />
-      <Callout tone="warning" title="Dos dependencias duras, no soft">
-        A diferencia de casi todos los demás addons de RPGRoll, Dungeons <strong>no</strong> puede correr sin
-        RPGRoll-Mobs (las oleadas y jefes referencian ids de <code>MobDefinition</code> directamente) ni sin
-        RPGRoll-Guilds (los grupos que entran a una mazmorra se resuelven vía Team). RPGRoll-Items y
-        RPGRoll-Quests sí son opcionales — sin ellos, ciertos tipos de loot/objetivo simplemente no hacen nada.
+      <Callout tone="warning" title={c.hardTitle}>
+        {fill(c.hardBody, { not: <strong>{c.notWord}</strong>, mobDef: <code>MobDefinition</code> })}
       </Callout>
 
-      <SectionHeading id="estructura">Una mazmorra es una lista de salas</SectionHeading>
+      <SectionHeading id="estructura">{c.roomsTitle}</SectionHeading>
       <p>
-        Cada <code>DungeonRoom</code> tiene un <code>type</code> (<code>ENTRANCE</code>, <code>COMBAT</code>,{" "}
-        <code>PUZZLE</code>, <code>REST</code>, <code>TREASURE</code>, <code>BOSS</code>, <code>EVENT</code>,{" "}
-        <code>STORY</code>, <code>CINEMATIC</code>), un punto de entrada, y según el tipo: <code>objectives</code>{" "}
-        (salas normales/puzzle), <code>waves</code> de mobs (salas de combate), o un <code>boss</code> (id de{" "}
-        <code>MobDefinition</code> de RPGRoll-Mobs, solo en salas <code>BOSS</code>). Cada sala puede además
-        disparar <code>events</code> propios (<code>ROOM_ENTER</code>, <code>ROOM_CLEAR</code>...).
+        {fill(c.roomsBody, {
+          room: <code>DungeonRoom</code>,
+          type: <code>type</code>,
+          types: (
+            <>
+              <code>ENTRANCE</code>, <code>COMBAT</code>, <code>PUZZLE</code>, <code>REST</code>,{" "}
+              <code>TREASURE</code>, <code>BOSS</code>, <code>EVENT</code>, <code>STORY</code>,{" "}
+              <code>CINEMATIC</code>
+            </>
+          ),
+          objectives: <code>objectives</code>,
+          waves: <code>waves</code>,
+          boss: <code>boss</code>,
+          mobDef: <code>MobDefinition</code>,
+          bossType: <code>BOSS</code>,
+          events: <code>events</code>,
+          eventTypes: (
+            <>
+              <code>ROOM_ENTER</code>, <code>ROOM_CLEAR</code>...
+            </>
+          ),
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Tipo de objetivo</Th>
-          <Th>Uso típico</Th>
+          <Th>{c.thObjective}</Th>
+          <Th>{c.thUse}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">KILL_ENTITY / DESTROY_BLOCK / COLLECT_ITEM</Td><Td>Progreso directo, mismo estilo que RPGRoll-Quests.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SURVIVE_TIME / RESIST_TIME</Td><Td>Aguantar sin morir/ser derrotado un tiempo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">DEFEND / ESCORT</Td><Td>Proteger un punto o un NPC/mob aliado.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SOLVE_PUZZLE / ACTIVATE_MECHANISM</Td><Td>Salas de puzzle — la lógica real del mecanismo la implementa otro addon/plugin, esto solo trackea el flag.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">ESCAPE</Td><Td>Llegar a un punto de salida antes de que se acabe el tiempo.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">KILL_ENTITY / DESTROY_BLOCK / COLLECT_ITEM</Td><Td>{c.oDirect}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SURVIVE_TIME / RESIST_TIME</Td><Td>{c.oSurvive}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">DEFEND / ESCORT</Td><Td>{c.oDefend}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SOLVE_PUZZLE / ACTIVATE_MECHANISM</Td><Td>{c.oPuzzle}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">ESCAPE</Td><Td>{c.oEscape}</Td></Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="dificultades">Dificultades</SectionHeading>
+      <SectionHeading id="dificultades">{c.diffTitle}</SectionHeading>
       <p>
-        Cada <code>DungeonDifficulty</code> multiplica vida/daño/loot de todo lo que ocurre dentro (mobs, jefes,
-        recompensas) y puede sumar <code>modifiers</code>: <code>NO_HEALING</code>, <code>DOUBLE_DAMAGE_TAKEN</code>
-        , <code>CONSTANT_RAIN</code>, <code>PERMANENT_DARKNESS</code>, <code>REDUCED_TIME_LIMIT</code>.
+        {fill(c.diffBody, {
+          diff: <code>DungeonDifficulty</code>,
+          modifiers: <code>modifiers</code>,
+          mods: (
+            <>
+              <code>NO_HEALING</code>, <code>DOUBLE_DAMAGE_TAKEN</code>, <code>CONSTANT_RAIN</code>,{" "}
+              <code>PERMANENT_DARKNESS</code>, <code>REDUCED_TIME_LIMIT</code>
+            </>
+          ),
+        })}
       </p>
       <Callout tone="tip">
-        Si <code>difficulties</code> queda vacío en el YAML, el compacto constructor agrega automáticamente una
-        dificultad <code>normal</code> con todos los multiplicadores en 1.0 — nunca hay una mazmorra sin ninguna
-        dificultad jugable.
+        {fill(c.diffTip, { difficulties: <code>difficulties</code>, normal: <code>normal</code> })}
       </Callout>
 
-      <SectionHeading id="checkpoints">Checkpoints y revivir</SectionHeading>
+      <SectionHeading id="checkpoints">{c.cpTitle}</SectionHeading>
       <p>
-        <code>checkpoints.mode</code> decide qué pasa al morir todo el grupo: volver al último checkpoint (
-        <code>REVIVE_AT_CHECKPOINT</code>, default), reiniciar la sala (<code>RESTART_ROOM</code>), o la mazmorra
-        entera (<code>RESTART_DUNGEON</code>). <code>revive.mode</code> decide cómo revive un jugador caído
-        mientras el resto sigue vivo: nunca (<code>NONE</code>, default), automático, por un compañero, con un
-        ítem, o esperando un timer.
+        {fill(c.cpBody, {
+          cpMode: <code>checkpoints.mode</code>,
+          reviveCp: <code>REVIVE_AT_CHECKPOINT</code>,
+          restartRoom: <code>RESTART_ROOM</code>,
+          restartDungeon: <code>RESTART_DUNGEON</code>,
+          reviveMode: <code>revive.mode</code>,
+          none: <code>NONE</code>,
+        })}
       </p>
 
-      <SectionHeading id="estructuras-fisicas">Estructuras físicas: la Biblioteca</SectionHeading>
+      <SectionHeading id="estructuras-fisicas">{c.libTitle}</SectionHeading>
       <p>
-        Una <code>DungeonRoom</code> solo guarda un punto de teletransporte y reglas de spawn — el edificio en sí
-        (paredes, piso, techo) lo construye un admin en el mundo, como siempre. Lo que agrega la Biblioteca de
-        Estructuras es una forma de <strong>reusar</strong> esa construcción: guardarla una vez y pegarla las
-        veces que quieras, en vez de reconstruir cada sala a mano.
+        {fill(c.libBody, { room: <code>DungeonRoom</code>, reuse: <strong>{c.reuseWord}</strong> })}
       </p>
-      <p>
-        Cada entrada de <code>structures/*.yml</code> tiene una de estas tres fuentes:
-      </p>
+      <p>{fill(c.libIntro, { dir: <code>structures/*.yml</code> })}</p>
       <Table>
         <Thead>
-          <Th>Fuente</Th>
-          <Th>Cómo se genera</Th>
-          <Th>Cómo se pega</Th>
+          <Th>{c.thSource}</Th>
+          <Th>{c.thHowGen}</Th>
+          <Th>{c.thHowPaste}</Th>
         </Thead>
         <tbody>
           <Tr>
             <Td><Badge tone="violet">CUSTOM</Badge></Td>
-            <Td>Un YAML propio: una paleta de caracteres → Material, más capas de texto (una fila por bloque en Z, un carácter por bloque en X). Es el único formato que se puede escribir a mano o generar sin correr Minecraft.</Td>
-            <Td><code>World#setBlockData</code> bloque a bloque, con soporte de rotación 90°/180°/270° y espejo.</Td>
+            <Td>{c.sCustomGen}</Td>
+            <Td>{fill(c.sCustomPaste, { api: <code>World#setBlockData</code> })}</Td>
           </Tr>
           <Tr>
             <Td><Badge tone="blue">NATIVE</Badge></Td>
-            <Td>Un Structure Block vanilla real: paras en el lugar, lo pones en modo Guardar, le pones un nombre, y listo — cero curva de aprendizaje para un admin que ya construye en survival.</Td>
-            <Td>API nativa de Paper (<code>Bukkit#getStructureManager()</code>, el mismo sistema que usan los Structure Blocks) — resuelve rotación, espejo y entidades por su cuenta.</Td>
+            <Td>{c.sNativeGen}</Td>
+            <Td>{fill(c.sNativePaste, { api: <code>Bukkit#getStructureManager()</code> })}</Td>
           </Tr>
           <Tr>
             <Td><Badge tone="green">SCHEMATIC</Badge></Td>
-            <Td>Un archivo <code>.schem</code> de WorldEdit/FAWE, importado desde su carpeta <code>schematics/</code>. Requiere WorldEdit instalado en el servidor (soft-dependency, no obligatorio para el resto del addon).</Td>
-            <Td>API de WorldEdit (<code>ClipboardHolder</code> + <code>EditSession</code>) — resuelve rotación y espejo con su propio motor de transformaciones.</Td>
+            <Td>{fill(c.sSchemGen, { ext: <code>.schem</code>, dir: <code>schematics/</code> })}</Td>
+            <Td>{fill(c.sSchemPaste, { api: <><code>ClipboardHolder</code> + <code>EditSession</code></> })}</Td>
           </Tr>
         </tbody>
       </Table>
-      <Callout tone="info" title="¿Por qué dos formatos en vez de uno solo?">
-        Un archivo NATIVE necesita un servidor de Minecraft corriendo para generarse (alguien tiene que construir y
-        guardar con un Structure Block) — no es algo que se pueda escribir a mano ni generar por otro medio. El
-        formato CUSTOM sí: es texto plano, así que las {"4"} estructuras de ejemplo que incluye este addon
-        (<code>stone_entrance</code>, <code>treasure_vault</code>, <code>torch_corridor</code>,{" "}
-        <code>boss_arena_small</code>) están escritas directamente en YAML, sin pasar por el juego.
+      <Callout tone="info" title={c.whyTwoTitle}>
+        {fill(c.whyTwoBody, {
+          ids: (
+            <>
+              <code>stone_entrance</code>, <code>treasure_vault</code>, <code>torch_corridor</code>,{" "}
+              <code>boss_arena_small</code>
+            </>
+          ),
+        })}
       </Callout>
 
-      <SectionHeading id="importar-structure-block" level={3}>Importar un Structure Block</SectionHeading>
+      <SectionHeading id="importar-structure-block" level={3}>{c.importTitle}</SectionHeading>
       <p>
-        El flujo completo para un admin que ya construye a mano: construyes la sala en survival, pones un{" "}
-        <em>Structure Block</em> vanilla, modo <strong>Save</strong>, le pones un nombre (ej.{" "}
-        <code>rpgroll:sala_trasgos</code> — si no le pones namespace, Minecraft usa <code>minecraft:</code> por
-        defecto), y guardas. Después, en el juego:
+        {fill(c.importBody, {
+          sb: <em>{c.structureBlock}</em>,
+          save: <strong>{c.saveWord}</strong>,
+          example: <code>rpgroll:sala_trasgos</code>,
+          ns: <code>minecraft:</code>,
+        })}
       </p>
       <CodeBlock language="bash" code={"/dungeonadmin structure import rpgroll:sala_trasgos sala_trasgos \"Sala de los Trasgos\""} />
       <p>
-        Eso copia el <code>.nbt</code> real a <code>structures/sala_trasgos.nbt</code> y escribe el YAML de
-        metadata (<code>source: NATIVE</code>) — ya queda en la Biblioteca, pegable como cualquier otra.
+        {fill(c.importAfter, {
+          nbt: <code>.nbt</code>,
+          path: <code>structures/sala_trasgos.nbt</code>,
+          source: <code>source: NATIVE</code>,
+        })}
       </p>
 
-      <SectionHeading id="importar-schematic" level={3}>Importar un schematic de WorldEdit</SectionHeading>
+      <SectionHeading id="importar-schematic" level={3}>{c.schemTitle}</SectionHeading>
       <p>
-        Un tercer origen, <code>SCHEMATIC</code>, para quien ya construye con WorldEdit/FastAsyncWorldEdit en vez
-        de Structure Blocks vanilla. Requiere <strong>WorldEdit instalado en el servidor</strong> — es un
-        soft-dependency, no obligatorio para el resto del addon; sin él, este flujo específico devuelve un error
-        claro y el resto de Dungeons sigue funcionando igual. Flujo: seleccioná la región con WorldEdit y guardala
-        con <Kbd>//schematic save miroom</Kbd> (queda en{" "}
-        <code>plugins/WorldEdit/schematics/miroom.schem</code>), y después:
+        {fill(c.schemBody, {
+          schematic: <code>SCHEMATIC</code>,
+          needWE: <strong>{c.needWE}</strong>,
+          cmd: <Kbd>//schematic save miroom</Kbd>,
+          path: <code>plugins/WorldEdit/schematics/miroom.schem</code>,
+        })}
       </p>
       <CodeBlock
         language="bash"
         code={"/dungeonadmin structure importschem miroom sala_wizard \"Torre del Mago\""}
       />
       <p>
-        Copia ese <code>.schem</code> a <code>structures/sala_wizard.schem</code> (independiente de la carpeta de
-        WorldEdit — si borras el original después, sigue funcionando) y escribe el YAML de metadata (
-        <code>source: SCHEMATIC</code>). Se pega igual que cualquier otra estructura de la Biblioteca (
-        <Kbd>/dungeonadmin structure paste</Kbd> o el browser), rotación y espejo incluidos — WorldEdit resuelve
-        la geometría, RPGRoll solo orquesta cuándo y dónde.
+        {fill(c.schemAfter, {
+          ext: <code>.schem</code>,
+          path: <code>structures/sala_wizard.schem</code>,
+          source: <code>source: SCHEMATIC</code>,
+          cmd: <Kbd>/dungeonadmin structure paste</Kbd>,
+        })}
       </p>
 
-      <SectionHeading id="formato-custom" level={3}>Formato CUSTOM: paleta + capas</SectionHeading>
+      <SectionHeading id="formato-custom" level={3}>{c.customTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
-        filename="structures/stone_entrance.yml (fragmento)"
+        filename={c.customFile}
         code={
           "id: stone_entrance\n" +
           'display-name: "Entrada de Piedra"\n' +
@@ -232,37 +258,25 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
           "    # ...\n"
         }
       />
-      <p>
-        <code>anchor</code> es el punto de la grilla que coincide con donde pegas — poner el centro ahí (como en
-        el ejemplo) es justamente lo que permite "parate donde quieres el centro de la sala y pega", en vez de
-        tener que calcular esquinas. Las capas se pegan de abajo hacia arriba (y=0 primero), así que un bloque que
-        necesite apoyo (como una antorcha en pie) ya tiene su soporte puesto cuando le toca su turno.
-      </p>
-      <Callout tone="warning" title="Sin BlockData — evitá materiales con orientación">
-        El pegado CUSTOM hace <code>setType()</code> plano, sin facing/hinge/half. Puertas, escaleras, antorchas
-        de pared y camas van a quedar con una orientación por defecto, no la que "debería" tener. Los 4 ejemplos
-        de este addon solo usan materiales sin orientación (ladrillos, antorchas de pie, cofres, glowstone) a
-        propósito, para no depender de eso.
+      <p>{fill(c.anchorBody, { anchor: <code>anchor</code> })}</p>
+      <Callout tone="warning" title={c.noBlockDataTitle}>
+        {fill(c.noBlockDataBody, { setType: <code>setType()</code> })}
       </Callout>
 
-      <SectionHeading id="pegar-estructura" level={3}>Pegar una estructura</SectionHeading>
-      <p>
-        <Kbd>/dungeonadmin structure browser</Kbd> abre la Biblioteca en una GUI: eliges una, opcionalmente
-        rotas/espejas, y "Pegar en mi posición" la pega centrada donde estás parado. Para coordenadas exactas (o
-        desde consola) existe el comando equivalente:
-      </p>
+      <SectionHeading id="pegar-estructura" level={3}>{c.pasteTitle}</SectionHeading>
+      <p>{fill(c.pasteBody, { browser: <Kbd>/dungeonadmin structure browser</Kbd> })}</p>
       <CodeBlock
         language="bash"
         code={"/dungeonadmin structure paste boss_arena_small world 100 64 -200 CLOCKWISE_90"}
       />
       <YamlBuilder
-        title="Constructor visual: Structure (metadata)"
-        description="Identidad y fuente de una estructura. anchor/palette/layers (CUSTOM) son demasiado anidados para este formulario — copia y adapta uno de los 4 ejemplos incluidos. Para NATIVE ni siquiera hace falta escribir YAML: usa /dungeonadmin structure import."
+        title={c.bStructure}
+        description={c.bStructureDesc}
         folder="structures"
-        fields={structureFields}
+        fields={structureFields(c)}
       />
 
-      <SectionHeading id="formato-yaml">Ejemplos de archivo YAML</SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="dungeons/trial_of_ash.yml"
@@ -332,7 +346,7 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
       />
       <CodeBlock
         language="yaml"
-        filename="dungeons/goblin_den.yml (fragmento — 3 salas, jefe y 2 dificultades)"
+        filename={c.denFile}
         code={
           "id: goblin_den\n" +
           "category: cave\n" +
@@ -389,85 +403,89 @@ export function Dungeons({ onNavigate }: { onNavigate: (slug: string) => void })
         }
       />
 
-      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
-        <code>dungeons/reference_full.yml</code> (incluido en el jar) usa los 9 tipos de sala, los 10 tipos de
-        objetivo, oleadas, 3 dificultades con todos los modificadores, checkpoints/revive, los 5 tipos de loot con
-        sus 3 scopes, y los 12 triggers.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, { file: <code>dungeons/reference_full.yml</code> })}
       </Callout>
 
       <YamlBuilder
-        title="Constructor visual: Dungeon"
-        description="Identidad, límites de tiempo/jugadores, lobby y bounds. Rooms, waves, difficulties, checkpoints, revive, loot y triggers son demasiado anidados para un formulario lineal — el editor in-game los separa en pantallas propias (RoomsEditorGUI, WavesEditorGUI, DifficultiesEditorGUI...); aquí lo más práctico es copiar y adaptar uno de los ejemplos de arriba."
+        title={c.bDungeon}
+        description={c.bDungeonDesc}
         folder="dungeons"
-        fields={dungeonFields}
+        fields={dungeonFields(c)}
       />
 
-      <SectionHeading id="gui">GUI: navegador y editor con pantallas dedicadas</SectionHeading>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
       <p>
-        <Kbd>/dungeonadmin browser</Kbd> abre el navegador; <Kbd>{"/dungeonadmin editor <id>"}</Kbd> (o crear una
-        nueva) abre <code>DungeonEditorHubGUI</code>, que enlaza a una pantalla propia por sección: info básica,
-        salas, oleadas, dificultades, checkpoints/revive, loot y triggers. Todos los cambios se acumulan en una
-        sesión de edición hasta guardar, sin importar cuánto navegues entre pantallas. Aparte,{" "}
-        <Kbd>/dungeonadmin structure browser</Kbd> abre la Biblioteca de Estructuras — ver{" "}
-        <button type="button" className="underline" onClick={() => document.getElementById("estructuras-fisicas")?.scrollIntoView()}>
-          arriba
-        </button>
-        .
+        {fill(c.guiBody, {
+          browser: <Kbd>/dungeonadmin browser</Kbd>,
+          editor: <Kbd>{"/dungeonadmin editor <id>"}</Kbd>,
+          hub: <code>DungeonEditorHubGUI</code>,
+          structBrowser: <Kbd>/dungeonadmin structure browser</Kbd>,
+          above: (
+            <button
+              type="button"
+              className="underline"
+              onClick={() => document.getElementById("estructuras-fisicas")?.scrollIntoView()}
+            >
+              {c.aboveWord}
+            </button>
+          ),
+        })}
       </p>
 
-      <SectionHeading id="comandos-jugador">Comandos de jugador — /dungeon</SectionHeading>
+      <SectionHeading id="comandos-jugador">{c.playerCmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">/dungeon list</Td><Td>Lista mazmorras disponibles.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeon info <id>"}</Td><Td>Detalle: nivel recomendado, jugadores, dificultades, cooldown.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeon invite <jugador> | accept | decline"}</Td><Td>Arma el grupo antes de entrar.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/dungeon leaveparty</Td><Td>Sale del grupo previo a entrar.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeon enter <id> [dificultad]"}</Td><Td>Entra a la mazmorra con tu grupo actual.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/dungeon leave</Td><Td>Abandona la mazmorra en curso.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeon revive <jugador>"}</Td><Td>Intenta revivir a ese jugador según la política de revive de la mazmorra actual.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeon ranking <id> [daily|weekly|monthly|global]"}</Td><Td>Mejores tiempos registrados para esa mazmorra (por defecto: global).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/dungeon list</Td><Td>{c.pList}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeon info <id>"}</Td><Td>{c.pInfo}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeon invite <jugador> | accept | decline"}</Td><Td>{c.pInvite}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/dungeon leaveparty</Td><Td>{c.pLeaveParty}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeon enter <id> [dificultad]"}</Td><Td>{c.pEnter}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/dungeon leave</Td><Td>{c.pLeave}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeon revive <jugador>"}</Td><Td>{c.pRevive}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeon ranking <id> [daily|weekly|monthly|global]"}</Td><Td>{c.pRanking}</Td></Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="comandos-admin">Comandos de administrador — /dungeonadmin</SectionHeading>
+      <SectionHeading id="comandos-admin">{c.adminCmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/dungeonadmin create <id>"}</Td><Td>Crea una mazmorra base y abre el editor directo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeonadmin forcestop <id>"}</Td><Td>Termina a la fuerza una instancia activa.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/dungeonadmin browser</Td><Td>Abre el navegador gráfico.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeonadmin editor <id>"}</Td><Td>Abre el editor gráfico directo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/dungeonadmin reload</Td><Td>Recarga todas las definiciones (mazmorras y estructuras) desde disco.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/dungeonadmin structure list</Td><Td>Lista todas las estructuras de la Biblioteca.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure info <id>"}</Td><Td>Detalle: fuente, tamaño real, descripción.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure paste <id> [mundo x y z] [rotación]"}</Td><Td>Pega una estructura — sin coordenadas, en tu posición actual.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure import <nombreVanilla> <id> [nombre...]"}</Td><Td>Trae una estructura guardada con Structure Block a la Biblioteca.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure importschem <archivo.schem> <id> [nombre...]"}</Td><Td>Trae un schematic de WorldEdit a la Biblioteca (requiere WorldEdit instalado).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/dungeonadmin structure browser</Td><Td>Abre la Biblioteca en una GUI (elegir + rotar + pegar).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeonadmin create <id>"}</Td><Td>{c.aCreate}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeonadmin forcestop <id>"}</Td><Td>{c.aForceStop}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/dungeonadmin browser</Td><Td>{c.aBrowser}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeonadmin editor <id>"}</Td><Td>{c.aEditor}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/dungeonadmin reload</Td><Td>{c.aReload}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/dungeonadmin structure list</Td><Td>{c.aStructList}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure info <id>"}</Td><Td>{c.aStructInfo}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure paste <id> [mundo x y z] [rotación]"}</Td><Td>{c.aStructPaste}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure import <nombreVanilla> <id> [nombre...]"}</Td><Td>{c.aStructImport}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/dungeonadmin structure importschem <archivo.schem> <id> [nombre...]"}</Td><Td>{c.aStructImportSchem}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/dungeonadmin structure browser</Td><Td>{c.aStructBrowser}</Td></Tr>
         </tbody>
       </Table>
-      <p>Requiere <Badge tone="amber">rpgrolldungeons.admin.*</Badge> (default: op).</p>
+      <p>{fill(c.permNote, { perm: <Badge tone="amber">rpgrolldungeons.admin.*</Badge> })}</p>
 
-      <SectionHeading id="placeholders">Placeholders (PlaceholderAPI)</SectionHeading>
-      <p>Expansión <Badge tone="violet">rpgrolldungeons</Badge>.</p>
+      <SectionHeading id="placeholders">{c.phTitle}</SectionHeading>
+      <p>{fill(c.phIntro, { exp: <Badge tone="violet">rpgrolldungeons</Badge> })}</p>
       <Table>
         <Thead>
-          <Th>Placeholder</Th>
-          <Th>Valor</Th>
+          <Th>{c.thPlaceholder}</Th>
+          <Th>{c.thValue}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">%rpgrolldungeons_active_count% / _definitions_count</Td><Td>Instancias activas / mazmorras definidas (globales al servidor).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"%rpgrolldungeons_occupied_<id>%"}</Td><Td><code>si</code>/<code>no</code> — si esa mazmorra tiene una instancia corriendo ahora.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrolldungeons_in_dungeon%</Td><Td><code>si</code>/<code>no</code> para el jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrolldungeons_current_dungeon% / _current_room</Td><Td>Mazmorra y número de sala actual del jugador, o <code>-</code>.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"%rpgrolldungeons_cooldown_<id>%"}</Td><Td>Segundos restantes de cooldown para esa mazmorra.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">%rpgrolldungeons_active_count% / _definitions_count</Td><Td>{c.phActive}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"%rpgrolldungeons_occupied_<id>%"}</Td><Td>{fill(c.phOccupied, { yesno: <><code>si</code>/<code>no</code></> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">%rpgrolldungeons_in_dungeon%</Td><Td>{fill(c.phInDungeon, { yesno: <><code>si</code>/<code>no</code></> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">%rpgrolldungeons_current_dungeon% / _current_room</Td><Td>{fill(c.phCurrent, { dash: <code>-</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"%rpgrolldungeons_cooldown_<id>%"}</Td><Td>{c.phCooldown}</Td></Tr>
         </tbody>
       </Table>
 
