@@ -30,6 +30,8 @@ export const TRANSLATED_PAGES: ReadonlySet<string> = new Set(["inicio", "primero
   "disasters",
   "extras",
   "fishing",
+  "magic",
+  "npcs",
   "pass",
   "furniture",
   "recipes",

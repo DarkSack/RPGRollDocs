@@ -14,22 +14,26 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { ADDONS_E_COPY, type AddonsECopy } from "./copy/addonsE";
 
-const npcFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_npc", placeholder: "guardia" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&7Guardia de la Ciudad" },
+type NpcsCopy = AddonsECopy["npcs"];
+
+const npcFields = (c: NpcsCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: "nuevo_npc", placeholder: "guardia" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&7Guardia de la Ciudad" },
   {
     key: "pose",
-    label: "Pose",
+    label: c.fPose,
     type: "select",
     options: ["STANDING", "SITTING", "SNEAKING", "SWIMMING", "SLEEPING"],
   },
   {
     key: "location",
-    label: "Ubicación",
+    label: c.fLocation,
     type: "group",
     fields: [
-      { key: "world", label: "Mundo", type: "string", default: "world" },
+      { key: "world", label: c.fWorld, type: "string", default: "world" },
       { key: "x", label: "X", type: "number", default: "0" },
       { key: "y", label: "Y", type: "number", default: "64" },
       { key: "z", label: "Z", type: "number", default: "0" },
@@ -39,111 +43,139 @@ const npcFields: YamlField[] = [
   },
   {
     key: "skin",
-    label: "Skin (opcional)",
+    label: c.fSkin,
     type: "group",
     fields: [
       {
         key: "value",
-        label: "Textura (base64)",
+        label: c.fTexture,
         type: "string",
-        help: "En el editor in-game se resuelve solo pegando un link/id de mineskin.org — acá hay que pegarla a mano.",
+        help: c.fTextureHelp,
       },
-      { key: "signature", label: "Firma (base64)", type: "string" },
+      { key: "signature", label: c.fSignature, type: "string" },
     ],
   },
 ];
 
-const npcMenuFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_menu", placeholder: "tienda_general" },
-  { key: "title", label: "Título", type: "string", placeholder: "&2Tienda General" },
-  { key: "rows", label: "Filas (1-6)", type: "number", default: "3" },
+const npcMenuFields = (c: NpcsCopy): YamlField[] => [
+  { key: "id", label: c.mId, type: "string", default: "nuevo_menu", placeholder: "tienda_general" },
+  { key: "title", label: c.mTitle, type: "string", placeholder: "&2Tienda General" },
+  { key: "rows", label: c.mRows, type: "number", default: "3" },
 ];
 
 export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ADDONS_E_COPY[locale].npcs;
+
   return (
     <>
-      <PageHeader title="NPCs (RPGRoll-NPCs)">
-        Un addon <strong>separado</strong> de RPGRoll: NPCs interactuables con forma de jugador (Mannequins nativos
-        del servidor), con acciones y condiciones que se enganchan a los personajes de RPGRoll cuando el core está
-        instalado.
+      <PageHeader title={c.title}>
+        {fill(c.intro, { separate: <strong>{c.separate}</strong> })}
       </PageHeader>
 
-      <Callout tone="info" title="Es un plugin distinto, con su propio jar">
-        <code>RPGRoll-NPCs</code> no vive dentro del jar de <code>core</code> — es su propio plugin (<code>npcs/</code>,
-        módulo Gradle separado). Solo necesita <code>RPGRoll-Lib</code>; el core es opcional y, si está, las
-        condiciones de nivel, raza, clase y oficio leen el personaje del jugador.
+      <Callout tone="info" title={c.sepTitle}>
+        {fill(c.sepBody, {
+          plugin: <code>RPGRoll-NPCs</code>,
+          core: <code>core</code>,
+          dir: <code>npcs/</code>,
+          lib: <code>RPGRoll-Lib</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
-      <p>Declarado en su <code>plugin.yml</code>:</p>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
+      <p>{fill(c.reqDeclared, { pluginYml: <code>plugin.yml</code> })}</p>
       <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-Quests]"} />
       <ul>
-        <li><strong>RPGRoll-Lib</strong> — framework de GUIs (<code>InventoryGUI</code>/<code>ItemBuilder</code>) y el acceso a los personajes.</li>
         <li>
-          <strong>RPGRoll</strong> (opcional) — sin el core, las condiciones <code>MIN_LEVEL</code>,{" "}
-          <code>HAS_RACE</code>, <code>HAS_CLASS</code>, <code>HAS_JOB</code> y <code>MIN_JOB_LEVEL</code> no se
-          cumplen; <code>HAS_ITEM</code> y todas las acciones funcionan igual.
+          <strong>RPGRoll-Lib</strong> —{" "}
+          {fill(c.liLib, {
+            gui: (
+              <>
+                <code>InventoryGUI</code>/<code>ItemBuilder</code>
+              </>
+            ),
+          })}
         </li>
-        <li><strong>RPGRoll-Quests</strong> (opcional) — acciones y condiciones de misión.</li>
+        <li>
+          <strong>RPGRoll</strong>{" "}
+          {fill(c.liCore, {
+            conds: (
+              <>
+                <code>MIN_LEVEL</code>, <code>HAS_RACE</code>, <code>HAS_CLASS</code>, <code>HAS_JOB</code>,{" "}
+                <code>MIN_JOB_LEVEL</code>
+              </>
+            ),
+            hasItem: <code>HAS_ITEM</code>,
+          })}
+        </li>
+        <li>
+          <strong>RPGRoll-Quests</strong> {c.liQuests}
+        </li>
       </ul>
       <Callout tone="tip">
-        Compilá con <Kbd>./gradlew :npcs:build</Kbd> — el jar queda en{" "}
-        <code>npcs/build/libs/npcs-&lt;version&gt;.jar</code> (no el <code>-plain.jar</code>). Igual que{" "}
-        <code>core</code>, usa Shadow para empaquetar OkHttp (necesario para hablar con la API de MineSkin); Gson queda
-        afuera porque Paper ya lo trae. Ya no hace falta ProtocolLib.
+        {fill(c.buildTip, {
+          cmd: <Kbd>./gradlew :npcs:build</Kbd>,
+          jar: <code>npcs/build/libs/npcs-&lt;version&gt;.jar</code>,
+          plain: <code>-plain.jar</code>,
+          core: <code>core</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="como-funciona">Cómo funcionan los NPCs</SectionHeading>
-      <p>
-        Cada NPC es un <code>Mannequin</code>: la entidad con forma de jugador que trae el propio servidor. Lleva
-        nombre con formato, skin, pose y rotación, lo ven todos los jugadores (también los de Bedrock vía Geyser) y
-        los clics llegan como eventos normales de Bukkit. Antes se dibujaban jugadores falsos con paquetes de
-        ProtocolLib, lo que se rompía con cada versión nueva del protocolo.
-      </p>
+      <SectionHeading id="como-funciona">{c.howTitle}</SectionHeading>
+      <p>{fill(c.howBody, { mannequin: <code>Mannequin</code> })}</p>
       <ul>
         <li>
-          <strong>El YAML es la única fuente de verdad:</strong> las entidades no se guardan con el chunk. Se crean al
-          cargar el plugin o el chunk y desaparecen al descargarse, así no quedan duplicados tras un cierre brusco.
+          <strong>{c.liYamlTitle}</strong> {c.liYaml}
         </li>
         <li>
-          <strong>Sin IA, daño ni colisión:</strong> el Mannequin se crea inmóvil, sin IA, invulnerable, silencioso y
-          sin colisión — no camina ni interactúa con el mundo por sí mismo.
+          <strong>{c.liNoAiTitle}</strong> {c.liNoAi}
         </li>
         <li>
-          <strong>Interacción:</strong> click derecho sobre la entidad, con un cooldown de 300ms para evitar que un
-          solo click dispare la acción varias veces.
+          <strong>{c.liInteractTitle}</strong> {c.liInteract}
         </li>
         <li>
-          <strong>Regiones protegidas:</strong> WorldGuard (<code>mob-spawning deny</code> con{" "}
-          <code>block-plugin-spawning</code>) y otros anti-mobs cancelan las criaturas creadas por plugins. El addon
-          deshace esa cancelación solo para sus propios NPCs; si otro plugin la vuelve a cancelar, la consola lo avisa
-          con <code>✘ NPC '&lt;id&gt;': otro plugin canceló su aparición</code>.
+          <strong>{c.liRegionsTitle}</strong>{" "}
+          {fill(c.liRegions, {
+            deny: <code>mob-spawning deny</code>,
+            blockSpawning: <code>block-plugin-spawning</code>,
+            msg: <code>{"\u2718 NPC '<id>': otro plugin cancel\u00f3 su aparici\u00f3n"}</code>,
+          })}
         </li>
       </ul>
 
-      <SectionHeading id="crear-npc">Crear y editar un NPC</SectionHeading>
-      <p>Todo el flujo de creación es una GUI de inventario, no un formulario de texto:</p>
+      <SectionHeading id="crear-npc">{c.createTitle}</SectionHeading>
+      <p>{c.createIntro}</p>
       <ol>
-        <li><Kbd>{"/npc create <id>"}</Kbd> — usa tu ubicación y posición actuales, abre el editor.</li>
-        <li>Click en <strong>Nombre</strong> → te pide el nombre por chat.</li>
         <li>
-          Click en <strong>Skin</strong> → pegas un link o ID de{" "}
-          <a href="https://mineskin.org" target="_blank" rel="noopener noreferrer">mineskin.org</a> por chat; el addon consulta la API de
-          MineSkin y resuelve el <code>value</code>/<code>signature</code> reales automáticamente (no hace falta
-          pegar el texto largo de la textura a mano).
+          <Kbd>{"/npc create <id>"}</Kbd> {c.s1}
         </li>
-        <li>Click en <strong>Pose</strong> → eliges entre STANDING, SITTING, SNEAKING, SWIMMING, SLEEPING.</li>
-        <li>Click en <strong>Posición</strong> → reasigna la ubicación a donde estés parado.</li>
-        <li>Click en <strong>Acciones</strong> → agregá/quitá acciones (formato <code>TIPO|valor</code> por chat).</li>
-        <li>Guardar (deshabilitado hasta tener nombre y posición).</li>
+        <li>{fill(c.s2, { name: <strong>{c.sName}</strong> })}</li>
+        <li>
+          {fill(c.s3, {
+            skin: <strong>{c.sSkin}</strong>,
+            link: (
+              <a href="https://mineskin.org" target="_blank" rel="noopener noreferrer">
+                mineskin.org
+              </a>
+            ),
+            value: (
+              <>
+                <code>value</code>/<code>signature</code>
+              </>
+            ),
+          })}
+        </li>
+        <li>{fill(c.s4, { pose: <strong>{c.sPose}</strong> })}</li>
+        <li>{fill(c.s5, { pos: <strong>{c.sPos}</strong> })}</li>
+        <li>
+          {fill(c.s6, { actions: <strong>{c.sActions}</strong>, fmt: <code>TIPO|valor</code> })}
+        </li>
+        <li>{c.s7}</li>
       </ol>
-      <p>
-        <Kbd>{"/npc edit <id>"}</Kbd> reabre el mismo editor sobre un NPC existente. Nada se escribe a disco hasta
-        tocar "Guardar".
-      </p>
+      <p>{fill(c.editNote, { cmd: <Kbd>{"/npc edit <id>"}</Kbd> })}</p>
 
-      <SectionHeading id="formato-yaml">Formato del archivo YAML</SectionHeading>
-      <p>Se genera solo al guardar desde la GUI, en <code>plugins/RPGRoll-NPCs/npcs/&lt;id&gt;.yml</code>:</p>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
+      <p>{fill(c.yamlIntro, { path: <code>plugins/RPGRoll-NPCs/npcs/&lt;id&gt;.yml</code> })}</p>
       <CodeBlock
         language="yaml"
         filename="npcs/prueba.yml"
@@ -195,39 +227,42 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
 
       <YamlBuilder
-        title="Constructor visual: NPC"
-        description="El id, nombre, pose y ubicación de un NPC. La lista de actions (mensajes, sonidos, condicionales, abrir menú...) es demasiado variada para un formulario — agregala luego con /npc edit o copiando un ejemplo de arriba."
+        title={c.bNpc}
+        description={c.bNpcDesc}
         folder="npcs"
-        fields={npcFields}
+        fields={npcFields(c)}
       />
 
-      <SectionHeading id="acciones">Acciones (MenuAction)</SectionHeading>
-      <p>Se ejecutan en orden, todas, cada vez que un jugador hace click en el NPC. <code>{"{player}"}</code> se reemplaza por el nombre del jugador.</p>
+      <SectionHeading id="acciones">{c.actionsTitle}</SectionHeading>
+      <p>{fill(c.actionsIntro, { player: <code>{"{player}"}</code> })}</p>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>Formato de value</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thValueFmt}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">MESSAGE</Td><Td className="font-mono text-xs">texto libre</Td><Td>Envía un mensaje al jugador (soporta color legacy <code>&amp;</code>).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">COMMAND</Td><Td className="font-mono text-xs">comando</Td><Td>Ejecuta el comando como <strong>consola</strong> — para comandos tipo <code>/give</code> o LuckPerms que no necesitan que el sender sea el jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">COMMAND_AS_PLAYER</Td><Td className="font-mono text-xs">comando</Td><Td>Ejecuta el comando <strong>como el jugador que clickeó</strong> — necesario para comandos propios de RPGRoll (ej. <code>quest start x</code>), que exigen <code>sender instanceof Player</code> y fallan en silencio si se disparan por consola.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">GIVE_ITEM</Td><Td className="font-mono text-xs">MATERIAL[,cantidad]</Td><Td>Da un ítem; lo que no entra en el inventario se dropea a los pies.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TAKE_ITEM</Td><Td className="font-mono text-xs">MATERIAL[,cantidad]</Td><Td>Quita un ítem del inventario (sin volver a chequear si hay suficiente — pensado para usarse junto a un CONDITIONAL con HAS_ITEM).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SOUND</Td><Td className="font-mono text-xs">SONIDO[,volumen[,pitch]]</Td><Td>Reproduce un sonido en la ubicación del jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">TELEPORT</Td><Td className="font-mono text-xs">mundo,x,y,z</Td><Td>Teletransporta al jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">CONDITIONAL</Td><Td className="font-mono text-xs">condición;accSiTrue[;accSiFalse]</Td><Td>Evalúa una condición y ejecuta una sub-acción distinta según el resultado.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">OPEN_GUI</Td><Td className="font-mono text-xs">menuId</Td><Td>Abre un menú definido en <code>menus/*.yml</code> (ver abajo).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">CLOSE</Td><Td className="font-mono text-xs">(vacío)</Td><Td>Cierra el inventario que tenga abierto el jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">OPEN_INVENTORY</Td><Td className="font-mono text-xs">{"CHEST|HOPPER|FURNACE[,título]"}</Td><Td>Abre un contenedor vanilla vacío (sin ítems ni acciones propias).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">MESSAGE</Td><Td className="font-mono text-xs">{c.vFree}</Td><Td>{fill(c.aMessage, { amp: <code>&amp;</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">COMMAND</Td><Td className="font-mono text-xs">{c.vCommand}</Td><Td>{fill(c.aCommand, { console: <strong>{c.console}</strong>, give: <code>/give</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">COMMAND_AS_PLAYER</Td><Td className="font-mono text-xs">{c.vCommand}</Td><Td>{fill(c.aCommandAsPlayer, { asPlayer: <strong>{c.asPlayer}</strong>, quest: <code>quest start x</code>, sender: <code>sender instanceof Player</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">GIVE_ITEM</Td><Td className="font-mono text-xs">{c.vMaterial}</Td><Td>{c.aGiveItem}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TAKE_ITEM</Td><Td className="font-mono text-xs">{c.vMaterial}</Td><Td>{c.aTakeItem}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SOUND</Td><Td className="font-mono text-xs">{c.vSound}</Td><Td>{c.aSound}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">TELEPORT</Td><Td className="font-mono text-xs">{c.vWorldXyz}</Td><Td>{c.aTeleport}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">CONDITIONAL</Td><Td className="font-mono text-xs">{c.vCondFmt}</Td><Td>{c.aConditional}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">OPEN_GUI</Td><Td className="font-mono text-xs">{c.vMenuId}</Td><Td>{fill(c.aOpenGui, { menus: <code>menus/*.yml</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">CLOSE</Td><Td className="font-mono text-xs">{c.vEmpty}</Td><Td>{c.aClose}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">OPEN_INVENTORY</Td><Td className="font-mono text-xs">{"CHEST|HOPPER|FURNACE[,t\u00edtulo]"}</Td><Td>{c.aOpenInventory}</Td></Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="condicionales">CONDITIONAL: sub-acciones y condiciones</SectionHeading>
+      <SectionHeading id="condicionales">{c.condTitle}</SectionHeading>
       <p>
-        El formato es <code>condicion;accionSiTrue[;accionSiFalse]</code>, y cada sub-acción usa{" "}
-        <code>TIPO:valor</code> (con dos puntos, no <code>|</code> como en la GUI de acciones):
+        {fill(c.condIntro, {
+          fmt: <code>condicion;accionSiTrue[;accionSiFalse]</code>,
+          sub: <code>TIPO:valor</code>,
+          pipe: <code>|</code>,
+        })}
       </p>
       <CodeBlock
         language="text"
@@ -235,38 +270,47 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
       />
       <Table>
         <Thead>
-          <Th>Condición</Th>
-          <Th>Parámetro</Th>
+          <Th>{c.thCondition}</Th>
+          <Th>{c.thParam}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">HAS_JOB</Td><Td className="font-mono text-xs">jobId</Td></Tr>
-          <Tr><Td className="font-mono text-xs">MIN_JOB_LEVEL</Td><Td className="font-mono text-xs">jobId,nivel</Td></Tr>
-          <Tr><Td className="font-mono text-xs">MIN_LEVEL</Td><Td className="font-mono text-xs">nivel (de personaje)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">HAS_RACE</Td><Td className="font-mono text-xs">razaId</Td></Tr>
-          <Tr><Td className="font-mono text-xs">HAS_CLASS</Td><Td className="font-mono text-xs">claseId</Td></Tr>
-          <Tr><Td className="font-mono text-xs">HAS_ITEM</Td><Td className="font-mono text-xs">MATERIAL[,cantidad mínima]</Td></Tr>
-          <Tr><Td className="font-mono text-xs">HAS_PERMISSION</Td><Td className="font-mono text-xs">permiso</Td></Tr>
+          <Tr><Td className="font-mono text-xs">HAS_JOB</Td><Td className="font-mono text-xs">{c.pJobId}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">MIN_JOB_LEVEL</Td><Td className="font-mono text-xs">{c.pJobLevel}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">MIN_LEVEL</Td><Td className="font-mono text-xs">{c.pLevel}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">HAS_RACE</Td><Td className="font-mono text-xs">{c.pRaceId}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">HAS_CLASS</Td><Td className="font-mono text-xs">{c.pClassId}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">HAS_ITEM</Td><Td className="font-mono text-xs">{c.pMaterial}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">HAS_PERMISSION</Td><Td className="font-mono text-xs">{c.pPermission}</Td></Tr>
         </tbody>
       </Table>
       <p>
-        Se pueden combinar condiciones con <code>&amp;&amp;</code> (todas deben cumplirse) o <code>||</code> (al
-        menos una) — pero no ambos en la misma expresión, ya que no hay parser de precedencia/paréntesis: si
-        aparecen los dos operadores, solo se evalúa el primero que aparece de izquierda a derecha.
+        {fill(c.combineBody, { and: <code>&amp;&amp;</code>, or: <code>||</code> })}
       </p>
       <CodeBlock
         language="text"
         code={"HAS_JOB:minero && MIN_JOB_LEVEL:minero,20 && HAS_ITEM:IRON_PICKAXE;GIVE_ITEM:DIAMOND,5;MESSAGE:Necesitas ser Minero nivel 20 y llevar un pico de hierro."}
       />
 
-      <SectionHeading id="menus">Menús (tiendas)</SectionHeading>
+      <SectionHeading id="menus">{c.menusTitle}</SectionHeading>
       <p>
-        Un menú es una GUI de inventario configurable, abierta desde una acción <code>OPEN_GUI</code>. Vive en{" "}
-        <code>plugins/RPGRoll-NPCs/menus/&lt;id&gt;.yml</code>. El motor (acciones, condiciones y GUI) está en
-        RPGRoll-Lib, así que el mismo formato sirve para los menús de la brújula de{" "}
-        <a className="underline" href="/extras">RPGRoll-Extras</a> sin depender de este módulo. Además de
-        los campos del ejemplo, un menú acepta <code>filler: GRAY_STAINED_GLASS_PANE</code> (rellena los huecos) y
-        cada ítem <code>permission</code> (solo lo ve quien lo tenga); en <code>name</code> y <code>lore</code>,{" "}
-        <code>{"{player}"}</code> es el jugador, y una <code>PLAYER_HEAD</code> muestra su cabeza:
+        {fill(c.menusBody, {
+          openGui: <code>OPEN_GUI</code>,
+          path: <code>plugins/RPGRoll-NPCs/menus/&lt;id&gt;.yml</code>,
+          extras: (
+            <a className="underline" href="/extras">
+              RPGRoll-Extras
+            </a>
+          ),
+          filler: <code>filler: GRAY_STAINED_GLASS_PANE</code>,
+          permission: <code>permission</code>,
+          nameLore: (
+            <>
+              <code>name</code> / <code>lore</code>
+            </>
+          ),
+          player: <code>{"{player}"}</code>,
+          head: <code>PLAYER_HEAD</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -325,47 +369,63 @@ export function Npcs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <Callout tone="tip" title="Referencia completa: todos los campos en dos archivos">
-        <code>npcs/reference_full.yml</code> y <code>menus/reference_full_menu.yml</code> (incluidos en el jar) usan
-        absolutamente todos los tipos de acción, todas las condiciones de <code>CONDITIONAL</code> (incluyendo{" "}
-        <code>&amp;&amp;</code>/<code>||</code>) y todos los campos de un ítem de menú — pensados para copiar/pegar,
-        no para dar en partidas reales tal cual.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, {
+          files: (
+            <>
+              <code>npcs/reference_full.yml</code> / <code>menus/reference_full_menu.yml</code>
+            </>
+          ),
+          conditional: <code>CONDITIONAL</code>,
+          andOr: (
+            <>
+              <code>&amp;&amp;</code>/<code>||</code>
+            </>
+          ),
+        })}
       </Callout>
 
       <YamlBuilder
-        title="Constructor visual: NPC Menu"
-        description="Identidad de la GUI de tienda/menú. Los ítems del menú (slot/material/nombre/lore/acciones) se editan mejor con /npc menus, o copiando/adaptando uno de los ejemplos de arriba."
+        title={c.bMenu}
+        description={c.bMenuDesc}
         folder="menus"
-        fields={npcMenuFields}
+        fields={npcMenuFields(c)}
       />
 
-      <Callout tone="warning" title="El orden de GIVE_ITEM y TAKE_ITEM importa">
-        Para que una "compra" funcione de verdad hacen falta <strong>dos</strong> condicionales con la misma
-        condición: primero el que entrega el ítem, después el que cobra. Si el cobro fuera primero, el segundo
-        condicional volvería a evaluar <code>HAS_ITEM</code> ya sin el oro recién descontado y nunca llegaría a
-        entregar la espada. No hay una acción de "transacción atómica" — son dos chequeos independientes en
-        secuencia.
+      <Callout tone="warning" title={c.orderTitle}>
+        {fill(c.orderBody, { two: <strong>{c.two}</strong>, hasItem: <code>HAS_ITEM</code> })}
       </Callout>
-      <p>Cada ítem del menú tiene: <code>slot</code>, <code>material</code>, <code>name</code>, <code>lore</code> (lista), y su propia lista de <code>actions</code> (mismo sistema que las acciones de NPC).</p>
+      <p>
+        {fill(c.itemNote, {
+          fields: (
+            <>
+              <code>slot</code>, <code>material</code>, <code>name</code>, <code>lore</code> {c.listNote}
+            </>
+          ),
+          actions: <code>actions</code>,
+        })}
+      </p>
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/npc create <id>"}</Td><Td>Crea un NPC en tu ubicación y abre el editor.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/npc edit <id>"}</Td><Td>Reabre el editor sobre un NPC existente.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/npc list</Td><Td>Lista todos los NPCs existentes.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/npc delete <id>"}</Td><Td>Borra un NPC y lo despawnea para todos.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/npc menus</Td><Td>Abre el navegador gráfico de menús (crear/editar menús).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/npc reload</Td><Td>Recarga NPCs y menús desde disco, sin reiniciar el servidor.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/npc create <id>"}</Td><Td>{c.cCreate}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/npc edit <id>"}</Td><Td>{c.cEdit}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/npc list</Td><Td>{c.cList}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/npc delete <id>"}</Td><Td>{c.cDelete}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/npc menus</Td><Td>{c.cMenus}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/npc reload</Td><Td>{c.cReload}</Td></Tr>
         </tbody>
       </Table>
       <p>
-        Todos requieren el permiso <Badge tone="amber">rpgrollnpcs.admin.*</Badge> (default: op) — declarado tanto
-        en el comando (<code>plugin.yml</code>) como chequeado explícitamente en el código.
+        {fill(c.permNote, {
+          perm: <Badge tone="amber">rpgrollnpcs.admin.*</Badge>,
+          pluginYml: <code>plugin.yml</code>,
+        })}
       </p>
 
       <PrevNext current="npcs" onNavigate={onNavigate} />
