@@ -14,201 +14,215 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { ECONOMY_COPY, type EconomyCopy } from "./copy/economy";
 
-const currencyFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_moneda", placeholder: "gold" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "Oro" },
-  { key: "symbol", label: "Símbolo", type: "string", default: "$" },
-  { key: "decimals", label: "Decimales", type: "number", default: "2" },
-  { key: "icon", label: "Ícono (Material)", type: "string", default: "SUNFLOWER" },
-  { key: "color", label: "Color", type: "string", default: "GOLD" },
-  { key: "min-balance", label: "Balance mínimo", type: "number", default: "0" },
-  { key: "max-balance", label: "Balance máximo (0 = sin tope)", type: "number", default: "0" },
-  { key: "permission", label: "Permiso requerido (vacío = ninguno)", type: "string" },
-  { key: "exchange-rate-to-base", label: "Tasa de cambio a la moneda base", type: "number", default: "1.0" },
-  { key: "is-base", label: "Es la moneda base", type: "boolean", default: "false" },
+const mono = "font-mono text-xs";
+
+const currencyFields = (c: EconomyCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewCurrency, placeholder: "gold" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: c.phGold },
+  { key: "symbol", label: c.fSymbol, type: "string", default: "$" },
+  { key: "decimals", label: c.fDecimals, type: "number", default: "2" },
+  { key: "icon", label: c.fIcon, type: "string", default: "SUNFLOWER" },
+  { key: "color", label: c.fColor, type: "string", default: "GOLD" },
+  { key: "min-balance", label: c.fMinBalance, type: "number", default: "0" },
+  { key: "max-balance", label: c.fMaxBalance, type: "number", default: "0" },
+  { key: "permission", label: c.fPermission, type: "string" },
+  { key: "exchange-rate-to-base", label: c.fRate, type: "number", default: "1.0" },
+  { key: "is-base", label: c.fIsBase, type: "boolean", default: "false" },
 ];
 
-const marketProductFields: YamlField[] = [
-  { key: "id", label: "Id (típicamente un Material)", type: "string", default: "NUEVO_PRODUCTO", placeholder: "IRON_INGOT" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "Lingote de Hierro" },
-  { key: "icon", label: "Ícono (Material)", type: "string", default: "PAPER" },
-  { key: "currency", label: "Moneda (vacío = la del servidor)", type: "string" },
-  { key: "base-price", label: "Precio base", type: "number", default: "10" },
-  { key: "min-price", label: "Precio mínimo", type: "number", default: "2" },
-  { key: "max-price", label: "Precio máximo", type: "number", default: "50" },
-  { key: "supply-weight", label: "Peso de oferta", type: "number", default: "1.0" },
-  { key: "demand-weight", label: "Peso de demanda", type: "number", default: "1.0" },
-  { key: "volatility", label: "Volatilidad", type: "number", default: "0.25" },
-  { key: "recovery-rate", label: "Tasa de recuperación", type: "number", default: "0.02" },
-  { key: "category", label: "Categoría", type: "string", default: "misc" },
+const marketProductFields = (c: EconomyCopy): YamlField[] => [
+  { key: "id", label: c.fIdMaterial, type: "string", default: c.phNewProduct, placeholder: "IRON_INGOT" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: c.phIronIngot },
+  { key: "icon", label: c.fIcon, type: "string", default: "PAPER" },
+  { key: "currency", label: c.fCurrency, type: "string" },
+  { key: "base-price", label: c.fBasePrice, type: "number", default: "10" },
+  { key: "min-price", label: c.fMinPrice, type: "number", default: "2" },
+  { key: "max-price", label: c.fMaxPrice, type: "number", default: "50" },
+  { key: "supply-weight", label: c.fSupply, type: "number", default: "1.0" },
+  { key: "demand-weight", label: c.fDemand, type: "number", default: "1.0" },
+  { key: "volatility", label: c.fVolatility, type: "number", default: "0.25" },
+  { key: "recovery-rate", label: c.fRecovery, type: "number", default: "0.02" },
+  { key: "category", label: c.fCategory, type: "string", default: "misc" },
 ];
 
-const taxRuleFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_regla", placeholder: "sales_tax" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "IVA" },
+const taxRuleFields = (c: EconomyCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewRule, placeholder: "sales_tax" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: c.phVat },
   {
     key: "type",
-    label: "Tipo",
+    label: c.fTaxType,
     type: "select",
     options: ["SALE", "INCOME", "COMPANY", "PROPERTY", "COMMERCIAL", "LUXURY"],
     default: "SALE",
   },
-  { key: "rate-percent", label: "Tasa (%)", type: "number", default: "16" },
-  { key: "applies-to", label: "Aplica a (ids/categorías, vacío = todo)", type: "list" },
-  { key: "enabled", label: "Activa", type: "boolean", default: "true" },
+  { key: "rate-percent", label: c.fRatePercent, type: "number", default: "16" },
+  { key: "applies-to", label: c.fAppliesTo, type: "list" },
+  { key: "enabled", label: c.fEnabled, type: "boolean", default: "true" },
 ];
 
 export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ECONOMY_COPY[locale];
+
   return (
     <>
-      <PageHeader title="RPGRoll-Economy" slug="economy">
-        El sistema económico avanzado del ecosistema: monedas múltiples, wallets, bancos y préstamos, un{" "}
-        <strong>mercado dinámico</strong> con oferta/demanda real, tiendas de jugador, subastas, empresas,
-        impuestos, un libro mayor de transacciones y un tracker de inflación. También es el{" "}
-        <strong>proveedor del servicio Economy de Vault</strong> — en cuanto está instalado, todo lo demás del
-        ecosistema (Jobs, Guilds, Items, Workers) que ya sabía hablar Vault queda funcional sin tocar una línea
-        de esos módulos.
+      <PageHeader title={c.title} slug="economy">
+        {fill(c.intro, { market: <strong>{c.marketWord}</strong>, vault: <strong>{c.vaultWord}</strong> })}
       </PageHeader>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Plugin</Th>
-          <Th>Tipo</Th>
-          <Th>Para qué</Th>
+          <Th>{c.thPlugin}</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thWhatFor}</Th>
         </Thead>
         <tbody>
-          <Tr><Td>RPGRoll-Lib</Td><Td><Badge tone="violet">depend</Badge></Td><Td>Framework de GUIs y utilidades compartidas.</Td></Tr>
-          <Tr><Td>RPGRoll (core)</Td><Td><Badge>softdepend</Badge></Td><Td>Solo orden de carga: Economy funciona completo sin el core.</Td></Tr>
-          <Tr><Td>Vault</Td><Td><Badge>softdepend</Badge></Td><Td>RPGRoll-Economy se registra como <strong>proveedor</strong> del servicio Economy — no lo consume, lo implementa.</Td></Tr>
-          <Tr><Td>PlaceholderAPI</Td><Td><Badge>softdepend</Badge></Td><Td>Placeholders <code>%rpgeconomy_...%</code>.</Td></Tr>
-          <Tr><Td>RPGRoll-Guilds</Td><Td><Badge>softdepend</Badge></Td><Td>Integración activa: impuesto territorial periódico por guild (ver "Integración activa" más abajo).</Td></Tr>
-          <Tr><Td>RPGRoll-Seasons</Td><Td><Badge>softdepend</Badge></Td><Td>Integración activa: modificadores de precio de mercado por estación (ver "Economías regionales" más abajo).</Td></Tr>
-          <Tr><Td>RPGRoll-Furniture</Td><Td><Badge>softdepend</Badge></Td><Td>Líneas <code>furniture:</code> de la tienda del servidor (ver "Tienda del servidor").</Td></Tr>
-        </tbody>
-      </Table>
-
-      <SectionHeading id="monedas">Monedas</SectionHeading>
-      <p>
-        El servidor puede tener varias monedas (oro, plata, tokens de evento...) — cada una es un{" "}
-        <code>Currency</code> con su propio símbolo, decimales, ícono/color para las GUIs, límites de balance,
-        permiso opcional para poder tenerla, y una tasa de cambio hacia la moneda marcada <code>is-base</code>{" "}
-        (solo informativa; no hay un comando de conversión automática). Exactamente una moneda debería
-        ser <code>is-base: true</code>: es la que usa el puente de Vault (ver <code>default-currency</code> en{" "}
-        <code>config.yml</code>).
-      </p>
-      <Callout tone="warning" title="El campo 'permission' no se aplica solo">
-        Está en el schema y se puede leer desde otro addon, pero <code>WalletService</code> no lo chequea por sí
-        mismo antes de depositar/retirar — es un gancho para que tú (u otro sistema) lo hagas cumplir.
-      </Callout>
-
-      <SectionHeading id="wallets">Wallets</SectionHeading>
-      <p>
-        Cada jugador tiene un <code>Wallet</code> con un saldo independiente por moneda, persistido en{" "}
-        <code>plugins/RPGRoll-Economy/wallets/&lt;uuid&gt;.yml</code>. Todo depósito/retiro/transferencia pasa por{" "}
-        <code>WalletService</code>, que respeta <code>min-balance</code>/<code>max-balance</code> de cada moneda y
-        escribe siempre un registro en el libro mayor. Una transferencia que falla en el depósito (ej. wallet
-        destino bloqueado) revierte automáticamente el retiro — nunca queda plata "perdida" a mitad de camino.
-      </p>
-
-      <Callout tone="info" title="Correcciones preparadas para la próxima actualización">
-        Los abonos que superen el saldo máximo se rechazarán completos; las transferencias fallidas
-        devolverán el dinero al emisor. Una compra en tienda de jugador se cancelará si el vendedor
-        no puede cobrar. En subastas, el pago y el objeto quedarán retenidos hasta poder liquidar la
-        venta, sin volver a cobrar al comprador; tampoco se sustituirá una puja si no se puede devolver
-        la anterior. Al disolver una empresa, la tesorería que no se pueda abonar seguirá guardada
-        para reintentar después de liberar saldo.
-      </Callout>
-      <SectionHeading id="bancos-prestamos">Bancos y préstamos</SectionHeading>
-      <p>
-        A diferencia del wallet (uno por jugador), un jugador puede tener varias <code>BankAccount</code>:
-        personales, de una empresa, de una guild, o compartidas con co-titulares explícitos. Los bancos también
-        ofrecen crédito: un préstamo (<code>Loan</code>) deposita el monto en la cuenta al instante, acumula
-        interés diario sobre el saldo restante (tarea periódica, <code>loan-check-interval-ticks</code>), y se
-        paga de a partes hasta llegar a 0. Los límites van en la sección <code>loans</code> del{" "}
-        <code>config.yml</code>: <code>max-amount</code> (5000 por defecto; 0 = sin tope, no recomendado),{" "}
-        <code>max-active</code> (préstamos sin saldar a la vez por jugador),{" "}
-        <code>daily-interest-percent</code> y <code>term-days</code>. Al vencer se cobra lo que falte, primero
-        de la cuenta y después de la cartera de quien lo pidió; si no alcanza, la deuda sigue y se cobra en cada
-        revisión.
-      </p>
-      <Table>
-        <Thead>
-          <Th>Tipo de cuenta</Th>
-          <Th>Para qué</Th>
-        </Thead>
-        <tbody>
-          <Tr><Td className="font-mono text-xs">PERSONAL</Td><Td>Ahorros propios de un jugador, además de su wallet de uso diario.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">COMPANY</Td><Td>La tesorería de una empresa — se crea sola al fundarla.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">GUILD</Td><Td>Una etiqueta de tipo de cuenta más — no está vinculada al <code>GuildVault</code> real de RPGRoll-Guilds, que es un balance propio separado (ver "Integración activa" más abajo).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">SHARED</Td><Td>Cuenta con una lista explícita de co-titulares autorizados.</Td></Tr>
-        </tbody>
-      </Table>
-
-      <SectionHeading id="mercado-dinamico">Mercado dinámico</SectionHeading>
-      <p>
-        El sistema más importante del addon. Cada <code>MarketProduct</code> reacciona a lo que los jugadores
-        realmente compran/venden: vender acumula "oferta" y baja el precio, comprar acumula "demanda" y lo sube.
-        Sin actividad nueva, una tarea periódica (<code>market-recovery-interval-ticks</code>) decae ambos
-        acumuladores un <code>recovery-rate</code> hacia 0, así el precio vuelve solo a <code>base-price</code>{" "}
-        con el tiempo.
-      </p>
-      <CodeBlock
-        language="text"
-        code={"precio = clamp(base * (1 + presión * volatility), min, max)\n" +
-          "presión = (demanda*demand-weight - oferta*supply-weight) / 100"}
-      />
-      <p>
-        100 unidades de oferta/demanda neta equivalen a "una unidad completa" de presión. Con los valores por
-        defecto del ejemplo incluido (<code>base-price: 10</code>, <code>volatility: 0.25</code>), vender 250
-        unidades netas sin ninguna compra de por medio genera una presión de -2.5 y un precio de{" "}
-        <code>10 * (1 - 2.5*0.25) = 3.75</code> (clamped a <code>min-price</code> si fuera menor).
-      </p>
-      <Callout tone="tip" title="El precio nunca se guarda directamente">
-        Se recalcula siempre a partir del estado de oferta/demanda acumulado (persistido en{" "}
-        <code>market/_state.yml</code>) + la definición del producto — así nunca puede desincronizarse.
-      </Callout>
-
-      <SectionHeading id="economias-regionales">Economías regionales</SectionHeading>
-      <p>
-        Además del multiplicador de oferta/demanda (global, por producto), <code>MarketEngine.price(producto,
-        ubicación)</code> aplica dos multiplicadores más si le pasas una <code>Location</code> — el precio de
-        oferta/demanda ya calculado se multiplica por cada uno, en cadena:
-      </p>
-      <Table>
-        <Thead>
-          <Th>Multiplicador</Th>
-          <Th>De dónde sale</Th>
-        </Thead>
-        <tbody>
+          <Tr><Td>RPGRoll-Lib</Td><Td><Badge tone="violet">depend</Badge></Td><Td>{c.rLib}</Td></Tr>
+          <Tr><Td>RPGRoll (core)</Td><Td><Badge>softdepend</Badge></Td><Td>{c.rCore}</Td></Tr>
           <Tr>
-            <Td>Región (<code>MarketRegion</code>)</Td>
-            <Td>
-              Una caja (AABB, sin WorldGuard — mismo estilo que <code>SeasonRegion</code>/
-              <code>FishingRegion</code>) con <code>category-modifiers</code>/<code>product-modifiers</code> propios.
-              Sin ninguna región definida, o fuera de todas, el multiplicador es 1.0 (sin efecto) — el precio es
-              el global de siempre.
-            </Td>
+            <Td>Vault</Td>
+            <Td><Badge>softdepend</Badge></Td>
+            <Td>{fill(c.rVault, { provider: <strong>{c.providerWord}</strong> })}</Td>
           </Tr>
           <Tr>
-            <Td>Estación (<code>season-modifiers</code> del producto)</Td>
-            <Td>
-              Si RPGRoll-Seasons está instalado, se busca la <code>Season</code> activa en esa ubicación y se
-              multiplica por el modificador de CADA tag de esa estación que el producto tenga definido (ej.{" "}
-              <code>harvest: 0.8</code>). Sin Seasons instalado, este paso se salta sin error.
-            </Td>
+            <Td>PlaceholderAPI</Td>
+            <Td><Badge>softdepend</Badge></Td>
+            <Td>{fill(c.rPapi, { ph: <code>%rpgeconomy_...%</code> })}</Td>
+          </Tr>
+          <Tr><Td>RPGRoll-Guilds</Td><Td><Badge>softdepend</Badge></Td><Td>{c.rGuilds}</Td></Tr>
+          <Tr><Td>RPGRoll-Seasons</Td><Td><Badge>softdepend</Badge></Td><Td>{c.rSeasons}</Td></Tr>
+          <Tr>
+            <Td>RPGRoll-Furniture</Td>
+            <Td><Badge>softdepend</Badge></Td>
+            <Td>{fill(c.rFurniture, { furniture: <code>furniture:</code> })}</Td>
           </Tr>
         </tbody>
       </Table>
+
+      <SectionHeading id="monedas">{c.currTitle}</SectionHeading>
       <p>
-        El método de un solo argumento (<code>price(producto)</code>, usado por tiendas/subastas hoy) sigue
-        devolviendo exactamente lo mismo que antes — regiones y estaciones son puramente opcionales, activadas
-        solo cuando quien llama pasa una ubicación.
+        {fill(c.currBody, {
+          currency: <code>Currency</code>,
+          isBase: <code>is-base</code>,
+          isBaseTrue: <code>is-base: true</code>,
+          defaultCurrency: <code>default-currency</code>,
+          config: <code>config.yml</code>,
+        })}
       </p>
+      <Callout tone="warning" title={c.currWarnTitle}>
+        {fill(c.currWarnBody, { walletService: <code>WalletService</code> })}
+      </Callout>
+
+      <SectionHeading id="wallets">{c.walletTitle}</SectionHeading>
+      <p>
+        {fill(c.walletBody, {
+          wallet: <code>Wallet</code>,
+          path: <code>plugins/RPGRoll-Economy/wallets/&lt;uuid&gt;.yml</code>,
+          walletService: <code>WalletService</code>,
+          min: <code>min-balance</code>,
+          max: <code>max-balance</code>,
+        })}
+      </p>
+
+      <Callout tone="info" title={c.fixesTitle}>
+        {c.fixesBody}
+      </Callout>
+
+      <SectionHeading id="bancos-prestamos">{c.bankTitle}</SectionHeading>
+      <p>
+        {fill(c.bankBody, {
+          account: <code>BankAccount</code>,
+          loan: <code>Loan</code>,
+          interval: <code>loan-check-interval-ticks</code>,
+          loans: <code>loans</code>,
+          config: <code>config.yml</code>,
+          maxAmount: <code>max-amount</code>,
+          maxActive: <code>max-active</code>,
+          dailyInterest: <code>daily-interest-percent</code>,
+          termDays: <code>term-days</code>,
+        })}
+      </p>
+      <Table>
+        <Thead>
+          <Th>{c.thAccountType}</Th>
+          <Th>{c.thWhatFor}</Th>
+        </Thead>
+        <tbody>
+          <Tr><Td className={mono}>PERSONAL</Td><Td>{c.aPersonal}</Td></Tr>
+          <Tr><Td className={mono}>COMPANY</Td><Td>{c.aCompany}</Td></Tr>
+          <Tr>
+            <Td className={mono}>GUILD</Td>
+            <Td>{fill(c.aGuild, { guildVault: <code>GuildVault</code> })}</Td>
+          </Tr>
+          <Tr><Td className={mono}>SHARED</Td><Td>{c.aShared}</Td></Tr>
+        </tbody>
+      </Table>
+
+      <SectionHeading id="mercado-dinamico">{c.marketTitle}</SectionHeading>
+      <p>
+        {fill(c.marketBody, {
+          product: <code>MarketProduct</code>,
+          interval: <code>market-recovery-interval-ticks</code>,
+          recovery: <code>recovery-rate</code>,
+          base: <code>base-price</code>,
+        })}
+      </p>
+      <CodeBlock language="text" code={c.marketFormula} />
+      <p>
+        {fill(c.marketExample, {
+          base: <code>base-price: 10</code>,
+          vol: <code>volatility: 0.25</code>,
+          calc: <code>10 * (1 - 2.5*0.25) = 3.75</code>,
+          minPrice: <code>min-price</code>,
+        })}
+      </p>
+      <Callout tone="tip" title={c.priceTipTitle}>
+        {fill(c.priceTipBody, { state: <code>market/_state.yml</code> })}
+      </Callout>
+
+      <SectionHeading id="economias-regionales">{c.regionsTitle}</SectionHeading>
+      <p>
+        {fill(c.regionsBody, {
+          priceCall: <code>MarketEngine.price(producto, ubicación)</code>,
+          location: <code>Location</code>,
+        })}
+      </p>
+      <Table>
+        <Thead>
+          <Th>{c.thMultiplier}</Th>
+          <Th>{c.thFrom}</Th>
+        </Thead>
+        <tbody>
+          <Tr>
+            <Td>{fill(c.mRegion, { cls: <code>MarketRegion</code> })}</Td>
+            <Td>
+              {fill(c.mRegionBody, {
+                seasonRegion: <code>SeasonRegion</code>,
+                fishingRegion: <code>FishingRegion</code>,
+                catMods: <code>category-modifiers</code>,
+                prodMods: <code>product-modifiers</code>,
+              })}
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>{fill(c.mSeason, { cls: <code>season-modifiers</code> })}</Td>
+            <Td>
+              {fill(c.mSeasonBody, {
+                season: <code>Season</code>,
+                example: <code>harvest: 0.8</code>,
+              })}
+            </Td>
+          </Tr>
+        </tbody>
+      </Table>
+      <p>{fill(c.regionsOptionalBody, { call: <code>price(producto)</code> })}</p>
       <CodeBlock
         language="yaml"
-        filename="market-regions/reference_full.yml (fragmento)"
+        filename={c.regionsFile}
         code={
           "id: reference_full_example\n" +
           "world: world\n" +
@@ -220,65 +234,80 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           "  DIAMOND: 0.6   # tiene prioridad sobre category-modifiers si ambos aplican\n"
         }
       />
-      <Callout tone="warning" title="Solo verificado por compilación">
-        Igual que otras integraciones agregadas recientemente, esto se verificó compilando y con el motor de
-        precio ejercitado por lógica, no probado en juego contra un servidor Paper real.
+      <Callout tone="warning" title={c.compileWarnTitle}>
+        {c.compileWarnBody}
       </Callout>
 
-      <SectionHeading id="integracion-activa">Integración activa: Guilds y Seasons</SectionHeading>
+      <SectionHeading id="integracion-activa">{c.activeTitle}</SectionHeading>
       <p>
-        Hasta hace poco, las dependencias de Economy con RPGRoll-Guilds y RPGRoll-Seasons eran solo de
-        compilación (<code>compileOnly</code> en <code>build.gradle.kts</code>) — el softdepend estaba
-        declarado pero nada en runtime las usaba de verdad. Ahora hay comportamiento real:
+        {fill(c.activeBody, { compileOnly: <code>compileOnly</code>, gradle: <code>build.gradle.kts</code> })}
       </p>
       <ul>
         <li>
-          <strong>Seasons</strong> — ver "Economías regionales" arriba: el precio de un producto puede variar
-          según la estación activa donde se cotiza, vía <code>season-modifiers</code>.
+          {fill(c.activeSeasons, {
+            seasons: <strong>Seasons</strong>,
+            mods: <code>season-modifiers</code>,
+          })}
         </li>
         <li>
-          <strong>Guilds</strong> — una tarea periódica (<code>guild-territory-tax-interval-ticks</code> en{" "}
-          <code>config.yml</code>, cada 24000 ticks/1 día por defecto) recorre todas las guilds vía{" "}
-          <code>GuildsAPI</code> y les cobra un impuesto <code>PROPERTY</code> por cada <code>GuildTerritory</code>{" "}
-          que tengan reclamada, descontado directo de su <code>GuildVault</code>. El monto real depende de que
-          exista una <code>TaxRule</code> tipo <code>PROPERTY</code> con <code>applies-to: [guild-territory]</code>{" "}
-          (o vacío) — sin esa regla el impuesto es 0 y la tarea no hace nada. Viene un ejemplo{" "}
-          <code>tax/guild_territory_tax.yml</code> con <code>enabled: false</code> por defecto.
+          {fill(c.activeGuilds, {
+            guilds: <strong>Guilds</strong>,
+            interval: <code>guild-territory-tax-interval-ticks</code>,
+            config: <code>config.yml</code>,
+            api: <code>GuildsAPI</code>,
+            property: <code>PROPERTY</code>,
+            territory: <code>GuildTerritory</code>,
+            vault: <code>GuildVault</code>,
+            rule: <code>TaxRule</code>,
+            property2: <code>PROPERTY</code>,
+            appliesTo: <code>applies-to: [guild-territory]</code>,
+            example: <code>tax/guild_territory_tax.yml</code>,
+            disabled: <code>enabled: false</code>,
+          })}
         </li>
       </ul>
-      <Callout tone="info" title="Softdepend real, no solo declarado">
-        Ambas integraciones están guardadas con el mismo patrón que el resto del ecosistema (
-        <code>Bukkit.getPluginManager().getPlugin("...") != null &amp;&amp; XApi.isReady()</code>) — sin Guilds o
-        sin Seasons instalados, Economy funciona exactamente igual que antes, sin errores ni advertencias.
+      <Callout tone="info" title={c.softTitle}>
+        {fill(c.softBody, {
+          check: <code>Bukkit.getPluginManager().getPlugin("...") != null &amp;&amp; XApi.isReady()</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="tienda-servidor">Tienda del servidor (/tienda)</SectionHeading>
+      <SectionHeading id="tienda-servidor">{c.shopTitle}</SectionHeading>
       <p>
-        <Kbd>/tienda</Kbd> (alias <Kbd>/shop</Kbd>) abre una portada con una casilla por sección; cada sección es un
-        YAML en <code>plugins/RPGRoll-Economy/server-shop/&lt;id&gt;.yml</code> y <Kbd>{"/tienda <id>"}</Kbd> la abre
-        directo. Dentro, <strong>clic izquierdo</strong> compra un lote y con shift una pila entera;{" "}
-        <strong>clic derecho</strong> vende un lote y con shift todo lo que el jugador lleve encima. Cobra y paga en la
-        moneda de la sección (la por defecto si no dice otra), queda en el libro mayor como{" "}
-        <code>MARKET_BUY</code>/<code>MARKET_SELL</code> y solo cobra si lo comprado cabe entero en el inventario.
+        {fill(c.shopBody, {
+          tienda: <Kbd>/tienda</Kbd>,
+          shop: <Kbd>/shop</Kbd>,
+          path: <code>plugins/RPGRoll-Economy/server-shop/&lt;id&gt;.yml</code>,
+          tiendaId: <Kbd>{"/tienda <id>"}</Kbd>,
+          left: <strong>{c.leftClick}</strong>,
+          right: <strong>{c.rightClick}</strong>,
+          buy: <code>MARKET_BUY</code>,
+          sell: <code>MARKET_SELL</code>,
+        })}
       </p>
       <p>
-        Viene con 14 secciones vanilla (bloques, maderas, naturaleza, minerales, comida, granja, botín, redstone,
-        herramientas, armaduras, pociones, encantamientos, decoración y utilidades) y una <strong>Premium</strong> con
-        los ítems de RPGRoll-Items y los libros de RPGRoll-Enchantments a precios altos. Se recargan con{" "}
-        <Kbd>/economyadmin reload</Kbd>.
+        {fill(c.shopSectionsBody, {
+          premium: <strong>{c.premiumWord}</strong>,
+          reload: <Kbd>/economyadmin reload</Kbd>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Línea</Th>
-          <Th>Entrega</Th>
+          <Th>{c.thLine}</Th>
+          <Th>{c.thDelivers}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">material: OAK_LOG</Td><Td>Un ítem vanilla. Es lo único que la tienda le compra al jugador, y solo "limpio": con nombre, encantado o de RPGRoll no cuenta.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">item: flame_blade</Td><Td>Un ítem de RPGRoll-Items (necesita ese módulo).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">enchant: lifesteal + level</Td><Td>El libro de un encantamiento de RPGRoll-Enchantments, que se aplica en el yunque.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">book: mending + level</Td><Td>Un libro encantado vanilla, por la clave del encantamiento.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">furniture: sofa:red</Td><Td>Un mueble de RPGRoll-Furniture, con su versión opcional tras los dos puntos (necesita ese módulo).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">potion: STRONG_HEALING</Td><Td>Una poción vanilla; <code>form: SPLASH_POTION</code> o <code>LINGERING_POTION</code> para arrojadiza o persistente.</Td></Tr>
+          <Tr><Td className={mono}>material: OAK_LOG</Td><Td>{c.lMaterial}</Td></Tr>
+          <Tr><Td className={mono}>item: flame_blade</Td><Td>{c.lItem}</Td></Tr>
+          <Tr><Td className={mono}>enchant: lifesteal + level</Td><Td>{c.lEnchant}</Td></Tr>
+          <Tr><Td className={mono}>book: mending + level</Td><Td>{c.lBook}</Td></Tr>
+          <Tr><Td className={mono}>furniture: sofa:red</Td><Td>{c.lFurniture}</Td></Tr>
+          <Tr>
+            <Td className={mono}>potion: STRONG_HEALING</Td>
+            <Td>
+              {fill(c.lPotion, { splash: <code>form: SPLASH_POTION</code>, lingering: <code>LINGERING_POTION</code> })}
+            </Td>
+          </Tr>
         </tbody>
       </Table>
       <CodeBlock
@@ -308,29 +337,26 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           '    lore: ["&7Solo esta temporada"]\n'
         }
       />
-      <Callout tone="info" title="Sin dinero infinito">
-        Una línea con <code>market:</code> se compra al precio de mercado del momento y se vende a{" "}
-        <code>server-shop.market-sell-ratio</code> de él (0.4 por defecto, en <code>config.yml</code>); comprar sube
-        su demanda y vender su oferta. Con precios fijos, un <code>sell</code> mayor que <code>buy</code> se recorta
-        y se avisa en consola: comprar para revender en el acto nunca da dinero. Las secciones incluidas recompran
-        solo materias primas, al 25 % de su precio.
+      <Callout tone="info" title={c.noMoneyTitle}>
+        {fill(c.noMoneyBody, {
+          market: <code>market:</code>,
+          ratio: <code>server-shop.market-sell-ratio</code>,
+          config: <code>config.yml</code>,
+          sell: <code>sell</code>,
+          buy: <code>buy</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="comprador">El comprador (NPC que compra de todo)</SectionHeading>
+      <SectionHeading id="comprador">{c.buyerTitle}</SectionHeading>
       <p>
-        Una ventana donde el jugador deja lo que quiera vender y pulsa{" "}
-        <strong>Vender</strong>. Cada ítem se paga por su valor interno: los peces y
-        los productos del rancho lo llevan dentro (según especie, peso y calidad), y
-        los materiales vanilla limpios (sin nombre ni lore) se pagan a lo que daría{" "}
-        <code>/tienda</code> por ellos. Lo que no compra se devuelve al cerrar; nada se
-        pierde aunque el jugador se desconecte o el servidor se apague con la ventana
-        abierta.
+        {fill(c.buyerBody, { sell: <strong>{c.sellWord}</strong>, tienda: <code>/tienda</code> })}
       </p>
       <p>
-        Se abre con <code>/economyadmin comprador &lt;jugador&gt;</code>, pensado para
-        la acción <code>COMMAND</code> de un NPC de RPGRoll-NPCs (o de cualquier plugin
-        de NPCs que ejecute comandos por consola). El plugin de NPCs trae el ejemplo{" "}
-        <code>npcs/_ejemplo_comprador.yml</code>:
+        {fill(c.buyerNpcBody, {
+          cmd: <code>/economyadmin comprador &lt;jugador&gt;</code>,
+          command: <code>COMMAND</code>,
+          example: <code>npcs/_ejemplo_comprador.yml</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -356,49 +382,54 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         }
       />
 
-      <SectionHeading id="tiendas">Tiendas de jugador</SectionHeading>
+      <SectionHeading id="tiendas">{c.playerShopsTitle}</SectionHeading>
       <p>
-        Cada jugador puede abrir una tienda (<code>PlayerShop</code>) desde <Kbd>/economy shop</Kbd> y meter en
-        ella el ítem que tiene en la mano, con un precio: el stock es lo que ha metido (si ya vendía ese mismo
-        ítem, se suma y se actualiza el precio), y retirar una línea le devuelve lo que no se vendió. Otros
-        jugadores compran directo desde una GUI de navegación de todas las tiendas abiertas del servidor; si la
-        compra no cabe en el inventario, no se hace. El stock ilimitado queda para las tiendas del servidor. El
-        impuesto de venta (<code>SALE</code>) configurado se retiene automáticamente en cada compra.
+        {fill(c.playerShopsBody, {
+          cls: <code>PlayerShop</code>,
+          cmd: <Kbd>/economy shop</Kbd>,
+          sale: <code>SALE</code>,
+        })}
       </p>
 
-      <SectionHeading id="subastas">Casa de Subastas (/subasta)</SectionHeading>
+      <SectionHeading id="subastas">{c.auctionTitle}</SectionHeading>
       <p>
-        <Kbd>/subasta</Kbd> (alias <Kbd>/ah</Kbd> y <Kbd>/subastas</Kbd>) abre un buscador con todo lo que venden los
-        jugadores: 45 publicaciones por página, filtradas por <strong>sección</strong> (ítems especiales de
-        RPGRoll-Items, armas y herramientas, armaduras, libros encantados, pociones, comida, bloques y materiales),
-        ordenadas por más recientes, las que terminan pronto o precio, y con <strong>búsqueda</strong> por nombre,
-        material o encantamiento (buscar «mending» encuentra los libros con Reparación). Cada ítem se ve tal cual —
-        encantamientos, nombre y lore— con su precio, vendedor y tiempo restante.
+        {fill(c.auctionBody, {
+          subasta: <Kbd>/subasta</Kbd>,
+          ah: <Kbd>/ah</Kbd>,
+          subastas: <Kbd>/subastas</Kbd>,
+          section: <strong>{c.sectionWord}</strong>,
+          search: <strong>{c.searchWord}</strong>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>Cómo se publica</Th>
-          <Th>Cómo se compra</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thHowList}</Th>
+          <Th>{c.thHowBuy}</Th>
         </Thead>
         <tbody>
-          <Tr><Td>Precio fijo</Td><Td className="font-mono text-xs">{"/subasta vender <precio>"}</Td><Td>Clic → confirmar.</Td></Tr>
-          <Tr><Td>Subasta</Td><Td className="font-mono text-xs">{"/subasta subastar <inicial> [compra ya]"}</Td><Td>Clic → escribir la puja; shift-clic compra ya si tiene precio de compra inmediata.</Td></Tr>
+          <Tr><Td>{c.aFixed}</Td><Td className={mono}>{"/subasta vender <precio>"}</Td><Td>{c.aFixedBuy}</Td></Tr>
+          <Tr>
+            <Td>{c.aAuction}</Td>
+            <Td className={mono}>{"/subasta subastar <inicial> [compra ya]"}</Td>
+            <Td>{c.aAuctionBuy}</Td>
+          </Tr>
         </tbody>
       </Table>
       <p>
-        Se publica lo que el jugador tiene en la mano (también desde el botón de la GUI, con clic para precio fijo
-        o clic derecho para subasta). Los precios aceptan <code>1.5k</code> o <code>2m</code>. La puja se cobra en
-        el momento (<em>escrow</em>) y, si alguien la supera, se devuelve sola con aviso; subir la propia puja solo
-        cobra la diferencia, y una puja en los últimos segundos alarga la subasta para que nadie gane «robando» al
-        final. Pujar el precio de compra inmediata es comprarla.
+        {fill(c.auctionListBody, {
+          k: <code>1.5k</code>,
+          m: <code>2m</code>,
+          escrow: <em>escrow</em>,
+        })}
       </p>
       <p>
-        Todo lo que se cierra va a la <strong>caja de recogida</strong> (<Kbd>/subasta recoger</Kbd>): lo comprado,
-        lo ganado y lo que venció sin vender. Lo que no cabe en el inventario se queda en la caja; nunca se tira ni se
-        pierde, y al entrar se avisa si hay algo esperando. En <Kbd>/subasta mis</Kbd> el vendedor ve lo suyo y lo
-        retira con shift-clic mientras no tenga pujas. Al vender se aplican los impuestos <code>SALE</code> y el
-        vendedor recibe un aviso con lo cobrado.
+        {fill(c.auctionBoxBody, {
+          box: <strong>{c.boxWord}</strong>,
+          cmd: <Kbd>/subasta recoger</Kbd>,
+          mine: <Kbd>/subasta mis</Kbd>,
+          sale: <code>SALE</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -421,59 +452,60 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           '  blocked-data-keys: ["rpgrollextras:backpack_bound", "rpgrollextras:server_menu_item"]\n'
         }
       />
-      <Callout tone="info" title="Qué no se puede vender">
-        Los materiales de <code>blacklist</code> y cualquier ítem con una marca de <code>blocked-data-keys</code>{" "}
-        (<code>plugin:clave</code> de su PersistentDataContainer). Por defecto son las mochilas ligadas y la brújula
-        del menú de RPGRoll-Extras: nadie compra una mochila que no va a poder abrir. Un admin
-        (<code>rpgrolleconomy.auction.admin</code>) retira cualquier publicación con shift-clic derecho; el ítem
-        vuelve a la caja del vendedor y la puja, a su postor.
+      <Callout tone="info" title={c.blacklistTitle}>
+        {fill(c.blacklistBody, {
+          blacklist: <code>blacklist</code>,
+          keys: <code>blocked-data-keys</code>,
+          format: <code>plugin:clave</code>,
+          perm: <code>rpgrolleconomy.auction.admin</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="empresas">Empresas</SectionHeading>
-      <p>
-        Un jugador puede fundar una <code>Company</code>, que crea automáticamente su propia cuenta bancaria de
-        tesorería. El dueño (o un <code>MANAGER</code>) puede contratar empleados con un salario cada uno,
-        depositar/retirar de la tesorería, y pagar todos los salarios pendientes con un solo click. No incluye
-        acciones ni bolsa de valores en esta versión.
-      </p>
+      <SectionHeading id="empresas">{c.compTitle}</SectionHeading>
+      <p>{fill(c.compBody, { company: <code>Company</code>, manager: <code>MANAGER</code> })}</p>
 
-      <SectionHeading id="impuestos">Impuestos</SectionHeading>
+      <SectionHeading id="impuestos">{c.taxTitle}</SectionHeading>
       <p>
-        Cada <code>TaxRule</code> define un <code>type</code>, una tasa (%), y a qué ids/categorías aplica (vacío
-        = todo). El monto retenido es un <strong>money sink</strong> puro: sale de circulación, no se deposita en
-        ninguna cuenta — solo queda como un registro <code>TAX</code> en el libro mayor para que el admin vea
-        cuánto se recaudó.
+        {fill(c.taxBody, {
+          rule: <code>TaxRule</code>,
+          type: <code>type</code>,
+          sink: <strong>{c.sinkWord}</strong>,
+          tax: <code>TAX</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>¿Se aplica automáticamente hoy?</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thAutoToday}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">SALE</Td><Td>Sí — tiendas de jugador, subastas y cualquier venta al mercado.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PROPERTY</Td><Td>Sí, si hay una regla con <code>applies-to: [guild-territory]</code> — la tarea de impuesto territorial de guilds (ver "Integración activa" arriba) la dispara periódicamente.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">INCOME / COMPANY / COMMERCIAL / LUXURY</Td><Td>No — completamente modeladas y aplicables a mano vía <code>TaxEngine#apply</code> desde otro addon, pero ningún punto de este addon las dispara todavía.</Td></Tr>
+          <Tr><Td className={mono}>SALE</Td><Td>{c.tSale}</Td></Tr>
+          <Tr>
+            <Td className={mono}>PROPERTY</Td>
+            <Td>{fill(c.tProperty, { appliesTo: <code>applies-to: [guild-territory]</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>INCOME / COMPANY / COMMERCIAL / LUXURY</Td>
+            <Td>{fill(c.tOthers, { apply: <code>TaxEngine#apply</code> })}</Td>
+          </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="inflacion">Inflación</SectionHeading>
+      <SectionHeading id="inflacion">{c.inflTitle}</SectionHeading>
       <p>
-        Una tarea periódica (<code>inflation-snapshot-interval-ticks</code>) suma la masa monetaria total —{" "}
-        <strong>todos</strong> los wallets guardados en disco (no solo los cacheados en memoria) más todas las
-        cuentas bancarias — por moneda, y la compara contra la foto anterior. Guarda hasta 52 fotos en{" "}
-        <code>inflation.yml</code>. <Kbd>/economyadmin inflation</Kbd> muestra el % actual; <Kbd>/economyadmin snapshot</Kbd>{" "}
-        fuerza una foto fuera de horario.
+        {fill(c.inflBody, {
+          interval: <code>inflation-snapshot-interval-ticks</code>,
+          all: <strong>{c.allWord}</strong>,
+          file: <code>inflation.yml</code>,
+          cmd: <Kbd>/economyadmin inflation</Kbd>,
+          snapshot: <Kbd>/economyadmin snapshot</Kbd>,
+        })}
       </p>
 
-      <SectionHeading id="libro-mayor">Libro mayor de transacciones</SectionHeading>
-      <p>
-        Cada movimiento económico (depósito, retiro, venta, impuesto, préstamo, salario...) queda registrado. Para
-        no reescribir el archivo del día en disco en cada transacción, los registros nuevos se acumulan primero en
-        memoria y se vuelcan a <code>ledger/&lt;yyyy-MM-dd&gt;.yml</code> recién cada 30 segundos (y una vez más al
-        apagar el servidor) — la consulta de "historial reciente" siempre lee del buffer en memoria, no del disco.
-      </p>
+      <SectionHeading id="libro-mayor">{c.ledgerTitle}</SectionHeading>
+      <p>{fill(c.ledgerBody, { path: <code>ledger/&lt;yyyy-MM-dd&gt;.yml</code> })}</p>
 
-      <SectionHeading id="formato-yaml">Ejemplos de archivo YAML</SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="currencies/gold.yml"
@@ -521,116 +553,141 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           "enabled: true\n"
         }
       />
-      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo, por cada tipo de contenido">
-        <code>currencies/reference_full.yml</code>, <code>market/reference_full.yml</code> y{" "}
-        <code>tax/reference_full.yml</code> (incluidos en el jar) documentan absolutamente todos los campos
-        disponibles de cada tipo, con comentarios explicando cada uno.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, {
+          files: (
+            <>
+              <code>currencies/reference_full.yml</code>, <code>market/reference_full.yml</code>,{" "}
+              <code>tax/reference_full.yml</code>
+            </>
+          ),
+        })}
       </Callout>
 
-      <YamlBuilder title="Constructor visual: Moneda" folder="currencies" fields={currencyFields} />
-      <YamlBuilder title="Constructor visual: Producto de mercado" folder="market" fields={marketProductFields} />
-      <YamlBuilder title="Constructor visual: Regla tributaria" folder="tax" fields={taxRuleFields} />
+      <YamlBuilder title={c.builderCurrency} folder="currencies" fields={currencyFields(c)} />
+      <YamlBuilder title={c.builderMarket} folder="market" fields={marketProductFields(c)} />
+      <YamlBuilder title={c.builderTax} folder="tax" fields={taxRuleFields(c)} />
 
-      <SectionHeading id="gui">GUI: Economy Studio</SectionHeading>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
       <p>
-        <Kbd>/economyadmin browser</Kbd> abre un hub que enlaza a 3 navegadores de contenido (Monedas, Mercado,
-        Impuestos). Del lado del jugador, <Kbd>/economy bank</Kbd>, <Kbd>/economy shop</Kbd>,{" "}
-        <Kbd>/economy auction</Kbd> y <Kbd>/economy company</Kbd> abren sus propias GUIs — depósitos/retiros y
-        montos siempre se piden por chat (mismo patrón de <code>ChatPromptManager</code> que el resto del
-        ecosistema), no hay un teclado numérico en inventario.
-      </p>
-
-      <SectionHeading id="api">API para addons — EconomyAPI</SectionHeading>
-      <p>
-        <code>EconomyAPI.isReady()</code> / <code>EconomyAPI.get()</code>, mismo patrón que el resto del
-        ecosistema. Expone los 4 managers de contenido (<code>currencies()</code>, <code>market()</code>,{" "}
-        <code>marketRegions()</code>, <code>taxRules()</code>) y los servicios de runtime: <code>wallet()</code>,{" "}
-        <code>bank()</code>, <code>loans()</code>, <code>tax()</code>, <code>marketEngine()</code>,{" "}
-        <code>shops()</code>, <code>auctions()</code>, <code>companies()</code>/<code>companyService()</code>,{" "}
-        <code>ledger()</code> e <code>inflation()</code>. Un futuro RPGRoll-Farming/Mining/Crafting típicamente
-        entra por <code>market().get(id)</code> + <code>marketEngine().price(producto, ubicación)</code> para
-        cotizar su producción (con soporte regional/estacional si pasa la ubicación), y por{" "}
-        <code>wallet()</code> para acreditarle al jugador.
+        {fill(c.guiBody, {
+          browser: <Kbd>/economyadmin browser</Kbd>,
+          bank: <Kbd>/economy bank</Kbd>,
+          shop: <Kbd>/economy shop</Kbd>,
+          auction: <Kbd>/economy auction</Kbd>,
+          company: <Kbd>/economy company</Kbd>,
+          prompt: <code>ChatPromptManager</code>,
+        })}
       </p>
 
-      <SectionHeading id="wallet-backend">Saldos compartidos entre servidores — WalletBackend</SectionHeading>
+      <SectionHeading id="api">{c.apiTitle}</SectionHeading>
       <p>
-        Por defecto cada servidor guarda sus saldos en <code>wallets/</code>. Si tienes varios servidores y
-        quieres un solo saldo para todos, otro plugin puede registrar un <code>WalletBackend</code> en el{" "}
-        <code>ServicesManager</code> de Bukkit (<code>com.sack.rpgroll.economy.api.WalletBackend</code>) y decir
-        qué monedas lleva. Desde ese momento, todo lo que mueve esas monedas en RPGRoll-Economy (tiendas,
-        subastas, <code>/pay</code>, comandos de admin y lo que otros plugins cobran por Vault) pasa por él; el
-        resto de monedas, los bancos y los préstamos siguen en el servidor.
-      </p>
-      <p>
-        El saldo que cada jugador ya tuviera en el servidor se traspasa solo, una vez, al entrar
-        (<code>importBalance</code>, con un id que se guarda antes de pedirlo para no duplicarlo si el servidor
-        cae a mitad). Si el almacén no responde, la operación devuelve <code>UNAVAILABLE</code> y no se mueve
-        nada. Sin ningún <code>WalletBackend</code> registrado, todo funciona exactamente como antes.
+        {fill(c.apiBody, {
+          isReady: <code>EconomyAPI.isReady()</code>,
+          get: <code>EconomyAPI.get()</code>,
+          managers: (
+            <>
+              <code>currencies()</code>, <code>market()</code>, <code>marketRegions()</code>,{" "}
+              <code>taxRules()</code>
+            </>
+          ),
+          services: (
+            <>
+              <code>wallet()</code>, <code>bank()</code>, <code>loans()</code>, <code>tax()</code>,{" "}
+              <code>marketEngine()</code>, <code>shops()</code>, <code>auctions()</code>,{" "}
+              <code>companies()</code>/<code>companyService()</code>, <code>ledger()</code>,{" "}
+              <code>inflation()</code>
+            </>
+          ),
+          entry: (
+            <>
+              <code>market().get(id)</code> + <code>marketEngine().price(producto, ubicación)</code>
+            </>
+          ),
+          wallet: <code>wallet()</code>,
+        })}
       </p>
 
-      <SectionHeading id="integracion-vault">Integración con Vault</SectionHeading>
+      <SectionHeading id="wallet-backend">{c.backendTitle}</SectionHeading>
       <p>
-        A diferencia de <code>core</code> (que solo <em>consume</em> el servicio Economy de Vault si hay un
-        EssentialsX-style instalado), RPGRoll-Economy se registra como <strong>proveedor</strong>{" "}
-        (<code>EconomyVaultProvider</code>, prioridad <code>Normal</code>) apenas detecta Vault en{" "}
-        <code>onEnable</code>. Opera siempre sobre la moneda marcada <code>is-base: true</code>. No implementa el
-        soporte de "bancos" de Vault (es un concepto distinto al banco propio de este addon) — esos métodos
-        devuelven <code>NOT_IMPLEMENTED</code>.
+        {fill(c.backendBody, {
+          dir: <code>wallets/</code>,
+          cls: <code>WalletBackend</code>,
+          services: <code>ServicesManager</code>,
+          fqn: <code>com.sack.rpgroll.economy.api.WalletBackend</code>,
+          pay: <code>/pay</code>,
+        })}
       </p>
-      <Callout tone="warning" title="Si tienes otro plugin de economía (EssentialsX, CMI) instalado">
-        Vault deja el registro de mayor prioridad activo — con la misma prioridad, gana el que se registró
-        último. Para que RPGRoll-Economy sea el que manda, desinstalá el otro plugin de economía o subile la
-        prioridad aquí si hace falta convivir con ambos.
+      <p>
+        {fill(c.backendImportBody, {
+          import: <code>importBalance</code>,
+          unavailable: <code>UNAVAILABLE</code>,
+          cls: <code>WalletBackend</code>,
+        })}
+      </p>
+
+      <SectionHeading id="integracion-vault">{c.vaultTitle}</SectionHeading>
+      <p>
+        {fill(c.vaultBody, {
+          core: <code>core</code>,
+          consumes: <em>{c.consumesWord}</em>,
+          provider: <strong>{c.providerWord}</strong>,
+          cls: <code>EconomyVaultProvider</code>,
+          normal: <code>Normal</code>,
+          onEnable: <code>onEnable</code>,
+          isBase: <code>is-base: true</code>,
+          notImpl: <code>NOT_IMPLEMENTED</code>,
+        })}
+      </p>
+      <Callout tone="warning" title={c.vaultWarnTitle}>
+        {c.vaultWarnBody}
       </Callout>
 
-      <SectionHeading id="placeholders">Placeholders (PlaceholderAPI)</SectionHeading>
-      <p>
-        Expansión <Badge tone="violet">rpgeconomy</Badge>.
-      </p>
+      <SectionHeading id="placeholders">{c.phTitle}</SectionHeading>
+      <p>{fill(c.phBody, { exp: <Badge tone="violet">rpgeconomy</Badge> })}</p>
       <Table>
         <Thead>
-          <Th>Placeholder</Th>
-          <Th>Devuelve</Th>
+          <Th>{c.thPlaceholder}</Th>
+          <Th>{c.thReturns}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">%rpgeconomy_balance%</Td><Td>Saldo del jugador en la moneda por defecto.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgeconomy_balance_&lt;moneda&gt;%</Td><Td>Saldo en una moneda específica.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgeconomy_bank%</Td><Td>Suma de todas sus cuentas bancarias (moneda por defecto).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgeconomy_currency%</Td><Td>Nombre de la moneda por defecto.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgeconomy_inflation%</Td><Td>% de inflación de la moneda por defecto.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgeconomy_market_price_&lt;producto&gt;%</Td><Td>Precio actual de mercado.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgeconomy_tax_rate_&lt;tipo&gt;%</Td><Td>% total configurado para ese tipo de impuesto.</Td></Tr>
+          <Tr><Td className={mono}>%rpgeconomy_balance%</Td><Td>{c.p1}</Td></Tr>
+          <Tr><Td className={mono}>%rpgeconomy_balance_&lt;moneda&gt;%</Td><Td>{c.p2}</Td></Tr>
+          <Tr><Td className={mono}>%rpgeconomy_bank%</Td><Td>{c.p3}</Td></Tr>
+          <Tr><Td className={mono}>%rpgeconomy_currency%</Td><Td>{c.p4}</Td></Tr>
+          <Tr><Td className={mono}>%rpgeconomy_inflation%</Td><Td>{c.p5}</Td></Tr>
+          <Tr><Td className={mono}>%rpgeconomy_market_price_&lt;producto&gt;%</Td><Td>{c.p6}</Td></Tr>
+          <Tr><Td className={mono}>%rpgeconomy_tax_rate_&lt;tipo&gt;%</Td><Td>{c.p7}</Td></Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
-          <Th>Permiso</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
+          <Th>{c.thPermission}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">/economyadmin browser</Td><Td>Abre el Economy Studio.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">/economyadmin reload</Td><Td>Recarga monedas/mercado/impuestos.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/economyadmin give|take <jugador> <moneda> <cant>"}</Td><Td>Ajusta un balance.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/economyadmin setbalance <jugador> <moneda> <cant>"}</Td><Td>Fija un balance exacto.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">/economyadmin inflation</Td><Td>Muestra la última foto de inflación.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">/economyadmin snapshot</Td><Td>Fuerza una foto de masa monetaria.</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/economyadmin comprador <jugador>"}</Td><Td>Abre la ventana del comprador a ese jugador (para NPCs).</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/tienda [sección]"}</Td><Td>Abre la tienda del servidor, o una sección directa.</Td><Td><Badge>rpgrolleconomy.servershop</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/economy balance [moneda]"}</Td><Td>Ver tu saldo.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/economy pay <jugador> <cant> [moneda]"}</Td><Td>Pagarle a otro jugador.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">/economy bank</Td><Td>Abre tus cuentas bancarias.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">/economy shop</Td><Td>Navega tiendas de jugador / administra la tuya.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">/economy auction</Td><Td>Abre la Casa de Subastas.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">/subasta</Td><Td>Abre la Casa de Subastas (alias /ah, /subastas).</Td><Td><Badge>rpgrolleconomy.auction</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/subasta vender <precio>"}</Td><Td>Publica lo de la mano a precio fijo.</Td><Td><Badge>rpgrolleconomy.auction.sell</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/subasta subastar <inicial> [compra ya]"}</Td><Td>Lo publica con pujas.</Td><Td><Badge>rpgrolleconomy.auction.sell</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/subasta buscar <texto>"}</Td><Td>Abre el buscador filtrado.</Td><Td><Badge>rpgrolleconomy.auction</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">/subasta mis · /subasta recoger</Td><Td>Tus publicaciones · tu caja de recogida.</Td><Td><Badge>rpgrolleconomy.auction</Badge></Td></Tr>
-          <Tr><Td className="font-mono text-xs">/economy company</Td><Td>Ver/fundar/administrar tus empresas.</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
+          <Tr><Td className={mono}>/economyadmin browser</Td><Td>{c.c1}</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
+          <Tr><Td className={mono}>/economyadmin reload</Td><Td>{c.c2}</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
+          <Tr><Td className={mono}>{"/economyadmin give|take <jugador> <moneda> <cant>"}</Td><Td>{c.c3}</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
+          <Tr><Td className={mono}>{"/economyadmin setbalance <jugador> <moneda> <cant>"}</Td><Td>{c.c4}</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
+          <Tr><Td className={mono}>/economyadmin inflation</Td><Td>{c.c5}</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
+          <Tr><Td className={mono}>/economyadmin snapshot</Td><Td>{c.c6}</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
+          <Tr><Td className={mono}>{"/economyadmin comprador <jugador>"}</Td><Td>{c.c7}</Td><Td><Badge tone="violet">rpgrolleconomy.admin.*</Badge></Td></Tr>
+          <Tr><Td className={mono}>{"/tienda [sección]"}</Td><Td>{c.c8}</Td><Td><Badge>rpgrolleconomy.servershop</Badge></Td></Tr>
+          <Tr><Td className={mono}>{"/economy balance [moneda]"}</Td><Td>{c.c9}</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
+          <Tr><Td className={mono}>{"/economy pay <jugador> <cant> [moneda]"}</Td><Td>{c.c10}</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
+          <Tr><Td className={mono}>/economy bank</Td><Td>{c.c11}</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
+          <Tr><Td className={mono}>/economy shop</Td><Td>{c.c12}</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
+          <Tr><Td className={mono}>/economy auction</Td><Td>{c.c13}</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
+          <Tr><Td className={mono}>/subasta</Td><Td>{c.c14}</Td><Td><Badge>rpgrolleconomy.auction</Badge></Td></Tr>
+          <Tr><Td className={mono}>{"/subasta vender <precio>"}</Td><Td>{c.c15}</Td><Td><Badge>rpgrolleconomy.auction.sell</Badge></Td></Tr>
+          <Tr><Td className={mono}>{"/subasta subastar <inicial> [compra ya]"}</Td><Td>{c.c16}</Td><Td><Badge>rpgrolleconomy.auction.sell</Badge></Td></Tr>
+          <Tr><Td className={mono}>{"/subasta buscar <texto>"}</Td><Td>{c.c17}</Td><Td><Badge>rpgrolleconomy.auction</Badge></Td></Tr>
+          <Tr><Td className={mono}>/subasta mis · /subasta recoger</Td><Td>{c.c18}</Td><Td><Badge>rpgrolleconomy.auction</Badge></Td></Tr>
+          <Tr><Td className={mono}>/economy company</Td><Td>{c.c19}</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
         </tbody>
       </Table>
 
