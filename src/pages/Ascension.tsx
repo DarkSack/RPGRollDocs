@@ -14,141 +14,137 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { ASCENSION_COPY, type AscensionCopy } from "./copy/ascension";
 
-const requirementsGroup: YamlField = {
+const mono = "font-mono text-xs";
+
+const requirementsGroup = (c: AscensionCopy): YamlField => ({
   key: "requirements",
-  label: "Requisitos",
+  label: c.fRequirements,
   type: "group",
   fields: [
-    { key: "level", label: "Nivel mínimo", type: "number", default: "0" },
-    { key: "prestige", label: "Prestigio mínimo", type: "number", default: "0" },
-    { key: "trait", label: "Trait requerido", type: "string", placeholder: "arcane_affinity" },
+    { key: "level", label: c.fMinLevel, type: "number", default: "0" },
+    { key: "prestige", label: c.fMinPrestige, type: "number", default: "0" },
+    { key: "trait", label: c.fTrait, type: "string", placeholder: "arcane_affinity" },
     {
       key: "completed-quests",
-      label: "Misiones completadas",
+      label: c.fQuests,
       type: "list",
       placeholder: "trial_of_ashes, dragon_hunt",
-      help: "Ids separados por coma (requiere RPGRoll-Quests).",
+      help: c.fQuestsHelp,
     },
     {
       key: "reputation",
-      label: "Reputación mínima",
+      label: c.fReputation,
       type: "map",
       placeholder: "reino=50, orden_arcana=20",
-      help: "facción=cantidad separado por coma.",
+      help: c.fReputationHelp,
     },
   ],
-};
+});
 
-const raceEvolutionFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_evolucion", placeholder: "alto_elfo" },
-  { key: "base-race", label: "Raza base", type: "string", placeholder: "elfo" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&bAlto Elfo" },
-  requirementsGroup,
-  { key: "stats", label: "Bono de stats", type: "map", placeholder: "intelligence=8, magic_power=10" },
-  { key: "affinities", label: "Bono de afinidades", type: "map", placeholder: "light=20" },
-  { key: "resistances", label: "Resistencias", type: "map", placeholder: "magic=15" },
-  { key: "weaknesses", label: "Debilidades", type: "map", placeholder: "fire=10" },
-  { key: "traits", label: "Traits otorgados", type: "list", placeholder: "arcane_affinity" },
-  { key: "skills", label: "Skills otorgadas", type: "list", placeholder: "arcane_bolt" },
-  { key: "professions", label: "Profesiones exclusivas", type: "list", placeholder: "alquimista" },
+const raceEvolutionFields = (c: AscensionCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewEvolution, placeholder: "alto_elfo" },
+  { key: "base-race", label: c.fBaseRace, type: "string", placeholder: "elfo" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&bAlto Elfo" },
+  requirementsGroup(c),
+  { key: "stats", label: c.fStats, type: "map", placeholder: "intelligence=8, magic_power=10" },
+  { key: "affinities", label: c.fAffinities, type: "map", placeholder: "light=20" },
+  { key: "resistances", label: c.fResistances, type: "map", placeholder: "magic=15" },
+  { key: "weaknesses", label: c.fWeaknesses, type: "map", placeholder: "fire=10" },
+  { key: "traits", label: c.fTraits, type: "list", placeholder: "arcane_affinity" },
+  { key: "skills", label: c.fSkills, type: "list", placeholder: "arcane_bolt" },
+  { key: "professions", label: c.fProfessions, type: "list", placeholder: "alquimista" },
 ];
 
-const classSpecializationFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_especializacion", placeholder: "berserker" },
-  { key: "base-class", label: "Clase base", type: "string", placeholder: "guerrero" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&4Berserker" },
-  requirementsGroup,
-  { key: "stats", label: "Bono de stats", type: "map", placeholder: "damage=4" },
-  { key: "restrictions", label: "Restricciones", type: "list", placeholder: "no-shield" },
-  { key: "exclusive-equipment", label: "Equipo exclusivo", type: "list", placeholder: "berserker_axe" },
+const classSpecializationFields = (c: AscensionCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewSpec, placeholder: "berserker" },
+  { key: "base-class", label: c.fBaseClass, type: "string", placeholder: "guerrero" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&4Berserker" },
+  requirementsGroup(c),
+  { key: "stats", label: c.fStats, type: "map", placeholder: "damage=4" },
+  { key: "restrictions", label: c.fRestrictions, type: "list", placeholder: "no-shield" },
+  { key: "exclusive-equipment", label: c.fExclusiveEq, type: "list", placeholder: "berserker_axe" },
 ];
 
-const prestigeFields: YamlField[] = [
-  { key: "id", label: "Id (número de rango)", type: "string", default: "1", placeholder: "1" },
-  { key: "required-level", label: "Nivel requerido", type: "number", default: "100" },
-  { key: "exp-bonus-percent", label: "Bono de XP (%)", type: "number", default: "5" },
-  { key: "skills", label: "Skills otorgadas", type: "list", placeholder: "prestige_aura_1" },
+const prestigeFields = (c: AscensionCopy): YamlField[] => [
+  { key: "id", label: c.fIdRank, type: "string", default: "1", placeholder: "1" },
+  { key: "required-level", label: c.fReqLevel, type: "number", default: "100" },
+  { key: "exp-bonus-percent", label: c.fExpBonus, type: "number", default: "5" },
+  { key: "skills", label: c.fSkills, type: "list", placeholder: "prestige_aura_1" },
 ];
 
-const affinityFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_afinidad", placeholder: "fuego" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&6Fuego" },
-  { key: "opposing", label: "Afinidad opuesta", type: "string", placeholder: "agua" },
-  { key: "resist-causes", label: "Causas de daño resistidas", type: "list", placeholder: "FIRE, FIRE_TICK, LAVA" },
+const affinityFields = (c: AscensionCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewAffinity, placeholder: "fuego" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&6Fuego" },
+  { key: "opposing", label: c.fOpposing, type: "string", placeholder: "agua" },
+  { key: "resist-causes", label: c.fResistCauses, type: "list", placeholder: "FIRE, FIRE_TICK, LAVA" },
 ];
 
-const legacyFields: YamlField[] = [
-  { key: "id", label: "Id (número de tier)", type: "string", default: "1", placeholder: "1" },
-  { key: "required-prestige", label: "Prestigio requerido", type: "number", default: "3" },
-  { key: "permanent-exp-bonus-percent", label: "Bono de XP permanente (%)", type: "number", default: "5" },
-  { key: "bonus-stat-points", label: "Puntos de stat de regalo", type: "number", default: "5" },
+const legacyFields = (c: AscensionCopy): YamlField[] => [
+  { key: "id", label: c.fIdTier, type: "string", default: "1", placeholder: "1" },
+  { key: "required-prestige", label: c.fReqPrestige, type: "number", default: "3" },
+  { key: "permanent-exp-bonus-percent", label: c.fPermExpBonus, type: "number", default: "5" },
+  { key: "bonus-stat-points", label: c.fBonusPoints, type: "number", default: "5" },
 ];
 
-const achievementFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_logro", placeholder: "maestro_espadachin" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&fMaestro Espadachín" },
+const achievementFields = (c: AscensionCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewAch, placeholder: "maestro_espadachin" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&fMaestro Espadachín" },
   {
     key: "description",
-    label: "Descripción",
+    label: c.fDescription,
     type: "string",
-    placeholder: "+3% daño con espadas (informativo)",
+    placeholder: c.phAchDesc,
   },
 ];
 
-const titleFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_titulo", placeholder: "el_elegido" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&6El Elegido" },
+const titleFields = (c: AscensionCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewTitle, placeholder: "el_elegido" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&6El Elegido" },
 ];
 
-const factionFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_faccion", placeholder: "kingdom" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&6Reino" },
+const factionFields = (c: AscensionCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewFaction, placeholder: "kingdom" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&6Reino" },
 ];
 
-const jobEvolutionFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_evolucion_job", placeholder: "master_miner" },
-  { key: "base-job", label: "Job base", type: "string", placeholder: "minero" },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&7Master Miner" },
-  { key: "required-job-level", label: "Nivel de job requerido", type: "number", default: "25" },
-  { key: "unlocked-recipes", label: "Recetas desbloqueadas", type: "list", placeholder: "reinforced_pickaxe" },
-  { key: "unlocked-tools", label: "Herramientas desbloqueadas", type: "list", placeholder: "efficiency_drill" },
-  { key: "unlocked-quests", label: "Misiones desbloqueadas", type: "list" },
+const jobEvolutionFields = (c: AscensionCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewJobEvo, placeholder: "master_miner" },
+  { key: "base-job", label: c.fBaseJob, type: "string", placeholder: "minero" },
+  { key: "display-name", label: c.fDisplayName, type: "string", placeholder: "&7Master Miner" },
+  { key: "required-job-level", label: c.fReqJobLevel, type: "number", default: "25" },
+  { key: "unlocked-recipes", label: c.fRecipes, type: "list", placeholder: "reinforced_pickaxe" },
+  { key: "unlocked-tools", label: c.fTools, type: "list", placeholder: "efficiency_drill" },
+  { key: "unlocked-quests", label: c.fUnlockedQuests, type: "list" },
 ];
 
-const secretUnlockFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_secreto", placeholder: "dragon_blood_unlock" },
-  { key: "target-type", label: "Tipo de objetivo", type: "select", options: ["RACE", "CLASS", "TRAIT"] },
-  { key: "target-id", label: "Id real en :core", type: "string", placeholder: "dragon_blood" },
-  requirementsGroup,
+const secretUnlockFields = (c: AscensionCopy): YamlField[] => [
+  { key: "id", label: c.fId, type: "string", default: c.phNewSecret, placeholder: "dragon_blood_unlock" },
+  { key: "target-type", label: c.fTargetType, type: "select", options: ["RACE", "CLASS", "TRAIT"] },
+  { key: "target-id", label: c.fTargetId, type: "string", placeholder: "dragon_blood" },
+  requirementsGroup(c),
 ];
 
 export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ASCENSION_COPY[locale];
+
   return (
     <>
-      <PageHeader title="Ascension (RPGRoll-Ascension)">
-        Expansión de progresión avanzada por encima del sistema base de razas/clases/niveles: evolución de raza,
-        especialización de clase con árbol de talentos, prestigio, afinidades elementales, y una serie de
-        sistemas de datos (logros, títulos, facciones, legado) para que otros addons construyan mecánicas encima.
-      </PageHeader>
+      <PageHeader title={c.title}>{c.intro}</PageHeader>
 
-      <Callout tone="info" title="4 pilares con mecánica real + 6 sistemas de datos">
-        Race Evolution, Class Specialization (+talentos), Prestigio y Afinidades tienen efecto real en el
-        jugador. Job Evolutions, Secretos, Facciones, Logros y Títulos son deliberadamente capas de{" "}
-        <em>datos y consulta</em> — la mecánica automática que los aplique queda para otro addon (o para ti).
-        Legado es la excepción: vive junto a los sistemas de datos pero sí tiene un reset real.
+      <Callout tone="info" title={c.pillarsTitle}>
+        {fill(c.pillarsBody, { data: <em>{c.dataWord}</em> })}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib, RPGRoll]\nsoftdepend: [RPGRoll-Enchantments, RPGRoll-Quests, RPGRoll-Mobs, RPGRoll-Items, Vault, PlaceholderAPI]"} />
-      <p>Sin ninguno de los dos, Ascension funciona igual: un talento que otorgaría un encantamiento simplemente no lo aplica, y un requisito de "quest completada" nunca bloquea.</p>
+      <p>{c.reqBody}</p>
 
-      <SectionHeading id="race-evolution">Evolución de raza</SectionHeading>
-      <p>
-        Una <code>RaceEvolution</code> es una variante de la raza base del jugador (ej. Elfo → Alto Elfo): conserva
-        su raza real, pero suma bonos de stats, afinidades, resistencias/debilidades, traits, skills y
-        profesiones desbloqueadas exclusivas.
-      </p>
+      <SectionHeading id="race-evolution">{c.raceTitle}</SectionHeading>
+      <p>{fill(c.raceBody, { cls: <code>RaceEvolution</code> })}</p>
       <CodeBlock
         language="yaml"
         filename="evolutions/alto_elfo.yml"
@@ -211,21 +207,28 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
           "  - minero\n"
         }
       />
-      <p><Kbd>{"/ascend race <id>"}</Kbd> falla si la evolución no corresponde a tu raza base, o si no cumples sus <code>requirements</code>.</p>
+      <p>
+        {fill(c.raceCmdBody, {
+          cmd: <Kbd>{"/ascend race <id>"}</Kbd>,
+          req: <code>requirements</code>,
+        })}
+      </p>
 
       <YamlBuilder
-        title="Constructor visual: Race Evolution"
-        description="Arma el YAML de una evolución de raza y descargalo en evolutions/<id>.yml. El árbol de talentos no aplica aquí — es de Class Specialization."
+        title={c.builderRace}
+        description={c.builderRaceDesc}
         folder="evolutions"
-        fields={raceEvolutionFields}
+        fields={raceEvolutionFields(c)}
       />
 
-      <SectionHeading id="specialization">Especialización de clase y árbol de talentos</SectionHeading>
+      <SectionHeading id="specialization">{c.specTitle}</SectionHeading>
       <p>
-        Una <code>ClassSpecialization</code> (ej. Guerrero → Berserker) trae su propio bono de stats y un árbol de
-        talentos propio. <code>restrictions</code> y <code>exclusive-equipment</code> son{" "}
-        <strong>solo informativos</strong> — otro addon (como RPGRoll-Items) puede leerlos para hacerlos cumplir,
-        pero Ascension no los aplica por sí sola.
+        {fill(c.specBody, {
+          cls: <code>ClassSpecialization</code>,
+          restrictions: <code>restrictions</code>,
+          equipment: <code>exclusive-equipment</code>,
+          infoOnly: <strong>{c.infoOnly}</strong>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -327,45 +330,48 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
         }
       />
       <p>
-        Cada nodo (<code>TalentNode</code>) tiene un <code>cost</code> en puntos de talento, requisitos de nodos
-        previos (<code>requires</code>), un bono de stats aditivo, y opcionalmente otorga una skill, un trait o un
-        encantamiento (uno solo, en general) al desbloquearse. <Kbd>{"/ascend talent <id>"}</Kbd> valida en este
-        orden: tienes especialización activa → el nodo existe → no lo desbloqueaste ya → tienes todos sus
-        prerrequisitos → tienes puntos suficientes.
+        {fill(c.nodeBody, {
+          node: <code>TalentNode</code>,
+          cost: <code>cost</code>,
+          requires: <code>requires</code>,
+          cmd: <Kbd>{"/ascend talent <id>"}</Kbd>,
+        })}
       </p>
-      <Callout tone="warning" title="Cambiar de especialización borra el árbol de talentos">
-        <code>{"/ascend specialize <id>"}</code> limpia por completo los talentos ya desbloqueados — no hay forma
-        de conservarlos al cambiar de rama.
+      <Callout tone="warning" title={c.specWarnTitle}>
+        {fill(c.specWarnBody, { cmd: <code>{"/ascend specialize <id>"}</code> })}
       </Callout>
 
-      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
-        <code>specializations/reference_full.yml</code> (incluido en el jar) agrega los campos que los dos ejemplos
-        de arriba no muestran: <code>requirements.prestige</code>, <code>requirements.completed-quests</code>,{" "}
-        <code>requirements.reputation</code>, <code>exclusive-equipment</code>, y un nodo con dos prerrequisitos y
-        recompensa de encantamiento.
+      <Callout tone="tip" title={c.specRefTitle}>
+        {fill(c.specRefBody, {
+          file: <code>specializations/reference_full.yml</code>,
+          fields: (
+            <>
+              <code>requirements.prestige</code>, <code>requirements.completed-quests</code>,{" "}
+              <code>requirements.reputation</code>, <code>exclusive-equipment</code>
+            </>
+          ),
+        })}
       </Callout>
 
       <YamlBuilder
-        title="Constructor visual: Class Specialization"
-        description="Arma la identidad, requisitos, bono de stats, restricciones y equipo exclusivo. El árbol de talentos (talents:) es demasiado anidado para este formulario — cópialo de un ejemplo de arriba y editalo a mano."
+        title={c.builderSpec}
+        description={c.builderSpecDesc}
         folder="specializations"
-        fields={classSpecializationFields}
+        fields={classSpecializationFields(c)}
       />
 
-      <SectionHeading id="prestige">Prestigio</SectionHeading>
+      <SectionHeading id="prestige">{c.prestigeTitle}</SectionHeading>
+      <p>{fill(c.prestigeBody, { cmd: <Kbd>/ascend prestige</Kbd> })}</p>
       <p>
-        Al alcanzar el nivel requerido, <Kbd>/ascend prestige</Kbd> resetea tu nivel a 1 (conservando evolución,
-        especialización y talentos) a cambio de un bono de experiencia acumulativo entre rangos, más las skills
-        que ese rango otorgue.
-      </p>
-      <p>
-        El bono se aplica de verdad a toda la XP de personaje que se gana jugando (mobs, misiones, recetas):
-        Ascension lo registra en el <code>ExperienceBonusService</code> del core junto con el bono permanente de
-        legado, y se suma al bono por rango (<code>rpgroll.exp.bonus.&lt;n&gt;</code>). Ver{" "}
-        <a href="/progresion" className="underline">
-          Progresión y nivel
-        </a>
-        .
+        {fill(c.prestigeBonusBody, {
+          service: <code>ExperienceBonusService</code>,
+          perm: <code>rpgroll.exp.bonus.&lt;n&gt;</code>,
+          link: (
+            <a href="/progresion" className="underline">
+              {c.progressionLink}
+            </a>
+          ),
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -385,18 +391,15 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
       />
 
       <YamlBuilder
-        title="Constructor visual: Prestige Level"
-        description="El id es el número de rango como texto (ej. '1', '2')."
+        title={c.builderPrestige}
+        description={c.builderPrestigeDesc}
         folder="prestige"
-        fields={prestigeFields}
+        fields={prestigeFields(c)}
       />
 
-      <SectionHeading id="affinities">Afinidades elementales</SectionHeading>
+      <SectionHeading id="affinities">{c.affTitle}</SectionHeading>
       <p>
-        La única mecánica automática real de este sistema: cada afinidad mapea a una lista de{" "}
-        <code>DamageCause</code> de Bukkit, y el nivel de afinidad del jugador (experiencia ÷ 100, tope nivel 100)
-        reduce ese daño hasta un <strong>20% como máximo</strong>. El resto de bonos (a hechizos, ítems,
-        encantamientos) quedan expuestos por API para que otro addon los consulte.
+        {fill(c.affBody, { cause: <code>DamageCause</code>, max: <strong>{c.affMax}</strong> })}
       </p>
       <CodeBlock
         language="yaml"
@@ -416,19 +419,21 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
         filename="affinities/agua.yml"
         code={"id: agua\n" + 'display-name: "&9Agua"\n' + "opposing: fuego\n" + "resist-causes:\n" + "  - DROWNING\n"}
       />
-      <p>Hay 8 afinidades de ejemplo: fuego, agua, hielo, electricidad, luz, oscuridad, naturaleza, veneno — cada una opcionalmente con una <code>opposing</code> (afinidad contraria, sin efecto mecánico propio, solo referencia).</p>
+      <p>{fill(c.affListBody, { opposing: <code>opposing</code> })}</p>
 
       <YamlBuilder
-        title="Constructor visual: Affinity"
+        title={c.builderAff}
         folder="affinities"
-        fields={affinityFields}
+        fields={affinityFields(c)}
       />
 
-      <SectionHeading id="legacy">Legado: el reset definitivo</SectionHeading>
+      <SectionHeading id="legacy">{c.legacyTitle}</SectionHeading>
       <p>
-        Al llegar al prestigio mínimo de un <code>LegacyTier</code>, <Kbd>/ascend legacy</Kbd> hace un reset total:
-        nivel, prestigio, evolución de raza, especialización y todos los talentos vuelven a cero — a cambio de un
-        bono de experiencia <strong>permanente y acumulativo entre legados</strong> más puntos de stat de regalo.
+        {fill(c.legacyBody, {
+          tier: <code>LegacyTier</code>,
+          cmd: <Kbd>/ascend legacy</Kbd>,
+          perm: <strong>{c.legacyPerm}</strong>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -452,35 +457,63 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
       />
 
       <YamlBuilder
-        title="Constructor visual: Legacy Tier"
-        description="El id es el número de tier como texto (ej. '1', '2')."
+        title={c.builderLegacy}
+        description={c.builderLegacyDesc}
         folder="legacy"
-        fields={legacyFields}
+        fields={legacyFields(c)}
       />
 
-      <SectionHeading id="datos">Sistemas de datos: logros, títulos, facciones, job evolutions, secretos</SectionHeading>
-      <p>Estos cinco quedan deliberadamente sin mecánica automática — son consulta + otorgar/activar manual, para que se construya encima:</p>
+      <SectionHeading id="datos">{c.dataTitle}</SectionHeading>
+      <p>{c.dataBody}</p>
       <Table>
         <Thead>
-          <Th>Sistema</Th>
-          <Th>Representa</Th>
-          <Th>Cómo se otorga/activa</Th>
+          <Th>{c.thSystem}</Th>
+          <Th>{c.thRepresents}</Th>
+          <Th>{c.thHowGranted}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">Achievements</Td><Td>Logro a nivel de personaje, con una descripción narrativa del bono que otorga (no se aplica automáticamente a las stats).</Td><Td><Kbd>{"/ascendadmin achievement grant <j> <id>"}</Kbd></Td></Tr>
-          <Tr><Td className="font-mono text-xs">Titles</Td><Td>Título cosmético.</Td><Td>Otorgado por admin, activado por el jugador con <Kbd>{"/ascend title <id|clear>"}</Kbd></Td></Tr>
-          <Tr><Td className="font-mono text-xs">Factions</Td><Td>Facción/reino con la que acumulas reputación.</Td><Td><Kbd>{"/ascendadmin reputation add <j> <facción> <cant>"}</Kbd> (valida que la facción exista)</Td></Tr>
-          <Tr><Td className="font-mono text-xs">Job Evolutions</Td><Td>Rango evolutivo de un trabajo (ej. Minero → Master Miner) que desbloquea recetas/herramientas/quests.</Td><Td>Solo consulta vía API — sin comando ni mecánica que lo active.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">Secret Unlocks</Td><Td>Requisitos para desbloquear una raza/clase/trait "secreta" que ya vive en el core.</Td><Td>Solo consulta vía <code>find(tipo, id)</code> — nada en el código actual lo dispara.</Td></Tr>
+          <Tr>
+            <Td className={mono}>Achievements</Td>
+            <Td>{c.dAchievements}</Td>
+            <Td><Kbd>{"/ascendadmin achievement grant <j> <id>"}</Kbd></Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>Titles</Td>
+            <Td>{c.dTitles}</Td>
+            <Td>{fill(c.dTitlesHow, { cmd: <Kbd>{"/ascend title <id|clear>"}</Kbd> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>Factions</Td>
+            <Td>{c.dFactions}</Td>
+            <Td>
+              {fill(c.dFactionsHow, {
+                cmd: <Kbd>{"/ascendadmin reputation add <j> <facción> <cant>"}</Kbd>,
+              })}
+            </Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>Job Evolutions</Td>
+            <Td>{c.dJobs}</Td>
+            <Td>{c.dJobsHow}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>Secret Unlocks</Td>
+            <Td>{c.dSecrets}</Td>
+            <Td>{fill(c.dSecretsHow, { find: <code>find(tipo, id)</code> })}</Td>
+          </Tr>
         </tbody>
       </Table>
       <Callout tone="tip">
-        <code>factions/reino.yml</code> es un buen recordatorio de que el <strong>id interno</strong> manda sobre
-        el nombre de archivo: el archivo se llama <code>reino.yml</code> pero su campo <code>id</code> es{" "}
-        <code>kingdom</code> — el sistema indexa por ese campo, no por el nombre del YAML.
+        {fill(c.idTipBody, {
+          file: <code>factions/reino.yml</code>,
+          internalId: <strong>{c.internalId}</strong>,
+          name: <code>reino.yml</code>,
+          id: <code>id</code>,
+          value: <code>kingdom</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="achievements" level={3}>Achievement</SectionHeading>
+      <SectionHeading id="achievements" level={3}>{c.achTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="achievements/maestro_espadachin.yml"
@@ -499,9 +532,9 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
           'description: "+5% velocidad de descubrimiento (bono informativo — la mecánica queda para otro addon la aplique)"\n'
         }
       />
-      <YamlBuilder title="Constructor visual: Achievement" folder="achievements" fields={achievementFields} />
+      <YamlBuilder title={c.builderAch} folder="achievements" fields={achievementFields(c)} />
 
-      <SectionHeading id="titles-format" level={3}>Title</SectionHeading>
+      <SectionHeading id="titles-format" level={3}>{c.titleTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="titles/el_elegido.yml"
@@ -512,9 +545,9 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
         filename="titles/portador_de_leyenda.yml"
         code={"id: portador_de_leyenda\n" + 'display-name: "&ePortador de Leyenda"\n'}
       />
-      <YamlBuilder title="Constructor visual: Title" folder="titles" fields={titleFields} />
+      <YamlBuilder title={c.builderTitle} folder="titles" fields={titleFields(c)} />
 
-      <SectionHeading id="factions-format" level={3}>Faction</SectionHeading>
+      <SectionHeading id="factions-format" level={3}>{c.facTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="factions/reino.yml"
@@ -525,9 +558,9 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
         filename="factions/orden_arcana.yml"
         code={"id: orden_arcana\n" + 'display-name: "&5Orden Arcana"\n'}
       />
-      <YamlBuilder title="Constructor visual: Faction" folder="factions" fields={factionFields} />
+      <YamlBuilder title={c.builderFac} folder="factions" fields={factionFields(c)} />
 
-      <SectionHeading id="job-evolutions-format" level={3}>Job Evolution</SectionHeading>
+      <SectionHeading id="job-evolutions-format" level={3}>{c.jobTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="job-evolutions/master_miner.yml"
@@ -556,9 +589,9 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
           "  - alchemist_cauldron\n"
         }
       />
-      <YamlBuilder title="Constructor visual: Job Evolution" folder="job-evolutions" fields={jobEvolutionFields} />
+      <YamlBuilder title={c.builderJob} folder="job-evolutions" fields={jobEvolutionFields(c)} />
 
-      <SectionHeading id="secrets-format" level={3}>Secret Unlock Requirement</SectionHeading>
+      <SectionHeading id="secrets-format" level={3}>{c.secTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="secrets/dragon_blood.yml"
@@ -587,81 +620,102 @@ export function Ascension({ onNavigate }: { onNavigate: (slug: string) => void }
           "    - trial_of_ashes\n"
         }
       />
-      <YamlBuilder title="Constructor visual: Secret Unlock Requirement" folder="secrets" fields={secretUnlockFields} />
+      <YamlBuilder title={c.builderSec} folder="secrets" fields={secretUnlockFields(c)} />
 
-      <SectionHeading id="integraciones">Integraciones</SectionHeading>
+      <SectionHeading id="integraciones">{c.intTitle}</SectionHeading>
       <ul>
-        <li><strong>RPGRoll-Enchantments</strong> — si un talento tiene <code>enchantment: &lt;id&gt;</code>, al desbloquearlo se aplica ese encantamiento al ítem en tu mano principal (si el addon está instalado; si no, no pasa nada).</li>
-        <li><strong>RPGRoll-Quests</strong> — un requisito <code>completed-quests</code> en evoluciones/especializaciones/secretos se valida contra el estado real de misiones del jugador, si el addon está presente. Sin él, ese requisito nunca bloquea.</li>
+        <li>
+          {fill(c.intEnch, {
+            ench: <strong>RPGRoll-Enchantments</strong>,
+            field: <code>enchantment: &lt;id&gt;</code>,
+          })}
+        </li>
+        <li>
+          {fill(c.intQuests, {
+            quests: <strong>RPGRoll-Quests</strong>,
+            field: <code>completed-quests</code>,
+          })}
+        </li>
       </ul>
 
-      <SectionHeading id="gui">GUI: navegador y editor para los 10 tipos de contenido</SectionHeading>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
       <p>
-        <Kbd>{"/ascendadmin browser <tipo>"}</Kbd> abre un navegador gráfico con botón "Crear nuevo" para cada uno
-        de los 10 tipos de esta página — <code>evolution</code>, <code>specialization</code>, <code>prestige</code>,{" "}
-        <code>affinity</code>, <code>jobevolution</code>, <code>secret</code>, <code>faction</code>,{" "}
-        <code>achievement</code>, <code>title</code>, <code>legacy</code> (por defecto, sin argumento, abre{" "}
-        <code>evolution</code>). Click sobre un ítem abre su editor: campos simples se editan con click derecho/
-        izquierdo o un prompt de chat; los mapas (stats, afinidades, resistencias, debilidades, reputación) usan
-        una sintaxis compacta <code>clave=valor,clave2=valor2</code> por chat.
+        {fill(c.guiBody, {
+          cmd: <Kbd>{"/ascendadmin browser <tipo>"}</Kbd>,
+          types: (
+            <>
+              <code>evolution</code>, <code>specialization</code>, <code>prestige</code>,{" "}
+              <code>affinity</code>, <code>jobevolution</code>, <code>secret</code>, <code>faction</code>,{" "}
+              <code>achievement</code>, <code>title</code>, <code>legacy</code>
+            </>
+          ),
+          def: <code>evolution</code>,
+          syntax: <code>clave=valor,clave2=valor2</code>,
+        })}
       </p>
-      <Callout tone="warning" title="El árbol de talentos no tiene grilla visual">
-        <code>ClassSpecialization</code> edita sus talentos con una línea de chat compacta (
-        <code>{"id;nombre;costo;requiere1,requiere2;stat=val;skill;trait;encantamiento"}</code>) en vez de un editor
-        de árbol — igual que el constructor web de esta página, que directamente no lo expone y te manda a copiar un
-        ejemplo YAML a mano para esa parte.
+      <Callout tone="warning" title={c.guiWarnTitle}>
+        {fill(c.guiWarnBody, {
+          cls: <code>ClassSpecialization</code>,
+          syntax: <code>{"id;nombre;costo;requiere1,requiere2;stat=val;skill;trait;encantamiento"}</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="comandos-jugador">Comandos de jugador — /ascend</SectionHeading>
+      <SectionHeading id="comandos-jugador">{c.playerCmdsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/ascend race <id>"}</Td><Td>Evoluciona tu raza si cumples los requisitos.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/ascend specialize <id>"}</Td><Td>Elige una especialización de tu clase (borra talentos previos).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/ascend talent <id>"}</Td><Td>Desbloquea un nodo del árbol de talentos de tu especialización.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/ascend prestige</Td><Td>Reinicia tu nivel a cambio de bono de exp acumulativo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/ascend affinity</Td><Td>Lista tu experiencia y nivel en cada afinidad.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/ascend reputation</Td><Td>Lista tu reputación con cada facción.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/ascend title <id|clear>"}</Td><Td>Activa un título ya desbloqueado, o lo quita.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/ascend legacy</Td><Td>Reset total a cambio de bono permanente (si alcanzas el prestigio mínimo).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/ascend info</Td><Td>Resumen de tu evolución, especialización, talentos, prestigio, legado y bono de exp total.</Td></Tr>
+          <Tr><Td className={mono}>{"/ascend race <id>"}</Td><Td>{c.pc1}</Td></Tr>
+          <Tr><Td className={mono}>{"/ascend specialize <id>"}</Td><Td>{c.pc2}</Td></Tr>
+          <Tr><Td className={mono}>{"/ascend talent <id>"}</Td><Td>{c.pc3}</Td></Tr>
+          <Tr><Td className={mono}>/ascend prestige</Td><Td>{c.pc4}</Td></Tr>
+          <Tr><Td className={mono}>/ascend affinity</Td><Td>{c.pc5}</Td></Tr>
+          <Tr><Td className={mono}>/ascend reputation</Td><Td>{c.pc6}</Td></Tr>
+          <Tr><Td className={mono}>{"/ascend title <id|clear>"}</Td><Td>{c.pc7}</Td></Tr>
+          <Tr><Td className={mono}>/ascend legacy</Td><Td>{c.pc8}</Td></Tr>
+          <Tr><Td className={mono}>/ascend info</Td><Td>{c.pc9}</Td></Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="comandos-admin">Comandos de administrador — /ascendadmin</SectionHeading>
+      <SectionHeading id="comandos-admin">{c.adminCmdsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/ascendadmin achievement grant <j> <id>"}</Td><Td>Otorga un logro.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/ascendadmin title grant <j> <id>"}</Td><Td>Otorga un título.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/ascendadmin reputation add <j> <facción> <cant>"}</Td><Td>Suma reputación (valida que la facción exista).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/ascendadmin browser [tipo]"}</Td><Td>Abre el navegador gráfico de uno de los 10 tipos de contenido (ver sección GUI arriba).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/ascendadmin reload</Td><Td>Recarga los 10 tipos de contenido: evoluciones, especializaciones, prestigio, legado, logros, títulos, afinidades, job evolutions, secretos y facciones.</Td></Tr>
+          <Tr><Td className={mono}>{"/ascendadmin achievement grant <j> <id>"}</Td><Td>{c.ac1}</Td></Tr>
+          <Tr><Td className={mono}>{"/ascendadmin title grant <j> <id>"}</Td><Td>{c.ac2}</Td></Tr>
+          <Tr><Td className={mono}>{"/ascendadmin reputation add <j> <facción> <cant>"}</Td><Td>{c.ac3}</Td></Tr>
+          <Tr><Td className={mono}>{"/ascendadmin browser [tipo]"}</Td><Td>{c.ac4}</Td></Tr>
+          <Tr><Td className={mono}>/ascendadmin reload</Td><Td>{c.ac5}</Td></Tr>
         </tbody>
       </Table>
-      <p>Ambos comandos administrativos requieren <Badge tone="amber">rpgrollascension.admin.*</Badge> (default: op).</p>
+      <p>{fill(c.adminPermBody, { perm: <Badge tone="amber">rpgrollascension.admin.*</Badge> })}</p>
 
-      <SectionHeading id="placeholders">Placeholders (PlaceholderAPI)</SectionHeading>
-      <p>Expansión <Badge tone="violet">rpgrollascension</Badge>.</p>
+      <SectionHeading id="placeholders">{c.phTitle}</SectionHeading>
+      <p>{fill(c.phBody, { exp: <Badge tone="violet">rpgrollascension</Badge> })}</p>
       <Table>
         <Thead>
-          <Th>Placeholder</Th>
-          <Th>Valor</Th>
+          <Th>{c.thPlaceholder}</Th>
+          <Th>{c.thValue}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">%rpgrollascension_evolution% / _specialization</Td><Td>Id actual, o <code>-</code> si no eligió ninguna.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollascension_prestige% / _legacy</Td><Td>Rangos de prestigio/legado alcanzados.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollascension_exp_bonus%</Td><Td>% de bono de experiencia total (prestigio + legado).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollascension_talent_points%</Td><Td>Puntos de talento sin gastar.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"%rpgrollascension_affinity_<id>_level%"}</Td><Td>Nivel de esa afinidad (0-100).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"%rpgrollascension_reputation_<facción>%"}</Td><Td>Reputación acumulada con esa facción.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollascension_title%</Td><Td>Título activo, o <code>-</code>.</Td></Tr>
+          <Tr>
+            <Td className={mono}>%rpgrollascension_evolution% / _specialization</Td>
+            <Td>{fill(c.ph1, { dash: <code>-</code> })}</Td>
+          </Tr>
+          <Tr><Td className={mono}>%rpgrollascension_prestige% / _legacy</Td><Td>{c.ph2}</Td></Tr>
+          <Tr><Td className={mono}>%rpgrollascension_exp_bonus%</Td><Td>{c.ph3}</Td></Tr>
+          <Tr><Td className={mono}>%rpgrollascension_talent_points%</Td><Td>{c.ph4}</Td></Tr>
+          <Tr><Td className={mono}>{"%rpgrollascension_affinity_<id>_level%"}</Td><Td>{c.ph5}</Td></Tr>
+          <Tr><Td className={mono}>{"%rpgrollascension_reputation_<facción>%"}</Td><Td>{c.ph6}</Td></Tr>
+          <Tr>
+            <Td className={mono}>%rpgrollascension_title%</Td>
+            <Td>{fill(c.ph7, { dash: <code>-</code> })}</Td>
+          </Tr>
         </tbody>
       </Table>
 
