@@ -39,6 +39,7 @@ export const TRANSLATED_PAGES: ReadonlySet<string> = new Set(["inicio", "primero
   "dungeons",
   "mobs",
   "worldforge",
+  "sackresourcepack",
   "pass",
   "furniture",
   "recipes",
