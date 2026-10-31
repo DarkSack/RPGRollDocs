@@ -14,12 +14,14 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { MOBS_COPY, type MobsCopy } from "./copy/mobs";
 
-const mobFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nuevo_mob", placeholder: "forest_goblin" },
+const mobFields = (c: MobsCopy): YamlField[] => [
+  { key: "id", label: c.mfId, type: "string", default: "nuevo_mob", placeholder: "forest_goblin" },
   {
     key: "category",
-    label: "Categoría",
+    label: c.mfCategory,
     type: "select",
     options: [
       "NORMAL",
@@ -37,43 +39,43 @@ const mobFields: YamlField[] = [
       "CINEMATIC_BOSS",
     ],
   },
-  { key: "display-name", label: "Nombre visible", type: "string", placeholder: "&2Trasgo del Bosque" },
-  { key: "base-entity-type", label: "Tipo de entidad base (Bukkit)", type: "string", placeholder: "ZOMBIE" },
-  { key: "level", label: "Nivel", type: "number", default: "1" },
-  { key: "rarity", label: "Rareza (id)", type: "string", default: "common" },
-  { key: "tags", label: "Tags", type: "list", placeholder: "forest, humanoid" },
-  { key: "description", label: "Descripción", type: "string" },
+  { key: "display-name", label: c.mfDisplayName, type: "string", placeholder: "&2Trasgo del Bosque" },
+  { key: "base-entity-type", label: c.mfBaseEntity, type: "string", placeholder: "ZOMBIE" },
+  { key: "level", label: c.mfLevel, type: "number", default: "1" },
+  { key: "rarity", label: c.mfRarity, type: "string", default: "common" },
+  { key: "tags", label: c.mfTags, type: "list", placeholder: "forest, humanoid" },
+  { key: "description", label: c.mfDescription, type: "string" },
   {
     key: "model",
-    label: "Modelo",
+    label: c.mfModel,
     type: "group",
     fields: [
-      { key: "scale", label: "Escala", type: "number", default: "1.0" },
-      { key: "glow", label: "Brillo", type: "boolean" },
-      { key: "invisible", label: "Invisible", type: "boolean" },
+      { key: "scale", label: c.mfScale, type: "number", default: "1.0" },
+      { key: "glow", label: c.mfGlow, type: "boolean" },
+      { key: "invisible", label: c.mfInvisible, type: "boolean" },
     ],
   },
-  { key: "stats", label: "Stats", type: "map", placeholder: "health=30, damage=4, speed=105" },
-  { key: "resistances", label: "Resistencias", type: "map", placeholder: "poison=25" },
+  { key: "stats", label: c.mfStats, type: "map", placeholder: "health=30, damage=4, speed=105" },
+  { key: "resistances", label: c.mfResistances, type: "map", placeholder: "poison=25" },
   {
     key: "ai",
-    label: "IA",
+    label: c.mfAi,
     type: "group",
     fields: [
-      { key: "goals", label: "Goals (orden de prioridad)", type: "list", placeholder: "ATTACK_PLAYERS, FLEE" },
-      { key: "aggro-range", label: "Rango de aggro", type: "number", default: "16" },
-      { key: "flee-health-percent", label: "% de vida para huir", type: "number", default: "0" },
-      { key: "move-speed", label: "Velocidad de movimiento", type: "number", default: "1.0" },
+      { key: "goals", label: c.mfGoals, type: "list", placeholder: "ATTACK_PLAYERS, FLEE" },
+      { key: "aggro-range", label: c.mfAggro, type: "number", default: "16" },
+      { key: "flee-health-percent", label: c.mfFlee, type: "number", default: "0" },
+      { key: "move-speed", label: c.mfMoveSpeed, type: "number", default: "1.0" },
     ],
   },
 ];
 
-const mobRegionFields: YamlField[] = [
-  { key: "id", label: "Id", type: "string", default: "nueva_region", placeholder: "volcano_arena" },
-  { key: "world", label: "Mundo", type: "string", default: "world" },
+const mobRegionFields = (c: MobsCopy): YamlField[] => [
+  { key: "id", label: c.rfId, type: "string", default: "nueva_region", placeholder: "volcano_arena" },
+  { key: "world", label: c.rfWorld, type: "string", default: "world" },
   {
     key: "min",
-    label: "Esquina mínima",
+    label: c.rfMin,
     type: "group",
     fields: [
       { key: "x", label: "X", type: "number", default: "0" },
@@ -83,7 +85,7 @@ const mobRegionFields: YamlField[] = [
   },
   {
     key: "max",
-    label: "Esquina máxima",
+    label: c.rfMax,
     type: "group",
     fields: [
       { key: "x", label: "X", type: "number", default: "0" },
@@ -94,112 +96,154 @@ const mobRegionFields: YamlField[] = [
 ];
 
 export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = MOBS_COPY[locale];
+
   return (
     <>
-      <PageHeader title="Mobs y jefes (RPGRoll-Mobs)" slug="mobs">
-        Motor de criaturas personalizadas: mobs normales, mini-jefes y jefes con fases, IA propia, resistencias,
-        loot con probabilidad y bossbar/diálogos — todo definido en YAML, con editor gráfico incluido.
+      <PageHeader title={c.title} slug="mobs">
+        {c.intro}
       </PageHeader>
 
-      <Callout tone="info" title="Alcance de esta primera versión: núcleo PvE a fondo">
-        RPGRoll-Mobs prioriza profundidad real en definición de mob, motor de combate, comportamiento y
-        fases de jefe. Para verse distinto tiene dos caminos: modelos 3D animados con FreeMinecraftModels
-        (gratis, opcional — ver <a href="#modelos-3d" onClick={(e) => e.preventDefault()}>Modelos 3D</a>) o
-        skins estáticas sin ninguna dependencia con <a href="#reskin" onClick={(e) => e.preventDefault()}>model.skins</a>.
-        No integra con ModelEngine/BetterModel ni WorldGuard/WorldEdit.
+      <Callout tone="info" title={c.scopeTitle}>
+        {fill(c.scopeBody, {
+          models3d: (
+            <a href="#modelos-3d" onClick={(e) => e.preventDefault()}>
+              {c.models3dLink}
+            </a>
+          ),
+          skins: (
+            <a href="#reskin" onClick={(e) => e.preventDefault()}>
+              model.skins
+            </a>
+          ),
+        })}
       </Callout>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, Vault, RPGRoll-Items, RPGRoll-Quests, PlaceholderAPI, SackResourcePack, FreeMinecraftModels]"}
       />
       <p>
-        Sin RPGRoll-Items ni RPGRoll-Quests instalados, todo sigue funcionando: el equipo de un mob cae a{" "}
-        <code>Material</code> vanilla directo, el loot de tipo <code>ITEM</code> también, y el loot de tipo{" "}
-        <code>QUEST</code> simplemente no hace nada. Sin{" "}
+        {fill(c.reqBody1, {
+          material: <code>Material</code>,
+          item: <code>ITEM</code>,
+          quest: <code>QUEST</code>,
+        })}{" "}
         <a href="/sackresourcepack" className="text-violet-600 underline dark:text-violet-400">
           SackResourcePack
         </a>
-        , las <a href="#reskin" onClick={(e) => e.preventDefault()}>skins visuales</a> de un mob simplemente no
-        aparecen configuradas como opción (no rompe nada — el mob se ve vanilla normal).
+        {fill(c.reqBody2, {
+          skins: (
+            <a href="#reskin" onClick={(e) => e.preventDefault()}>
+              {c.skinsLink}
+            </a>
+          ),
+        })}
       </p>
 
-      <SectionHeading id="filosofia">Un mob es una composición de sistemas independientes</SectionHeading>
+      <SectionHeading id="filosofia">{c.philTitle}</SectionHeading>
       <p>
-        Cada <code>MobDefinition</code> es un registro (<em>record</em>) que junta 21 componentes: identidad,
-        modelo, stats, resistencias, debilidades, IA, skills, triggers, fases, loot, bossbar, diálogos, reglas de
-        spawn y datos custom. Ningún componente es obligatorio salvo <code>id</code> y{" "}
-        <code>base-entity-type</code> — todo lo demás tiene un valor por defecto razonable.
+        {fill(c.philBody, {
+          def: <code>MobDefinition</code>,
+          record: <em>{c.recordWord}</em>,
+          id: <code>id</code>,
+          baseType: <code>base-entity-type</code>,
+        })}
       </p>
 
-      <SectionHeading id="ia">IA simulada, no vanilla</SectionHeading>
+      <SectionHeading id="ia">{c.aiTitle}</SectionHeading>
       <p>
-        Bukkit/Paper no expone el sistema real de <em>pathfinding-goals</em> de Minecraft (es interno de NMS). En
-        vez de usar reflection, cada mob RPGRoll arranca con <code>Mob#setAware(false)</code> — apaga{" "}
-        <strong>toda</strong> la IA vanilla — y una tarea propia (<code>MobAITask</code>) corre cada 10 ticks
-        evaluando sus <code>goals</code> en orden de prioridad, moviéndolo con{" "}
-        <code>Pathfinder#moveTo(...)</code> y <code>Mob#setTarget(...)</code>.
+        {fill(c.aiBody, {
+          pathfindingGoals: <em>{c.pathfindingGoals}</em>,
+          setAware: <code>Mob#setAware(false)</code>,
+          all: <strong>{c.allWord}</strong>,
+          task: <code>MobAITask</code>,
+          goals: <code>goals</code>,
+          moveTo: <code>Pathfinder#moveTo(...)</code>,
+          setTarget: <code>Mob#setTarget(...)</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Goal</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thGoal}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">ATTACK_PLAYERS</Td><Td>Busca al jugador survival/adventure más cercano dentro del rango de aggro, lo persigue y ataca cuerpo a cuerpo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">FLEE</Td><Td>Si la vida cae debajo de <code>flee-health-percent</code>, huye en dirección opuesta a su objetivo actual.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PATROL</Td><Td>Recorre <code>patrol-points</code> (lista de coordenadas <code>x,y,z</code>) en orden, ciclando.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">GUARD_REGION</Td><Td>Si sale de la región indicada en <code>guard-region</code>, vuelve caminando a su centro.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">DEFEND_ALLY</Td><Td>Si un mob de la misma definición cerca tiene target, ese mob también ataca a ese jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">FOLLOW_LEADER</Td><Td>Sigue al mob más cercano de la misma definición.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">STAY_STILL</Td><Td>No hace nada — útil como último goal de la lista, o para mobs puramente decorativos/comerciantes.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">ATTACK_PLAYERS</Td><Td>{c.gAttack}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">FLEE</Td><Td>{fill(c.gFlee, { pct: <code>flee-health-percent</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PATROL</Td><Td>{fill(c.gPatrol, { points: <code>patrol-points</code>, xyz: <code>x,y,z</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">GUARD_REGION</Td><Td>{fill(c.gGuard, { region: <code>guard-region</code> })}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">DEFEND_ALLY</Td><Td>{c.gDefend}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">FOLLOW_LEADER</Td><Td>{c.gFollow}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">STAY_STILL</Td><Td>{c.gStay}</Td></Tr>
         </tbody>
       </Table>
       <Callout tone="tip">
-        Los goals se evalúan <strong>en el orden en que aparecen</strong> en <code>ai.goals</code> — el primero
-        que aplica ese tick gana. Un mob con <code>[FLEE, ATTACK_PLAYERS]</code> prioriza huir sobre pelear en
-        cuanto cruza el umbral de vida.
+        {fill(c.goalTip, {
+          inOrder: <strong>{c.inOrderWord}</strong>,
+          goals: <code>ai.goals</code>,
+          example: <code>[FLEE, ATTACK_PLAYERS]</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="combate">Motor de combate</SectionHeading>
-      <p>Los stats se aplican de verdad, no son solo cosmética:</p>
+      <SectionHeading id="combate">{c.combatTitle}</SectionHeading>
+      <p>{c.combatIntro}</p>
       <ul>
-        <li><strong>health / speed / armor / knockback_resistance</strong> — se mapean a atributos vanilla reales (<code>GENERIC_MAX_HEALTH</code>, etc.) al spawnear.</li>
-        <li><strong>damage / accuracy / critical_chance / critical_damage</strong> — se resuelven en el propio ataque cuerpo a cuerpo del mob: <code>accuracy</code> es la chance de no fallar el golpe, <code>critical_chance</code>/<code>critical_damage</code> aplican un multiplicador extra.</li>
-        <li><strong>dodge</strong> — chance de anular por completo cualquier daño entrante (propio o de otro jugador/mob), evaluado antes de aplicar resistencias.</li>
-        <li><strong>defense / resistance</strong> — reducción plana de daño, aplicada después del multiplicador elemental.</li>
-        <li><strong>resistances / weaknesses</strong> — % de reducción o de daño extra según el <code>DamageCause</code> de Bukkit mapeado a un elemento (fire, water, ice, electric, poison, dark, magic, explosion, arrow).</li>
+        <li>
+          {fill(c.liAttrs, {
+            names: <strong>{c.attrNames}</strong>,
+            attrs: (
+              <>
+                <code>GENERIC_MAX_HEALTH</code>, etc.
+              </>
+            ),
+          })}
+        </li>
+        <li>
+          {fill(c.liDamage, {
+            names: <strong>{c.damageNames}</strong>,
+            accuracy: <code>accuracy</code>,
+            crit: (
+              <>
+                <code>critical_chance</code>/<code>critical_damage</code>
+              </>
+            ),
+          })}
+        </li>
+        <li>{fill(c.liDodge, { name: <strong>{c.dodgeName}</strong> })}</li>
+        <li>{fill(c.liDefense, { names: <strong>{c.defenseNames}</strong> })}</li>
+        <li>{fill(c.liRes, { names: <strong>{c.resNames}</strong>, cause: <code>DamageCause</code> })}</li>
       </ul>
-      <Callout tone="warning" title="El daño se resuelve un tick después">
-        Cuando un mob recibe daño, el listener ajusta el daño del evento en el momento (esquive/resistencias), pero
-        el chequeo de transición de fase y el trigger <code>DAMAGED</code> se agendan para el próximo tick — recién
-        ahí <code>getHealth()</code> refleja la vida ya restada por Bukkit.
+      <Callout tone="warning" title={c.tickTitle}>
+        {fill(c.tickBody, { damaged: <code>DAMAGED</code>, getHealth: <code>getHealth()</code> })}
       </Callout>
 
-      <SectionHeading id="modelos-3d">Modelos 3D animados (FreeMinecraftModels)</SectionHeading>
+      <SectionHeading id="modelos-3d">{c.m3dTitle}</SectionHeading>
       <p>
-        <code>model.model-engine-id</code> es el id de un modelo de{" "}
-        <strong>FreeMinecraftModels</strong> (FMM, de MagmaGuy, gratis y GPLv3): el nombre de su{" "}
-        <code>.bbmodel</code> en <code>plugins/FreeMinecraftModels/models/</code>. Con FMM instalado, el mob
-        se vuelve invisible y el modelo lo sigue y se anima; la entidad vanilla sigue siendo la que pelea
-        (hitbox, IA, vida). Sin FMM el campo se ignora y el mob se ve vanilla: la integración es blanda.
+        {fill(c.m3dBody, {
+          field: <code>model.model-engine-id</code>,
+          fmm: <strong>{c.fmmName}</strong>,
+          bbmodel: <code>.bbmodel</code>,
+          dir: <code>plugins/FreeMinecraftModels/models/</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Animación</Th>
-          <Th>Quién la lanza</Th>
+          <Th>{c.thAnimation}</Th>
+          <Th>{c.thWho}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">spawn / idle / walk</Td><Td>FMM, solo (al aparecer, quieto, caminando).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">attack</Td><Td>RPGRoll-Mobs, cuando el mob golpea — salvo que una skill acabe de lanzar otra animación (1,5 s de margen, para no pisarla).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">death</Td><Td>RPGRoll-Mobs, al morir; el modelo se retira al acabarla.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">cualquier otra</Td><Td>La acción <code>ANIMATION</code> de una skill o trigger (<code>value</code>: el nombre; <code>loop: true</code> la repite).</Td></Tr>
+          <Tr><Td className="font-mono text-xs">spawn / idle / walk</Td><Td>{c.anSpawn}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">attack</Td><Td>{c.anAttack}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">death</Td><Td>{c.anDeath}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{c.anOtherLabel}</Td><Td>{fill(c.anOther, { animation: <code>ANIMATION</code>, value: <code>value</code>, loop: <code>loop: true</code> })}</Td></Tr>
         </tbody>
       </Table>
       <CodeBlock
         language="yaml"
-        filename="un jefe con modelo 3D (fragmento)"
+        filename={c.m3dFile}
         code={
           "base-entity-type: RAVAGER\n" +
           "model:\n" +
@@ -216,32 +260,33 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
           "        ticks: \"100\"\n"
         }
       />
-      <Callout tone="info" title="El modelo se diseña al tamaño del mob base">
-        FMM multiplica el modelo por el atributo <code>scale</code> de la entidad, igual que Minecraft hace con
-        su caja de golpes. Si el modelo mide lo mismo que el mob vanilla a escala 1, con cualquier{" "}
-        <code>model.scale</code> seguirán encajando. El nombre del mob se muestra en el hueso <code>tag_</code>{" "}
-        del modelo, no sobre la entidad invisible. Para los jugadores de Bedrock, FMM genera también un pack
-        que reparte ResourcePackManager a Geyser.
+      <Callout tone="info" title={c.scaleTitle}>
+        {fill(c.scaleBody, {
+          scale: <code>scale</code>,
+          modelScale: <code>model.scale</code>,
+          tag: <code>tag_</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="reskin">Skins visuales (sin ModelEngine/BetterModel)</SectionHeading>
+      <SectionHeading id="reskin">{c.reskinTitle}</SectionHeading>
       <p>
-        Minecraft no tiene ningún equivalente a <code>CustomModelData</code> para entidades vivas — no hay forma de
-        re-texturizar un mob vanilla solo con un resource pack. RPGRoll-Mobs implementa el mismo truco que usan
-        plugins como ModelEngine, pero desde cero y sin esa dependencia: la entidad vanilla real sigue siendo la
-        que pelea/camina (hitbox, IA, pathfinding intactos), pero se le monta una entidad <code>ItemDisplay</code>{" "}
-        como pasajero real, portando un ítem con <code>custom-model-data</code>. Combinado con{" "}
-        <code>model.invisible: true</code>, el jugador solo ve el modelo custom, nunca la entidad vanilla debajo.
+        {fill(c.reskinBody, {
+          cmd: <code>CustomModelData</code>,
+          display: <code>ItemDisplay</code>,
+          cmdLower: <code>custom-model-data</code>,
+          invisible: <code>model.invisible: true</code>,
+        })}
       </p>
       <p>
-        <code>model.skins</code> es una <strong>lista</strong>, no un valor único: al spawnear el mob se sortea
-        una skin por peso (<code>weight</code>, mayor = más probable) y esa elección queda persistida en la
-        entidad — un reinicio del server o una recarga de chunk nunca le cambia la apariencia a un mob ya vivo
-        (no vuelve a sortear). Lista vacía (o sin la sección) = sin reskin, mob vanilla normal.
+        {fill(c.reskinBody2, {
+          skins: <code>model.skins</code>,
+          list: <strong>{c.listWord}</strong>,
+          weight: <code>weight</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
-        filename="mobs/bosses/reference_full.yml (fragmento)"
+        filename={c.reskinFile}
         code={
           "model:\n" +
           "  invisible: true\n" +
@@ -259,48 +304,60 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <p>
-        Con este ejemplo, un mob nuevo tiene 2/3 de chance de nacer "molten" y 1/3 "obsidian". El material y el
-        número de <code>custom-model-data</code> los define un resource pack real — el mismo pipeline que ya usa
-        RPGRoll-Items: pon el modelo/textura en{" "}
-        <code>plugins/RPGRoll-Mobs/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...</code> y, si
-        SackResourcePack está instalado, se sincroniza solo al arrancar el plugin.
+        {fill(c.reskinBody3, {
+          cmd: <code>custom-model-data</code>,
+          path: (
+            <code>
+              plugins/RPGRoll-Mobs/resourcepack/&lt;namespace&gt;/&lt;textures|models&gt;/item/...
+            </code>
+          ),
+        })}
       </p>
       <p>
-        Desde <Kbd>{"/mobadmin editor <id>"}</Kbd> → Modelo → Skins se administra la lista sin tocar el YAML a
-        mano: agregar pide <code>id material custom-model-data [peso]</code> por chat, shift-click sobre una
-        entrada existente la quita.
+        {fill(c.editorBody, {
+          cmd: <Kbd>{"/mobadmin editor <id>"}</Kbd>,
+          fmt: <code>id material custom-model-data [peso]</code>,
+        })}
       </p>
-      <Callout tone="warning" title="Solo verificado por compilación, no probado en juego">
-        Esta primera versión de las skins no fue probada visualmente contra un cliente real de Minecraft (sin
-        servidor Paper disponible en el entorno de desarrollo) — la lógica de sorteo/montaje/persistencia/limpieza
-        está completa, pero conviene probarla en un server de pruebas antes de usarla en producción.
+      <Callout tone="warning" title={c.untestedTitle}>
+        {c.untestedBody}
       </Callout>
 
-      <SectionHeading id="fases">Fases de jefe</SectionHeading>
+      <SectionHeading id="fases">{c.phasesTitle}</SectionHeading>
       <p>
-        Cada <code>MobPhase</code> tiene un <code>health-threshold-percent</code>: al cruzar ese % de vida hacia
-        abajo, se activa la fase con umbral más bajo entre las ya cruzadas (la más profunda en el combate). Las
-        fases son <strong>aditivas</strong>: las skills de una fase se suman a las que el mob ya tenía, no las
-        reemplazan. Además puede sobreescribir color/título de la bossbar, disparar una línea de diálogo, y
-        cambiar la partícula de aura.
+        {fill(c.phasesBody, {
+          phase: <code>MobPhase</code>,
+          threshold: <code>health-threshold-percent</code>,
+          additive: <strong>{c.additiveWord}</strong>,
+        })}
       </p>
 
-      <SectionHeading id="loot">Loot</SectionHeading>
+      <SectionHeading id="loot">{c.lootTitle}</SectionHeading>
       <p>
-        Cada entrada tiene <code>type</code> (<Badge tone="green">ITEM</Badge> <Badge tone="amber">MONEY</Badge>{" "}
-        <Badge tone="blue">EXPERIENCE</Badge> <Badge tone="violet">COMMAND</Badge> <Badge>QUEST</Badge>),
-        cantidad mín/máx, probabilidad, nivel mínimo requerido, y <code>scope</code>:
+        {fill(c.lootBody, {
+          type: <code>type</code>,
+          badges: (
+            <>
+              <Badge tone="green">ITEM</Badge> <Badge tone="amber">MONEY</Badge>{" "}
+              <Badge tone="blue">EXPERIENCE</Badge> <Badge tone="violet">COMMAND</Badge>{" "}
+              <Badge>QUEST</Badge>
+            </>
+          ),
+          scope: <code>scope</code>,
+        })}
       </p>
       <ul>
-        <li><strong>SHARED</strong> — se sortea una sola vez, entregado a quien dio el golpe final.</li>
-        <li><strong>PER_PLAYER</strong> — se sortea una vez <em>por cada jugador</em> que contribuyó daño (trackeado en memoria mientras el mob está vivo — no persiste a través de un reinicio del server).</li>
+        <li>{fill(c.liShared, { name: <strong>{c.sharedName}</strong> })}</li>
+        <li>
+          {fill(c.liPerPlayer, {
+            name: <strong>{c.perPlayerName}</strong>,
+            perEach: <em>{c.perEachPlayer}</em>,
+          })}
+        </li>
       </ul>
 
-      <SectionHeading id="formato-yaml">Formato del archivo YAML</SectionHeading>
-      <p>
-        Se cargan recursivamente desde <code>plugins/RPGRoll-Mobs/mobs/**/*.yml</code> (admite subcarpetas por
-        categoría). Ejemplo de un mob normal:
-      </p>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
+      <p>{fill(c.yamlIntro, { path: <code>plugins/RPGRoll-Mobs/mobs/**/*.yml</code> })}</p>
       <CodeBlock
         language="yaml"
         filename="mobs/normal/forest_goblin.yml"
@@ -380,12 +437,17 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
       <p>
-        Un mini-jefe agrega <code>phases</code>, <code>bossbar</code>, <code>dialogues</code> y{" "}
-        <code>triggers</code> (acciones directas por evento, sin pasar por el sistema de skills):
+        {fill(c.bossIntro, {
+          fields: (
+            <>
+              <code>phases</code>, <code>bossbar</code>, <code>dialogues</code> &amp; <code>triggers</code>
+            </>
+          ),
+        })}
       </p>
       <CodeBlock
         language="yaml"
-        filename="mobs/bosses/ash_colossus.yml (fragmento)"
+        filename={c.bossFile}
         code={
           "category: MINI_BOSS\n" +
           "phases:\n" +
@@ -416,97 +478,128 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
-      <Callout tone="tip" title="Referencia completa: todos los campos en un solo archivo">
-        <code>mobs/bosses/reference_full.yml</code> (incluido en el jar) usa absolutamente todos los campos de un
-        mob: modelo, stats, resistencias, debilidades, IA, skills, los 12 triggers, fases, los 5 tipos de loot,
-        bossbar, diálogos y reglas de spawn.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, { file: <code>mobs/bosses/reference_full.yml</code> })}
       </Callout>
 
-      <SectionHeading id="skills">Skills, triggers y condiciones</SectionHeading>
+      <SectionHeading id="skills">{c.skillsTitle}</SectionHeading>
       <p>
-        Una skill tiene <code>trigger</code> (o ninguno, si es pasiva), <code>cooldown</code>, <code>chance</code>{" "}
-        de disparar, una lista de <code>conditions</code> (expresiones simples tipo{" "}
-        <code>mob.health &lt; 50%</code>, <code>target.type == PLAYER</code>, <code>night == true</code>) y una
-        lista de <code>actions</code>.
+        {fill(c.skillsBody, {
+          trigger: <code>trigger</code>,
+          cooldown: <code>cooldown</code>,
+          chance: <code>chance</code>,
+          conditions: <code>conditions</code>,
+          exprs: (
+            <>
+              <code>mob.health &lt; 50%</code>, <code>target.type == PLAYER</code>,{" "}
+              <code>night == true</code>
+            </>
+          ),
+          actions: <code>actions</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Trigger</Th>
-          <Th>Cuándo dispara</Th>
+          <Th>{c.thTrigger}</Th>
+          <Th>{c.thWhen}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">SPAWN / DEATH</Td><Td>Al crear/morir el mob.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">DAMAGED / ATTACK</Td><Td>Al recibir daño / al golpear cuerpo a cuerpo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PHASE_CHANGE</Td><Td>Al entrar a una nueva fase.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">LOSE_TARGET</Td><Td>Cuando pierde de vista a su objetivo actual.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PLAYER_ENTER_RANGE</Td><Td>La primera vez que un jugador entra a su rango de aggro.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">PERIODIC / HEALTH_THRESHOLD</Td><Td>Cada pocos segundos, mientras esté vivo.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">SPAWN / DEATH</Td><Td>{c.tSpawn}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">DAMAGED / ATTACK</Td><Td>{c.tDamaged}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PHASE_CHANGE</Td><Td>{c.tPhase}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">LOSE_TARGET</Td><Td>{c.tLoseTarget}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PLAYER_ENTER_RANGE</Td><Td>{c.tEnterRange}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">PERIODIC / HEALTH_THRESHOLD</Td><Td>{c.tPeriodic}</Td></Tr>
         </tbody>
       </Table>
-      <p>Acciones incorporadas: <code>MESSAGE</code>, <code>COMMAND</code>, <code>SOUND</code>, <code>PARTICLE</code>, <code>DAMAGE</code>, <code>HEAL</code>, <code>SUMMON</code>, <code>TELEPORT</code>, <code>EXPLOSION</code>, <code>FIRE</code>, <code>FREEZE</code>, <code>PUSH</code>, <code>PULL</code>, <code>LIGHTNING</code>, <code>TITLE</code>, <code>ANIMATION</code> — cada una con sus propios parámetros por <code>key=value</code>.</p>
+      <p>
+        {fill(c.actionsBody, {
+          list: (
+            <>
+              <code>MESSAGE</code>, <code>COMMAND</code>, <code>SOUND</code>, <code>PARTICLE</code>,{" "}
+              <code>DAMAGE</code>, <code>HEAL</code>, <code>SUMMON</code>, <code>TELEPORT</code>,{" "}
+              <code>EXPLOSION</code>, <code>FIRE</code>, <code>FREEZE</code>, <code>PUSH</code>,{" "}
+              <code>PULL</code>, <code>LIGHTNING</code>, <code>TITLE</code>, <code>ANIMATION</code>
+            </>
+          ),
+          kv: <code>key=value</code>,
+        })}
+      </p>
 
       <YamlBuilder
-        title="Constructor visual: Mob"
-        description="Identidad, modelo, stats/resistencias e IA básica. Skins, skills, triggers, phases, loot, bossbar, diálogos y spawn-rules son demasiado anidados para este formulario — usa /mobadmin editor o copia uno de los ejemplos de arriba."
+        title={c.bMob}
+        description={c.bMobDesc}
         folder="mobs"
-        fields={mobFields}
+        fields={mobFields(c)}
       />
 
-      <SectionHeading id="spawn">Reglas de spawn natural</SectionHeading>
+      <SectionHeading id="spawn">{c.spawnTitle}</SectionHeading>
       <p>
-        Con <code>spawn-rules.natural-spawn: true</code>, el addon intercepta el <code>CreatureSpawnEvent</code>{" "}
-        vanilla: si el tipo de entidad y el contexto (bioma, mundo, región, altura, rango horario, clima,
-        distancia mínima a jugadores) calzan con alguna definición, cancela el spawn vanilla y crea el mob
-        RPGRoll en su lugar — eligiendo por peso (<code>spawn-weight</code>) si varias definiciones compiten por
-        el mismo tipo de entidad.
+        {fill(c.spawnBody, {
+          flag: <code>spawn-rules.natural-spawn: true</code>,
+          event: <code>CreatureSpawnEvent</code>,
+          weight: <code>spawn-weight</code>,
+        })}
       </p>
 
-      <SectionHeading id="regiones">Regiones de mob (MobRegion)</SectionHeading>
+      <SectionHeading id="regiones">{c.regionsTitle}</SectionHeading>
       <p>
-        Un cuboide propio (sin WorldGuard), igual que en RPGRoll-Quests: sirve como <code>guard-region</code> para
-        el goal <code>GUARD_REGION</code> y como filtro de <code>spawn-rules.regions</code>.
+        {fill(c.regionsBody, {
+          guardRegion: <code>guard-region</code>,
+          goal: <code>GUARD_REGION</code>,
+          filter: <code>spawn-rules.regions</code>,
+        })}
       </p>
       <Callout tone="info">
-        <code>mobs/src/main/resources/regions/</code> incluye archivos de ejemplo (<code>boss_arena.yml</code>,{" "}
-        <code>forest_camp.yml</code>) listos para usar o copiar como base.
+        {fill(c.regionsNote, {
+          dir: <code>mobs/src/main/resources/regions/</code>,
+          files: (
+            <>
+              <code>boss_arena.yml</code>, <code>forest_camp.yml</code>
+            </>
+          ),
+        })}
       </Callout>
-      <YamlBuilder title="Constructor visual: Mob Region" folder="regions" fields={mobRegionFields} />
+      <YamlBuilder title={c.bRegion} folder="regions" fields={mobRegionFields(c)} />
 
-      <SectionHeading id="tamano-aleatorio">Tamaño aleatorio de los mobs</SectionHeading>
+      <SectionHeading id="tamano-aleatorio">{c.sizeTitle}</SectionHeading>
       <p>
-        Con <code>random-size.enabled: true</code> en el <code>config.yml</code>, cada mob que aparece sale con
-        un tamaño distinto (atributo <code>scale</code>): vacas un poco más grandes o más pequeñas, algún zombi
-        enorme. Vale para los mobs <strong>vanilla</strong> y para los de <strong>RPGRoll</strong>. El tamaño se
-        guarda con la entidad como modificador de atributo, así que sobrevive a reinicios y no se vuelve a
-        tirar al recargar el chunk.
+        {fill(c.sizeBody, {
+          flag: <code>random-size.enabled: true</code>,
+          config: <code>config.yml</code>,
+          scale: <code>scale</code>,
+          vanilla: <strong>{c.vanillaWord}</strong>,
+          rpgroll: <strong>{c.rpgrollWord}</strong>,
+        })}
       </p>
       <ul>
+        <li>{fill(c.liDist, { chance: <code>extremes.chance</code> })}</li>
         <li>
-          El tamaño sale de una distribución triangular dentro del rango de su categoría (pasivo, neutral u
-          hostil): los tamaños del medio son los más comunes. Con <code>extremes.chance</code> % sale un mini o
-          un gigante fuera del rango.
+          {fill(c.liStats, {
+            stats: <code>stats</code>,
+            formula: <code>{c.sizeFormula}</code>,
+            speed: <code>speed: -0.25</code>,
+          })}
+        </li>
+        <li>{fill(c.liHeight, { min: <code>hostile-min-height</code> })}</li>
+        <li>
+          {fill(c.liExcluded, {
+            exclude: <code>exclude-types</code>,
+            reasons: <code>spawn-reasons</code>,
+            summon: <code>/summon</code>,
+            command: <code>COMMAND</code>,
+            worlds: <code>disabled-worlds</code>,
+          })}
         </li>
         <li>
-          La vida, el daño, la velocidad, la experiencia y el botín siguen al tamaño según su peso en{" "}
-          <code>stats</code>: <code>1 + (tamaño − 1) × peso</code>. Con <code>speed: -0.25</code> los grandes son
-          algo más lentos. El botín solo multiplica lo apilable, nunca el equipo puesto.
-        </li>
-        <li>
-          Un hostil alto (zombi, esqueleto…) nunca baja de <code>hostile-min-height</code> bloques, para que no
-          se cuele por huecos de un bloque que antes le cerraban el paso. Las arañas y los slimes sí pueden
-          encoger.
-        </li>
-        <li>
-          No cambian: mobs vanilla con nombre, mascotas domadas, los tipos de <code>exclude-types</code>, los
-          que aparecen por un motivo fuera de <code>spawn-reasons</code> (por ejemplo{" "}
-          <code>/summon</code>, que es <code>COMMAND</code>) y los mundos de <code>disabled-worlds</code>.
-        </li>
-        <li>
-          Mobs de RPGRoll: el tamaño se multiplica sobre su <code>model.scale</code> y su vida; su ataque propio
-          (stat <code>damage</code>) también sigue al peso de daño. Los jefes nunca cambian, ni los que llevan
-          modelo 3D salvo <code>rpgroll-modeled: true</code> (el modelo no sigue al tamaño). Un mob concreto se
-          queda fuera con <code>custom-data: {"{random-size: \"false\"}"}</code> o tiene rango propio en{" "}
-          <code>types</code> como <code>"rpgroll:&lt;id&gt;"</code>.
+          {fill(c.liRpgroll, {
+            modelScale: <code>model.scale</code>,
+            damage: <code>damage</code>,
+            modeled: <code>rpgroll-modeled: true</code>,
+            customData: <code>{'custom-data: {random-size: "false"}'}</code>,
+            types: <code>types</code>,
+            typeId: <code>{'"rpgroll:<id>"'}</code>,
+          })}
         </li>
       </ul>
       <CodeBlock
@@ -531,64 +624,60 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
   stats: {health: 1.0, damage: 0.5, speed: -0.25, experience: 1.0, loot: 0.5}`}
       />
       <Callout tone="info">
-        <Kbd>/mobadmin reload</Kbd> relee también el <code>config.yml</code>: el cambio vale para los mobs que
-        aparezcan desde ese momento; los que ya existían conservan su tamaño.
+        {fill(c.configNote, { cmd: <Kbd>/mobadmin reload</Kbd>, config: <code>config.yml</code> })}
       </Callout>
 
-      <SectionHeading id="gui">GUI: navegador y editor</SectionHeading>
-      <p>
-        <Kbd>/mobadmin browser</Kbd> abre un navegador paginado con búsqueda y filtro por categoría. Click sobre
-        un mob abre el editor completo, con un botón por componente:
-      </p>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
+      <p>{fill(c.guiBody, { browser: <Kbd>/mobadmin browser</Kbd> })}</p>
       <ul>
-        <li>Identidad, Modelo, Stats, Resistencias/Debilidades — edición directa con clicks (+1/+10, alternar, ciclar) y prompts de chat para texto.</li>
-        <li>IA — activar/desactivar goals, ajustar rango/huida/velocidad, gestionar puntos de patrulla y región a proteger.</li>
-        <li>Skills y Triggers — lista de acciones por evento, alta rápida con sintaxis <code>TIPO clave=valor</code> por chat.</li>
-        <li>Fases — umbral de vida, multiplicadores de stat, y qué skills ya existentes se suman en esa fase.</li>
-        <li>Loot, BossBar, Diálogos, Reglas de spawn, Datos custom.</li>
+        <li>{c.liGuiIdentity}</li>
+        <li>{c.liGuiAi}</li>
+        <li>{fill(c.liGuiSkills, { fmt: <code>TIPO clave=valor</code> })}</li>
+        <li>{c.liGuiPhases}</li>
+        <li>{c.liGuiLoot}</li>
       </ul>
-      <Callout tone="warning" title="Sin historial, versionado ni import/export">
-        A diferencia de lo que se planteó originalmente, este editor no guarda versiones anteriores ni permite
-        importar/exportar definiciones — cada "Guardar" sobreescribe el YAML en disco directamente.
+      <Callout tone="warning" title={c.noHistoryTitle}>
+        {c.noHistoryBody}
       </Callout>
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">{"/mobadmin spawn <id> [jugador]"}</Td><Td>Invoca un mob en la ubicación del jugador indicado (o la tuya).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/mobadmin list [categoría]"}</Td><Td>Lista definiciones cargadas, opcionalmente filtradas.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/mobadmin info <id>"}</Td><Td>Muestra stats y componentes resumidos de una definición.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/mobadmin reload</Td><Td>Recarga el config.yml y todas las definiciones desde disco.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/mobadmin killall [id]"}</Td><Td>Elimina todos los mobs activos, opcionalmente de una sola definición.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/mobadmin create <id> [tipo-entidad-base]"}</Td><Td>Crea un mob base y abre el editor directo.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">/mobadmin browser</Td><Td>Abre el navegador gráfico.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"/mobadmin editor <id>"}</Td><Td>Abre el editor gráfico directo sobre una definición.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/mobadmin spawn <id> [jugador]"}</Td><Td>{c.xSpawn}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/mobadmin list [categoría]"}</Td><Td>{c.xList}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/mobadmin info <id>"}</Td><Td>{c.xInfo}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/mobadmin reload</Td><Td>{c.xReload}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/mobadmin killall [id]"}</Td><Td>{c.xKillall}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/mobadmin create <id> [tipo-entidad-base]"}</Td><Td>{c.xCreate}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">/mobadmin browser</Td><Td>{c.xBrowser}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/mobadmin editor <id>"}</Td><Td>{c.xEditor}</Td></Tr>
         </tbody>
       </Table>
-      <p>Todos requieren <Badge tone="amber">rpgrollmobs.admin.*</Badge> (default: op).</p>
+      <p>{fill(c.permNote, { perm: <Badge tone="amber">rpgrollmobs.admin.*</Badge> })}</p>
 
-      <SectionHeading id="placeholders">Placeholders (PlaceholderAPI)</SectionHeading>
+      <SectionHeading id="placeholders">{c.phTitle}</SectionHeading>
       <p>
-        Expansión <Badge tone="violet">rpgrollmobs</Badge> — a diferencia de los demás addons, la mayoría son
-        globales al servidor (conteos), no por jugador. La excepción es <code>nearest_*</code>, que busca el mob
-        RPGRoll vivo más cercano al jugador (hasta 64 bloques) en su mismo mundo.
+        {fill(c.phIntro, {
+          exp: <Badge tone="violet">rpgrollmobs</Badge>,
+          nearest: <code>nearest_*</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Placeholder</Th>
-          <Th>Valor</Th>
+          <Th>{c.thPlaceholder}</Th>
+          <Th>{c.thValue}</Th>
         </Thead>
         <tbody>
-          <Tr><Td className="font-mono text-xs">%rpgrollmobs_active_count%</Td><Td>Mobs RPGRoll vivos ahora mismo, en todos los mundos.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">{"%rpgrollmobs_active_count_<categoría>%"}</Td><Td>Igual, filtrado por categoría (NORMAL, MINI_BOSS, etc.).</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollmobs_definitions_count%</Td><Td>Cantidad de definiciones de mob cargadas.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollmobs_nearest_name%</Td><Td>Nombre del mob RPGRoll más cercano al jugador.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollmobs_nearest_health% / _health_max</Td><Td>Su vida actual/máxima.</Td></Tr>
-          <Tr><Td className="font-mono text-xs">%rpgrollmobs_nearest_distance%</Td><Td>Distancia en bloques.</Td></Tr>
+          <Tr><Td className="font-mono text-xs">%rpgrollmobs_active_count%</Td><Td>{c.pActive}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"%rpgrollmobs_active_count_<categoría>%"}</Td><Td>{c.pActiveCat}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">%rpgrollmobs_definitions_count%</Td><Td>{c.pDefs}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">%rpgrollmobs_nearest_name%</Td><Td>{c.pNearestName}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">%rpgrollmobs_nearest_health% / _health_max</Td><Td>{c.pNearestHealth}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">%rpgrollmobs_nearest_distance%</Td><Td>{c.pNearestDistance}</Td></Tr>
         </tbody>
       </Table>
 
