@@ -65,6 +65,7 @@ const MODULES = {
   recipes: "recipes",
   disasters: "disasters",
   machines: "machines",
+  worldforge: "worldforge",
 };
 
 const localIndex = process.argv.indexOf("--local");
