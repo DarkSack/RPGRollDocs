@@ -32,7 +32,7 @@ const es = {
   archCalloutBody: "Casi todos exponen una API pública tipo singleton ({singleton}) más eventos de Bukkit propios — el patrón completo, con ejemplos reales, está en",
 
   quickTitle: "Instalación rápida",
-  step1: "Descargá {lib} (la librería compartida) y {jar} (núcleo) y colocalos en {dir} de tu servidor Paper.",
+  step1: "Descarga {lib} (la librería compartida) y {jar} (núcleo) y colócalos en {dir} de tu servidor Paper.",
   step2: "Reiniciá el servidor — el núcleo genera sus archivos de configuración y contenido de ejemplo la primera vez que arranca.",
   step3: "Editá {file} y el contenido en {dirs} a gusto (ver",
   step4: "Sumá los addons que quieras dejando su jar junto al del núcleo — cada uno agrega sus propios comandos y contenido de ejemplo al reiniciar.",
