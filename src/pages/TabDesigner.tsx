@@ -1,60 +1,66 @@
 import { PageHeader, SectionHeading, Callout, PrevNext } from "../components/ui";
 import { TabDesignerTool } from "../components/tabdesigner/TabDesignerTool";
 import { TableListIcon } from "../components/icons/Icon";
+import { useI18n, fill } from "../i18n";
+import { TAB_DESIGNER_COPY } from "./copy/tabdesigner";
 
 export function TabDesigner({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = TAB_DESIGNER_COPY[locale];
+
   return (
     <>
-      <PageHeader title="Diseñador de TAB" icon={TableListIcon} eyebrow="Herramienta">
-        Arma perfiles, contextos, scoreboards, tablists, nametags, belowname, bossbars, sorting, teams y
-        animaciones para{" "}
-        <a href="/tab" className="underline">
-          RPGRoll-TAB
-        </a>{" "}
-        con formularios en vez de escribir el YAML a mano, y copia o descargá el resultado listo para pegar en el
-        servidor — sin instalar nada ni tocar código Java.
+      <PageHeader title={c.title} icon={TableListIcon} eyebrow={c.eyebrow}>
+        {fill(c.intro, {
+          tab: (
+            <a href="/tab" className="underline">
+              RPGRoll-TAB
+            </a>
+          ),
+        })}
       </PageHeader>
 
-      <Callout tone="info" title="100% en el navegador">
-        Esta herramienta corre entera aquí en la página — no habla con ningún servidor. Lo que produce es texto
-        YAML: lo copias o descargas, y lo pegas en la carpeta correspondiente bajo{" "}
-        <code>plugins/RPGRoll-TAB/tab/&lt;carpeta&gt;/</code> (ej. <code>profiles/</code>, <code>contexts/</code>,{" "}
-        <code>scoreboards/</code>...). Es el mismo formato que ya leen los <code>*Parser.java</code> de cada tipo,
-        así que no hace falta cambiar nada del lado del plugin.
+      <Callout tone="info" title={c.browserTitle}>
+        {fill(c.browserBody, {
+          dir: <code>plugins/RPGRoll-TAB/tab/&lt;{c.folderWord}&gt;/</code>,
+          d1: <code>profiles/</code>,
+          d2: <code>contexts/</code>,
+          d3: <code>scoreboards/</code>,
+          parser: <code>*Parser.java</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="como-usar">Cómo usarlo</SectionHeading>
+      <SectionHeading id="como-usar">{c.howTitle}</SectionHeading>
       <ol>
-        <li>Elige una pestaña arriba (Perfiles, Contextos, Scoreboards, Tablists...) — cada una es una carpeta distinta de contenido.</li>
-        <li>
-          Agrega una entrada nueva o elige una de la lista de la izquierda. Los campos que referencian otro
-          contenido (ej. el <code>tablist</code> de un Perfil) tienen autocompletado con los ids que ya creaste en
-          esa pestaña.
-        </li>
-        <li>Completá el formulario — el YAML de la derecha se actualiza solo, con el mismo nombre de archivo esperado.</li>
-        <li>Copia o descargá el archivo, y repetí para cada tipo de contenido que necesites.</li>
+        <li>{c.step1}</li>
+        <li>{fill(c.step2, { tablist: <code>tablist</code> })}</li>
+        <li>{c.step3}</li>
+        <li>{c.step4}</li>
       </ol>
 
-      <Callout tone="warning" title="No reemplaza ningún editor in-game">
-        RPGRoll-TAB no tiene GUI Studio dentro del juego (a diferencia de la mayoría de los otros addons) — esta
-        herramienta web es la forma soportada de armar el contenido sin escribir el schema de memoria. Después de
-        pegar los archivos, corré <code>/tabadmin reload</code> en el servidor para aplicarlos.
+      <Callout tone="warning" title={c.warnTitle}>
+        {fill(c.warnBody, { reload: <code>/tabadmin reload</code> })}
       </Callout>
 
-      <SectionHeading id="herramienta">La herramienta</SectionHeading>
+      <SectionHeading id="herramienta">{c.toolTitle}</SectionHeading>
       <TabDesignerTool />
 
-      <SectionHeading id="siguiente-paso">Siguiente paso</SectionHeading>
+      <SectionHeading id="siguiente-paso">{c.nextTitle}</SectionHeading>
       <p>
-        Con los archivos ya en <code>tab/</code>, corré <code>/tabadmin reload</code> — ver la sección{" "}
-        <a className="underline" href="/tab#comandos">
-          Comandos
-        </a>{" "}
-        de la documentación de TAB para el resto de los comandos de administración, y{" "}
-        <a className="underline" href="/tab#motor-de-contexto">
-          Context Engine
-        </a>{" "}
-        para entender cómo se elige, entre varios Contextos que matchean, cuál perfil termina aplicado.
+        {fill(c.nextBody, {
+          dir: <code>tab/</code>,
+          reload: <code>/tabadmin reload</code>,
+          commands: (
+            <a className="underline" href="/tab#comandos">
+              {c.commandsLink}
+            </a>
+          ),
+          engine: (
+            <a className="underline" href="/tab#motor-de-contexto">
+              Context Engine
+            </a>
+          ),
+        })}
       </p>
 
       <PrevNext current="tab-designer" onNavigate={onNavigate} />

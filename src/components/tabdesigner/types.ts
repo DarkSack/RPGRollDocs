@@ -166,17 +166,17 @@ export interface TabWorkspace {
 
 export type TabContentKind = keyof TabWorkspace;
 
-export const CONTENT_KIND_LABELS: Record<TabContentKind, { label: string; folder: string }> = {
-  profiles: { label: "Perfiles", folder: "profiles" },
-  contexts: { label: "Contextos", folder: "contexts" },
-  scoreboards: { label: "Scoreboards", folder: "scoreboards" },
-  tablists: { label: "Tablists", folder: "tablists" },
-  nametags: { label: "Nametags", folder: "nametags" },
-  belownames: { label: "BelowName", folder: "belownames" },
-  bossbars: { label: "BossBars", folder: "bossbars" },
-  sortings: { label: "Sorting", folder: "sortings" },
-  teams: { label: "Teams", folder: "teams" },
-  animations: { label: "Animaciones", folder: "animations" },
+export const CONTENT_KIND_FOLDERS: Record<TabContentKind, string> = {
+  profiles: "profiles",
+  contexts: "contexts",
+  scoreboards: "scoreboards",
+  tablists: "tablists",
+  nametags: "nametags",
+  belownames: "belownames",
+  bossbars: "bossbars",
+  sortings: "sortings",
+  teams: "teams",
+  animations: "animations",
 };
 
 export function defaultProfile(id = "nuevo_perfil"): TABProfile {

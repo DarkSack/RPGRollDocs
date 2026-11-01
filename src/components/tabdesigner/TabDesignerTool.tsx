@@ -29,7 +29,7 @@ import {
   slugify,
 } from "./yaml";
 import {
-  CONTENT_KIND_LABELS,
+  CONTENT_KIND_FOLDERS,
   defaultAnimation,
   defaultBelowName,
   defaultBossBar,
@@ -44,6 +44,8 @@ import {
   type TabContentKind,
   type TabWorkspace,
 } from "./types";
+import { useI18n } from "../../i18n";
+import { TAB_TOOL_COPY } from "./copy";
 
 const KIND_ORDER: TabContentKind[] = [
   "profiles",
@@ -104,6 +106,8 @@ function buildYaml(kind: TabContentKind, item: any): string {
  * o descargar a tab/<carpeta>/<id>.yml.
  */
 export function TabDesignerTool() {
+  const { locale } = useI18n();
+  const c = TAB_TOOL_COPY[locale];
   const [workspace, setWorkspace] = useState<TabWorkspace>(emptyWorkspace);
   const [activeKind, setActiveKind] = useState<TabContentKind>("profiles");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -148,7 +152,7 @@ export function TabDesignerTool() {
 
   const yaml = activeItem ? buildYaml(activeKind, activeItem) : "";
   const slug = activeItem ? slugify(activeItem.id, "sin_id") : "";
-  const folder = CONTENT_KIND_LABELS[activeKind].folder;
+  const folder = CONTENT_KIND_FOLDERS[activeKind];
 
   return (
     <div className="not-prose my-6 space-y-5 rounded-xl border border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-900/40">
@@ -164,7 +168,7 @@ export function TabDesignerTool() {
                 : "bg-white text-slate-600 hover:bg-violet-50 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-violet-500/10"
             }`}
           >
-            {CONTENT_KIND_LABELS[kind].label} ({workspace[kind].length})
+            {c.kinds[kind]} ({workspace[kind].length})
           </button>
         ))}
       </div>
@@ -182,14 +186,14 @@ export function TabDesignerTool() {
                 }`}
               >
                 <button type="button" onClick={() => setActiveIndex(i)} className="min-w-0 flex-1 truncate text-left">
-                  {it.id || "(sin id)"}
+                  {it.id || c.noId}
                 </button>
                 <button type="button" onClick={() => removeItem(i)} className="shrink-0 text-slate-400 hover:text-red-500">
                   <TrashIcon size={14} />
                 </button>
               </div>
             ))}
-            {items.length === 0 && <p className="px-2 py-1.5 text-sm text-slate-400">Sin entradas todavía.</p>}
+            {items.length === 0 && <p className="px-2 py-1.5 text-sm text-slate-400">{c.noEntries}</p>}
           </div>
           <button
             type="button"
@@ -197,7 +201,7 @@ export function TabDesignerTool() {
             className="inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-violet-300 px-2.5 py-1.5 text-sm font-medium text-violet-600 transition-colors hover:bg-violet-50 dark:border-violet-700 dark:text-violet-400 dark:hover:bg-violet-950/30"
           >
             <PlusIcon size={14} />
-            Nueva entrada
+            {c.newEntry}
           </button>
         </div>
 
@@ -229,12 +233,12 @@ export function TabDesignerTool() {
                   className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-violet-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-violet-500"
                 >
                   <DownloadIcon size={14} />
-                  Descargar {slug}.yml
+                  {c.download} {slug}.yml
                 </button>
               </div>
             </>
           ) : (
-            <p className="text-sm text-slate-400">Crea una entrada para empezar a editarla.</p>
+            <p className="text-sm text-slate-400">{c.createFirst}</p>
           )}
         </div>
       </div>

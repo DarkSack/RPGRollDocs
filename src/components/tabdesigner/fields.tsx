@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { idListId } from "./ids";
+import { useI18n } from "../../i18n";
+import { TAB_TOOL_COPY } from "./copy";
 
 const INPUT_CLASS =
   "w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm text-slate-800 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100";
@@ -117,8 +119,10 @@ export function LinesField({
   placeholder?: string;
   rows?: number;
 }) {
+  const { locale } = useI18n();
+
   return (
-    <Field label={label} hint="una por línea">
+    <Field label={label} hint={TAB_TOOL_COPY[locale].linesHint}>
       <textarea
         value={value.join("\n")}
         placeholder={placeholder}
@@ -154,14 +158,16 @@ export function SectionCard({ children }: { children: ReactNode }) {
   return <div className="space-y-3 rounded-lg border border-slate-200 bg-white/60 p-3 dark:border-slate-800 dark:bg-slate-950/40">{children}</div>;
 }
 
-export function RemoveButton({ onClick, label = "Quitar" }: { onClick: () => void; label?: string }) {
+export function RemoveButton({ onClick, label }: { onClick: () => void; label?: string }) {
+  const { locale } = useI18n();
+
   return (
     <button
       type="button"
       onClick={onClick}
       className="rounded-md border border-red-200 px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/30"
     >
-      {label}
+      {label ?? TAB_TOOL_COPY[locale].remove}
     </button>
   );
 }
