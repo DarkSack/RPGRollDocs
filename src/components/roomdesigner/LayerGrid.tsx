@@ -3,6 +3,8 @@ import { colorForMaterial } from "./materials";
 import type { Anchor, Palette } from "./types";
 import { AIR } from "./types";
 import { ChevronDownIcon, ChevronRightIcon, TargetIcon } from "../icons/Icon";
+import { useI18n } from "../../i18n";
+import { ROOM_TOOL_COPY } from "./copy";
 
 interface LayerGridProps {
   width: number;
@@ -52,6 +54,8 @@ export function LayerGrid({
   onClearLayer,
   onCopyLayerBelow,
 }: LayerGridProps) {
+  const { locale } = useI18n();
+  const c = ROOM_TOOL_COPY[locale];
   const [painting, setPainting] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
   const lastCell = useRef<string | null>(null);
@@ -109,7 +113,11 @@ export function LayerGrid({
             <ChevronRightIcon size={14} className="-rotate-90" />
           </button>
           <span className="min-w-[7.5rem] text-center text-sm font-medium text-slate-700 dark:text-slate-200">
-            {layer === 0 ? "Piso (y=0)" : layer === height - 1 ? `Techo (y=${layer})` : `Capa y=${layer}`}
+            {layer === 0
+              ? c.floor
+              : layer === height - 1
+                ? c.ceiling.replace("{y}", String(layer))
+                : c.layerN.replace("{y}", String(layer))}
           </span>
           <button
             type="button"
@@ -131,10 +139,10 @@ export function LayerGrid({
                 ? "border-amber-400 bg-amber-50 text-amber-700 dark:border-amber-500/50 dark:bg-amber-500/10 dark:text-amber-300"
                 : "border-slate-200 text-slate-500 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800")
             }
-            title="Click en una celda para mover el punto de pegado (anchor) a esa posición, en esta capa"
+            title={c.anchorTitle}
           >
             <TargetIcon size={13} />
-            {anchorMode ? "Click para fijar ancla…" : "Fijar ancla"}
+            {anchorMode ? c.anchorSetting : c.anchorSet}
           </button>
           <button
             type="button"
@@ -142,21 +150,21 @@ export function LayerGrid({
             disabled={layer === 0}
             className="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 disabled:opacity-30 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
           >
-            Copiar capa de abajo
+            {c.copyBelow}
           </button>
           <button
             type="button"
             onClick={onFillLayer}
             className="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
           >
-            Rellenar
+            {c.fillLayer}
           </button>
           <button
             type="button"
             onClick={onClearLayer}
             className="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
           >
-            Vaciar
+            {c.clearLayer}
           </button>
         </div>
       </div>
@@ -203,8 +211,8 @@ export function LayerGrid({
       </div>
 
       <p className="text-xs text-slate-400 dark:text-slate-500">
-        Tocá/click y arrastrá para pintar varias celdas · X →, Z ↓ · {width}×{depth} en esta capa
-        {(width > 12 || depth > 12) && " · desplazá con el dedo si no entra en pantalla"}
+        {c.gridHint.replace("{w}", String(width)).replace("{d}", String(depth))}
+        {(width > 12 || depth > 12) && c.gridHintScroll}
       </p>
     </div>
   );

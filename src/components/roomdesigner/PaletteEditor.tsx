@@ -3,6 +3,9 @@ import { CURATED_MATERIALS, MATERIAL_CATEGORIES, colorForMaterial, isOrientation
 import type { Palette } from "./types";
 import { AIR } from "./types";
 import { PlusIcon, TrashIcon, EraserIcon, SearchIcon } from "../icons/Icon";
+import { useI18n } from "../../i18n";
+import { ROOM_TOOL_COPY } from "./copy";
+import { materialLabel } from "./materialLabels";
 
 interface PaletteEditorProps {
   palette: Palette;
@@ -26,6 +29,8 @@ export function PaletteEditor({
   onRemoveSymbol,
   usage,
 }: PaletteEditorProps) {
+  const { locale } = useI18n();
+  const c = ROOM_TOOL_COPY[locale];
   const [customMaterial, setCustomMaterial] = useState("");
   const [search, setSearch] = useState("");
 
@@ -36,9 +41,10 @@ export function PaletteEditor({
     const q = search.trim().toLowerCase();
     if (!q) return CURATED_MATERIALS;
     return CURATED_MATERIALS.filter(
-      (m) => m.label.toLowerCase().includes(q) || m.name.toLowerCase().includes(q),
+      (m) =>
+        materialLabel(locale, m).toLowerCase().includes(q) || m.name.toLowerCase().includes(q),
     );
-  }, [search]);
+  }, [search, locale]);
 
   function addCurated(material: string) {
     if (nextSymbol) onAddMaterial(material);
@@ -55,12 +61,12 @@ export function PaletteEditor({
   return (
     <div className="space-y-3">
       <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-        Paleta ({CURATED_MATERIALS.length} materiales curados + cualquier otro a mano)
+        {c.paletteTitle.replace("{n}", String(CURATED_MATERIALS.length))}
       </p>
 
       <div className="flex flex-wrap gap-1.5">
         <BrushSwatch
-          label="Aire (borrar)"
+          label={c.brushAir}
           color="transparent"
           active={activeBrush === AIR}
           onClick={() => onSelectBrush(AIR)}
@@ -83,7 +89,7 @@ export function PaletteEditor({
 
       <details className="rounded-lg border border-slate-200 dark:border-slate-700/60">
         <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-300">
-          + Agregar material a la paleta
+          {c.addMaterial}
         </summary>
         <div className="space-y-3 border-t border-slate-200 p-3 dark:border-slate-700/60">
           <label className="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus-within:border-violet-400 focus-within:ring-1 focus-within:ring-violet-400 dark:border-slate-700 dark:bg-slate-950">
@@ -91,7 +97,7 @@ export function PaletteEditor({
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar material curado (ej. cobre, vidrio, roble...)"
+              placeholder={c.searchPh}
               className="w-full bg-transparent text-slate-800 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500"
             />
           </label>
@@ -104,7 +110,7 @@ export function PaletteEditor({
               return (
                 <div key={category}>
                   <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                    {category}
+                    {c.categories[category]}
                   </p>
                   <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
                     {items.map((m) => (
@@ -120,7 +126,7 @@ export function PaletteEditor({
                           className="h-3.5 w-3.5 shrink-0 rounded-sm border border-black/10"
                           style={{ backgroundColor: m.color }}
                         />
-                        <span className="truncate">{m.label}</span>
+                        <span className="truncate">{materialLabel(locale, m)}</span>
                         {!m.orientationSafe && <span className="shrink-0 text-[10px]">⚠</span>}
                       </button>
                     ))}
@@ -131,7 +137,7 @@ export function PaletteEditor({
 
             {filtered.length === 0 && (
               <p className="py-4 text-center text-xs text-slate-400 dark:text-slate-500">
-                Sin resultados para "{search}" — probá con otro nombre, o escribilo directo abajo.
+                {c.noResults.replace("{q}", search)}
               </p>
             )}
           </div>
@@ -141,7 +147,7 @@ export function PaletteEditor({
               value={customMaterial}
               onChange={(e) => setCustomMaterial(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && addCustom()}
-              placeholder="Otro Material exacto (ej. NETHERITE_BLOCK)"
+              placeholder={c.customPh}
               className="w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
             />
             <button
@@ -151,13 +157,13 @@ export function PaletteEditor({
               className="inline-flex shrink-0 items-center gap-1 rounded-md bg-violet-600 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <PlusIcon size={13} />
-              Agregar
+              {c.add}
             </button>
           </div>
 
           {!nextSymbol && (
             <p className="text-xs text-amber-600 dark:text-amber-400">
-              Llegaste al máximo de {SYMBOL_POOL.length} materiales distintos en una sola estructura.
+              {c.maxSymbols.replace("{n}", String(SYMBOL_POOL.length))}
             </p>
           )}
         </div>
@@ -185,6 +191,9 @@ function BrushSwatch({
   icon?: React.ReactNode;
   warn?: boolean;
 }) {
+  const { locale } = useI18n();
+  const c = ROOM_TOOL_COPY[locale];
+
   return (
     <div
       className={
@@ -205,7 +214,7 @@ function BrushSwatch({
         {typeof count === "number" && count > 0 && (
           <span className="text-slate-400 dark:text-slate-500">×{count}</span>
         )}
-        {warn && <span title="Este material tiene orientación — se pega sin ella">⚠</span>}
+        {warn && <span title={c.orientationWarn}>⚠</span>}
       </button>
 
       {onRemove && (
@@ -213,7 +222,7 @@ function BrushSwatch({
           type="button"
           onClick={onRemove}
           className="text-slate-300 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100 dark:text-slate-600"
-          title="Quitar de la paleta"
+          title={c.removeFromPalette}
         >
           <TrashIcon size={12} />
         </button>

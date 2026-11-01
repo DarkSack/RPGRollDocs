@@ -1,66 +1,60 @@
 import { PageHeader, SectionHeading, Callout, PrevNext } from "../components/ui";
 import { RoomDesignerTool } from "../components/roomdesigner/RoomDesignerTool";
 import { CubeIcon } from "../components/icons/Icon";
+import { useI18n, fill } from "../i18n";
+import { ROOM_DESIGNER_COPY } from "./copy/roomdesigner";
 
 export function RoomDesigner({ onNavigate }: { onNavigate: (slug: string) => void }) {
+  const { locale } = useI18n();
+  const c = ROOM_DESIGNER_COPY[locale];
+
   return (
     <>
-      <PageHeader title="Diseñador de Salas" icon={CubeIcon} eyebrow="Herramienta">
-        Diseñá una estructura CUSTOM para la{" "}
-        <a href="/dungeons" className="underline">
-          Biblioteca de Estructuras
-        </a>{" "}
-        de RPGRoll-Dungeons pintando capa por capa, mirándola en 3D en vivo, y copiando el YAML ya armado — sin
-        instalar nada ni tocar código Java.
+      <PageHeader title={c.title} icon={CubeIcon} eyebrow={c.eyebrow}>
+        {fill(c.intro, {
+          library: (
+            <a href="/dungeons" className="underline">
+              {c.libraryLink}
+            </a>
+          ),
+        })}
       </PageHeader>
 
-      <Callout tone="info" title="100% en el navegador">
-        Esta herramienta corre entera aquí en la página — no habla con ningún servidor. Lo que produce es texto
-        YAML: lo copias o descargas, y lo pegas en <code>plugins/RPGRoll-Dungeons/structures/</code> en tu
-        servidor. Es el mismo formato CUSTOM que ya lee <code>StructureParser.java</code>, así que no hace falta
-        cambiar nada del lado del plugin.
+      <Callout tone="info" title={c.browserTitle}>
+        {fill(c.browserBody, {
+          dir: <code>plugins/RPGRoll-Dungeons/structures/</code>,
+          parser: <code>StructureParser.java</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="como-usar">Cómo usarlo</SectionHeading>
+      <SectionHeading id="como-usar">{c.howTitle}</SectionHeading>
       <ol>
-        <li>
-          Elige el tamaño (ancho/alto/profundidad) — puedes cambiarlo después, se preserva lo que ya pintaste
-          donde entra.
-        </li>
-        <li>
-          Agrega materiales a la paleta (con el buscador curado o escribiendo cualquier Material a mano) y
-          elige uno como pincel activo.
-        </li>
-        <li>
-          Pintá capa por capa: subes/bajas con las flechas, click y arrastras para pintar varias celdas de una.
-          El piso es la capa y=0.
-        </li>
-        <li>
-          Marca el punto de pegado ("Fijar ancla") — normalmente el centro del piso, así al pegar en el juego te
-          paras donde quieres el centro de la sala.
-        </li>
-        <li>Mira el resultado en 3D (arrastrar rota, la rueda hace zoom) y copia o descargá el YAML de abajo.</li>
+        <li>{c.step1}</li>
+        <li>{c.step2}</li>
+        <li>{c.step3}</li>
+        <li>{c.step4}</li>
+        <li>{c.step5}</li>
       </ol>
 
-      <Callout tone="warning" title="Sin orientación de bloques">
-        El motor de pegado CUSTOM hace <code>setType()</code> plano — puertas, escaleras, antorchas de pared y
-        camas quedan con una orientación por defecto, no la que "deberían" tener. El selector de materiales avisa
-        con ⚠ cuando un material curado tiene este problema; si escribes uno a mano, el aviso no puede detectarlo
-        automáticamente.
+      <Callout tone="warning" title={c.warnTitle}>
+        {fill(c.warnBody, { setType: <code>setType()</code> })}
       </Callout>
 
-      <SectionHeading id="herramienta">La herramienta</SectionHeading>
+      <SectionHeading id="herramienta">{c.toolTitle}</SectionHeading>
       <RoomDesignerTool />
 
-      <SectionHeading id="siguiente-paso">Siguiente paso</SectionHeading>
+      <SectionHeading id="siguiente-paso">{c.nextTitle}</SectionHeading>
       <p>
-        Con el archivo ya en <code>structures/</code>, corré <code>/dungeonadmin reload</code> en el juego y
-        pegala con <code>/dungeonadmin structure browser</code> — ver la sección{" "}
-        <a className="underline" href="/dungeons#pegar-estructura">
-          Pegar una estructura
-        </a>{" "}
-        de la documentación de Dungeons para el detalle completo (incluye la alternativa con Structure Block
-        vanilla, para construir a mano en el juego en vez de aquí).
+        {fill(c.nextBody, {
+          dir: <code>structures/</code>,
+          reload: <code>/dungeonadmin reload</code>,
+          browser: <code>/dungeonadmin structure browser</code>,
+          link: (
+            <a className="underline" href="/dungeons#pegar-estructura">
+              {c.pasteLink}
+            </a>
+          ),
+        })}
       </p>
 
       <PrevNext current="room-designer" onNavigate={onNavigate} />

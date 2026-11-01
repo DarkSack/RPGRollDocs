@@ -9,6 +9,8 @@ import { clampAnchor, clearLayer, copyLayer, countBySymbol, createGrid, fillLaye
 import { SYMBOL_POOL } from "./materials";
 import { AIR, MAX_DIMENSION, MIN_DIMENSION, type Palette, type RoomDesign } from "./types";
 import { DownloadIcon } from "../icons/Icon";
+import { useI18n } from "../../i18n";
+import { ROOM_TOOL_COPY } from "./copy";
 
 const INITIAL_WIDTH = 7;
 const INITIAL_HEIGHT = 4;
@@ -38,6 +40,8 @@ function initialDesign(): RoomDesign {
  * CUSTOM que lee StructureParser.java, sin que haga falta tocar Java.
  */
 export function RoomDesignerTool() {
+  const { locale } = useI18n();
+  const c = ROOM_TOOL_COPY[locale];
   const [design, setDesign] = useState<RoomDesign>(initialDesign);
   const [layer, setLayer] = useState(0);
   const [activeBrush, setActiveBrush] = useState<string>("#");
@@ -103,31 +107,31 @@ export function RoomDesignerTool() {
   return (
     <div className="not-prose my-6 space-y-5 rounded-xl border border-slate-200 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-900/40">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <TextField label="Id" value={design.id} onChange={(v) => updateMeta("id", v)} placeholder="mi_sala" />
+        <TextField label={c.fId} value={design.id} onChange={(v) => updateMeta("id", v)} placeholder="mi_sala" />
         <TextField
-          label="Nombre visible"
+          label={c.fDisplayName}
           value={design.displayName}
           onChange={(v) => updateMeta("displayName", v)}
           placeholder="Mi Sala"
         />
         <TextField
-          label="Ícono (Material, para la GUI)"
+          label={c.fIcon}
           value={design.icon}
           onChange={(v) => updateMeta("icon", v)}
           placeholder="STONE_BRICKS"
         />
         <TextField
-          label="Descripción"
+          label={c.fDescription}
           value={design.description}
           onChange={(v) => updateMeta("description", v)}
-          placeholder="Opcional"
+          placeholder={c.phOptional}
         />
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <NumberField label="Ancho (X)" value={design.width} onChange={(v) => updateDimensions({ width: v })} />
-        <NumberField label="Alto (Y, capas)" value={design.height} onChange={(v) => updateDimensions({ height: v })} />
-        <NumberField label="Profundidad (Z)" value={design.depth} onChange={(v) => updateDimensions({ depth: v })} />
+        <NumberField label={c.fWidth} value={design.width} onChange={(v) => updateDimensions({ width: v })} />
+        <NumberField label={c.fHeight} value={design.height} onChange={(v) => updateDimensions({ height: v })} />
+        <NumberField label={c.fDepth} value={design.depth} onChange={(v) => updateDimensions({ depth: v })} />
       </div>
 
       <PaletteEditor
@@ -191,7 +195,7 @@ export function RoomDesignerTool() {
           className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-violet-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-violet-500"
         >
           <DownloadIcon size={14} />
-          Descargar {slug}.yml
+          {c.download} {slug}.yml
         </button>
       </div>
     </div>

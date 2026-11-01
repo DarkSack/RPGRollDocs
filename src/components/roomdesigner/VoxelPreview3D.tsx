@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { renderVoxelScene, DEFAULT_VIEW, type ViewState } from "./voxelRender";
 import type { Anchor, Palette, VoxelGrid } from "./types";
 import { RotateIcon, LayersIcon, PlusIcon, MinusIcon } from "../icons/Icon";
+import { useI18n } from "../../i18n";
+import { ROOM_TOOL_COPY } from "./copy";
 
 interface VoxelPreview3DProps {
   grid: VoxelGrid;
@@ -31,6 +33,8 @@ const MAX_SCALE = 70;
  * leyendo el estado más reciente desde un ref, para no duplicar lógica.
  */
 export function VoxelPreview3D({ grid, palette, width, height, depth, anchor, currentLayer }: VoxelPreview3DProps) {
+  const { locale } = useI18n();
+  const c = ROOM_TOOL_COPY[locale];
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<ViewState>(DEFAULT_VIEW);
@@ -209,7 +213,7 @@ export function VoxelPreview3D({ grid, palette, width, height, depth, anchor, cu
     <div className="space-y-2">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-          Vista previa 3D
+          {c.preview3d}
         </p>
         <div className="flex flex-wrap items-center gap-1.5">
           <button
@@ -221,16 +225,16 @@ export function VoxelPreview3D({ grid, palette, width, height, depth, anchor, cu
                 ? "border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-500/50 dark:bg-violet-500/10 dark:text-violet-300"
                 : "border-slate-200 text-slate-500 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800")
             }
-            title="Ocultar capas por encima de la que estás editando, para ver el interior"
+            title={c.insideTitle}
           >
             <LayersIcon size={13} />
-            <span className="hidden sm:inline">{onlyUpToLayer ? "Hasta capa actual" : "Todas las capas"}</span>
+            <span className="hidden sm:inline">{onlyUpToLayer ? c.upToLayer : c.allLayers}</span>
           </button>
           <button
             type="button"
             onClick={() => rotateStep(-1)}
             className="rounded-md border border-slate-200 p-1.5 text-slate-500 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
-            title="Girar 45° a la izquierda"
+            title={c.rotateLeft}
           >
             <RotateIcon size={13} className="-scale-x-100" />
           </button>
@@ -238,7 +242,7 @@ export function VoxelPreview3D({ grid, palette, width, height, depth, anchor, cu
             type="button"
             onClick={() => rotateStep(1)}
             className="rounded-md border border-slate-200 p-1.5 text-slate-500 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
-            title="Girar 45° a la derecha"
+            title={c.rotateRight}
           >
             <RotateIcon size={13} />
           </button>
@@ -247,7 +251,7 @@ export function VoxelPreview3D({ grid, palette, width, height, depth, anchor, cu
               type="button"
               onClick={() => zoomStep(-1)}
               className="p-1.5 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
-              title="Alejar"
+              title={c.zoomOut}
             >
               <MinusIcon size={13} />
             </button>
@@ -255,7 +259,7 @@ export function VoxelPreview3D({ grid, palette, width, height, depth, anchor, cu
               type="button"
               onClick={() => zoomStep(1)}
               className="border-l border-slate-200 p-1.5 text-slate-500 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
-              title="Acercar"
+              title={c.zoomIn}
             >
               <PlusIcon size={13} />
             </button>
@@ -265,7 +269,7 @@ export function VoxelPreview3D({ grid, palette, width, height, depth, anchor, cu
             onClick={resetView}
             className="rounded-md border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
           >
-            Reset
+            {c.reset}
           </button>
         </div>
       </div>
@@ -287,7 +291,7 @@ export function VoxelPreview3D({ grid, palette, width, height, depth, anchor, cu
       </div>
 
       <p className="text-xs text-slate-400 dark:text-slate-500">
-        Arrastrá para rotar · rueda del mouse (o pellizcá) para zoom · el punto naranja es el ancla
+        {c.previewHint}
       </p>
     </div>
   );
