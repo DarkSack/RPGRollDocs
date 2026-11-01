@@ -14,176 +14,180 @@ import {
   YamlBuilder,
   type YamlField,
 } from "../components/ui";
+import { useI18n, fill } from "../i18n";
+import { CRAFTING_COPY, type CraftingCopy } from "./copy/crafting";
 
-const stationFields: YamlField[] = [
+const mono = "font-mono text-xs";
+
+const stationFields = (c: CraftingCopy): YamlField[] => [
   {
     key: "id",
-    label: "Id",
+    label: c.fId,
     type: "string",
-    default: "nueva_estacion",
+    default: c.phNewStation,
     placeholder: "iron_forge",
   },
   {
     key: "display-name",
-    label: "Nombre visible",
+    label: c.fDisplayName,
     type: "string",
-    placeholder: "Forja de Hierro",
+    placeholder: c.phForge,
   },
   {
     key: "icon",
-    label: "Ícono (Material)",
+    label: c.fIcon,
     type: "string",
     default: "SMITHING_TABLE",
   },
   {
     key: "trigger-block-material",
-    label: "Bloque disparador (Material)",
+    label: c.fTriggerBlock,
     type: "string",
     default: "SMITHING_TABLE",
   },
   {
     key: "inventory-size",
-    label: "Tamaño de inventario",
+    label: c.fInvSize,
     type: "number",
     default: "27",
   },
   {
     key: "ingredient-slots",
-    label: "Slots de ingrediente",
+    label: c.fIngSlots,
     type: "list",
     placeholder: "0, 1, 2, 3",
   },
   {
     key: "fuel-slot",
-    label: "Slot de combustible (-1 = sin combustible)",
+    label: c.fFuelSlot,
     type: "number",
     default: "-1",
   },
   {
     key: "output-slot",
-    label: "Slot de salida",
+    label: c.fOutputSlot,
     type: "number",
     default: "26",
   },
   {
     key: "requires-fuel",
-    label: "Requiere combustible",
+    label: c.fRequiresFuel,
     type: "boolean",
     default: "false",
   },
-  { key: "gui-title", label: "Título de GUI", type: "string" },
+  { key: "gui-title", label: c.fGuiTitle, type: "string" },
   {
     key: "allowed-recipe-ids",
-    label: "Recetas permitidas (vacío = todas de esta estación)",
+    label: c.fAllowedRecipes,
     type: "list",
   },
 ];
 
-const recipeFields: YamlField[] = [
+const recipeFields = (c: CraftingCopy): YamlField[] => [
   {
     key: "id",
-    label: "Id",
+    label: c.fId,
     type: "string",
-    default: "nueva_receta",
+    default: c.phNewRecipe,
     placeholder: "steel_ingot",
   },
   {
     key: "display-name",
-    label: "Nombre visible",
+    label: c.fDisplayName,
     type: "string",
-    placeholder: "Lingote de Acero",
+    placeholder: c.phSteel,
   },
   {
     key: "icon",
-    label: "Ícono (Material)",
+    label: c.fIcon,
     type: "string",
     default: "CRAFTING_TABLE",
   },
   {
     key: "station-id",
-    label: "Id de la estación",
+    label: c.fStationId,
     type: "string",
     placeholder: "iron_forge",
   },
   {
     key: "processing-time-ticks",
-    label: "Tiempo de proceso (ticks)",
+    label: c.fProcTime,
     type: "number",
     default: "100",
   },
   {
     key: "fuel-per-craft",
-    label: "Combustible por crafteo",
+    label: c.fFuelPerCraft,
     type: "number",
     default: "0",
   },
   {
     key: "xp-amount",
-    label: "XP de personaje otorgada",
+    label: c.fXp,
     type: "number",
     default: "0",
   },
   {
     key: "economy-currency-id",
-    label: "Moneda (vacío = base)",
+    label: c.fCurrency,
     type: "string",
   },
   {
     key: "economy-cost",
-    label: "Costo económico",
+    label: c.fCost,
     type: "number",
     default: "0",
   },
   {
     key: "fail-chance",
-    label: "Prob. de fallo (-1 = usar config.yml)",
+    label: c.fFailChance,
     type: "number",
     default: "-1",
   },
   {
     key: "quality-enabled",
-    label: "Calidad habilitada",
+    label: c.fQualityEnabled,
     type: "boolean",
     default: "false",
   },
 ];
 
-const fuelFields: YamlField[] = [
+const fuelFields = (c: CraftingCopy): YamlField[] => [
   {
     key: "id",
-    label: "Id",
+    label: c.fId,
     type: "string",
-    default: "nuevo_combustible",
+    default: c.phNewFuel,
     placeholder: "charcoal_fuel",
   },
   {
     key: "display-name",
-    label: "Nombre visible",
+    label: c.fDisplayName,
     type: "string",
-    placeholder: "Carbón vegetal",
+    placeholder: c.phCharcoal,
   },
-  { key: "icon", label: "Ícono (Material)", type: "string", default: "COAL" },
+  { key: "icon", label: c.fIcon, type: "string", default: "COAL" },
   {
     key: "material-or-item-id",
-    label: "Material o id de ítem",
+    label: c.fMaterialOrItem,
     type: "string",
     default: "COAL",
   },
   {
     key: "is-custom-item",
-    label: "Es ítem personalizado",
+    label: c.fIsCustomItem,
     type: "boolean",
     default: "false",
   },
   {
     key: "burn-ticks",
-    label: "Ticks de quemado",
+    label: c.fBurnTicks,
     type: "number",
     default: "1600",
   },
   {
     key: "consume-amount",
-    label: "Cantidad consumida",
+    label: c.fConsumeAmount,
     type: "number",
     default: "1",
   },
@@ -194,28 +198,25 @@ export function Crafting({
 }: {
   onNavigate: (slug: string) => void;
 }) {
+  const { locale } = useI18n();
+  const c = CRAFTING_COPY[locale];
+
   return (
     <>
-      <PageHeader title="RPGRoll-Crafting">
-        Motor de crafteo avanzado: recetas personalizadas con{" "}
-        <strong>ingredientes y condiciones ricas</strong>, un sistema de
-        calidad, <strong>estaciones de crafteo propias</strong> (multi-etapa,
-        con combustible, estructura multibloque opcional y niveles mejorables) y
-        un puente hacia las estaciones vanilla que exponen una API de receta
-        genérica (mesa de crafteo, familia de hornos, cortadora de piedra, mesa
-        de herrería), más motores dedicados para las que no la tienen (yunque,
-        fermentación, piedra de amolar, mesa de cartografía, telar, comercio de
-        aldeanos y automatización de Crafter). Incluye además un sistema de{" "}
-        <strong>proficiencia de crafteo</strong> propio y descubrimiento de
-        recetas por experimentación.
+      <PageHeader title={c.title}>
+        {fill(c.intro, {
+          rich: <strong>{c.richWord}</strong>,
+          stations: <strong>{c.stationsWord}</strong>,
+          prof: <strong>{c.profWord}</strong>,
+        })}
       </PageHeader>
 
-      <SectionHeading id="requisitos">Requisitos</SectionHeading>
+      <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Plugin</Th>
-          <Th>Tipo</Th>
-          <Th>Para qué</Th>
+          <Th>{c.thPlugin}</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thWhatFor}</Th>
         </Thead>
         <tbody>
           <Tr>
@@ -223,18 +224,14 @@ export function Crafting({
             <Td>
               <Badge tone="violet">depend</Badge>
             </Td>
-            <Td>Framework de GUIs y utilidades compartidas.</Td>
+            <Td>{c.rLib}</Td>
           </Tr>
           <Tr>
             <Td>RPGRoll (core)</Td>
             <Td>
               <Badge>softdepend</Badge>
             </Td>
-            <Td>
-              Nivel, raza, clase y oficio del jugador para las condiciones LEVEL_MIN, RACE,
-              CLASS y JOB_MIN, y la xp de personaje de las recetas. Sin el core esas
-              condiciones no se cumplen y la xp se omite.
-            </Td>
+            <Td>{c.rCore}</Td>
           </Tr>
           <Tr>
             <Td>RPGRoll-Items</Td>
@@ -242,10 +239,10 @@ export function Crafting({
               <Badge>softdepend</Badge>
             </Td>
             <Td>
-              Reconoce ítems personalizados como ingrediente/resultado (vía{" "}
-              <code>ItemsPlugin#getItemManager()</code>/
-              <code>getItemFactory()</code>, sin una API pública dedicada de ese
-              addon).
+              {fill(c.rItems, {
+                m1: <code>ItemsPlugin#getItemManager()</code>,
+                m2: <code>getItemFactory()</code>,
+              })}
             </Td>
           </Tr>
           <Tr>
@@ -253,230 +250,205 @@ export function Crafting({
             <Td>
               <Badge>softdepend</Badge>
             </Td>
-            <Td>Cobra el costo monetario opcional de una receta.</Td>
+            <Td>{c.rEconomy}</Td>
           </Tr>
           <Tr>
             <Td>RPGRoll-Guilds</Td>
             <Td>
               <Badge>softdepend</Badge>
             </Td>
-            <Td>
-              Condición <code>GUILD_MEMBER</code>.
-            </Td>
+            <Td>{fill(c.rGuilds, { cond: <code>GUILD_MEMBER</code> })}</Td>
           </Tr>
           <Tr>
             <Td>RPGRoll-Seasons</Td>
             <Td>
               <Badge>softdepend</Badge>
             </Td>
-            <Td>
-              Condición <code>SEASON</code>.
-            </Td>
+            <Td>{fill(c.rSeasons, { cond: <code>SEASON</code> })}</Td>
           </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="identidad-de-item">Identidad de ítem</SectionHeading>
+      <SectionHeading id="identidad-de-item">{c.identityTitle}</SectionHeading>
       <p>
-        Cualquier resultado que no sea un material vanilla puro se marca con la
-        clave PDC compartida <code>rpgroll:item_id</code> (namespace literal, no
-        atado a este plugin). El motor también sabe leer, sin depender en tiempo
-        de compilación de RPGRoll-Items, la clave que ese addon ya usa (
-        <code>rpgroll-items:item-id</code>) — así un ítem personalizado de Items
-        funciona como ingrediente o resultado sin que Crafting necesite su clase
-        Java.
+        {fill(c.identityBody, {
+          key: <code>rpgroll:item_id</code>,
+          key2: <code>rpgroll-items:item-id</code>,
+        })}
       </p>
-      <Callout
-        tone="tip"
-        title="Los materiales vanilla planos nunca se etiquetan"
-      >
-        Si el resultado es un <code>Material</code> simple sin calidad
-        habilitada, el ítem sale limpio (sin PDC) para que siga apilando
-        normalmente con el resto del inventario. Solo se etiqueta cuando hay una
-        identidad real que preservar (ítem personalizado, o calidad rolada).
+      <Callout tone="tip" title={c.plainTitle}>
+        {fill(c.plainBody, { material: <code>Material</code> })}
       </Callout>
 
-      <SectionHeading id="ingredientes">Ingredientes</SectionHeading>
+      <SectionHeading id="ingredientes">{c.ingTitle}</SectionHeading>
       <p>
-        Cada <code>IngredientSpec</code> tiene un <code>type</code>, un{" "}
-        <code>value</code>, una <code>amount</code> y opcionalmente una{" "}
-        <code>min-quality</code> (el ítem entregado debe cumplir o superar esa
-        calidad).
+        {fill(c.ingBody, {
+          spec: <code>IngredientSpec</code>,
+          type: <code>type</code>,
+          value: <code>value</code>,
+          amount: <code>amount</code>,
+          minQuality: <code>min-quality</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>value espera</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thValueExpects}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td className="font-mono text-xs">MATERIAL</Td>
+            <Td className={mono}>MATERIAL</Td>
+            <Td>{fill(c.iMaterial, { material: <code>Material</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>TAG</Td>
             <Td>
-              Un <code>Material</code> vanilla exacto.
+              {fill(c.iTag, { example: <code>minecraft:planks</code> })}
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">TAG</Td>
-            <Td>
-              Un tag vanilla de ítems (ej. <code>minecraft:planks</code>) —
-              cualquier material del tag sirve.
-            </Td>
+            <Td className={mono}>ITEM_ID</Td>
+            <Td>{c.iItemId}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">ITEM_ID</Td>
-            <Td>
-              Un id de ítem personalizado, propio de Crafting o de
-              RPGRoll-Items.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">ANY</Td>
-            <Td>Comodín — cualquier ítem sirve, solo importa la cantidad.</Td>
+            <Td className={mono}>ANY</Td>
+            <Td>{c.iAny}</Td>
           </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="condiciones">Condiciones</SectionHeading>
-      <p>
-        Gating por jugador, evaluado antes de iniciar una receta (o al
-        previsualizar el resultado en la mesa de crafteo vanilla). Cada tipo que
-        depende de otro addon sigue el patrón blando "isReady() → get()" del
-        ecosistema: si el addon no está instalado, la condición simplemente no
-        se cumple.
-      </p>
+      <SectionHeading id="condiciones">{c.condTitle}</SectionHeading>
+      <p>{c.condBody}</p>
       <Table>
         <Thead>
-          <Th>Tipo</Th>
-          <Th>Qué chequea</Th>
+          <Th>{c.thType}</Th>
+          <Th>{c.thChecks}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td className="font-mono text-xs">LEVEL_MIN</Td>
+            <Td className={mono}>LEVEL_MIN</Td>
+            <Td>{fill(c.cLevel, { min: <code>min-value</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>RACE / CLASS</Td>
+            <Td>{c.cRace}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>JOB_MIN</Td>
             <Td>
-              Nivel de personaje mínimo (<code>min-value</code>).
+              {fill(c.cJob, {
+                value: <code>value</code>,
+                min: <code>min-value</code>,
+              })}
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">RACE / CLASS</Td>
-            <Td>Raza o clase exacta del personaje.</Td>
+            <Td className={mono}>PERMISSION</Td>
+            <Td>{c.cPermission}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">JOB_MIN</Td>
+            <Td className={mono}>WORLD</Td>
+            <Td>{c.cWorld}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>HOUR_RANGE</Td>
+            <Td>{fill(c.cHour, { example: <code>"6-18"</code> })}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>BIOME</Td>
+            <Td>{c.cBiome}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>SEASON</Td>
+            <Td>{c.cSeason}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>GUILD_MEMBER</Td>
+            <Td>{c.cGuild}</Td>
+          </Tr>
+          <Tr>
+            <Td className={mono}>WEATHER</Td>
             <Td>
-              Nivel mínimo en un job específico (<code>value</code> +{" "}
-              <code>min-value</code>).
-            </Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">PERMISSION</Td>
-            <Td>Nodo de permiso de Bukkit.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">WORLD</Td>
-            <Td>Nombre del mundo.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">HOUR_RANGE</Td>
-            <Td>
-              Rango de hora del reloj de Minecraft, ej. <code>"6-18"</code>.
-            </Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">BIOME</Td>
-            <Td>Bioma vanilla exacto.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">SEASON</Td>
-            <Td>Id de estación de RPGRoll-Seasons.</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">GUILD_MEMBER</Td>
-            <Td>El jugador pertenece a un gremio (RPGRoll-Guilds).</Td>
-          </Tr>
-          <Tr>
-            <Td className="font-mono text-xs">WEATHER</Td>
-            <Td>
-              <code>CLEAR</code> / <code>RAIN</code> / <code>THUNDER</code> en
-              el mundo del jugador.
+              {fill(c.cWeather, {
+                clear: <code>CLEAR</code>,
+                rain: <code>RAIN</code>,
+                thunder: <code>THUNDER</code>,
+              })}
             </Td>
           </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="calidad">Sistema de calidad</SectionHeading>
+      <SectionHeading id="calidad">{c.qualTitle}</SectionHeading>
       <p>
-        Cuando una receta tiene <code>quality-enabled: true</code>, el resultado
-        rola un tier <code>CraftQuality</code> (70% según habilidad, 30% azar —
-        mismo enfoque que <code>ProductQuality</code> de RPGRoll-Ranching) y
-        queda etiquetado con una línea de lore + la clave PDC de calidad, para
-        que otras recetas puedan exigir <code>min-quality</code> sobre ese ítem
-        como ingrediente.
+        {fill(c.qualBody, {
+          enabled: <code>quality-enabled: true</code>,
+          cls: <code>CraftQuality</code>,
+          ranchQuality: <code>ProductQuality</code>,
+          minQuality: <code>min-quality</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Tier</Th>
-          <Th>Multiplicador de valor</Th>
+          <Th>{c.thTier}</Th>
+          <Th>{c.thValueMult}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td>Tosca</Td>
+            <Td>{c.qCrude}</Td>
             <Td>x0.75</Td>
           </Tr>
           <Tr>
-            <Td>Estándar</Td>
+            <Td>{c.qStandard}</Td>
             <Td>x1.0</Td>
           </Tr>
           <Tr>
-            <Td>Fina</Td>
+            <Td>{c.qFine}</Td>
             <Td>x1.3</Td>
           </Tr>
           <Tr>
-            <Td>Maestra</Td>
+            <Td>{c.qMaster}</Td>
             <Td>x1.7</Td>
           </Tr>
           <Tr>
-            <Td>Legendaria</Td>
+            <Td>{c.qLegendary}</Td>
             <Td>x2.5</Td>
           </Tr>
         </tbody>
       </Table>
 
       <SectionHeading id="estaciones-personalizadas">
-        Estaciones personalizadas ⭐
+        {c.stationsTitle}
       </SectionHeading>
       <p>
-        El sistema insignia del addon. Una <code>CustomStation</code> es un
-        bloque del mundo (cualquier <code>Material</code> que definas) que al
-        hacer click derecho abre un inventario propio (ingredientes +
-        combustible opcional + resultado). Cada estación colocada en el mundo
-        tiene su propio <code>StationRuntime</code> — persistido por ubicación
-        en{" "}
-        <code>
-          station-instances/&lt;mundo&gt;_&lt;x&gt;_&lt;y&gt;_&lt;z&gt;.yml
-        </code>{" "}
-        — que <code>StationProcessingEngine</code> tickea periódicamente (
-        <code>station-tick-interval-ticks</code>): busca una receta cuyos
-        ingredientes/condiciones/combustible se cumplan, la inicia (consumiendo
-        ingredientes y cobrando el costo), avanza el progreso, y entrega el
-        resultado — con calidad, xp y descubrimiento de receta incluidos —
-        cuando termina.
+        {fill(c.stationsBody, {
+          cls: <code>CustomStation</code>,
+          material: <code>Material</code>,
+          runtime: <code>StationRuntime</code>,
+          path: (
+            <code>
+              station-instances/&lt;mundo&gt;_&lt;x&gt;_&lt;y&gt;_&lt;z&gt;.yml
+            </code>
+          ),
+          engine: <code>StationProcessingEngine</code>,
+          interval: <code>station-tick-interval-ticks</code>,
+        })}
       </p>
-      <Callout tone="warning" title="El slot de salida es de solo-extracción">
-        El jugador puede sacar el resultado terminado, pero no puede insertar
-        ítems ahí a mano — si lo hiciera, rompería el conteo que usa el motor
-        para saber si ya puede colocar el próximo resultado.
+      <Callout tone="warning" title={c.outputWarnTitle}>
+        {c.outputWarnBody}
       </Callout>
 
       <SectionHeading id="estructura-multibloque" level={3}>
-        Estructura multibloque
+        {c.structTitle}
       </SectionHeading>
       <p>
-        Una estación puede exigir bloques concretos alrededor del disparador —{" "}
-        <code>structure-requirements</code> es una lista de offsets relativos (
-        <code>dx</code>/<code>dy</code>/<code>dz</code>) + <code>material</code>
-        . Si falta alguno, el click derecho no abre nada y avisa qué falta y
-        dónde. Vacía (por defecto), la estación se comporta como siempre: un
-        único bloque disparador, sin estructura.
+        {fill(c.structBody, {
+          key: <code>structure-requirements</code>,
+          dx: <code>dx</code>,
+          dy: <code>dy</code>,
+          dz: <code>dz</code>,
+          material: <code>material</code>,
+        })}
       </p>
       <CodeBlock
         language="yaml"
@@ -490,301 +462,273 @@ export function Crafting({
       />
 
       <SectionHeading id="niveles-de-estacion" level={3}>
-        Niveles de estación (Forja I-V)
+        {c.tiersTitle}
       </SectionHeading>
       <p>
-        <code>max-tier</code>, <code>speed-bonus-per-tier</code> y{" "}
-        <code>fail-reduction-per-tier</code> habilitan mejoras por instancia:
-        cada <code>StationRuntime</code> guarda su propio <code>tier</code>{" "}
-        (persistido, arranca en 1), y <Kbd>/crafting upgrade</Kbd> — usado con
-        la estación abierta — cobra el costo del próximo nivel (
-        <code>tier-upgrades</code>: ingredientes + costo económico opcional) y
-        lo sube. El motor de proceso aplica el bono automáticamente: menos{" "}
-        <code>processing-time-ticks</code> efectivos y menos{" "}
-        <code>fail-chance</code> efectiva por cada nivel sobre el 1, sin que la
-        receta necesite saber nada del nivel de la estación.
+        {fill(c.tiersBody, {
+          maxTier: <code>max-tier</code>,
+          speedBonus: <code>speed-bonus-per-tier</code>,
+          failReduction: <code>fail-reduction-per-tier</code>,
+          runtime: <code>StationRuntime</code>,
+          tier: <code>tier</code>,
+          cmd: <Kbd>/crafting upgrade</Kbd>,
+          upgrades: <code>tier-upgrades</code>,
+          time: <code>processing-time-ticks</code>,
+          fail: <code>fail-chance</code>,
+        })}
       </p>
 
       <SectionHeading id="proficiencia" level={3}>
-        Proficiencia de crafteo
+        {c.profTitle}
       </SectionHeading>
       <p>
-        El "sistema de habilidades" propio del addon — reemplaza el{" "}
-        <code>skillFactor</code> que antes era una constante fija en el roll de
-        calidad. Cada estación tiene una <code>skill-category</code> (vacía =
-        usa su propio id; dos estaciones con la misma categoría comparten el
-        mismo progreso). Completar una receta otorga xp de proficiencia a esa
-        categoría (el mismo <code>xp-amount</code> de la receta, mínimo 1),
-        persistido en <code>proficiency/&lt;uuid&gt;.yml</code>. El nivel
-        resultante (curva cuadrática, 50 niveles) alimenta{" "}
-        <code>QualityRoller</code> como factor 0-1 — más nivel en una categoría,
-        mejor calidad promedio al craftear ahí.{" "}
-        <Kbd>{"/crafting proficiency <categoría>"}</Kbd> muestra tu nivel y
-        progreso.
+        {fill(c.profBody, {
+          skillFactor: <code>skillFactor</code>,
+          category: <code>skill-category</code>,
+          xp: <code>xp-amount</code>,
+          path: <code>proficiency/&lt;uuid&gt;.yml</code>,
+          roller: <code>QualityRoller</code>,
+          cmd: <Kbd>{"/crafting proficiency <categoria>"}</Kbd>,
+        })}
       </p>
-      <Callout tone="tip" title="Por qué no un addon nuevo">
-        No existe todavía un sistema de habilidades genérico compartido en el
-        ecosistema RPGRoll — en vez de construir uno aparte (fuera de alcance de
-        "completar Crafting"), la proficiencia vive adentro de este addon,
-        expuesta vía <code>CraftingAPI.proficiency()</code> para que algo más
-        general se conecte después.
+      <Callout tone="tip" title={c.profTipTitle}>
+        {fill(c.profTipBody, { api: <code>CraftingAPI.proficiency()</code> })}
       </Callout>
 
       <SectionHeading id="recetas-personalizadas">
-        Recetas personalizadas
+        {c.recipesTitle}
       </SectionHeading>
       <p>
-        Una <code>CustomRecipe</code> apunta a una <code>station-id</code>,
-        define sus ingredientes y condiciones, un <code>result</code> (material
-        vanilla o ítem de RPGRoll-Items), tiempo de proceso, combustible
-        requerido, costo económico opcional, xp de personaje, probabilidad de
-        fallo propia (o heredada de <code>default-fail-chance</code>) y si pasa
-        por el sistema de calidad.
+        {fill(c.recipesBody, {
+          cls: <code>CustomRecipe</code>,
+          stationId: <code>station-id</code>,
+          result: <code>result</code>,
+          default: <code>default-fail-chance</code>,
+        })}
       </p>
 
-      <SectionHeading id="recetas-vanilla">
-        Puente con estaciones vanilla
-      </SectionHeading>
+      <SectionHeading id="recetas-vanilla">{c.vanillaTitle}</SectionHeading>
       <p>
-        Una <code>VanillaRecipeDefinition</code> se registra directamente en{" "}
-        <code>Bukkit.addRecipe()</code> — cubre las 7 estaciones vanilla para
-        las que Bukkit expone un tipo <code>Recipe</code> genérico. El resultado
-        puede ser un material o un ítem de RPGRoll-Items, igual que las recetas
-        de estación propia.
+        {fill(c.vanillaBody, {
+          cls: <code>VanillaRecipeDefinition</code>,
+          addRecipe: <code>Bukkit.addRecipe()</code>,
+          recipe: <code>Recipe</code>,
+        })}
       </p>
       <Table>
         <Thead>
           <Th>type</Th>
-          <Th>Estación vanilla</Th>
+          <Th>{c.thVanillaStation}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td className="font-mono text-xs">
-              CRAFTING_TABLE_SHAPED / SHAPELESS
-            </Td>
-            <Td>Mesa de crafteo.</Td>
+            <Td className={mono}>CRAFTING_TABLE_SHAPED / SHAPELESS</Td>
+            <Td>{c.vTable}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">
+            <Td className={mono}>
               FURNACE / BLAST_FURNACE / SMOKER / CAMPFIRE
             </Td>
-            <Td>Familia completa de hornos.</Td>
+            <Td>{c.vFurnace}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">STONECUTTER</Td>
-            <Td>Cortadora de piedra.</Td>
+            <Td className={mono}>STONECUTTER</Td>
+            <Td>{c.vStonecutter}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">SMITHING_TRANSFORM</Td>
-            <Td>Mesa de herrería (plantilla + base + adición).</Td>
+            <Td className={mono}>SMITHING_TRANSFORM</Td>
+            <Td>{c.vSmithing}</Td>
           </Tr>
         </tbody>
       </Table>
-      <Callout
-        tone="warning"
-        title="Las condiciones solo se aplican en la mesa de crafteo"
-      >
-        Bukkit no ofrece un evento de "previsualización" para
-        hornos/cortadora/herrería — esas 5 estaciones registran la receta igual,
-        pero sin gating por jugador. En la mesa de crafteo,{" "}
-        <code>PrepareItemCraftEvent</code> oculta el resultado si el jugador que
-        la ve no cumple las condiciones.
+      <Callout tone="warning" title={c.vanillaWarnTitle}>
+        {fill(c.vanillaWarnBody, {
+          event: <code>PrepareItemCraftEvent</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="motores-dedicados">Motores dedicados</SectionHeading>
-      <p>
-        7 estaciones vanilla tienen un tipo <code>Recipe</code> genérico en
-        Bukkit (arriba). Las otras 7 no — Yunque y Fermentación se resolvieron
-        desde el lanzamiento del addon; Piedra de Amolar, Mesa de Cartografía,
-        Telar, Comercio de Aldeanos y automatización de Crafter se agregaron
-        después, cada una con su propio motor porque cada una expone (o no
-        expone) una API distinta.
-      </p>
+      <SectionHeading id="motores-dedicados">{c.enginesTitle}</SectionHeading>
+      <p>{fill(c.enginesBody, { recipe: <code>Recipe</code> })}</p>
       <Table>
         <Thead>
-          <Th>Estación</Th>
-          <Th>Motor</Th>
-          <Th>Cómo intercepta</Th>
+          <Th>{c.thStation}</Th>
+          <Th>{c.thEngine}</Th>
+          <Th>{c.thIntercepts}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td>Yunque</Td>
-            <Td className="font-mono text-xs">AnvilEngine</Td>
+            <Td>{c.eAnvil}</Td>
+            <Td className={mono}>AnvilEngine</Td>
             <Td>
-              <code>PrepareAnvilEvent</code> — reemplaza el resultado si
-              base+adición coinciden con una <code>AnvilRecipeDefinition</code>.
+              {fill(c.eAnvilBody, {
+                event: <code>PrepareAnvilEvent</code>,
+                def: <code>AnvilRecipeDefinition</code>,
+              })}
             </Td>
           </Tr>
           <Tr>
-            <Td>Fermentación</Td>
-            <Td className="font-mono text-xs">BrewingEngine</Td>
+            <Td>{c.eBrewing}</Td>
+            <Td className={mono}>BrewingEngine</Td>
             <Td>
-              <code>BrewEvent</code> — reemplaza el resultado de cada botella si
-              el ingrediente coincide con una <code>BrewRecipeDefinition</code>.
+              {fill(c.eBrewingBody, {
+                event: <code>BrewEvent</code>,
+                def: <code>BrewRecipeDefinition</code>,
+              })}
             </Td>
           </Tr>
           <Tr>
-            <Td>Piedra de Amolar</Td>
-            <Td className="font-mono text-xs">GrindstoneEngine</Td>
+            <Td>{c.eGrindstone}</Td>
+            <Td className={mono}>GrindstoneEngine</Td>
             <Td>
-              <code>PrepareGrindstoneEvent</code> (mismo patrón que el yunque) —{" "}
-              <code>GrindstoneRecipeDefinition</code>.
+              {fill(c.eGrindstoneBody, {
+                event: <code>PrepareGrindstoneEvent</code>,
+                def: <code>GrindstoneRecipeDefinition</code>,
+              })}
             </Td>
           </Tr>
           <Tr>
-            <Td>Mesa de Cartografía</Td>
-            <Td className="font-mono text-xs">CartographyEngine</Td>
+            <Td>{c.eCartography}</Td>
+            <Td className={mono}>CartographyEngine</Td>
             <Td>
-              Bukkit no tiene evento "prepare" aquí — Paper sí,{" "}
-              <code>CartographyItemEvent</code> —{" "}
-              <code>CartographyRecipeDefinition</code>.
+              {fill(c.eCartographyBody, {
+                event: <code>CartographyItemEvent</code>,
+                def: <code>CartographyRecipeDefinition</code>,
+              })}
             </Td>
           </Tr>
           <Tr>
-            <Td>Telar</Td>
-            <Td className="font-mono text-xs">LoomEngine</Td>
+            <Td>{c.eLoom}</Td>
+            <Td className={mono}>LoomEngine</Td>
             <Td>
-              Sin evento "prepare" ni getters de slot — intercepta el click en
-              el slot de resultado (layout fijo: banner/tinte/patrón/resultado)
-              — <code>LoomRecipeDefinition</code>.
+              {fill(c.eLoomBody, { def: <code>LoomRecipeDefinition</code> })}
             </Td>
           </Tr>
           <Tr>
-            <Td>Comercio de Aldeanos</Td>
-            <Td className="font-mono text-xs">VillagerTradeEngine</Td>
+            <Td>{c.eVillager}</Td>
+            <Td className={mono}>VillagerTradeEngine</Td>
             <Td>
-              <code>VillagerAcquireTradeEvent</code>/
-              <code>VillagerReplenishTradeEvent</code> sobre un aldeano
-              vinculado — <code>VillagerTradeDefinition</code>.
+              {fill(c.eVillagerBody, {
+                e1: <code>VillagerAcquireTradeEvent</code>,
+                e2: <code>VillagerReplenishTradeEvent</code>,
+                def: <code>VillagerTradeDefinition</code>,
+              })}
             </Td>
           </Tr>
           <Tr>
-            <Td>Crafter (automatización)</Td>
-            <Td className="font-mono text-xs">CrafterAutomationEngine</Td>
+            <Td>{c.eCrafter}</Td>
+            <Td className={mono}>CrafterAutomationEngine</Td>
             <Td>
-              <code>CrafterCraftEvent</code> — cancela recetas vanilla con
-              condiciones que dependen de un jugador (un Crafter craftea sin
-              ninguno presente).
+              {fill(c.eCrafterBody, { event: <code>CrafterCraftEvent</code> })}
             </Td>
           </Tr>
         </tbody>
       </Table>
-      <p>
-        Sin coincidencia, las siete estaciones funcionan exactamente igual que
-        en vanilla.
-      </p>
+      <p>{c.enginesNoMatchBody}</p>
 
       <SectionHeading id="piedra-de-amolar" level={3}>
-        Piedra de amolar
+        {c.grindTitle}
       </SectionHeading>
       <p>
-        <code>GrindstoneRecipeDefinition</code>: <code>upper</code> +{" "}
-        <code>lower</code> → <code>result</code>, con condiciones opcionales —
-        YAML (<code>grindstone-recipes/</code>) o el navegador de Crafting
-        Studio.
+        {fill(c.grindBody, {
+          def: <code>GrindstoneRecipeDefinition</code>,
+          upper: <code>upper</code>,
+          lower: <code>lower</code>,
+          result: <code>result</code>,
+          dir: <code>grindstone-recipes/</code>,
+        })}
       </p>
 
       <SectionHeading id="mesa-de-cartografia" level={3}>
-        Mesa de cartografía
+        {c.cartTitle}
       </SectionHeading>
       <p>
-        <code>CartographyRecipeDefinition</code>: <code>map</code> +{" "}
-        <code>item</code> → <code>result</code> — YAML (
-        <code>cartography-recipes/</code>) o el navegador de Crafting Studio.
+        {fill(c.cartBody, {
+          def: <code>CartographyRecipeDefinition</code>,
+          map: <code>map</code>,
+          item: <code>item</code>,
+          result: <code>result</code>,
+          dir: <code>cartography-recipes/</code>,
+        })}
       </p>
 
       <SectionHeading id="telar" level={3}>
-        Telar
+        {c.loomTitle}
       </SectionHeading>
       <p>
-        <code>LoomRecipeDefinition</code>: <code>banner</code> +{" "}
-        <code>dye</code> + opcionalmente un <code>pattern</code> concreto →{" "}
-        <code>result</code> — YAML (<code>loom-recipes/</code>) o el navegador
-        de Crafting Studio (el patrón se puede quitar con click derecho para
-        volver a "cualquiera").
+        {fill(c.loomBody, {
+          def: <code>LoomRecipeDefinition</code>,
+          banner: <code>banner</code>,
+          dye: <code>dye</code>,
+          pattern: <code>pattern</code>,
+          result: <code>result</code>,
+          dir: <code>loom-recipes/</code>,
+        })}
       </p>
 
       <SectionHeading id="comercio-de-aldeanos" level={3}>
-        Comercio de aldeanos
+        {c.villagerTitle}
       </SectionHeading>
       <p>
-        Un <code>VillagerTradeDefinition</code> (1 o 2 costos, editable por YAML
-        o el navegador de Crafting Studio) no se activa solo — hay que{" "}
-        <em>vincular</em> un aldeano puntual con{" "}
-        <Kbd>{"/craftingadmin villager bind <id1,id2,...>"}</Kbd> mirándolo
-        (guarda los ids en su PDC, que persiste con el chunk — sin YAML propio
-        de bindings). Un aldeano vinculado ofrece esos comercios en vez de los
-        vanilla normales; <Kbd>/craftingadmin villager unbind</Kbd> lo devuelve
-        a la normalidad.
+        {fill(c.villagerBody, {
+          def: <code>VillagerTradeDefinition</code>,
+          bind: <em>{c.bindWord}</em>,
+          cmd: <Kbd>{"/craftingadmin villager bind <id1,id2,...>"}</Kbd>,
+          unbind: <Kbd>/craftingadmin villager unbind</Kbd>,
+        })}
       </p>
 
       <SectionHeading id="automatizacion-de-crafter" level={3}>
-        Automatización de Crafter
+        {c.crafterTitle}
       </SectionHeading>
       <p>
-        El bloque Crafter craftea sin ningún jugador presente, así que una{" "}
-        <code>VanillaRecipeDefinition</code> de mesa de crafteo con condiciones
-        que dependen de un jugador (nivel, raza, clase, job, permiso, bioma,
-        guild) no puede evaluarse ahí — <code>CrafterAutomationEngine</code>{" "}
-        cancela ese auto-crafteo en vez de dejarlo pasar sin chequeo.
+        {fill(c.crafterBody, {
+          def: <code>VanillaRecipeDefinition</code>,
+          engine: <code>CrafterAutomationEngine</code>,
+        })}
       </p>
 
-      <SectionHeading id="descubrimiento">
-        Descubrimiento de recetas
-      </SectionHeading>
+      <SectionHeading id="descubrimiento">{c.discTitle}</SectionHeading>
       <p>
-        Cada vez que una <code>CustomRecipe</code> se completa por primera vez
-        para un jugador, queda marcada como descubierta (persistido en{" "}
-        <code>discoveries/&lt;uuid&gt;.yml</code>) y dispara{" "}
-        <code>RecipeDiscoverEvent</code>. <Kbd>/crafting book</Kbd> abre el
-        Recipe Book: las recetas descubiertas muestran su ícono, estación e
-        ingredientes reales; las que no, un ítem "???" — nunca revela una receta
-        sin descubrir.
+        {fill(c.discBody, {
+          cls: <code>CustomRecipe</code>,
+          path: <code>discoveries/&lt;uuid&gt;.yml</code>,
+          event: <code>RecipeDiscoverEvent</code>,
+          cmd: <Kbd>/crafting book</Kbd>,
+        })}
       </p>
       <p>
-        Craftear nunca estuvo condicionado por el descubrimiento — cualquier
-        combinación que matchee una receta funciona, la conozcas o no; descubrir
-        es solo lo que queda registrado después. <Kbd>/crafting experiment</Kbd>{" "}
-        va un paso más allá: en una estación con{" "}
-        <code>allow-experimentation: true</code>, con materiales puestos que no
-        matchean nada exacto, compara qué tan cerca estuviste (fracción de
-        ingredientes coincidentes) de la receta no-descubierta más parecida y
-        rola una chance de revelarla sin craftearla — solo conocimiento, no un
-        atajo gratis al ítem. Tiene cooldown por jugador (
-        <code>experimentation-cooldown-seconds</code>) para evitar spam.
+        {fill(c.expBody, {
+          cmd: <Kbd>/crafting experiment</Kbd>,
+          allow: <code>allow-experimentation: true</code>,
+          cooldown: <code>experimentation-cooldown-seconds</code>,
+        })}
       </p>
 
       <SectionHeading id="procesamiento-offline">
-        Procesamiento con el dueño offline
+        {c.offlineTitle}
       </SectionHeading>
       <p>
-        Una estación ya sobrevivía un reinicio del servidor y seguía avanzando
-        el progreso en curso aunque su dueño se desconectara — lo que no
-        funcionaba era <em>iniciar</em> una receta nueva con condiciones si el
-        dueño no estaba conectado, porque el chequeo exigía un{" "}
-        <code>Player</code> en línea incluso para condiciones que en realidad
-        solo necesitan su UUID (nivel, raza, clase, job, membresía de gremio —
-        se leen de datos persistidos, no del jugador en vivo).{" "}
-        <code>ConditionEvaluator</code> ahora evalúa esas contra el UUID
-        directamente, y usa el <em>mundo de la estación</em> (no el del jugador)
-        para <code>WORLD</code>/<code>HOUR_RANGE</code>/<code>SEASON</code>/
-        <code>WEATHER</code>. El costo de Economy y el xp de personaje ya
-        cobraban/otorgaban por UUID — nunca necesitaron al jugador en línea,
-        solo estaban gateados de más.
+        {fill(c.offlineBody, {
+          start: <em>{c.startWord}</em>,
+          player: <code>Player</code>,
+          evaluator: <code>ConditionEvaluator</code>,
+          stationWorld: <em>{c.stationWorldWord}</em>,
+          conds: (
+            <>
+              <code>WORLD</code>/<code>HOUR_RANGE</code>/<code>SEASON</code>/
+              <code>WEATHER</code>
+            </>
+          ),
+        })}
       </p>
-      <Callout
-        tone="warning"
-        title="Dos condiciones siguen exigiendo al jugador conectado"
-      >
-        <code>PERMISSION</code> y <code>BIOME</code> dependen de estado que solo
-        existe en un jugador real (su árbol de permisos, su posición) — una
-        receta que las use no puede iniciarse con el dueño offline, y eso es
-        correcto, no un bug.
+      <Callout tone="warning" title={c.offlineWarnTitle}>
+        {fill(c.offlineWarnBody, {
+          permission: <code>PERMISSION</code>,
+          biome: <code>BIOME</code>,
+        })}
       </Callout>
 
-      <SectionHeading id="formato-yaml">
-        Ejemplos de archivo YAML
-      </SectionHeading>
+      <SectionHeading id="formato-yaml">{c.yamlTitle}</SectionHeading>
       <CodeBlock
         language="yaml"
         filename="stations/iron_forge.yml"
@@ -833,195 +777,188 @@ export function Crafting({
           "consume-amount: 1\n"
         }
       />
-      <Callout
-        tone="tip"
-        title="Referencia completa: todos los campos en un solo archivo, por cada tipo de contenido"
-      >
-        <code>recipes/reference_full.yml</code>,{" "}
-        <code>stations/reference_full.yml</code>,{" "}
-        <code>fuels/reference_full.yml</code>,{" "}
-        <code>vanilla-recipes/reference_full.yml</code>,{" "}
-        <code>anvil-recipes/reference_full.yml</code> y{" "}
-        <code>brew-recipes/reference_full.yml</code> (incluidos en el jar)
-        documentan todos los campos disponibles de cada tipo, incluyendo todos
-        los tipos posibles de ingrediente y de condición.
+      <Callout tone="tip" title={c.refTitle}>
+        {fill(c.refBody, {
+          files: (
+            <>
+              <code>recipes/reference_full.yml</code>,{" "}
+              <code>stations/reference_full.yml</code>,{" "}
+              <code>fuels/reference_full.yml</code>,{" "}
+              <code>vanilla-recipes/reference_full.yml</code>,{" "}
+              <code>anvil-recipes/reference_full.yml</code>,{" "}
+              <code>brew-recipes/reference_full.yml</code>
+            </>
+          ),
+        })}
       </Callout>
 
       <YamlBuilder
-        title="Constructor visual: Estación personalizada"
+        title={c.builderStation}
         folder="stations"
-        fields={stationFields}
+        fields={stationFields(c)}
       />
       <YamlBuilder
-        title="Constructor visual: Receta personalizada"
+        title={c.builderRecipe}
         folder="recipes"
-        fields={recipeFields}
+        fields={recipeFields(c)}
       />
       <YamlBuilder
-        title="Constructor visual: Combustible"
+        title={c.builderFuel}
         folder="fuels"
-        fields={fuelFields}
+        fields={fuelFields(c)}
       />
 
-      <SectionHeading id="gui">GUI: Crafting Studio</SectionHeading>
+      <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
       <p>
-        <Kbd>/craftingadmin browser</Kbd> abre un hub que enlaza a los{" "}
-        <strong>10 navegadores</strong> (uno por tipo de contenido), y los 10
-        tienen crear + editar completo en inventario — nada requiere tocar YAML
-        a mano. Los campos escalares (nombre, ícono, tiempos, costos,
-        resultado...) se editan slot por slot; las listas (ingredientes de una
-        receta, condiciones) abren un sub-editor dedicado con sus propios slots
-        de "agregar"/"quitar" (shift-click) y una mini-sintaxis por chat para el
-        ítem nuevo, ej. <code>MATERIAL IRON_INGOT 2</code> o{" "}
-        <code>LEVEL_MIN 5</code>; <code>shape</code>/<code>key</code>/
-        <code>ingredients</code> de una receta vanilla se retipean enteros por
-        chat (una lista tan variable no entra en slots fijos). El comercio de
-        aldeano tiene su propia variante: hasta 2 costos, cada uno con su propio
-        slot de tipo/valor/cantidad, y un botón para agregar/quitar el segundo.
-        Editar o borrar una receta vanilla la vuelve a registrar en Bukkit al
-        instante — no hace falta reiniciar el servidor. Del lado del jugador,{" "}
-        <Kbd>/crafting book</Kbd> abre el Recipe Book.
+        {fill(c.guiBody, {
+          cmd: <Kbd>/craftingadmin browser</Kbd>,
+          ten: <strong>{c.tenBrowsers}</strong>,
+          e1: <code>MATERIAL IRON_INGOT 2</code>,
+          e2: <code>LEVEL_MIN 5</code>,
+          fields: (
+            <>
+              <code>shape</code>/<code>key</code>/<code>ingredients</code>
+            </>
+          ),
+          book: <Kbd>/crafting book</Kbd>,
+        })}
       </p>
 
-      <SectionHeading id="api">
-        API para addons — CraftingAPI + eventos
-      </SectionHeading>
+      <SectionHeading id="api">{c.apiTitle}</SectionHeading>
       <p>
-        <code>CraftingAPI.isReady()</code> / <code>CraftingAPI.get()</code>,
-        mismo patrón que el resto del ecosistema. Expone los 10 managers de
-        contenido (estaciones, recetas personalizadas, combustibles, vanilla,
-        yunque, fermentación, amolar, cartografía, telar, comercio de aldeanos),{" "}
-        <code>discovery()</code>, <code>proficiency()</code> y{" "}
-        <code>stationAt(mundo, x, y, z)</code> para consultar el{" "}
-        <code>StationRuntime</code> de una ubicación (incluye su{" "}
-        <code>tier</code> actual).
+        {fill(c.apiBody, {
+          isReady: <code>CraftingAPI.isReady()</code>,
+          get: <code>CraftingAPI.get()</code>,
+          discovery: <code>discovery()</code>,
+          proficiency: <code>proficiency()</code>,
+          stationAt: <code>stationAt(world, x, y, z)</code>,
+          runtime: <code>StationRuntime</code>,
+          tier: <code>tier</code>,
+        })}
       </p>
       <Table>
         <Thead>
-          <Th>Evento</Th>
-          <Th>Cuándo</Th>
+          <Th>{c.thEvent}</Th>
+          <Th>{c.thWhen}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td className="font-mono text-xs">CraftPrepareEvent</Td>
-            <Td>Justo antes de consumir ingredientes/cobrar — cancelable.</Td>
+            <Td className={mono}>CraftPrepareEvent</Td>
+            <Td>{c.ev1}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">CraftStartEvent</Td>
-            <Td>La receta empieza a procesarse.</Td>
+            <Td className={mono}>CraftStartEvent</Td>
+            <Td>{c.ev2}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">CraftProcessEvent</Td>
-            <Td>Cada tick que avanza el progreso.</Td>
+            <Td className={mono}>CraftProcessEvent</Td>
+            <Td>{c.ev3}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">CraftCompleteEvent</Td>
-            <Td>Resultado entregado exitosamente.</Td>
+            <Td className={mono}>CraftCompleteEvent</Td>
+            <Td>{c.ev4}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">CraftFailEvent</Td>
-            <Td>La receta terminó pero falló.</Td>
+            <Td className={mono}>CraftFailEvent</Td>
+            <Td>{c.ev5}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">RecipeDiscoverEvent</Td>
-            <Td>Primera vez que un jugador descubre una receta.</Td>
+            <Td className={mono}>RecipeDiscoverEvent</Td>
+            <Td>{c.ev6}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">StationOpenEvent</Td>
-            <Td>Click derecho en el bloque de una estación — cancelable.</Td>
+            <Td className={mono}>StationOpenEvent</Td>
+            <Td>{c.ev7}</Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">StationCloseEvent</Td>
-            <Td>El jugador cierra el inventario de una estación.</Td>
+            <Td className={mono}>StationCloseEvent</Td>
+            <Td>{c.ev8}</Td>
           </Tr>
         </tbody>
       </Table>
 
-      <SectionHeading id="comandos">Comandos</SectionHeading>
+      <SectionHeading id="comandos">{c.cmdsTitle}</SectionHeading>
       <Table>
         <Thead>
-          <Th>Comando</Th>
-          <Th>Qué hace</Th>
-          <Th>Permiso</Th>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thWhat}</Th>
+          <Th>{c.thPermission}</Th>
         </Thead>
         <tbody>
           <Tr>
-            <Td className="font-mono text-xs">/craftingadmin browser</Td>
-            <Td>Abre el Crafting Studio.</Td>
+            <Td className={mono}>/craftingadmin browser</Td>
+            <Td>{c.a1}</Td>
             <Td>
               <Badge tone="violet">rpgrollcrafting.admin.*</Badge>
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">/craftingadmin reload</Td>
-            <Td>Recarga todo el contenido YAML.</Td>
+            <Td className={mono}>/craftingadmin reload</Td>
+            <Td>{c.a2}</Td>
             <Td>
               <Badge tone="violet">rpgrollcrafting.admin.*</Badge>
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">
-              {"/craftingadmin give <jugador> <item-id>"}
+            <Td className={mono}>
+              {"/craftingadmin give <player> <item-id>"}
             </Td>
-            <Td>Entrega un ítem de RPGRoll-Items por id.</Td>
+            <Td>{c.a3}</Td>
             <Td>
               <Badge tone="violet">rpgrollcrafting.admin.*</Badge>
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">
+            <Td className={mono}>
               {"/craftingadmin villager bind <id1,id2,...>"}
             </Td>
-            <Td>Vincula el aldeano al que miras a esos comercios.</Td>
+            <Td>{c.a4}</Td>
             <Td>
               <Badge tone="violet">rpgrollcrafting.admin.*</Badge>
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">
-              /craftingadmin villager unbind
-            </Td>
-            <Td>Desvincula el aldeano al que miras.</Td>
+            <Td className={mono}>/craftingadmin villager unbind</Td>
+            <Td>{c.a5}</Td>
             <Td>
               <Badge tone="violet">rpgrollcrafting.admin.*</Badge>
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">/crafting book</Td>
-            <Td>Abre tu Recipe Book.</Td>
+            <Td className={mono}>/crafting book</Td>
+            <Td>{c.u1}</Td>
             <Td>
               <Badge>rpgrollcrafting.use</Badge>
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">/crafting discover</Td>
-            <Td>Ve cuántas recetas descubriste.</Td>
+            <Td className={mono}>/crafting discover</Td>
+            <Td>{c.u2}</Td>
             <Td>
               <Badge>rpgrollcrafting.use</Badge>
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">/crafting upgrade</Td>
-            <Td>Sube de nivel la estación que tienes abierta.</Td>
+            <Td className={mono}>/crafting upgrade</Td>
+            <Td>{c.u3}</Td>
             <Td>
               <Badge>rpgrollcrafting.use</Badge>
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">/crafting experiment</Td>
+            <Td className={mono}>/crafting experiment</Td>
             <Td>
-              Intenta descubrir una receta por lo que tienes puesto (estación con{" "}
-              <code>allow-experimentation</code>).
+              {fill(c.u4, { allow: <code>allow-experimentation</code> })}
             </Td>
             <Td>
               <Badge>rpgrollcrafting.use</Badge>
             </Td>
           </Tr>
           <Tr>
-            <Td className="font-mono text-xs">
-              {"/crafting proficiency <categoría>"}
+            <Td className={mono}>
+              {"/crafting proficiency <categoria>"}
             </Td>
-            <Td>Ve tu nivel de proficiencia en esa categoría.</Td>
+            <Td>{c.u5}</Td>
             <Td>
               <Badge>rpgrollcrafting.use</Badge>
             </Td>

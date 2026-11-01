@@ -45,6 +45,7 @@ export const TRANSLATED_PAGES: ReadonlySet<string> = new Set(["inicio", "primero
   "items",
   "rpgroll-effects",
   "ranching",
+  "crafting",
   "pass",
   "furniture",
   "recipes",
