@@ -135,7 +135,7 @@ const es = {
   ammoBody:
     "Con {ammo}, un disparo sin munición no hace nada más que su sonido de vacío. Pon el sonido del disparo en {sound} de la propia acción SHOOT y no en una acción SOUND aparte: las acciones de la lista se ejecutan todas, así que una SOUND suelta sonaría aunque el arma esté vacía. Una munición vanilla ({paper}) no cuenta los ítems de RPGRoll hechos sobre ese material.",
 
-  laserTitle: "Láser sostenido",
+  laserTitle: "Láser sostenido (1.1.8)",
   laserBody:
     "Con {sustain} el rayo no es un fogonazo: se queda encendido y sigue la mira cada tic mientras mantienes el clic derecho. Java repite el clic mantenido cada 4 tics, y cada repetición es un disparo completo: gasta {ammo}, hace {amount} de daño y renueva el rayo. Son 5 pulsos por segundo, así que {example} son 10 de daño por segundo. Al soltar, el rayo dura {sustain2} tics más y se apaga (6 tapa el hueco entre pulsos). La invulnerabilidad tras un golpe no frena los pulsos del rayo.",
   laserBedrockTitle: "En Bedrock",
@@ -373,7 +373,7 @@ const en: ItemsCopy = {
   ammoBody:
     "With {ammo}, a shot with no ammunition does nothing but its empty sound. Put the shot's sound in the SHOOT action's own {sound} and not in a separate SOUND action: every action in the list runs, so a loose SOUND would play even with the weapon empty. Vanilla ammunition ({paper}) does not count RPGRoll items made on that material.",
 
-  laserTitle: "Sustained laser",
+  laserTitle: "Sustained laser (1.1.8)",
   laserBody:
     "With {sustain} the beam is not a flash: it stays lit and follows the crosshair every tick while you hold right click. Java repeats the held click every 4 ticks, and each repetition is a full shot: it spends {ammo}, deals {amount} damage and renews the beam. That is 5 pulses per second, so {example} is 10 damage per second. On release, the beam lasts {sustain2} more ticks and goes out (6 covers the gap between pulses). The invulnerability after a hit does not slow the beam's pulses.",
   laserBedrockTitle: "On Bedrock",
@@ -608,7 +608,7 @@ const pt: ItemsCopy = {
   ammoBody:
     "Com {ammo}, um tiro sem munição não faz nada além do seu som de vazio. Coloque o som do tiro no {sound} da própria ação SHOOT e não numa ação SOUND à parte: as ações da lista são executadas todas, então uma SOUND solta tocaria mesmo com a arma vazia. Uma munição vanilla ({paper}) não conta os itens do RPGRoll feitos sobre esse material.",
 
-  laserTitle: "Laser sustentado",
+  laserTitle: "Laser sustentado (1.1.8)",
   laserBody:
     "Com {sustain} o raio não é um clarão: fica aceso e segue a mira a cada tick enquanto você mantém o clique direito. O Java repete o clique mantido a cada 4 ticks, e cada repetição é um tiro completo: gasta {ammo}, faz {amount} de dano e renova o raio. São 5 pulsos por segundo, então {example} são 10 de dano por segundo. Ao soltar, o raio dura {sustain2} ticks a mais e se apaga (6 tapa o buraco entre pulsos). A invulnerabilidade depois de um golpe não freia os pulsos do raio.",
   laserBedrockTitle: "No Bedrock",
