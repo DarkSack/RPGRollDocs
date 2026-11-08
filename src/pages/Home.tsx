@@ -56,8 +56,8 @@ export function Home({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-2">
-          <a href="/configuracion" className="inline-flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-[13px] font-medium text-white transition-opacity hover:opacity-90" style={{ backgroundColor: "var(--ruby)" }}>
-            {c.ctaConfigure}
+          <a href="/primeros-pasos" className="no-prose inline-flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-[13px] font-medium text-white no-underline transition-shadow hover:ring-2 hover:ring-[var(--ruby)]" style={{ backgroundColor: "var(--ruby)" }}>
+            {c.ctaStart}
             <ArrowRightIcon size={14} />
           </a>
           <a href="/arquitectura" className="inline-flex items-center gap-1.5 rounded-sm border px-3 py-1.5 text-[13px] font-medium transition-colors" style={{ borderColor: "var(--line)", color: "var(--text-dim)" }}>

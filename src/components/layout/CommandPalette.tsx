@@ -68,6 +68,9 @@ export function CommandPalette({ onNavigate, theme, onToggleTheme }: CommandPale
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+  const recovery = useMemo<PaletteEntry[]>(() => ["primeros-pasos", "requisitos"].map((slug) => ({
+    kind: "page", id: `recovery:${slug}`, title: localizedPageLabel(slug, pageTitle(slug), locale), slug,
+  })), [locale]);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -138,6 +141,8 @@ export function CommandPalette({ onNavigate, theme, onToggleTheme }: CommandPale
     );
     return [...matchedActions, ...searchPalette(query)];
   }, [actions, query]);
+  const noMatches = query.trim() !== "" && rows.length === 0;
+  const options = noMatches ? recovery : rows;
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -172,7 +177,7 @@ export function CommandPalette({ onNavigate, theme, onToggleTheme }: CommandPale
 
   useEffect(() => {
     listRef.current?.querySelector<HTMLElement>('[data-active="true"]')?.scrollIntoView({ block: "nearest" });
-  }, [activeIndex, rows]);
+  }, [activeIndex, options]);
 
   function select(row: Row) {
     setOpen(false);
@@ -187,13 +192,13 @@ export function CommandPalette({ onNavigate, theme, onToggleTheme }: CommandPale
   function onInputKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((i) => (rows.length === 0 ? 0 : (i + 1) % rows.length));
+      setActiveIndex((i) => (options.length === 0 ? 0 : (i + 1) % options.length));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActiveIndex((i) => (rows.length === 0 ? 0 : (i - 1 + rows.length) % rows.length));
+      setActiveIndex((i) => (options.length === 0 ? 0 : (i - 1 + options.length) % options.length));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      const row = rows[activeIndex];
+      const row = options[activeIndex];
       if (row) select(row);
     } else if (e.key === "Tab") {
       // El diálogo tiene un único elemento enfocable (el input): Tab no debe escapar a la página de atrás.
@@ -204,7 +209,7 @@ export function CommandPalette({ onNavigate, theme, onToggleTheme }: CommandPale
   // Se agrupa para mostrar, pero el índice activo recorre la lista plana.
   const grouped = GROUP_ORDER.map((kind) => ({
     kind,
-    rows: rows.map((row, index) => ({ row, index })).filter(({ row }) => row.kind === kind),
+    rows: options.map((row, index) => ({ row, index })).filter(({ row }) => row.kind === kind),
   })).filter((group) => group.rows.length > 0);
 
   return (
@@ -251,7 +256,7 @@ export function CommandPalette({ onNavigate, theme, onToggleTheme }: CommandPale
                 role="combobox"
                 aria-expanded
                 aria-controls="palette-results"
-                aria-activedescendant={rows[activeIndex] ? `palette-row-${activeIndex}` : undefined}
+                aria-activedescendant={options[activeIndex] ? `palette-row-${activeIndex}` : undefined}
                 className="w-full bg-transparent py-3.5 text-sm outline-none"
                 style={{ color: "var(--text)" }}
               />
@@ -260,12 +265,12 @@ export function CommandPalette({ onNavigate, theme, onToggleTheme }: CommandPale
               )}
             </div>
 
+            {noMatches && (
+              <p role="status" className="px-4 pt-3 pb-1 text-sm" style={{ color: "var(--text-dim)" }}>
+                {`${t.search.noResults} “${query}”. ${t.search.tryPages}`}
+              </p>
+            )}
             <div ref={listRef} id="palette-results" role="listbox" aria-label={t.search.label} className="max-h-[52vh] overflow-y-auto py-1.5">
-              {rows.length === 0 && (
-                <p className="px-4 py-10 text-center text-sm" style={{ color: "var(--text-faint)" }}>
-                  {query.trim() ? `${t.search.noResults} “${query}”.` : t.search.empty}
-                </p>
-              )}
 
               {grouped.map((group) => (
                 <div key={group.kind} className="mb-1 last:mb-0">
@@ -300,7 +305,7 @@ export function CommandPalette({ onNavigate, theme, onToggleTheme }: CommandPale
                             }
                             style={{ color: "var(--text)" }}
                           >
-                            {row.title}
+                            {row.kind === "page" ? localizedPageLabel(row.slug, row.title, locale) : row.title}
                           </span>
                           {row.subtitle && (
                             <span className="block truncate text-xs" style={{ color: "var(--text-faint)" }}>

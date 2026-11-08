@@ -6,7 +6,7 @@ const es = {
   title: "Un framework RPG completo para Paper/Minecraft",
   intro:
     "Razas, clases, atributos, salud y maná, habilidades, trabajos y progresión por niveles — con {n} addons oficiales que agregan desde mazmorras hasta una economía dinámica completa.",
-  ctaConfigure: "Empezar a configurar",
+  ctaStart: "Primeros pasos",
   ctaArchitecture: "Ver arquitectura",
 
   statAddons: "Addons oficiales",
@@ -58,7 +58,7 @@ const en: HomeCopy = {
   title: "A complete RPG framework for Paper/Minecraft",
   intro:
     "Races, classes, attributes, health and mana, skills, jobs and level progression — with {n} official addons that add everything from dungeons to a full dynamic economy.",
-  ctaConfigure: "Start configuring",
+  ctaStart: "Getting started",
   ctaArchitecture: "See the architecture",
 
   statAddons: "Official addons",
@@ -108,7 +108,7 @@ const pt: HomeCopy = {
   title: "Um framework RPG completo para Paper/Minecraft",
   intro:
     "Raças, classes, atributos, vida e mana, habilidades, trabalhos e progressão por níveis — com {n} addons oficiais que adicionam de masmorras a uma economia dinâmica completa.",
-  ctaConfigure: "Começar a configurar",
+  ctaStart: "Primeiros passos",
   ctaArchitecture: "Ver a arquitetura",
 
   statAddons: "Addons oficiais",

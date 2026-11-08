@@ -36,6 +36,12 @@ export interface PaletteEntry {
   keywords?: string;
 }
 
+const TASK_QUERIES: Record<string, RegExp> = {
+  "primeros-pasos": /\b(instalar|instalacion|instalacao|install|installation|setup)\b/,
+  requisitos: /\b(java|jdk|paper|requirements|requisitos)\b/,
+  troubleshooting: /\b(licencia|licencias|license|licenses|licenca|licencas)\b/,
+};
+
 function fromDocs(entry: SearchEntry): PaletteEntry {
   return entry.heading
     ? {
@@ -133,6 +139,7 @@ export function searchPalette(query: string, limit = 24): PaletteEntry[] {
       else if (keywords.includes(q)) score = 45;
       else if (subtitle.includes(q)) score = 30;
       else if (entry.meta && normalize(entry.meta).includes(q)) score = 20;
+      else if (entry.kind === "page" && TASK_QUERIES[entry.slug]?.test(q)) score = 55;
 
       return { entry, score: score < 0 ? score : score + KIND_WEIGHT[entry.kind] };
     })
