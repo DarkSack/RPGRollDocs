@@ -25,16 +25,24 @@ function getInitialLocale(): Locale {
 }
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(getInitialLocale);
+  // El primer render coincide con el HTML estático; las preferencias se leen al hidratar.
+  const [locale, setLocaleState] = useState<Locale>("es");
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    setLocaleState(getInitialLocale());
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
     document.documentElement.lang = locale;
     try {
       localStorage.setItem(STORAGE_KEY, locale);
     } catch {
       // Sin persistencia: la elección vale para esta sesión y no rompe nada.
     }
-  }, [locale]);
+  }, [locale, ready]);
 
   const setLocale = useCallback((next: Locale) => setLocaleState(next), []);
 

@@ -9,9 +9,8 @@
  * con la portada. Aquí cada página recibe su propio `dist/<slug>/index.html`
  * con su título, descripción, canónica y Open Graph ya escritos.
  *
- * No es un prerender del contenido (eso exigiría renderizar React en Node):
- * el cuerpo lo sigue pintando la app. Es lo justo para que cada URL sea una
- * página distinta para quien no ejecuta JavaScript.
+ * React renderiza los mismos componentes que hidrata el cliente. Vite compila
+ * una entrada de servidor temporal; no hay una segunda copia del contenido.
  *
  * Uso: lo llama `npm run build`. Lee nav.ts y seo.ts con el type stripping
  * nativo de Node, como scripts/check-plugin-deps.mjs.
@@ -19,13 +18,21 @@
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { build } from "vite";
 
 import { nav } from "../src/content/nav.ts";
 import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL, pageDescriptions, pagePath } from "../src/content/seo.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
+const serverDist = join(root, "node_modules/.tmp/docs-prerender");
+await build({
+  root,
+  logLevel: "warn",
+  build: { ssr: "src/entry-server.tsx", outDir: serverDist, emptyOutDir: true },
+});
+const { render } = await import(pathToFileURL(join(serverDist, "entry-server.js")).href);
 
 /**
  * Los `blurb` de addons.ts, sacados con una expresión regular: ese archivo
@@ -53,7 +60,7 @@ function setAttr(html, tagPattern, attribute, value) {
   return html.replace(re, `$1${escapeHtml(value)}$2`);
 }
 
-function pageHtml(template, { title, description, url, robots }) {
+function pageHtml(template, { title, description, url, robots, route }) {
   let html = template.replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`);
   html = setAttr(html, 'meta\\s+name="description"', "content", description);
   html = setAttr(html, 'meta\\s+name="robots"', "content", robots);
@@ -61,7 +68,8 @@ function pageHtml(template, { title, description, url, robots }) {
   html = setAttr(html, 'meta\\s+property="og:url"', "content", url);
   html = setAttr(html, 'meta\\s+property="og:title"', "content", title);
   html = setAttr(html, 'meta\\s+property="og:description"', "content", description);
-  return html;
+  if (!html.includes('<div id="root"></div>')) throw new Error("index.html no tiene root vacío");
+  return html.replace('<div id="root"></div>', () => `<div id="root" data-route="${escapeHtml(route)}">${render(route)}</div>`);
 }
 
 const template = await readFile(join(dist, "index.html"), "utf8");
@@ -78,6 +86,7 @@ for (const { slug, label } of pages) {
     description: description ?? DEFAULT_DESCRIPTION,
     url: SITE_URL + pagePath(slug),
     robots: "index, follow",
+    route: slug,
   });
 
   const file = slug === "inicio" ? join(dist, "index.html") : join(dist, slug, "index.html");
@@ -95,6 +104,7 @@ await writeFile(
     description: DEFAULT_DESCRIPTION,
     url: `${SITE_URL}/`,
     robots: "noindex",
+    route: "404",
   }),
 );
 

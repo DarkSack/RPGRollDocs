@@ -58,16 +58,16 @@ import { Integrations } from "./pages/Integrations";
 import { Placeholders } from "./pages/Placeholders";
 import { Troubleshooting } from "./pages/Troubleshooting";
 
-function App() {
+function App({ initialRoute }: { initialRoute?: string }) {
   return (
     <LocaleProvider>
-      <Console />
+      <Console initialRoute={initialRoute} />
     </LocaleProvider>
   );
 }
 
-function Console() {
-  const [route, navigate] = useRoute();
+function Console({ initialRoute }: { initialRoute?: string }) {
+  const [route, navigate] = useRoute(initialRoute);
   const [theme, toggleTheme] = useTheme();
   const [version, setVersion] = useDocVersion();
   const { locale } = useI18n();

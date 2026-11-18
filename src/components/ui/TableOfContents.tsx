@@ -18,7 +18,7 @@ interface Heading {
  * plegado dentro de un <details> arriba del contenido.
  */
 export function TableOfContents({ route, variant = "rail" }: { route: string; variant?: "rail" | "collapsible" }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
 
@@ -35,7 +35,7 @@ export function TableOfContents({ route, variant = "rail" }: { route: string; va
       setActiveId(nodes[0]?.id ?? null);
     });
     return () => cancelAnimationFrame(raf);
-  }, [route]);
+  }, [route, locale]);
 
   useEffect(() => {
     if (headings.length === 0) return;

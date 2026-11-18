@@ -66,6 +66,8 @@ const GROUP_ORDER: Kind[] = ["action", "page", "command", "section", "permission
 export function CommandPalette({ onNavigate, theme, onToggleTheme }: CommandPaletteProps) {
   const { t, locale, setLocale } = useI18n();
   const [open, setOpen] = useState(false);
+  const [mac, setMac] = useState(false);
+  useEffect(() => setMac(isMac()), []);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const recovery = useMemo<PaletteEntry[]>(() => ["primeros-pasos", "requisitos"].map((slug) => ({
@@ -225,7 +227,7 @@ export function CommandPalette({ onNavigate, theme, onToggleTheme }: CommandPale
         <span className="hidden truncate sm:inline">{t.search.trigger}</span>
         <span className="truncate sm:hidden">{t.search.triggerShort}</span>
         <span className="ml-auto hidden shrink-0 items-center gap-1 sm:inline-flex">
-          <Kbd>{isMac() ? "⌘" : "Ctrl"}</Kbd>
+          <Kbd>{mac ? "⌘" : "Ctrl"}</Kbd>
           <Kbd>K</Kbd>
         </span>
       </button>

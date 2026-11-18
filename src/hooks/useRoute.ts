@@ -33,16 +33,13 @@ function slugFromPath(pathname: string): string {
 function migrateLegacyHash(): boolean {
   const hash = window.location.hash;
   if (!hash.startsWith(LEGACY_PREFIX)) return false;
-  const slug = hash.slice(LEGACY_PREFIX.length).split("#")[0] || DEFAULT_ROUTE;
-  window.history.replaceState(null, "", pagePath(slug));
+  const [slug, ...section] = hash.slice(LEGACY_PREFIX.length).split("#");
+  window.history.replaceState(null, "", pagePath(slug || DEFAULT_ROUTE) + (section.length ? `#${section.join("#")}` : ""));
   return true;
 }
 
-export function useRoute(): [string, (slug: string) => void] {
-  const [route, setRoute] = useState(() => {
-    migrateLegacyHash();
-    return slugFromPath(window.location.pathname);
-  });
+export function useRoute(initialRoute?: string): [string, (slug: string) => void] {
+  const [route, setRoute] = useState(() => initialRoute ?? slugFromPath(window.location.pathname));
 
   const navigate = useCallback((slug: string, hash = "") => {
     const target = pagePath(slug) + hash;
@@ -55,6 +52,8 @@ export function useRoute(): [string, (slug: string) => void] {
 
   useEffect(() => {
     const sync = () => setRoute(slugFromPath(window.location.pathname));
+    migrateLegacyHash();
+    sync();
     const onHashChange = () => {
       if (migrateLegacyHash()) sync();
     };

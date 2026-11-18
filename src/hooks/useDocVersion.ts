@@ -19,15 +19,22 @@ function getInitialVersion(): string {
  * versiones publicadas no obligue a tocar el layout.
  */
 export function useDocVersion(): [string, (id: string) => void] {
-  const [version, setVersion] = useState<string>(getInitialVersion);
+  const [version, setVersion] = useState<string>(DOC_VERSIONS[0].id);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    setVersion(getInitialVersion());
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
     try {
       localStorage.setItem(STORAGE_KEY, version);
     } catch {
       // Ignorado a propósito: la elección vale para esta sesión.
     }
-  }, [version]);
+  }, [version, ready]);
 
   return [version, useCallback((id: string) => setVersion(id), [])];
 }
