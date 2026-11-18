@@ -16,6 +16,7 @@ import {
 } from "../components/ui";
 import { useI18n, fill } from "../i18n";
 import { ENCHANTMENTS_COPY, type EnchantmentsCopy } from "./copy/enchantments";
+import { Novedades119 } from "./Novedades119";
 
 const enchantmentFields = (c: EnchantmentsCopy): YamlField[] => [
   { key: "id", label: c.fId, type: "string", default: "nuevo_encantamiento", placeholder: "frost" },
@@ -443,6 +444,8 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
           <Tr><Td className="font-mono text-xs">{"%rpgrollenchantments_helditem_has_<id>%"}</Td><Td>{fill(c.pHas, { yesno: <><code>si</code>/<code>no</code></> })}</Td></Tr>
         </tbody>
       </Table>
+
+      <Novedades119 page="encantamientos" />
 
       <PrevNext current="encantamientos" onNavigate={onNavigate} />
     </>

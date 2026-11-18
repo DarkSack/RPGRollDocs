@@ -17,6 +17,7 @@ import {
 import { placeholders } from "../content/placeholders";
 import { useI18n, fill, localizedPlaceholder, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
 import { ADDONS_C_COPY, type AddonsCCopy } from "./copy/addonsC";
+import { Novedades119 } from "./Novedades119";
 
 type QuestsCopy = AddonsCCopy["quests"];
 
@@ -445,6 +446,8 @@ export function Quests({ onNavigate }: { onNavigate: (slug: string) => void }) {
           ))}
         </tbody>
       </Table>
+
+      <Novedades119 page="quests" />
 
       <PrevNext current="quests" onNavigate={onNavigate} />
     </>

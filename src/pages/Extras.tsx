@@ -17,6 +17,7 @@ import {
 import { pageTitle } from "../content/nav";
 import { useI18n, fill, localizedPageLabel, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
 import { ADDONS_D_COPY, type AddonsDCopy } from "./copy/addonsD";
+import { Novedades119 } from "./Novedades119";
 
 type ExtrasCopy = AddonsDCopy["extras"];
 
@@ -777,6 +778,8 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
           any: <Badge tone="amber">rpgrollextras.menu.any</Badge>,
         })}
       </p>
+
+      <Novedades119 page="extras" />
 
       <PrevNext current="extras" onNavigate={onNavigate} />
     </>

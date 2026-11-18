@@ -17,6 +17,7 @@ import {
 import { placeholders } from "../content/placeholders";
 import { useI18n, fill, localizedPlaceholder } from "../i18n";
 import { ADDONS_A_COPY, type AddonsACopy } from "./copy/addonsA";
+import { Novedades119 } from "./Novedades119";
 
 type ChatCopy = AddonsACopy["chat"];
 
@@ -324,6 +325,8 @@ export function Chat({ onNavigate }: { onNavigate: (slug: string) => void }) {
           ))}
         </tbody>
       </Table>
+
+      <Novedades119 page="chat" />
 
       <PrevNext current="chat" onNavigate={onNavigate} />
     </>

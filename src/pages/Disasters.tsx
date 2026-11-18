@@ -15,6 +15,7 @@ import {
 import type { ReactNode } from "react";
 import { useI18n, fill } from "../i18n";
 import { DISASTERS_COPY } from "./copy/disasters";
+import { Novedades119 } from "./Novedades119";
 
 const HAILSTORM_YAML =
   "id: hailstorm\n" +
@@ -310,6 +311,8 @@ export function Disasters({ onNavigate }: { onNavigate: (slug: string) => void }
           ))}
         </tbody>
       </Table>
+
+      <Novedades119 page="disasters" />
 
       <PrevNext current="disasters" onNavigate={onNavigate} />
     </>

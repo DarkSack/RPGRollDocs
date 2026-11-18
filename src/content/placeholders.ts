@@ -64,6 +64,8 @@ export const placeholders: PlaceholderInfo[] = [
   { name: "%rpgrollguilds_guilds_count%", description: "Cantidad total de guilds (único que no necesita jugador).", expansion: "rpgrollguilds", slug: "guilds" },
   { name: "%rpgrollguilds_in_team% / _in_guild", description: "si/no.", expansion: "rpgrollguilds", slug: "guilds" },
   { name: "%rpgrollguilds_team_name% / _team_size / _team_role", description: "Datos de tu equipo actual, o -/0.", expansion: "rpgrollguilds", slug: "guilds" },
+  { name: "%rpgrollguilds_team_rank% / _guild_rank", description: "Nombre de tu rol en el equipo o en el gremio, en el idioma del servidor (o -).", expansion: "rpgrollguilds", slug: "guilds" },
+  { name: "%rpgrollguilds_guild_balance%", description: "Tesorería compartida de tu gremio, en la moneda de Vault.", expansion: "rpgrollguilds", slug: "guilds" },
   { name: "%rpgrollguilds_guild_name% / _guild_id / _guild_level / _guild_role / _guild_members", description: "Datos de tu guild actual, o -/0.", expansion: "rpgrollguilds", slug: "guilds" },
   { name: "%rpgrolldungeons_active_count% / _definitions_count", description: "Instancias activas / mazmorras definidas (globales al servidor).", expansion: "rpgrolldungeons", slug: "dungeons" },
   { name: "%rpgrolldungeons_occupied_<id>%", description: "si/no — si esa mazmorra tiene una instancia corriendo ahora.", expansion: "rpgrolldungeons", slug: "dungeons" },

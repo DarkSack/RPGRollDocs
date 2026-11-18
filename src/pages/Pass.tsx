@@ -14,6 +14,7 @@ import {
 } from "../components/ui";
 import { useI18n, fill } from "../i18n";
 import { PASS_COPY } from "./copy/pass";
+import { Novedades119 } from "./Novedades119";
 
 export function Pass({ onNavigate }: { onNavigate: (slug: string) => void }) {
   const { locale } = useI18n();
@@ -436,6 +437,8 @@ export function Pass({ onNavigate }: { onNavigate: (slug: string) => void }) {
         </tbody>
       </Table>
       <p>{fill(c.filesReload, { cmd: <Kbd>/passadmin reload</Kbd> })}</p>
+
+      <Novedades119 page="pass" />
 
       <PrevNext current="pass" onNavigate={onNavigate} />
     </>

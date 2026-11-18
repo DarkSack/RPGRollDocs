@@ -15,6 +15,7 @@ import {
 import type { ReactNode } from "react";
 import { useI18n, fill } from "../i18n";
 import { RECIPES_COPY } from "./copy/recipes";
+import { Novedades119 } from "./Novedades119";
 
 const EXTRA_YAML =
   'source: "MiPlugin"                   # nombre del origen (por defecto, el del archivo)\n' +
@@ -271,6 +272,8 @@ export function Recipes({ onNavigate }: { onNavigate: (slug: string) => void }) 
           ))}
         </tbody>
       </Table>
+
+      <Novedades119 page="recipes" />
 
       <PrevNext current="recipes" onNavigate={onNavigate} />
     </>

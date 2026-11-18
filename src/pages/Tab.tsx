@@ -15,6 +15,7 @@ import {
 } from "../components/ui";
 import { useI18n, fill } from "../i18n";
 import { TAB_COPY, type TabCopy } from "./copy/tab";
+import { Novedades119 } from "./Novedades119";
 
 const profileFields = (c: TabCopy): YamlField[] => [
   { key: "id", label: c.pfId, type: "string", default: "nuevo_perfil", placeholder: "default" },
@@ -482,6 +483,8 @@ export function Tab({ onNavigate }: { onNavigate: (slug: string) => void }) {
           parser: <code>*Parser.java</code>,
         })}
       </Callout>
+
+      <Novedades119 page="tab" />
 
       <PrevNext current="tab" onNavigate={onNavigate} />
     </>

@@ -15,6 +15,7 @@ import {
 import type { ReactNode } from "react";
 import { useI18n, fill } from "../i18n";
 import { MACHINES_COPY } from "./copy/machines";
+import { Novedades119 } from "./Novedades119";
 
 const FURNACE_YAML =
   "tiers:\n" +
@@ -285,6 +286,8 @@ export function Machines({ onNavigate }: { onNavigate: (slug: string) => void })
           ))}
         </tbody>
       </Table>
+
+      <Novedades119 page="machines" />
 
       <PrevNext current="machines" onNavigate={onNavigate} />
     </>

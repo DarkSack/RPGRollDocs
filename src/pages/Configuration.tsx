@@ -4,6 +4,7 @@ import { pageTitle } from "../content/nav";
 import { useI18n, fill, localizedConfigFile, localizedConfigKey, localizedPageLabel } from "../i18n";
 import { CONFIG_DB_COPY } from "./copy/configDatabase";
 import { pagePath } from "../content/seo";
+import { Novedades119 } from "./Novedades119";
 
 export function Configuration({ onNavigate }: { onNavigate: (slug: string) => void }) {
   const { locale } = useI18n();
@@ -57,6 +58,8 @@ export function Configuration({ onNavigate }: { onNavigate: (slug: string) => vo
         {fill(c.contentNote, { content: <strong>{c.contentStrong}</strong> })} <Go to="razas-clases" />,{" "}
         <Go to="trabajos" /> {c.and} <Go to="habilidades-traits" />.
       </p>
+
+      <Novedades119 page="configuracion" />
 
       <PrevNext current="configuracion" onNavigate={onNavigate} />
     </>

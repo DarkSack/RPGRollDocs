@@ -16,6 +16,7 @@ import {
 } from "../components/ui";
 import { useI18n, fill } from "../i18n";
 import { ECONOMY_COPY, type EconomyCopy } from "./copy/economy";
+import { Novedades119 } from "./Novedades119";
 
 const mono = "font-mono text-xs";
 
@@ -690,6 +691,8 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
           <Tr><Td className={mono}>/economy company</Td><Td>{c.c19}</Td><Td><Badge>rpgrolleconomy.use</Badge></Td></Tr>
         </tbody>
       </Table>
+
+      <Novedades119 page="economy" />
 
       <PrevNext current="economy" onNavigate={onNavigate} />
     </>

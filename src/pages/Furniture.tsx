@@ -15,6 +15,7 @@ import {
 import type { ReactNode } from "react";
 import { useI18n, fill } from "../i18n";
 import { FURNITURE_COPY } from "./copy/furniture";
+import { Novedades119 } from "./Novedades119";
 
 const EXAMPLE_YAML =
   "mesita:                               # id del mueble\n" +
@@ -377,6 +378,8 @@ export function Furniture({ onNavigate }: { onNavigate: (slug: string) => void }
           ))}
         </tbody>
       </Table>
+
+      <Novedades119 page="furniture" />
 
       <PrevNext current="furniture" onNavigate={onNavigate} />
     </>

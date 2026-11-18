@@ -20,6 +20,27 @@ export interface SearchEntry {
 export const searchIndex: SearchEntry[] = [
   ...nav.flatMap((section) => section.items.map((item) => ({ slug: item.slug, pageTitle: item.label }))),
 
+  // Novedades 1.1.9
+  h("extras", "Menú de admin de necesidades", "v119-menu-necesidades"),
+  h("extras", "Ordenar cofres e inventario (/ordenar, varita)", "v119-ordenar"),
+  h("extras", "Elevadores y Reforzador", "v119-elevadores"),
+  h("encantamientos", "Súper encantador por lista", "v119-super-encantador"),
+  h("encantamientos", "Infusor", "v119-infusor"),
+  h("mobs", "Rarezas, barra de vida y bestiario", "v119-rarezas"),
+  h("economy", "Tope diario de venta", "v119-tope-diario"),
+  h("economy", "Menús con fondo dibujado", "v119-menus-economia"),
+  h("machines", "Cantera y marco de spawners", "v119-cantera"),
+  h("recipes", "Catálogo por tipos", "v119-categorias"),
+  h("quests", "/quest continuar", "v119-continuar"),
+  h("guilds", "Placeholders nuevos (rangos y tesorería)", "v119-placeholders"),
+  h("furniture", "Apagar las recetas del carpintero", "v119-crafting"),
+  h("configuracion", "Menús con fondo dibujado", "v119-menus-dibujados"),
+  h("configuracion", "Daño recibido", "v119-dano-recibido"),
+  h("pass", "Menús con fondo dibujado", "v119-menus-pase"),
+  h("chat", "Aviso de cercanía", "v119-cercania"),
+  h("tab", "Sidebar", "v119-sidebar"),
+  h("disasters", "Chunks descargados", "v119-chunks"),
+
   // Arquitectura
   h("arquitectura", "Los módulos del núcleo", "modulos"),
   h("arquitectura", "Grafo de dependencias", "grafo"),

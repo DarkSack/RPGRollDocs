@@ -16,6 +16,7 @@ import {
 } from "../components/ui";
 import { useI18n, fill } from "../i18n";
 import { MOBS_COPY, type MobsCopy } from "./copy/mobs";
+import { Novedades119 } from "./Novedades119";
 
 const mobFields = (c: MobsCopy): YamlField[] => [
   { key: "id", label: c.mfId, type: "string", default: "nuevo_mob", placeholder: "forest_goblin" },
@@ -680,6 +681,8 @@ export function Mobs({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr><Td className="font-mono text-xs">%rpgrollmobs_nearest_distance%</Td><Td>{c.pNearestDistance}</Td></Tr>
         </tbody>
       </Table>
+
+      <Novedades119 page="mobs" />
 
       <PrevNext current="mobs" onNavigate={onNavigate} />
     </>

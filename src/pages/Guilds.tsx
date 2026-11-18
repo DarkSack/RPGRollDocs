@@ -18,6 +18,7 @@ import {
 import { placeholders } from "../content/placeholders";
 import { useI18n, fill, localizedPlaceholder, localizedCaveatTitle, localizedCaveatBody } from "../i18n";
 import { ADDONS_B_COPY, type AddonsBCopy } from "./copy/addonsB";
+import { Novedades119 } from "./Novedades119";
 
 type GuildsCopy = AddonsBCopy["guilds"];
 
@@ -264,6 +265,8 @@ export function Guilds({ onNavigate }: { onNavigate: (slug: string) => void }) {
           ))}
         </tbody>
       </Table>
+
+      <Novedades119 page="guilds" />
 
       <PrevNext current="guilds" onNavigate={onNavigate} />
     </>
