@@ -198,6 +198,7 @@ export const addonDependencies: AddonDependencies[] = [
   { slug: "magic", hard: ["RPGRoll-Lib", "RPGRoll"], soft: ["RPGRoll-FX", "RPGRoll-Effects"] },
   { slug: "seasons", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Mobs"] },
   { slug: "disasters", hard: ["RPGRoll-Lib"], soft: ["RPGRoll-Seasons", "RPGRoll-Mobs", "GriefPrevention", "WorldGuard"] },
+  { slug: "emotes", hard: ["RPGRoll-Lib", "BetterModel"], soft: ["RPGRoll-Magic", "SackResourcePack"] },
   { slug: "fishing", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "SackResourcePack"] },
   { slug: "ranching", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "SackResourcePack", "Vault", "FreeMinecraftModels"] },
   {

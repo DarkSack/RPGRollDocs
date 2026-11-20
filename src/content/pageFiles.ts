@@ -34,6 +34,7 @@ export const PAGE_FILES: Record<string, string> = {
   "magic": "Magic.tsx",
   "seasons": "Seasons.tsx",
   "disasters": "Disasters.tsx",
+  "emotes": "Emotes.tsx",
   "fishing": "Fishing.tsx",
   "sackresourcepack": "SackResourcePack.tsx",
   "ranching": "Ranching.tsx",

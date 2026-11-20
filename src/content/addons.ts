@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import type { IconProps } from "../components/icons/Icon";
 import {
   NpcIcon,
+  UsersIcon,
   GemIcon,
   WandIcon,
   FlagIcon,
@@ -61,6 +62,7 @@ export const addons: AddonMeta[] = [
   { slug: "magic", icon: WandIcon, blurb: "Hechizos por pipeline de componentes, runas y grimorios.", tone: "violet" },
   { slug: "seasons", icon: LeafIcon, blurb: "Calendario, clima, temperatura y vegetación dinámica.", tone: "green" },
   { slug: "disasters", icon: AlertTriangleIcon, blurb: "Tornados, terremotos, meteoritos y más: destrucción real que se regenera, con niveles y aviso.", tone: "red" },
+  { slug: "emotes", icon: UsersIcon, blurb: "Emotes y animaciones del jugador con BetterModel: menú, favoritos, desbloqueos y conjuros de Magic.", tone: "violet" },
   { slug: "fishing", icon: FishIcon, blurb: "Especies, cañas, carnadas y minijuego de forcejeo.", tone: "blue" },
   { slug: "sackresourcepack", icon: PackageIcon, blurb: "Pipeline de resource pack: fusión, build, distribución.", tone: "neutral" },
   { slug: "ranching", icon: RabbitIcon, blurb: "Genética, linaje, reproducción y bienestar animal.", tone: "green" },

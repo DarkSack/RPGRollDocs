@@ -31,6 +31,7 @@ import { Pass } from "./pages/Pass";
 import { Furniture } from "./pages/Furniture";
 import { Recipes } from "./pages/Recipes";
 import { Disasters } from "./pages/Disasters";
+import { Emotes } from "./pages/Emotes";
 import { Machines } from "./pages/Machines";
 import { WorldForge } from "./pages/WorldForge";
 import { Particles } from "./pages/Particles";
@@ -171,6 +172,8 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Magic onNavigate={onNavigate} />;
     case "disasters":
       return <Disasters onNavigate={onNavigate} />;
+    case "emotes":
+      return <Emotes onNavigate={onNavigate} />;
     case "seasons":
       return <Seasons onNavigate={onNavigate} />;
     case "fishing":

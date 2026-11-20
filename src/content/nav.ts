@@ -52,6 +52,7 @@ export const nav: NavSection[] = [
       { slug: "magic", label: "Magic" },
       { slug: "seasons", label: "Seasons" },
       { slug: "disasters", label: "Disasters" },
+      { slug: "emotes", label: "Emotes" },
       { slug: "fishing", label: "Fishing" },
       { slug: "sackresourcepack", label: "SackResourcePack" },
       { slug: "ranching", label: "Ranching" },
