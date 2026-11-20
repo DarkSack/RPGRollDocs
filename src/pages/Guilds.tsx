@@ -70,11 +70,23 @@ export function Guilds({ onNavigate }: { onNavigate: (slug: string) => void }) {
     ["/guild accept <id-de-guild> | decline | leave", c.gAccept],
     ["/guild info | vault | territory | upgrade | diplomacy | quest | achievements | calendar | members | ranking | chat | customize", c.gInfo],
     ["/guild browser", fill(c.gBrowser, { cmd: <code>/guildadmin browser guilds</code> })],
+    [
+      "/guild color <nombre con colores> | reset",
+      fill(c.gColor, {
+        perm: <code>rpgrollguilds.guild.color</code>,
+        hex: <code>&amp;#RRGGBB</code>,
+        x: <code>&amp;x&amp;R&amp;R&amp;G&amp;G&amp;B&amp;B</code>,
+        reset: <code>reset</code>,
+        colored: <code>%rpgrollguilds_guild_name_colored%</code>,
+        animated: <code>%rpgrollguilds_guild_name_animated%</code>,
+      }),
+    ],
   ];
 
   const adminCommands: [string, ReactNode][] = [
     ["/guildadmin browser [guilds|quests]", fill(c.aBrowser, { def: <code>GuildQuestDefinition</code> })],
     ["/guildadmin delete <id>", c.aDelete],
+    ["/guildadmin color <id> <texto | reset>", fill(c.aColor, { reset: <code>reset</code>, cmd: <code>/guild color</code> })],
     ["/guildadmin reload", c.aReload],
   ];
 

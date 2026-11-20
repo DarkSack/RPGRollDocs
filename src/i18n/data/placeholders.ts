@@ -62,6 +62,8 @@ const en: Map_ = {
   "%rpgrollguilds_team_name% / _team_size / _team_role": "Data about your current team, or -/0.",
   "%rpgrollguilds_guild_name% / _guild_id / _guild_level / _guild_role / _guild_members":
     "Data about your current guild, or -/0.",
+  "%rpgrollguilds_guild_name_colored% / _guild_name_animated":
+    "Your guild name with the colours from /guild color (or the guild colour); the animated one moves them one letter every 0.5 s. For the TAB.",
 
   "%rpgrolldungeons_active_count% / _definitions_count":
     "Active instances / defined dungeons (server-wide).",
@@ -139,6 +141,8 @@ const pt: Map_ = {
   "%rpgrollguilds_team_name% / _team_size / _team_role": "Dados do seu time atual, ou -/0.",
   "%rpgrollguilds_guild_name% / _guild_id / _guild_level / _guild_role / _guild_members":
     "Dados da sua guilda atual, ou -/0.",
+  "%rpgrollguilds_guild_name_colored% / _guild_name_animated":
+    "Nome da sua guilda com as cores de /guild color (ou a cor da guilda); o animado as move uma letra a cada 0,5 s. Para a TAB.",
 
   "%rpgrolldungeons_active_count% / _definitions_count":
     "Instâncias ativas / masmorras definidas (globais no servidor).",
