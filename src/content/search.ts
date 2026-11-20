@@ -500,6 +500,7 @@ export const searchIndex: SearchEntry[] = [
   h("traps", "Cadenas de mecanismos", "cadenas"),
   h("traps", "Estados (state machine)", "estados"),
   h("traps", "Torretas", "torretas"),
+  h("traps", "Cámaras y monitores", "camaras"),
   h("traps", "Ejemplos de archivo YAML", "ejemplos"),
   h("traps", "Comandos — /trapadmin", "comandos"),
 

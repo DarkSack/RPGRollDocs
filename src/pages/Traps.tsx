@@ -354,6 +354,61 @@ export function Traps({ onNavigate }: { onNavigate: (slug: string) => void }) {
         })}
       </p>
 
+      <SectionHeading id="camaras">{c.camTitle}</SectionHeading>
+      <p>
+        {fill(c.camIntro, {
+          camera: <code>turrets/camera.yml</code>,
+          monitor: <code>turrets/monitor.yml</code>,
+          impact: <code>impact.type</code>,
+          ctype: <code>CAMERA</code>,
+          mtype: <code>MONITOR</code>,
+        })}
+      </p>
+      <Table>
+        <Thead>
+          <Th>{c.thWhat2}</Th>
+          <Th>{c.thHow}</Th>
+        </Thead>
+        <tbody>
+          <Tr><Td>{c.camPlaceK}</Td><Td>{c.camPlace}</Td></Tr>
+          <Tr><Td>{c.camArcK}</Td><Td>{fill(c.camArc, { spin: <code>model.spin-degrees-per-tick</code> })}</Td></Tr>
+          <Tr><Td>{c.camAlertK}</Td><Td>{fill(c.camAlert, { radius: <code>radius</code>, interval: <code>fire-interval-ticks</code> })}</Td></Tr>
+          <Tr><Td>{c.camWatchK}</Td><Td>{c.camWatch}</Td></Tr>
+          <Tr><Td>{c.camRulesK}</Td><Td>{c.camRules}</Td></Tr>
+          <Tr><Td>{c.camNameK}</Td><Td>{c.camName}</Td></Tr>
+          <Tr><Td>{c.monK}</Td><Td>{c.mon}</Td></Tr>
+          <Tr><Td>{c.portK}</Td><Td>{fill(c.port, { cmd: <Kbd>{"/trapadmin turret give portable_monitor <jugador>"}</Kbd> })}</Td></Tr>
+        </tbody>
+      </Table>
+      <CodeBlock
+        language="yaml"
+        filename="turrets/camera.yml"
+        code={
+          "id: camera\n" +
+          'display-name: "&bCámara de Seguridad"\n\n' +
+          "radius: 24.0\n" +
+          "target-players: true\n" +
+          "target-hostile-mobs: false\n" +
+          "fire-interval-ticks: 600\n\n" +
+          "impact:\n" +
+          "  type: CAMERA\n\n" +
+          "model:\n" +
+          "  base-block: BARRIER\n" +
+          "  material: SPYGLASS\n" +
+          '  item-model: "rpgroll_traps:turret/camera"\n' +
+          "  hover-height: 0.0\n" +
+          "  spin-degrees-per-tick: 1.5"
+        }
+      />
+      <Callout tone="info" title={c.camYamlTitle}>
+        {fill(c.camYaml, {
+          type: <code>impact.type: CAMERA</code>,
+          spin: <code>spin-degrees-per-tick</code>,
+          block: <code>base-block: BARRIER</code>,
+          hover: <code>hover-height: 0.0</code>,
+        })}
+      </Callout>
+
       <SectionHeading id="ejemplos">{c.examplesTitle}</SectionHeading>
       <p>
         {fill(c.examplesBody, {
@@ -413,6 +468,7 @@ export function Traps({ onNavigate }: { onNavigate: (slug: string) => void }) {
           <Tr><Td className="font-mono text-xs">{"/trapadmin turret place <id>"}</Td><Td>{c.xTPlace}</Td></Tr>
           <Tr><Td className="font-mono text-xs">{"/trapadmin turret remove <placementId>"}</Td><Td>{c.xTRemove}</Td></Tr>
           <Tr><Td className="font-mono text-xs">/trapadmin turret list</Td><Td>{c.xTList}</Td></Tr>
+          <Tr><Td className="font-mono text-xs">{"/trapadmin turret give <id> [jugador] [cantidad]"}</Td><Td>{fill(c.xTGive, { portable: <code>portable_monitor</code> })}</Td></Tr>
         </tbody>
       </Table>
 
