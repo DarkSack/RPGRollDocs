@@ -99,7 +99,8 @@ const es = {
   thDelivers: "Entrega",
   lMaterial:
     "Un ítem vanilla. Es lo único que la tienda le compra al jugador, y solo «limpio»: con nombre, encantado o de RPGRoll no cuenta.",
-  lItem: "Un ítem de RPGRoll-Items (necesita ese módulo).",
+  lItem: "Un ítem de RPGRoll-Items (necesita ese módulo). Con {sell} la tienda también lo compra, por su id y sin mejoras, como el botín de los mobs.",
+  lSpawner: "Un spawner de RPGRoll-Machines del mob indicado, sin mejoras (necesita ese módulo). Se coloca y se mejora como los del mundo; la tienda no lo recompra.",
   lEnchant: "El libro de un encantamiento de RPGRoll-Enchantments, que se aplica en el yunque.",
   lBook: "Un libro encantado vanilla, por la clave del encantamiento.",
   lFurniture: "Un mueble de RPGRoll-Furniture, con su versión opcional tras los dos puntos (necesita ese módulo).",
@@ -110,7 +111,7 @@ const es = {
 
   buyerTitle: "El comprador (NPC que compra de todo)",
   buyerBody:
-    "Una ventana donde el jugador deja lo que quiera vender y pulsa {sell}. Cada ítem se paga por su valor interno: los peces y los productos del rancho lo llevan dentro (según especie, peso y calidad), y los materiales vanilla limpios (sin nombre ni lore) se pagan a lo que daría {tienda} por ellos. Lo que no compra se devuelve al cerrar; nada se pierde aunque el jugador se desconecte o el servidor se apague con la ventana abierta.",
+    "Una ventana donde el jugador deja lo que quiera vender y pulsa {sell}. Cada ítem se paga por su valor interno: los peces y los productos del rancho lo llevan dentro (según especie, peso y calidad), los materiales vanilla limpios (sin nombre ni lore) y los ítems de RPGRoll-Items que la tienda compra (línea {item} con {sellk}) se pagan a lo que daría {tienda} por ellos. Lo que no compra se devuelve al cerrar; nada se pierde aunque el jugador se desconecte o el servidor se apague con la ventana abierta.",
   sellWord: "Vender",
   buyerNpcBody:
     "Se abre con {cmd}, pensado para la acción {command} de un NPC de RPGRoll-NPCs (o de cualquier plugin de NPCs que ejecute comandos por consola). El plugin de NPCs trae el ejemplo {example}:",
@@ -363,7 +364,8 @@ const en: EconomyCopy = {
   thDelivers: "Delivers",
   lMaterial:
     "A vanilla item. It is the only thing the shop buys from the player, and only “clean”: named, enchanted or from RPGRoll does not count.",
-  lItem: "An RPGRoll-Items item (needs that module).",
+  lItem: "An RPGRoll-Items item (needs that module). With {sell} the shop also buys it, by its id and without upgrades, like mob loot.",
+  lSpawner: "An RPGRoll-Machines spawner for that mob, without upgrades (needs that module). It is placed and upgraded like the ones in the world; the shop does not buy it back.",
   lEnchant: "The book of an RPGRoll-Enchantments enchantment, which is applied at the anvil.",
   lBook: "A vanilla enchanted book, by the enchantment's key.",
   lFurniture: "An RPGRoll-Furniture piece, with its optional variant after the colon (needs that module).",
@@ -374,7 +376,7 @@ const en: EconomyCopy = {
 
   buyerTitle: "The buyer (an NPC that buys everything)",
   buyerBody:
-    "A window where the player drops whatever they want to sell and presses {sell}. Each item is paid for by its internal value: fish and ranch products carry it inside (by species, weight and quality), and clean vanilla materials (no name, no lore) are paid what {tienda} would give for them. What it does not buy is returned on closing; nothing is lost even if the player disconnects or the server shuts down with the window open.",
+    "A window where the player drops whatever they want to sell and presses {sell}. Each item is paid for by its internal value: fish and ranch products carry it inside (by species, weight and quality), and clean vanilla materials (no name, no lore) and the RPGRoll-Items items the shop buys (an {item} line with {sellk}) are paid what {tienda} would give for them. What it does not buy is returned on closing; nothing is lost even if the player disconnects or the server shuts down with the window open.",
   sellWord: "Sell",
   buyerNpcBody:
     "It opens with {cmd}, meant for the {command} action of an RPGRoll-NPCs NPC (or of any NPC plugin that runs console commands). The NPCs plugin ships the example {example}:",
@@ -624,7 +626,8 @@ const pt: EconomyCopy = {
   thDelivers: "Entrega",
   lMaterial:
     "Um item vanilla. É a única coisa que a loja compra do jogador, e só «limpo»: com nome, encantado ou do RPGRoll não conta.",
-  lItem: "Um item do RPGRoll-Items (precisa desse módulo).",
+  lItem: "Um item do RPGRoll-Items (precisa desse módulo). Com {sell} a loja também o compra, pelo id e sem melhorias, como o loot dos mobs.",
+  lSpawner: "Um spawner do RPGRoll-Machines do mob indicado, sem melhorias (precisa desse módulo). Coloca-se e melhora-se como os do mundo; a loja não o recompra.",
   lEnchant: "O livro de um encantamento do RPGRoll-Enchantments, que é aplicado na bigorna.",
   lBook: "Um livro encantado vanilla, pela chave do encantamento.",
   lFurniture: "Um móvel do RPGRoll-Furniture, com a sua versão opcional depois dos dois pontos (precisa desse módulo).",
@@ -635,7 +638,7 @@ const pt: EconomyCopy = {
 
   buyerTitle: "O comprador (NPC que compra de tudo)",
   buyerBody:
-    "Uma janela onde o jogador deixa o que quiser vender e aperta {sell}. Cada item é pago pelo seu valor interno: os peixes e os produtos do rancho o levam dentro (conforme espécie, peso e qualidade), e os materiais vanilla limpos (sem nome nem lore) são pagos pelo que {tienda} daria por eles. O que não compra é devolvido ao fechar; nada se perde mesmo que o jogador se desconecte ou o servidor desligue com a janela aberta.",
+    "Uma janela onde o jogador deixa o que quiser vender e aperta {sell}. Cada item é pago pelo seu valor interno: os peixes e os produtos do rancho o levam dentro (conforme espécie, peso e qualidade), e os materiais vanilla limpos (sem nome nem lore) e os itens do RPGRoll-Items que a loja compra (linha {item} com {sellk}) são pagos pelo que {tienda} daria por eles. O que não compra é devolvido ao fechar; nada se perde mesmo que o jogador se desconecte ou o servidor desligue com a janela aberta.",
   sellWord: "Vender",
   buyerNpcBody:
     "É aberto com {cmd}, pensado para a ação {command} de um NPC do RPGRoll-NPCs (ou de qualquer plugin de NPCs que execute comandos pelo console). O plugin de NPCs traz o exemplo {example}:",

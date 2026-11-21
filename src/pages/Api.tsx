@@ -240,6 +240,30 @@ export function Api({ onNavigate }: { onNavigate: (slug: string) => void }) {
         }
       />
 
+      <SectionHeading id="dar-invocar">{c.thingsTitle}</SectionHeading>
+      <p>
+        {fill(c.thingsBody, {
+          cls: <code>com.sack.rpgroll.common.quick.Things</code>,
+          enable: <code>onEnable()</code>,
+          create: <code>create(id)</code>,
+          dar: <code>/dar</code>,
+        })}
+      </p>
+      <CodeBlock
+        language="java"
+        filename="MiPlugin.java"
+        code={
+          "// /dar reliquia:<id>\n" +
+          "Things.give(this, \"reliquia\",\n" +
+          "        () -> relics.getAll().stream().map(r -> r.id()).toList(),\n" +
+          "        id -> relics.get(id).map(r -> relicItems.create(r)));\n\n" +
+          "// /invocar bestia:<id>\n" +
+          "Things.summon(this, \"bestia\",\n" +
+          "        () -> beasts.ids(),\n" +
+          "        (id, at) -> beasts.spawn(id, at).isPresent());"
+        }
+      />
+
       <SectionHeading id="donde-viven">{c.whereTitle}</SectionHeading>
       <p>
         {fill(c.whereBody, {

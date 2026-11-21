@@ -22,6 +22,24 @@ const es = {
     tabBody:
       "Además de sugerir el subcomando, {root} (y el de cada addon) sugiere desde el manager de contenido real en varios subcomandos: {ex1} lista razas de verdad desde el {manager}, {ex2} lista trabajos reales, etc. ({ex3} y {ex4} siguen usando una lista placeholder, no el manager real). Ver el detalle técnico en",
     tabLink: "Arquitectura → Tab-completion",
+    langTitle: "Comandos en tu idioma",
+    langBody:
+      "Los comandos de jugador de todos los módulos aceptan su nombre y su primer subcomando en español, inglés y portugués, y Tab te sugiere los de tu idioma de Minecraft (otros idiomas ven el inglés; la consola, el español). Lo que escribas en otra lengua también vale y se sigue sugiriendo. Solo se traduce la primera palabra tras el comando; los comandos de administración siguen en inglés.",
+    thEs: "Español",
+    thEn: "Inglés",
+    thPt: "Portugués",
+    langDevTitle: "Para módulos propios",
+    langDevBody:
+      "Cada módulo trae un {file} con {cmd}: los nombres van como alias y cada palabra llega al comando en su forma de siempre, así que el código no cambia. Lo lee el puente de comandos de la Lib ({bridge}).",
+    quickTitle: "Atajos: /dar, /invocar y /abrir",
+    quickBody:
+      "Tres comandos de RPGRoll-Lib que sirven para cualquier módulo instalado. {thing} es {typed} o solo el id si ningún otro tipo lo tiene; con Tab salen primero los tipos y, al escribir, los ids de todos.",
+    qDar: "Da una cosa. Sin jugador, a ti. Lo que no cabe cae a sus pies.",
+    qInvocar: "Invoca criaturas donde estás tú o el jugador indicado (máx. 50).",
+    qAbrir: "Abre un menú como si el jugador escribiera su comando, con sus permisos. Solo salen los menús de los módulos instalados; la lista está en {cfg}. Para abrírselo a otro hace falta {perm}.",
+    thType: "Tipo",
+    thModule: "Módulo",
+    thExample: "Ejemplo",
     seePerms: "Ver el árbol completo de permisos en",
   },
   permissions: {
@@ -85,6 +103,24 @@ const en: ReferenceCopy = {
     tabBody:
       "Beyond suggesting the subcommand, {root} (and each addon's) suggests from the real content manager in several subcommands: {ex1} lists actual races from the {manager}, {ex2} lists real jobs, and so on. ({ex3} and {ex4} still use a placeholder list, not the real manager.) The technical detail is in",
     tabLink: "Architecture → Tab-completion",
+    langTitle: "Commands in your language",
+    langBody:
+      "Player commands in every module accept their name and first subcommand in Spanish, English and Portuguese, and Tab suggests the ones in your Minecraft language (other languages see English; the console, Spanish). Whatever you type in another language works too and is still suggested. Only the first word after the command is translated; admin commands stay in English.",
+    thEs: "Spanish",
+    thEn: "English",
+    thPt: "Portuguese",
+    langDevTitle: "For your own modules",
+    langDevBody:
+      "Each module ships a {file} with {cmd}: names become aliases and each word reaches the command in its usual form, so the code doesn't change. The Lib's command bridge ({bridge}) reads it.",
+    quickTitle: "Shortcuts: /dar, /invocar and /abrir",
+    quickBody:
+      "Three RPGRoll-Lib commands that work for every installed module. {thing} is {typed}, or just the id if no other type has it; Tab shows the types first and, as you type, ids from all of them.",
+    qDar: "Gives a thing. Without a player, to you. What doesn't fit drops at their feet.",
+    qInvocar: "Summons creatures where you or the given player stand (max 50).",
+    qAbrir: "Opens a menu as if the player typed its command, with their permissions. Only installed modules' menus are listed; the list lives in {cfg}. Opening it for someone else needs {perm}.",
+    thType: "Type",
+    thModule: "Module",
+    thExample: "Example",
     seePerms: "See the full permission tree in",
   },
   permissions: {
@@ -146,6 +182,24 @@ const pt: ReferenceCopy = {
     tabBody:
       "Além de sugerir o subcomando, {root} (e o de cada addon) sugere a partir do gerenciador de conteúdo real em vários subcomandos: {ex1} lista raças de verdade a partir do {manager}, {ex2} lista trabalhos reais, etc. ({ex3} e {ex4} ainda usam uma lista placeholder, não o gerenciador real). Veja o detalhe técnico em",
     tabLink: "Arquitetura → Tab-completion",
+    langTitle: "Comandos no seu idioma",
+    langBody:
+      "Os comandos de jogador de todos os módulos aceitam o nome e o primeiro subcomando em espanhol, inglês e português, e o Tab sugere os do seu idioma do Minecraft (outros idiomas veem o inglês; o console, o espanhol). O que você escrever em outra língua também vale e continua sendo sugerido. Só se traduz a primeira palavra depois do comando; os comandos de administração continuam em inglês.",
+    thEs: "Espanhol",
+    thEn: "Inglês",
+    thPt: "Português",
+    langDevTitle: "Para módulos próprios",
+    langDevBody:
+      "Cada módulo traz um {file} com {cmd}: os nomes viram aliases e cada palavra chega ao comando na sua forma de sempre, então o código não muda. Quem o lê é a ponte de comandos da Lib ({bridge}).",
+    quickTitle: "Atalhos: /dar, /invocar e /abrir",
+    quickBody:
+      "Três comandos do RPGRoll-Lib que servem para qualquer módulo instalado. {thing} é {typed} ou só o id se nenhum outro tipo o tiver; com Tab aparecem primeiro os tipos e, ao escrever, os ids de todos.",
+    qDar: "Dá uma coisa. Sem jogador, para você. O que não cabe cai aos pés dele.",
+    qInvocar: "Invoca criaturas onde você ou o jogador indicado estão (máx. 50).",
+    qAbrir: "Abre um menu como se o jogador escrevesse o comando, com as permissões dele. Só aparecem os menus dos módulos instalados; a lista fica em {cfg}. Para abrir para outro é preciso {perm}.",
+    thType: "Tipo",
+    thModule: "Módulo",
+    thExample: "Exemplo",
     seePerms: "Veja a árvore completa de permissões em",
   },
   permissions: {

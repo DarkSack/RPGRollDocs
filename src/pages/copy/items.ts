@@ -142,6 +142,9 @@ const es = {
   laserBedrockBody:
     "Las texturas animadas de los modelos 3D se ven quietas (el primer fotograma): Bedrock no anima las texturas de los ítems en la mano.",
 
+  accTitle: "Amuletos (accesorios)",
+  accBody:
+    "Un ítem con {data} en su YAML es un amuleto: no va en la mano ni en la armadura, sino en 3 ranuras propias que se abren con {cmd} o con clic derecho llevándolo en la mano. Lo que lleva puesto cuenta como equipado para todo: stats, efectos, requisitos, habilidades y triggers. No se pueden llevar dos iguales (no se suman), hay que cumplir sus requisitos de uso y no se colocan como bloque aunque sean una cabeza. Se guardan en cada cambio en {folder}.",
   useReqTitle: "Requisitos de uso",
   useReqBody: "Un ítem puede pedir nivel, raza, clase, profesión, skill, trait, permiso, o dinero mínimo.",
   useReqWarnTitle: "Bloquean las habilidades, no el equipo",
@@ -380,6 +383,9 @@ const en: ItemsCopy = {
   laserBedrockBody:
     "Animated textures on 3D models look still (the first frame): Bedrock does not animate the textures of items in the hand.",
 
+  accTitle: "Amulets (accessories)",
+  accBody:
+    "An item with {data} in its YAML is an amulet: it does not go in the hand or armor but in 3 slots of its own, opened with {cmd} or by right-clicking with it in hand. What you wear counts as equipped for everything: stats, effects, requirements, skills and triggers. You can't wear two identical ones (they don't stack), you must meet its use requirements and it can't be placed as a block even if it is a head. They are saved on every change in {folder}.",
   useReqTitle: "Use requirements",
   useReqBody: "An item can require a level, race, class, profession, skill, trait, permission, or a minimum amount of money.",
   useReqWarnTitle: "They block the abilities, not equipping",
@@ -615,6 +621,9 @@ const pt: ItemsCopy = {
   laserBedrockBody:
     "As texturas animadas dos modelos 3D aparecem paradas (o primeiro quadro): o Bedrock não anima as texturas dos itens na mão.",
 
+  accTitle: "Amuletos (acessórios)",
+  accBody:
+    "Um item com {data} no seu YAML é um amuleto: não vai na mão nem na armadura, e sim em 3 espaços próprios que se abrem com {cmd} ou com clique direito segurando-o. O que está equipado conta para tudo: stats, efeitos, requisitos, habilidades e triggers. Não dá para usar dois iguais (não somam), é preciso cumprir os requisitos de uso e não se colocam como bloco mesmo sendo uma cabeça. Salvam-se a cada mudança em {folder}.",
   useReqTitle: "Requisitos de uso",
   useReqBody: "Um item pode pedir nível, raça, classe, profissão, skill, trait, permissão, ou dinheiro mínimo.",
   useReqWarnTitle: "Bloqueiam as habilidades, não o equipamento",

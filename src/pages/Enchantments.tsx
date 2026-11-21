@@ -392,6 +392,35 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
         })}
       </p>
 
+      <SectionHeading id="desencantador">{c.disTitle}</SectionHeading>
+      <p>{fill(c.disIntro, { open: <Kbd>{c.disOpenKey}</Kbd> })}</p>
+      <Table>
+        <Thead>
+          <Th>{c.disThWhat}</Th>
+          <Th>{c.disThHow}</Th>
+        </Thead>
+        <tbody>
+          <Tr><Td>{c.disPickK}</Td><Td>{fill(c.disPick, { left: <Kbd>{c.disLeftKey}</Kbd>, right: <Kbd>{c.disRightKey}</Kbd> })}</Td></Tr>
+          <Tr><Td>{c.disPriceK}</Td><Td>{fill(c.disPrice, { money: <code>1500</code>, shards: <code>1</code> })}</Td></Tr>
+          <Tr><Td>{c.disBookK}</Td><Td>{c.disBook}</Td></Tr>
+          <Tr><Td>{c.disShardK}</Td><Td>{fill(c.disShard, { id: <code>esquirla_de_olvidita</code> })}</Td></Tr>
+        </tbody>
+      </Table>
+      <CodeBlock
+        language="yaml"
+        filename="plugins/RPGRoll-Enchantments/config.yml"
+        code={
+          "disenchanter:\n" +
+          "  enabled: true\n" +
+          "  money-per-level: 1500\n" +
+          "  shards-per-level: 1\n" +
+          "  shard-item: esquirla_de_olvidita"
+        }
+      />
+      <Callout tone="info" title={c.disConfigTitle}>
+        {fill(c.disConfig, { enabled: <code>disenchanter.enabled: false</code> })}
+      </Callout>
+
       <SectionHeading id="gui">{c.guiTitle}</SectionHeading>
       <p>
         {fill(c.guiBody, {

@@ -141,6 +141,24 @@ const es = {
   itemsBody:
     "{def} tiene dos mapas separados: {vanilla} (encantamientos reales de Bukkit, aplicados directamente por Items sin pasar por este addon) y {custom} ({idLevel}, resueltos contra este addon). Al crear el ítem, Items comprueba en runtime si {plugin} está instalado — si no lo está, esa parte simplemente no hace nada; si lo está, busca cada definición por id y llama al mismo {apply} que usa {cmd}.",
 
+  disOpenKey: "Mayús + clic derecho en la muela",
+  disLeftKey: "Clic izquierdo",
+  disRightKey: "Clic derecho",
+  disTitle: "Desencantador",
+  disIntro:
+    "Quita un solo encantamiento de un ítem sin tocar los demás y te lo devuelve en un libro a su nivel. Es la muela de siempre: {open}, con el ítem en la mano principal; el clic normal sigue siendo la muela vanilla. Sirve para los encantamientos vanilla y para los de RPGRoll.",
+  disThWhat: "Qué",
+  disThHow: "Cómo",
+  disPickK: "Elegir",
+  disPick: "Sale un botón por encantamiento. {left} paga con dinero (Vault); {right} paga con esquirlas de olvidita.",
+  disPriceK: "Precio",
+  disPrice: "Por nivel: {money} monedas o {shards} esquirla. Los de tesoro y las maldiciones vanilla, y los de RPGRoll de rareza legendaria o más, cuestan el doble.",
+  disBookK: "Resultado",
+  disBook: "Un libro encantado (vanilla o de RPGRoll) con ese encantamiento y nivel. El ítem se queda con los demás.",
+  disShardK: "Esquirla",
+  disShard: "Cualquier ítem de RPGRoll-Items con el id {id} (configurable). En Sackito sale de la mena de olvidita, rara y solo en el mundo de recursos.",
+  disConfigTitle: "Sin Vault",
+  disConfig: "Sin un plugin de economía solo se puede pagar con esquirlas. {enabled} lo apaga del todo.",
   guiTitle: "GUI: navegador y editor",
   guiBody:
     "{browser} abre un navegador con todos los encantamientos definidos y un botón “Crear nuevo”. El editor cubre identidad, rareza, una grilla de 9 categorías y otra de 9 triggers (toggle por click), y la lista de efectos con alta rápida por chat ({fmt}).",
@@ -325,6 +343,24 @@ const en: EnchantmentsCopy = {
   itemsBody:
     "{def} has two separate maps: {vanilla} (real Bukkit enchantments, applied directly by Items without going through this addon) and {custom} ({idLevel}, resolved against this addon). When creating the item, Items checks at runtime whether {plugin} is installed — if it is not, that part simply does nothing; if it is, it looks up each definition by id and calls the same {apply} that {cmd} uses.",
 
+  disOpenKey: "Shift + right-click the grindstone",
+  disLeftKey: "Left-click",
+  disRightKey: "Right-click",
+  disTitle: "Disenchanter",
+  disIntro:
+    "Removes a single enchantment from an item without touching the rest and gives it back in a book at its level. It is the usual grindstone: {open}, with the item in your main hand; a normal click is still the vanilla grindstone. It works for vanilla enchantments and for RPGRoll ones.",
+  disThWhat: "What",
+  disThHow: "How",
+  disPickK: "Picking",
+  disPick: "There is one button per enchantment. {left} pays with money (Vault); {right} pays with olvidita shards.",
+  disPriceK: "Price",
+  disPrice: "Per level: {money} coins or {shards} shard. Vanilla treasure enchantments and curses, and RPGRoll ones of legendary rarity or higher, cost double.",
+  disBookK: "Result",
+  disBook: "An enchanted book (vanilla or RPGRoll) with that enchantment and level. The item keeps the others.",
+  disShardK: "Shard",
+  disShard: "Any RPGRoll-Items item with the id {id} (configurable). On Sackito it drops from olvidita ore, rare and only in the resource world.",
+  disConfigTitle: "Without Vault",
+  disConfig: "Without an economy plugin you can only pay with shards. {enabled} turns it off completely.",
   guiTitle: "GUI: browser and editor",
   guiBody:
     "{browser} opens a browser with every defined enchantment and a “Create new” button. The editor covers identity, rarity, a grid of 9 categories and another of 9 triggers (click to toggle), and the effects list with quick entry via chat ({fmt}).",
@@ -507,6 +543,24 @@ const pt: EnchantmentsCopy = {
   itemsBody:
     "{def} tem dois mapas separados: {vanilla} (encantamentos reais do Bukkit, aplicados diretamente pelo Items sem passar por este addon) e {custom} ({idLevel}, resolvidos contra este addon). Ao criar o item, o Items verifica em runtime se o {plugin} está instalado — se não estiver, essa parte simplesmente não faz nada; se estiver, busca cada definição por id e chama o mesmo {apply} que o {cmd} usa.",
 
+  disOpenKey: "Shift + clique direito no rebolo",
+  disLeftKey: "Clique esquerdo",
+  disRightKey: "Clique direito",
+  disTitle: "Desencantador",
+  disIntro:
+    "Tira um único encantamento de um item sem tocar nos outros e o devolve num livro no seu nível. É o rebolo de sempre: {open}, com o item na mão principal; o clique normal continua sendo o rebolo vanilla. Serve para os encantamentos vanilla e para os do RPGRoll.",
+  disThWhat: "O quê",
+  disThHow: "Como",
+  disPickK: "Escolher",
+  disPick: "Aparece um botão por encantamento. {left} paga com dinheiro (Vault); {right} paga com fragmentos de olvidita.",
+  disPriceK: "Preço",
+  disPrice: "Por nível: {money} moedas ou {shards} fragmento. Os de tesouro e as maldições vanilla, e os do RPGRoll de raridade lendária ou mais, custam o dobro.",
+  disBookK: "Resultado",
+  disBook: "Um livro encantado (vanilla ou do RPGRoll) com esse encantamento e nível. O item fica com os outros.",
+  disShardK: "Fragmento",
+  disShard: "Qualquer item do RPGRoll-Items com o id {id} (configurável). No Sackito sai do minério de olvidita, raro e só no mundo de recursos.",
+  disConfigTitle: "Sem Vault",
+  disConfig: "Sem um plugin de economia só dá para pagar com fragmentos. {enabled} o desliga de vez.",
   guiTitle: "GUI: navegador e editor",
   guiBody:
     "{browser} abre um navegador com todos os encantamentos definidos e um botão “Criar novo”. O editor cobre identidade, raridade, uma grade de 9 categorias e outra de 9 triggers (toggle por clique), e a lista de efeitos com cadastro rápido pelo chat ({fmt}).",

@@ -299,7 +299,8 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
         </Thead>
         <tbody>
           <Tr><Td className={mono}>material: OAK_LOG</Td><Td>{c.lMaterial}</Td></Tr>
-          <Tr><Td className={mono}>item: flame_blade</Td><Td>{c.lItem}</Td></Tr>
+          <Tr><Td className={mono}>item: flame_blade</Td><Td>{fill(c.lItem, { sell: <code>sell</code> })}</Td></Tr>
+          <Tr><Td className={mono}>spawner: zombie</Td><Td>{c.lSpawner}</Td></Tr>
           <Tr><Td className={mono}>enchant: lifesteal + level</Td><Td>{c.lEnchant}</Td></Tr>
           <Tr><Td className={mono}>book: mending + level</Td><Td>{c.lBook}</Td></Tr>
           <Tr><Td className={mono}>furniture: sofa:red</Td><Td>{c.lFurniture}</Td></Tr>
@@ -350,7 +351,7 @@ export function Economy({ onNavigate }: { onNavigate: (slug: string) => void }) 
 
       <SectionHeading id="comprador">{c.buyerTitle}</SectionHeading>
       <p>
-        {fill(c.buyerBody, { sell: <strong>{c.sellWord}</strong>, tienda: <code>/tienda</code> })}
+        {fill(c.buyerBody, { sell: <strong>{c.sellWord}</strong>, tienda: <code>/tienda</code>, item: <code>item:</code>, sellk: <code>sell</code> })}
       </p>
       <p>
         {fill(c.buyerNpcBody, {

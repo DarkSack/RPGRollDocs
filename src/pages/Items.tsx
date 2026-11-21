@@ -513,6 +513,20 @@ export function Items({ onNavigate }: { onNavigate: (slug: string) => void }) {
         {c.laserBedrockBody}
       </Callout>
 
+      <SectionHeading id="amuletos">{c.accTitle}</SectionHeading>
+      <p>
+        {fill(c.accBody, {
+          data: <code>custom-data.accessory: amulet</code>,
+          cmd: <Kbd>/amuletos</Kbd>,
+          folder: <code>plugins/RPGRoll-Items/accessories/</code>,
+        })}
+      </p>
+      <CodeBlock
+        language="yaml"
+        filename="packs/beta/insignia_beta.yml"
+        code={"stats:\n  luck: 3\n  health: 2\ncustom-data:\n  accessory: amulet"}
+      />
+
       <SectionHeading id="requisitos-de-uso">{c.useReqTitle}</SectionHeading>
       <p>{c.useReqBody}</p>
       <Callout tone="warning" title={c.useReqWarnTitle}>

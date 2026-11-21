@@ -87,6 +87,8 @@ export const searchIndex: SearchEntry[] = [
   // Comandos
   h("comandos", "Comandos de jugador", "jugador"),
   h("comandos", "Comandos de administrador", "admin"),
+  h("comandos", "Comandos en tu idioma (español, inglés y portugués)", "idioma"),
+  h("comandos", "Atajos: /dar, /invocar y /abrir", "atajos"),
 
   // Base de datos
   h("base-de-datos", "Sistema de migraciones", "migraciones"),
@@ -141,6 +143,7 @@ export const searchIndex: SearchEntry[] = [
   h("api", "Métodos disponibles", "metodos"),
   h("api", "Eventos", "eventos"),
   h("api", "Bonos de experiencia", "bonos-exp"),
+  h("api", "Que tu módulo salga en /dar y /invocar (Things)", "dar-invocar"),
   h("api", "Addons que no dependen del core", "sin-core"),
   h("api", "Dónde viven estos archivos, físicamente", "donde-viven"),
 
@@ -165,6 +168,7 @@ export const searchIndex: SearchEntry[] = [
   h("encantamientos", "Efectos", "efectos"),
   h("encantamientos", "Ejemplos de archivo YAML", "formato-yaml"),
   h("encantamientos", "Integración con RPGRoll-Items", "integracion-items"),
+  h("encantamientos", "Desencantador: quitar un encantamiento con dinero o olvidita", "desencantador"),
   h("encantamientos", "GUI: navegador y editor", "gui"),
   h("encantamientos", "Comandos", "comandos"),
   h("encantamientos", "Placeholders (PlaceholderAPI)", "placeholders"),
@@ -231,6 +235,7 @@ export const searchIndex: SearchEntry[] = [
   h("items", "Menas propias", "menas"),
   h("items", "Triggers, habilidades y condiciones", "comportamiento"),
   h("items", "Requisitos de uso", "requisitos-de-uso"),
+  h("items", "Amuletos (accesorios) y /amuletos", "amuletos"),
   h("items", "Recetas", "recetas"),
   h("items", "GUI: navegador y editor", "gui"),
   h("items", "Ejemplos de archivo YAML", "formato-yaml"),
@@ -586,6 +591,7 @@ export const searchIndex: SearchEntry[] = [
   h("extras", "Menú del servidor (brújula)", "menu-servidor"),
   h("extras", "Mochilas mejorables", "mochilas"),
   h("extras", "Viajes: /rtp, /death y warps", "viajes"),
+  h("extras", "Bloques protegidos: Reforzador y cerraduras con código", "proteccion-bloques"),
 ];
 
 function h(slug: string, headingLabel: string, heading: string): SearchEntry {

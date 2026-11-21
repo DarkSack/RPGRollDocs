@@ -382,6 +382,34 @@ export function Extras({ onNavigate }: { onNavigate: (slug: string) => void }) {
         })}
       </Callout>
 
+      <SectionHeading id="proteccion-bloques">{c.protTitle}</SectionHeading>
+      <p>{c.protIntro}</p>
+      <Table>
+        <Thead>
+          <Th>{c.thTool}</Th>
+          <Th>{c.thWhat3}</Th>
+        </Thead>
+        <tbody>
+          <Tr><Td>{c.reinK}</Td><Td>{c.rein}</Td></Tr>
+          <Tr><Td>{c.lockK}</Td><Td>{c.lock}</Td></Tr>
+          <Tr><Td>{c.openK}</Td><Td>{c.open}</Td></Tr>
+          <Tr><Td>{c.copyK}</Td><Td>{c.copy}</Td></Tr>
+          <Tr><Td>{c.safeK}</Td><Td>{fill(c.safe, { fails: <code>max-fails: 3</code>, secs: <code>penalty-seconds: 60</code> })}</Td></Tr>
+          <Tr><Td>{c.removeK}</Td><Td>{c.remove}</Td></Tr>
+        </tbody>
+      </Table>
+      <Callout tone="info">
+        {fill(c.protAdmin, {
+          rein: <Badge tone="amber">rpgrollextras.reinforce.admin</Badge>,
+          lock: <Badge tone="amber">rpgrollextras.lock.admin</Badge>,
+          cfg: (
+            <>
+              <code>reinforcement.enabled</code> / <code>locks.enabled</code>
+            </>
+          ),
+        })}
+      </Callout>
+
       <SectionHeading id="viajes">{c.travelTitle}</SectionHeading>
       <p>
         {fill(c.travelBody, {

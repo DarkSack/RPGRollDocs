@@ -130,6 +130,9 @@ const es = {
     expBody:
       "{service} aplica un bono a la EXP de personaje que se gana jugando (mobs, recompensas de misiones, recetas); los comandos de admin no pasan por él. El bono es el mayor permiso {perm} del jugador —no se acumulan entre sí— más lo que registre cada addon. RPGRoll-Ascension, por ejemplo, registra el bono de prestigio. Un addon con el core puede sumar el suyo:",
 
+    thingsTitle: "Que tu módulo salga en /dar y /invocar",
+    thingsBody:
+      "{cls} de RPGRoll-Lib junta lo que se puede dar o invocar. Registra tu tipo en {enable} con una línea; se da de baja solo cuando tu plugin se apaga (va por el ServicesManager de Bukkit). {create} devuelve una pieza nueva cada vez: {dar} la pide una vez por pila, así los ítems con datos propios por ejemplar no se clonan.",
     whereTitle: "Dónde viven estos archivos, físicamente",
     whereBody:
       "{apiTypes} y dos de los eventos ({apiEvents}) viven en el módulo {api}, sin ninguna dependencia de {core}. {facade} y los 3 eventos que exponen {rpgPlayer} viven físicamente en {core} (para poder usar sus clases concretas), pero conservan el paquete {pkg} para que el código de tu addon no note la diferencia. Más detalle en",
@@ -266,6 +269,9 @@ const en: DevelopersCopy = {
     expBody:
       "{service} applies a bonus to the character EXP earned by playing (mobs, quest rewards, recipes); admin commands do not go through it. The bonus is the player's highest {perm} permission — they do not stack with each other — plus whatever each addon registers. RPGRoll-Ascension, for example, registers the prestige bonus. An addon with the core can add its own:",
 
+    thingsTitle: "Getting your module into /dar and /invocar",
+    thingsBody:
+      "RPGRoll-Lib's {cls} gathers what can be given or summoned. Register your type in {enable} with one line; it unregisters itself when your plugin shuts down (it goes through Bukkit's ServicesManager). {create} returns a fresh piece every time: {dar} asks once per stack, so items with per-copy data are never cloned.",
     whereTitle: "Where these files live, physically",
     whereBody:
       "{apiTypes} and two of the events ({apiEvents}) live in the {api} module, with no dependency on {core}. {facade} and the 3 events that expose {rpgPlayer} live physically in {core} (so they can use its concrete classes), but keep the {pkg} package so your addon's code does not notice the difference. More detail in",
@@ -400,6 +406,9 @@ const pt: DevelopersCopy = {
     expBody:
       "{service} aplica um bônus à EXP de personagem ganha jogando (mobs, recompensas de missões, receitas); os comandos de admin não passam por ele. O bônus é a maior permissão {perm} do jogador — não se acumulam entre si — mais o que cada addon registrar. O RPGRoll-Ascension, por exemplo, registra o bônus de prestígio. Um addon com o núcleo pode somar o seu:",
 
+    thingsTitle: "Fazer o seu módulo aparecer em /dar e /invocar",
+    thingsBody:
+      "{cls} do RPGRoll-Lib junta o que pode ser dado ou invocado. Registre o seu tipo em {enable} com uma linha; ele sai sozinho quando o seu plugin desliga (passa pelo ServicesManager do Bukkit). {create} devolve uma peça nova a cada vez: {dar} pede uma por pilha, assim os itens com dados próprios por exemplar não são clonados.",
     whereTitle: "Onde estes arquivos vivem, fisicamente",
     whereBody:
       "{apiTypes} e dois dos eventos ({apiEvents}) vivem no módulo {api}, sem nenhuma dependência do {core}. {facade} e os 3 eventos que expõem o {rpgPlayer} vivem fisicamente no {core} (para poderem usar as suas classes concretas), mas conservam o pacote {pkg} para que o código do seu addon não note a diferença. Mais detalhe em",
