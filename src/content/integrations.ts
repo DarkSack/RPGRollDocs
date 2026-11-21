@@ -173,7 +173,7 @@ export const addonDependencies: AddonDependencies[] = [
     hard: ["RPGRoll-Lib"],
     soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Enchantments", "Vault", "PlaceholderAPI", "SackResourcePack"],
   },
-  { slug: "encantamientos", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "PlaceholderAPI"] },
+  { slug: "encantamientos", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-FX", "PlaceholderAPI", "Vault"] },
   { slug: "quests", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "Vault", "PlaceholderAPI"] },
   {
     slug: "ascension",
@@ -187,7 +187,7 @@ export const addonDependencies: AddonDependencies[] = [
   },
   { slug: "chat", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Guilds", "PlaceholderAPI"] },
   { slug: "guilds", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Items", "RPGRoll-Quests", "Vault", "PlaceholderAPI"] },
-  { slug: "crates", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "DecentHolograms", "Vault"] },
+  { slug: "crates", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "DecentHolograms", "Vault", "RPGRoll-Items", "RPGRoll-Mobs"] },
   {
     slug: "dungeons",
     hard: ["RPGRoll-Lib", "RPGRoll-Mobs", "RPGRoll-Guilds"],
@@ -206,7 +206,7 @@ export const addonDependencies: AddonDependencies[] = [
     hard: ["RPGRoll-Lib"],
     soft: ["RPGRoll", "RPGRoll-FX", "RPGRoll-Effects", "RPGRoll-Seasons", "RPGRoll-Ranching", "RPGRoll-Fishing", "RPGRoll-Guilds", "Vault", "SackResourcePack"],
   },
-  { slug: "economy", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "Vault", "PlaceholderAPI", "RPGRoll-Guilds", "RPGRoll-Seasons", "RPGRoll-Items", "RPGRoll-Enchantments", "RPGRoll-Furniture"] },
+  { slug: "economy", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "Vault", "PlaceholderAPI", "RPGRoll-Guilds", "RPGRoll-Seasons", "RPGRoll-Items", "RPGRoll-Enchantments", "RPGRoll-Furniture", "RPGRoll-Machines"] },
   { slug: "crafting", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Items", "RPGRoll-Economy", "RPGRoll-Guilds", "RPGRoll-Seasons"] },
   { slug: "tab", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "ProtocolLib", "PlaceholderAPI"] },
   { slug: "extras", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-TAB", "RPGRoll-Seasons", "RPGRoll-Items", "PlaceholderAPI", "Vault"] },

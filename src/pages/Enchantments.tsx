@@ -63,7 +63,7 @@ export function Enchantments({ onNavigate }: { onNavigate: (slug: string) => voi
       </Callout>
 
       <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
-      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, PlaceholderAPI]"} />
+      <CodeBlock language="yaml" code={"depend: [RPGRoll-Lib]\nsoftdepend: [RPGRoll, RPGRoll-FX, PlaceholderAPI, Vault]"} />
       <p>
         {fill(c.reqBody, {
           items: <strong>{c.itemsWord}</strong>,
