@@ -234,6 +234,13 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
           model: <code>model</code>,
         })}
       </p>
+      <p>{c.modelDefault}</p>
+      <div className="grid max-w-3xl gap-x-4 sm:grid-cols-3">
+        <Screenshot src="/capturas/structures/modelo-constructor.png" alt={c.altModelC} caption={c.shotModelC} />
+        <Screenshot src="/capturas/structures/modelo-ingeniero.png" alt={c.altModelI} caption={c.shotModelI} />
+        <Screenshot src="/capturas/structures/modelo-arquitecto.png" alt={c.altModelA} caption={c.shotModelA} />
+      </div>
+      <Screenshot src="/capturas/structures/modelo-item.png" alt={c.altModelItem} caption={c.shotModelItem} />
 
       <SectionHeading id="almacenamiento">{c.storageTitle}</SectionHeading>
       <p>

@@ -14,7 +14,7 @@ const es = {
 
   reqTitle: "Requisitos",
   reqBody:
-    "Paper 26.1.1 y {lib}. Los demás son opcionales ({soft}). Hoy solo se usan dos: Vault, para cobrar dinero al mejorar la mesa, y SackResourcePack, para un modelo propio de la mesa (opcional) y los fondos dibujados de los menús. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention y floodgate están declarados para las funciones que vienen y ahora no cambian nada.",
+    "Paper 26.1.1 y {lib}. Los demás son opcionales ({soft}). Hoy solo se usan dos: Vault, para cobrar dinero al mejorar la mesa, y SackResourcePack, para los modelos de las mesas y los fondos dibujados de los menús. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention y floodgate están declarados para las funciones que vienen y ahora no cambian nada.",
 
   tiersTitle: "Los tres niveles",
   tiersLead:
@@ -110,6 +110,15 @@ const es = {
   modelTitle: "Aspecto: bloque o modelo",
   modelBody:
     "Sin modelo, cada nivel se ve como un bloque de vanilla ({fallback}); si el material que pongas no es un bloque, se usa una mesa de crafteo. Con {model} en un nivel y SackResourcePack instalado, la mesa es una barrera con el modelo encima.",
+  modelDefault: "El plugin trae un modelo por nivel y viene activado: con SackResourcePack instalado no hay que hacer nada. Constructor es un banco de carpintero con sus herramientas y un plano; Ingeniero, un banco de pizarra con circuito de redstone, lámpara y una grúa pequeña; Arquitecto, un pedestal de runas con un cristal y su halo dorado. El ítem de la mesa usa el mismo modelo.",
+  shotModelC: "Constructor: banco de carpintero.",
+  shotModelI: "Ingeniero: pizarra y redstone.",
+  shotModelA: "Arquitecto: runas y cristal.",
+  shotModelItem: "Las tres mesas como ítem, en la barra y en la mano.",
+  altModelC: "Modelo de la mesa Constructor colocado en el mundo",
+  altModelI: "Modelo de la mesa Ingeniero colocado en el mundo",
+  altModelA: "Modelo de la mesa Arquitecto colocado en el mundo",
+  altModelItem: "Barra de inventario con las tres mesas y la mesa Constructor en la mano",
 
   commandsTitle: "Comandos",
   thCommand: "Comando",
@@ -146,7 +155,7 @@ const es = {
   kSize: "Tamaño máximo de obra de cada nivel: ancho, alto y largo (en workbench.yml).",
   kCost: "Materiales para mejorar a ese nivel: una lista de ítem y cantidad (en workbench.yml).",
   kMoney: "Dinero que se cobra además de los materiales. Necesita Vault con una economía; sin ella no se cobra y avisa.",
-  kModel: "Modelo del nivel. Vacío = el bloque de fallback-block.",
+  kModel: "Modelo del nivel. De fábrica, el de la mesa (rpgroll_structures:workbench/<nivel>). Vacío = el bloque de fallback-block.",
   kFallback: "Bloque con el que se ve el nivel sin modelo.",
   configNote: "Los cambios de {file} se aplican con {reload}.",
 
@@ -175,7 +184,7 @@ const en: StructuresCopy = {
 
   reqTitle: "Requirements",
   reqBody:
-    "Paper 26.1.1 and {lib}. Everything else is optional ({soft}). Only two are used today: Vault, to charge money when upgrading the table, and SackResourcePack, for an optional custom table model and the drawn menu backgrounds. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention and floodgate are declared for the features to come and change nothing now.",
+    "Paper 26.1.1 and {lib}. Everything else is optional ({soft}). Only two are used today: Vault, to charge money when upgrading the table, and SackResourcePack, for the table models and the drawn menu backgrounds. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention and floodgate are declared for the features to come and change nothing now.",
 
   tiersTitle: "The three levels",
   tiersLead:
@@ -271,6 +280,15 @@ const en: StructuresCopy = {
   modelTitle: "Look: block or model",
   modelBody:
     "Without a model, each level looks like a vanilla block ({fallback}); if the material you set is not a block, a crafting table is used. With {model} on a level and SackResourcePack installed, the table is a barrier with the model on top.",
+  modelDefault: "The plugin ships one model per level, enabled by default: with SackResourcePack installed there is nothing to do. Builder is a carpenter's bench with its tools and a blueprint; Engineer, a deepslate bench with a redstone circuit, a lamp and a small crane; Architect, a rune pedestal with a crystal and its golden halo. The table item uses the same model.",
+  shotModelC: "Builder: carpenter's bench.",
+  shotModelI: "Engineer: deepslate and redstone.",
+  shotModelA: "Architect: runes and crystal.",
+  shotModelItem: "The three tables as items, in the hotbar and in hand.",
+  altModelC: "Builder table model placed in the world",
+  altModelI: "Engineer table model placed in the world",
+  altModelA: "Architect table model placed in the world",
+  altModelItem: "Hotbar with the three tables and the Builder table in hand",
 
   commandsTitle: "Commands",
   thCommand: "Command",
@@ -307,7 +325,7 @@ const en: StructuresCopy = {
   kSize: "Maximum build size of each level: width, height and length (in workbench.yml).",
   kCost: "Materials to upgrade to that level: a list of item and amount (in workbench.yml).",
   kMoney: "Money charged on top of the materials. Needs Vault with an economy; without one nothing is charged and it warns.",
-  kModel: "The level's model. Empty = the fallback-block block.",
+  kModel: "The level's model. By default, the table's own (rpgroll_structures:workbench/<level>). Empty = the fallback-block block.",
   kFallback: "Block the level looks like without a model.",
   configNote: "Changes to {file} are applied with {reload}.",
 
@@ -334,7 +352,7 @@ const pt: StructuresCopy = {
 
   reqTitle: "Requisitos",
   reqBody:
-    "Paper 26.1.1 e {lib}. Os demais são opcionais ({soft}). Hoje só dois são usados: Vault, para cobrar dinheiro ao melhorar a mesa, e SackResourcePack, para um modelo próprio da mesa (opcional) e os fundos desenhados dos menus. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention e floodgate estão declarados para as funções que vêm e agora não mudam nada.",
+    "Paper 26.1.1 e {lib}. Os demais são opcionais ({soft}). Hoje só dois são usados: Vault, para cobrar dinheiro ao melhorar a mesa, e SackResourcePack, para os modelos das mesas e os fundos desenhados dos menus. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention e floodgate estão declarados para as funções que vêm e agora não mudam nada.",
 
   tiersTitle: "Os três níveis",
   tiersLead:
@@ -430,6 +448,15 @@ const pt: StructuresCopy = {
   modelTitle: "Aparência: bloco ou modelo",
   modelBody:
     "Sem modelo, cada nível aparece como um bloco vanilla ({fallback}); se o material definido não for um bloco, usa-se uma bancada de trabalho. Com {model} num nível e o SackResourcePack instalado, a mesa é uma barreira com o modelo por cima.",
+  modelDefault: "O plugin traz um modelo por nível, ativado de fábrica: com o SackResourcePack instalado não é preciso fazer nada. Construtor é uma bancada de carpinteiro com ferramentas e uma planta; Engenheiro, uma bancada de ardósia com circuito de redstone, lâmpada e um pequeno guindaste; Arquiteto, um pedestal de runas com um cristal e seu halo dourado. O item da mesa usa o mesmo modelo.",
+  shotModelC: "Construtor: bancada de carpinteiro.",
+  shotModelI: "Engenheiro: ardósia e redstone.",
+  shotModelA: "Arquiteto: runas e cristal.",
+  shotModelItem: "As três mesas como item, na barra e na mão.",
+  altModelC: "Modelo da mesa Construtor colocado no mundo",
+  altModelI: "Modelo da mesa Engenheiro colocado no mundo",
+  altModelA: "Modelo da mesa Arquiteto colocado no mundo",
+  altModelItem: "Barra com as três mesas e a mesa Construtor na mão",
 
   commandsTitle: "Comandos",
   thCommand: "Comando",
@@ -466,7 +493,7 @@ const pt: StructuresCopy = {
   kSize: "Tamanho máximo de obra de cada nível: largura, altura e comprimento (em workbench.yml).",
   kCost: "Materiais para melhorar a esse nível: uma lista de item e quantidade (em workbench.yml).",
   kMoney: "Dinheiro cobrado além dos materiais. Precisa do Vault com uma economia; sem ela não se cobra e avisa.",
-  kModel: "Modelo do nível. Vazio = o bloco de fallback-block.",
+  kModel: "Modelo do nível. De fábrica, o da mesa (rpgroll_structures:workbench/<nível>). Vazio = o bloco de fallback-block.",
   kFallback: "Bloco com que o nível aparece sem modelo.",
   configNote: "As mudanças em {file} se aplicam com {reload}.",
 
