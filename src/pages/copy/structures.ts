@@ -5,15 +5,16 @@ import type { Locale } from "../../i18n";
 const es = {
   title: "Estructuras (RPGRoll-Structures)",
   intro:
-    "Mesas de construcción para tus jugadores: una mesa con tres niveles (Constructor, Ingeniero y Arquitecto) que se fabrica, se coloca, se mejora en el sitio y se comparte con jugadores de confianza. Esta primera versión trae la mesa y sus menús; el catálogo de estructuras llega después.",
+    "Mesas de construcción para tus jugadores: una mesa con tres niveles (Constructor, Ingeniero y Arquitecto) que se fabrica, se coloca, se mejora en el sitio y se comparte con jugadores de confianza. Esta primera versión, en acceso anticipado, trae la mesa y sus menús; el catálogo de estructuras llega después.",
 
-  soonTitle: "Qué hay hoy y qué viene",
+  soonTitle: "Acceso anticipado: qué hay hoy y qué viene",
   soonBody:
-    "Hoy: la mesa, sus tres niveles, la receta, los menús de Centro, Mejoras, Acceso y Ayuda, la protección y el almacenamiento. En el Centro, los botones de catálogo de estructuras, construcciones, materiales y obra salen marcados como «Próximamente»: aún no hacen nada. No hay fecha para ellos.",
+    "Hoy: la mesa, sus tres niveles, la receta, los menús de Centro, Mejoras, Acceso y Ayuda, la protección y el almacenamiento. En el Centro, los botones de catálogo de estructuras, construcciones, materiales y obra salen marcados como «Próximamente»: aún no hacen nada. No hay fecha para ellos; las versiones que los traigan van incluidas en la compra.",
+  storeBody: "Se compra en la tienda por 6 USD (120 MXN), pago único: {link}.",
 
   reqTitle: "Requisitos",
   reqBody:
-    "Paper 26.1.1 y {lib}. Los demás son opcionales ({soft}). Hoy solo se usan dos: Vault, para cobrar dinero al mejorar la mesa, y SackResourcePack, para los modelos y los fondos dibujados de los menús. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention y floodgate están declarados para las funciones que vienen y ahora no cambian nada.",
+    "Paper 26.1.1 y {lib}. Los demás son opcionales ({soft}). Hoy solo se usan dos: Vault, para cobrar dinero al mejorar la mesa, y SackResourcePack, para un modelo propio de la mesa (opcional) y los fondos dibujados de los menús. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention y floodgate están declarados para las funciones que vienen y ahora no cambian nada.",
 
   tiersTitle: "Los tres niveles",
   tiersLead:
@@ -165,15 +166,16 @@ export type StructuresCopy = typeof es;
 const en: StructuresCopy = {
   title: "Structures (RPGRoll-Structures)",
   intro:
-    "Building tables for your players: one table with three levels (Builder, Engineer and Architect) that is crafted, placed, upgraded in place and shared with trusted players. This first version ships the table and its menus; the structure catalog comes later.",
+    "Building tables for your players: one table with three levels (Builder, Engineer and Architect) that is crafted, placed, upgraded in place and shared with trusted players. This first version, in early access, ships the table and its menus; the structure catalog comes later.",
 
-  soonTitle: "What there is today and what is coming",
+  soonTitle: "Early access: what there is today and what is coming",
   soonBody:
-    "Today: the table, its three levels, the recipe, the Center, Upgrades, Access and Help menus, protection and storage. In the Center, the buttons for the structure catalog, builds, materials and project are marked “Coming soon”: they do nothing yet. There is no date for them.",
+    "Today: the table, its three levels, the recipe, the Center, Upgrades, Access and Help menus, protection and storage. In the Center, the buttons for the structure catalog, builds, materials and project are marked “Coming soon”: they do nothing yet. There is no date for them; the versions that bring them are included in the purchase.",
+  storeBody: "Buy it in the store for 6 USD (120 MXN), one-time payment: {link}.",
 
   reqTitle: "Requirements",
   reqBody:
-    "Paper 26.1.1 and {lib}. Everything else is optional ({soft}). Only two are used today: Vault, to charge money when upgrading the table, and SackResourcePack, for models and the drawn menu backgrounds. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention and floodgate are declared for the features to come and change nothing now.",
+    "Paper 26.1.1 and {lib}. Everything else is optional ({soft}). Only two are used today: Vault, to charge money when upgrading the table, and SackResourcePack, for an optional custom table model and the drawn menu backgrounds. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention and floodgate are declared for the features to come and change nothing now.",
 
   tiersTitle: "The three levels",
   tiersLead:
@@ -323,15 +325,16 @@ const en: StructuresCopy = {
 const pt: StructuresCopy = {
   title: "Estruturas (RPGRoll-Structures)",
   intro:
-    "Mesas de construção para os seus jogadores: uma mesa com três níveis (Construtor, Engenheiro e Arquiteto) que se fabrica, se coloca, se melhora no lugar e se compartilha com jogadores de confiança. Esta primeira versão traz a mesa e os menus; o catálogo de estruturas vem depois.",
+    "Mesas de construção para os seus jogadores: uma mesa com três níveis (Construtor, Engenheiro e Arquiteto) que se fabrica, se coloca, se melhora no lugar e se compartilha com jogadores de confiança. Esta primeira versão, em acesso antecipado, traz a mesa e os menus; o catálogo de estruturas vem depois.",
 
-  soonTitle: "O que há hoje e o que vem",
+  soonTitle: "Acesso antecipado: o que há hoje e o que vem",
   soonBody:
-    "Hoje: a mesa, os três níveis, a receita, os menus de Centro, Melhorias, Acesso e Ajuda, a proteção e o armazenamento. No Centro, os botões de catálogo de estruturas, construções, materiais e obra aparecem como «Em breve»: ainda não fazem nada. Não há data para eles.",
+    "Hoje: a mesa, os três níveis, a receita, os menus de Centro, Melhorias, Acesso e Ajuda, a proteção e o armazenamento. No Centro, os botões de catálogo de estruturas, construções, materiais e obra aparecem como «Em breve»: ainda não fazem nada. Não há data para eles; as versões que os trouxerem estão incluídas na compra.",
+  storeBody: "Compre na loja por 6 USD (120 MXN), pagamento único: {link}.",
 
   reqTitle: "Requisitos",
   reqBody:
-    "Paper 26.1.1 e {lib}. Os demais são opcionais ({soft}). Hoje só dois são usados: Vault, para cobrar dinheiro ao melhorar a mesa, e SackResourcePack, para os modelos e os fundos desenhados dos menus. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention e floodgate estão declarados para as funções que vêm e agora não mudam nada.",
+    "Paper 26.1.1 e {lib}. Os demais são opcionais ({soft}). Hoje só dois são usados: Vault, para cobrar dinheiro ao melhorar a mesa, e SackResourcePack, para um modelo próprio da mesa (opcional) e os fundos desenhados dos menus. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention e floodgate estão declarados para as funções que vêm e agora não mudam nada.",
 
   tiersTitle: "Os três níveis",
   tiersLead:

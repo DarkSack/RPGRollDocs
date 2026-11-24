@@ -20,7 +20,7 @@ import type { ReleaseStatus } from "./site";
  * acá; el resto queda sin badge, que es lo correcto mientras no haya dato.
  */
 export const pageStatus: Record<string, ReleaseStatus> = {
-  structures: "dev",
+  structures: "early",
 };
 
 /**

@@ -117,6 +117,11 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
       <Callout tone="info" title={c.soonTitle}>
         {c.soonBody}
       </Callout>
+      <p>
+        {fill(c.storeBody, {
+          link: <a href="https://shop.sackito.online/producto/structures">shop.sackito.online/producto/structures</a>,
+        })}
+      </p>
 
       <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock
@@ -125,7 +130,7 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
           "depend: [RPGRoll-Lib]\nsoftdepend: [SackResourcePack, WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention, Vault, floodgate]"
         }
       />
-      <p>{fill(c.reqBody, { lib: <strong>RPGRoll-Lib</strong>, soft: <code>softdepend</code> })}</p>
+      <p>{fill(c.reqBody, { lib: <strong>RPGRoll-Lib 1.1.13</strong>, soft: <code>softdepend</code> })}</p>
 
       <SectionHeading id="niveles">{c.tiersTitle}</SectionHeading>
       <p>{c.tiersLead}</p>

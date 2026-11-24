@@ -10,6 +10,7 @@ export function statusColor(status: ReleaseStatus): string {
     case "stable":
       return "var(--success)";
     case "beta":
+    case "early":
       return "var(--gold)";
     case "experimental":
     case "dev":

@@ -15,7 +15,7 @@ export const ISSUES_URL = `${REPO_URL}/issues`;
 /** Ruta dentro del repo de docs donde vive cada página, para "Editar esta página". */
 export const DOCS_SOURCE_PATH = "src/pages";
 
-export type ReleaseStatus = "stable" | "beta" | "experimental" | "deprecated" | "dev";
+export type ReleaseStatus = "stable" | "beta" | "early" | "experimental" | "deprecated" | "dev";
 
 export interface DocVersion {
   /** Identificador estable — se guarda en localStorage y se muestra en el selector. */

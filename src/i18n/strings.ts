@@ -119,6 +119,7 @@ const es = {
   status: {
     stable: "Estable",
     beta: "Beta",
+    early: "Acceso anticipado",
     experimental: "Experimental",
     deprecated: "Obsoleto",
     dev: "En desarrollo",
@@ -237,6 +238,7 @@ const en: Strings = {
   status: {
     stable: "Stable",
     beta: "Beta",
+    early: "Early access",
     experimental: "Experimental",
     deprecated: "Deprecated",
     dev: "In development",
@@ -347,6 +349,7 @@ const pt: Strings = {
   status: {
     stable: "Estável",
     beta: "Beta",
+    early: "Acesso antecipado",
     experimental: "Experimental",
     deprecated: "Obsoleto",
     dev: "Em desenvolvimento",
