@@ -72,6 +72,7 @@ export const integrations: Integration[] = [
       { slug: "dungeons", requirement: "optional", note: "Recompensas en dinero de las mazmorras." },
       { slug: "pass", requirement: "optional", note: "Recompensas money: del pase, el diario y los votos. Sin economía, esas recompensas se omiten con un aviso en consola." },
       { slug: "furniture", requirement: "optional", note: "Recetas del carpintero que cobran dinero. Sin economía, esas recetas no se pueden fabricar." },
+      { slug: "structures", requirement: "optional", note: "Dinero opcional al mejorar la mesa (upgrade-money). Sin economía no se cobra dinero y se avisa en la consola." },
       { slug: "crates", requirement: "optional", note: "Acción MONEY de los lucky blocks. Sin economía, esa acción no paga nada." },
     ],
   },
@@ -218,6 +219,7 @@ export const addonDependencies: AddonDependencies[] = [
   { slug: "furniture", hard: ["RPGRoll-Lib"], soft: ["SackResourcePack", "Vault"] },
   { slug: "recipes", hard: ["RPGRoll-Lib"], soft: ["RPGRoll", "RPGRoll-Crafting", "RPGRoll-Items", "RPGRoll-Furniture", "RPGRoll-Extras"] },
   { slug: "machines", hard: ["RPGRoll-Lib"], soft: ["Vault", "GriefPrevention", "RPGRoll-Items", "RPGRoll-Crates", "SackResourcePack"] },
+  { slug: "structures", hard: ["RPGRoll-Lib"], soft: ["SackResourcePack", "WorldEdit", "FastAsyncWorldEdit", "WorldGuard", "GriefPrevention", "Vault", "floodgate"] },
   { slug: "worldforge", hard: [], soft: [] },
   {
     slug: "pass",

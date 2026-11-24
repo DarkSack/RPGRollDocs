@@ -30,6 +30,7 @@ import { Traps } from "./pages/Traps";
 import { Pass } from "./pages/Pass";
 import { Furniture } from "./pages/Furniture";
 import { Recipes } from "./pages/Recipes";
+import { Structures } from "./pages/Structures";
 import { Disasters } from "./pages/Disasters";
 import { Emotes } from "./pages/Emotes";
 import { Machines } from "./pages/Machines";
@@ -158,6 +159,8 @@ function Page({ route, onNavigate }: { route: string; onNavigate: (slug: string)
       return <Furniture onNavigate={onNavigate} />;
     case "recipes":
       return <Recipes onNavigate={onNavigate} />;
+    case "structures":
+      return <Structures onNavigate={onNavigate} />;
     case "worldforge":
       return <WorldForge onNavigate={onNavigate} />;
     case "machines":

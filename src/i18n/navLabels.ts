@@ -43,6 +43,7 @@ export const PAGE_LABELS: Record<string, PartialLabels> = {
   furniture: { en: "Furniture", pt: "Móveis" },
   recipes: { en: "Recipe book", pt: "Livro de receitas" },
   machines: { en: "Machines", pt: "Máquinas" },
+  structures: { en: "Structures", pt: "Estruturas" },
 
   "room-designer": { es: "Diseñador de Salas", en: "Room designer", pt: "Designer de salas" },
   "tab-designer": { es: "Diseñador de TAB", en: "TAB designer", pt: "Designer de TAB" },

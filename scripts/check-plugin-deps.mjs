@@ -65,6 +65,7 @@ const MODULES = {
   recipes: "recipes",
   disasters: "disasters",
   machines: "machines",
+  structures: "structures",
   worldforge: "worldforge",
 };
 

@@ -563,6 +563,21 @@ export const searchIndex: SearchEntry[] = [
   h("machines", "Permisos", "permisos"),
   h("machines", "Archivos", "archivos"),
 
+  // Estructuras
+  h("structures", "Requisitos", "requisitos"),
+  h("structures", "Los tres niveles — Constructor, Ingeniero, Arquitecto", "niveles"),
+  h("structures", "Fabricarla — receta de la mesa", "fabricar"),
+  h("structures", "Colocarla, usarla y romperla", "uso"),
+  h("structures", "Protección — explosiones, pistones, romper ajeno", "proteccion"),
+  h("structures", "Los menús — Centro, Mejoras, Acceso, Ayuda, Confirmar", "menus"),
+  h("structures", "Capturas", "capturas"),
+  h("structures", "Aspecto: bloque o modelo", "aspecto"),
+  h("structures", "Dónde se guardan las mesas — SQLite, MySQL", "almacenamiento"),
+  h("structures", "Comandos — /structures, /structuresadmin", "comandos"),
+  h("structures", "Permisos", "permisos"),
+  h("structures", "Configuración", "configuracion"),
+  h("structures", "Archivos", "archivos"),
+
   // WorldForge
   h("worldforge", "Requisitos — Paper y Folia 26.1.2, sin RPGRoll-Lib", "requisitos"),
   h("worldforge", "Instalación", "instalacion"),

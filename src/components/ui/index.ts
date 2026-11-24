@@ -4,6 +4,7 @@ export { Card, CardGrid } from "./Card";
 export { CodeBlock } from "./CodeBlock";
 export { CopyButton } from "./CopyButton";
 export { Kbd } from "./Kbd";
+export { Screenshot } from "./Screenshot";
 export { PageHeader } from "./PageHeader";
 export { SectionHeading } from "./SectionHeading";
 export { Table, Thead, Th, Tr, Td } from "./Table";
