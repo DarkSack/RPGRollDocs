@@ -92,6 +92,15 @@ const es = {
   altTaller: "Centro de construcción con el fondo de taller de madera",
   altIngenio: "Centro de construcción con el fondo de pizarra y redstone",
   altArcano: "Centro de construcción con el fondo de runas arcanas",
+  shotTips: "Con el ratón encima, cada botón explica qué hace y cada material dice si ya lo tienes.",
+  shotCatalog: "Cada botón trae su descripción; lo que aún no está listo dice «Próximamente».",
+  altCatalog: "Tooltip del botón Catálogo de estructuras en el Centro de construcción",
+  shotMissing: "Material que falta: ✘ en rojo y cuántos te faltan.",
+  altMissing: "Tooltip de un material de mejora que falta: 4x Lámpara, te faltan 3",
+  shotHave: "Material completo: ✔ en verde.",
+  altHave: "Tooltip de un material de mejora completo: 16x Lingote de hierro",
+  shotHelpText: "La Ayuda se lee pasando el ratón por sus páginas.",
+  altHelpText: "Tooltip de la primera página de la Ayuda de la mesa",
 
   storageTitle: "Dónde se guardan las mesas",
   storageBody:
@@ -243,6 +252,15 @@ const en: StructuresCopy = {
   altTaller: "Building Center with the wooden workshop background",
   altIngenio: "Building Center with the deepslate and redstone background",
   altArcano: "Building Center with the arcane runes background",
+  shotTips: "Hover over a button to see what it does, and over a material to see whether you already have it.",
+  shotCatalog: "Every button has a description; anything not ready yet says “Coming soon”.",
+  altCatalog: "Tooltip of the Structure Catalog button in the Building Center",
+  shotMissing: "Missing material: a red ✘ and how many you still need.",
+  altMissing: "Tooltip of a missing upgrade material: 4x Lamp, 3 still needed",
+  shotHave: "Material you have: a green ✔.",
+  altHave: "Tooltip of a complete upgrade material: 16x Iron Ingot",
+  shotHelpText: "Read the Help by hovering over its pages.",
+  altHelpText: "Tooltip of the first page of the table's Help",
 
   storageTitle: "Where tables are stored",
   storageBody:
@@ -392,6 +410,15 @@ const pt: StructuresCopy = {
   altTaller: "Centro de construção com o fundo de oficina de madeira",
   altIngenio: "Centro de construção com o fundo de ardósia e redstone",
   altArcano: "Centro de construção com o fundo de runas arcanas",
+  shotTips: "Com o mouse em cima, cada botão explica o que faz e cada material mostra se você já o tem.",
+  shotCatalog: "Cada botão tem sua descrição; o que ainda não está pronto diz “Em breve”.",
+  altCatalog: "Tooltip do botão Catálogo de estruturas no Centro de construção",
+  shotMissing: "Material que falta: ✘ em vermelho e quantos ainda faltam.",
+  altMissing: "Tooltip de um material de melhoria que falta: 4x Lâmpada, faltam 3",
+  shotHave: "Material completo: ✔ em verde.",
+  altHave: "Tooltip de um material de melhoria completo: 16x Barra de ferro",
+  shotHelpText: "A Ajuda é lida passando o mouse pelas páginas.",
+  altHelpText: "Tooltip da primeira página da Ajuda da mesa",
 
   storageTitle: "Onde as mesas são guardadas",
   storageBody:

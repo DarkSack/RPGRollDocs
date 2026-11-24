@@ -214,6 +214,13 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
         <Screenshot src="/capturas/structures/centro-ingeniero.png" alt={c.altIngenio} caption={c.shotIngenio} />
         <Screenshot src="/capturas/structures/centro-arquitecto.png" alt={c.altArcano} caption={c.shotArcano} />
       </div>
+      <p>{c.shotTips}</p>
+      <div className="grid max-w-3xl gap-x-6 sm:grid-cols-2">
+        <Screenshot src="/capturas/structures/centro-catalogo.png" alt={c.altCatalog} caption={c.shotCatalog} />
+        <Screenshot src="/capturas/structures/ayuda-texto.png" alt={c.altHelpText} caption={c.shotHelpText} />
+        <Screenshot src="/capturas/structures/mejoras-falta.png" alt={c.altMissing} caption={c.shotMissing} />
+        <Screenshot src="/capturas/structures/mejoras-tiene.png" alt={c.altHave} caption={c.shotHave} />
+      </div>
 
       <SectionHeading id="aspecto">{c.modelTitle}</SectionHeading>
       <p>
