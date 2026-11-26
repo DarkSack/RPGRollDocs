@@ -4,17 +4,14 @@ import type { Locale } from "../../i18n";
 
 const es = {
   title: "Estructuras (RPGRoll-Structures)",
-  intro:
-    "Mesas de construcción para tus jugadores: una mesa con tres niveles (Constructor, Ingeniero y Arquitecto) que se fabrica, se coloca, se mejora en el sitio y se comparte con jugadores de confianza. Esta primera versión, en acceso anticipado, trae la mesa y sus menús; el catálogo de estructuras llega después.",
+  intro: "Mesas de construcción para tus jugadores: una mesa con tres niveles (Constructor, Ingeniero y Arquitecto) que levanta estructuras bloque a bloque desde un catálogo. Eliges la estructura, la colocas con una vista previa, depositas los materiales y la obra se construye sola. Las construcciones se reparan y se mejoran a otras más grandes.",
 
   soonTitle: "Acceso anticipado: qué hay hoy y qué viene",
-  soonBody:
-    "Hoy: la mesa, sus tres niveles, la receta, los menús de Centro, Mejoras, Acceso y Ayuda, la protección y el almacenamiento. En el Centro, los botones de catálogo de estructuras, construcciones, materiales y obra salen marcados como «Próximamente»: aún no hacen nada. No hay fecha para ellos; las versiones que los traigan van incluidas en la compra.",
+  soonBody: "Hoy: la mesa con sus tres niveles, el catálogo, la vista previa, los materiales, la obra, reparar, mejorar, la protección de la zona y los módulos de granja y parcela. Lo que aún no trae son estructuras de fábrica: el catálogo lo llenas tú con tus esquemáticos (mira «Tus estructuras»). Las estructuras propias del plugin llegarán en próximas versiones, incluidas en la compra.",
   storeBody: "Se compra en la tienda por 6 USD (120 MXN), pago único: {link}.",
 
   reqTitle: "Requisitos",
-  reqBody:
-    "Paper 26.1.1 y {lib}. Los demás son opcionales ({soft}). Hoy solo se usan dos: Vault, para cobrar dinero al mejorar la mesa, y SackResourcePack, para los modelos de las mesas y los fondos dibujados de los menús. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention y floodgate están declarados para las funciones que vienen y ahora no cambian nada.",
+  reqBody: "Paper 26.1.1 y {lib}. Los demás son opcionales ({soft}): WorldEdit o FastAsyncWorldEdit para leer esquemáticos .schem; WorldGuard y GriefPrevention para respetar terrenos y crear parcelas; Vault para cobrar dinero; MythicMobs para granjas de sus mobs; SackResourcePack para los modelos de las mesas y los fondos de los menús.",
 
   tiersTitle: "Los tres niveles",
   tiersLead:
@@ -44,8 +41,7 @@ const es = {
     ["Romperla", "Solo la rompe su dueño (o quien tenga {bypass}). Suelta el ítem de la mesa con el mismo nivel y la misma serie, así que colocarla en otro sitio la deja tal cual estaba. En supervivencia se rompe con el clic izquierdo, aunque el bloque sea una barrera."],
     ["Mejorarla", "Desde el menú Mejoras: el bloque o el modelo cambia en el sitio, sin recolocar nada."],
   ] as [string, string][],
-  breakPolicy:
-    "{key} decide qué pasa si la mesa tiene una obra activa: {block} (no se deja romper), {pause} o {cancel}. Aún no hay obras, así que hoy no cambia nada; el ajuste ya se lee para cuando lleguen.",
+  breakPolicy: "{key} decide qué pasa si la mesa tiene una obra activa: {block} (no se deja romper), {pause} (la obra espera a que vuelvas a colocar la mesa) o {cancel} (se cancela y devuelve los materiales no gastados).",
 
   protectTitle: "Protección",
   protectBody:
@@ -56,8 +52,7 @@ const es = {
   thMenu: "Menú",
   thWhat: "Qué hace",
   mCenter: "Centro de construcción",
-  mCenterP:
-    "El menú principal (6 filas): el nivel de la mesa, y los botones a Mejoras, Acceso y Ayuda. Mejoras y Acceso solo los abre el dueño; a un jugador de confianza le dice que son del dueño. Catálogo, construcciones, materiales y obra salen como «Próximamente».",
+  mCenterP: "El menú principal (6 filas): el nivel de la mesa y los botones a Catálogo, Mis construcciones, Materiales, Obra, Mejoras, Acceso y Ayuda. Mejoras y Acceso solo los abre el dueño; a un jugador de confianza le dice que son del dueño.",
   mUpgrade: "Mejoras",
   mUpgradeP:
     "Enseña el nivel siguiente y cada requisito en verde (✔, lo tienes) o rojo (✘, y cuántos te faltan). Si ya lo tienes todo, el botón Mejorar pide confirmación y cobra los materiales (y el dinero, si el coste lo lleva). En el nivel máximo solo avisa de que ya no hay más.",
@@ -124,7 +119,7 @@ const es = {
   thCommand: "Comando",
   thDesc: "Qué hace",
   thAliases: "Nombres por idioma",
-  cHelp: "Abre la ayuda (tres páginas). {open} hace lo mismo.",
+  cHelp: "Sin argumentos o con {open}: abre el catálogo. También: ayuda, lista (el catálogo por categorías en el chat), info <id>, estado (tus obras) y cancelar.",
   cGive:
     "Da mesas a un jugador conectado: nivel y cantidad de 1 a 64 (1 si no se indica). Si no caben en el inventario, caen al suelo. Cada una sale con su serie.",
   cReload: "Recarga la configuración, la receta y los textos.",
@@ -168,23 +163,54 @@ const es = {
   fGui: "Los títulos de los menús (una clave del idioma o un texto con colores &).",
   fLang: "Todos los textos, en es, en y pt_BR.",
   fWords: "Los nombres de los comandos y sus subcomandos en cada idioma.",
+
+  buildTitle: "Construir una estructura",
+  buildSteps: ["Catálogo: elige una categoría y una estructura. Las que no puedes construir salen marcadas con el motivo (nivel de mesa, permiso o Vault).", "Ficha: materiales, dinero, tamaño y tiempo estimado. «Elegir» abre la vista previa.", "Vista previa: bloques falsos en el mundo delante de la mesa. Se mueve en X, Y y Z, se gira de 90 en 90 grados y se puede ver solo el contorno. «Confirmar» comprueba el sitio y cobra el dinero, si lo hay.", "Materiales: cada material con lo depositado y lo que falta. «Depositar» mete lo que llevas encima; clic en un material deposita o retira uno. Con todo, aparece «Construir».", "Obra: se levanta sola por tandas, con su progreso en el menú Obra y en el chat. Se puede pausar o cancelar; al cancelar vuelven los materiales no gastados (según cancel-refund).", "Al terminar aparece en Mis construcciones, con su sitio y su fecha."] as string[],
+  buildNote: "Si el servidor se reinicia, la obra sigue donde iba. Si se rompe la mesa, manda {key}. Una obra no escribe encima de lo que no esté en su lista {replace} (de fábrica, el césped): esos bloques cuentan como saltados.",
+  shotBuilt: "Una caseta levantada desde la mesa y mejorada después a «Caseta con invernadero».",
+  altBuilt: "Una casa de madera con una ampliación de cristal, construida por la mesa Constructor",
+  ownTitle: "Tus estructuras",
+  ownBody: "Cada estructura es un YAML en {dir} y su esquemático va en {schem}: un .nbt de bloque de estructura de Minecraft o un .schem de WorldEdit (para .schem hace falta WorldEdit o FastAsyncWorldEdit). El nombre del archivo es el id. Las categorías están en {cats}. Tras cambiar algo, {validate} revisa sin aplicar y {reload} carga el catálogo. Un archivo con errores no entra y el motivo sale en la consola.",
+  ownNote: "Obligatorias: name, category, tier, schematic y materials. El plugin deja un README.txt con todas las claves en la carpeta structures/.",
+  repairTitle: "Reparar y mejorar",
+  repairBody: "En Mis construcciones, clic en una construcción terminada: la mesa mira qué le falta y pide confirmación con el precio de esos bloques (la parte proporcional de los materiales y del dinero). Solo repone huecos: lo que un jugador cambió a mano no se pisa.",
+  upgradeBody: "Con {key} en el YAML, una estructura es la mejora de otra. Clic derecho en la construcción vieja muestra sus mejoras. Se paga el precio entero de la nueva y la obra se levanta en el mismo sitio y con el mismo giro: si la nueva es más grande, crece desde la esquina de la vieja. Solo cambia los bloques que siguen siendo de la construcción vieja: los cofres con lo que tienen, los carteles y lo que pusiste a mano se quedan. Al terminar, Mis construcciones muestra solo la nueva.",
+  zoneTitle: "Protección de la zona",
+  zoneBody: "Antes de cobrar, la mesa comprueba que el dueño pueda construir en toda la caja de la obra: con WorldGuard (sus permisos de construir en las regiones) y con GriefPrevention (permiso de construir en el claim). Si no puede, avisa y no cobra. Una obra en marcha lo vuelve a mirar cada {secs} segundos y se pausa si ya no puede. Tampoco deja construir encima de otra construcción terminada ni de otra obra. Quien tenga {bypass} (de fábrica, los op) se salta la comprobación.",
+  modulesTitle: "Módulos",
+  modulesLead: "Una estructura puede llevar un {key} que hace algo al terminar la obra:",
+  modules: [["farm", "Granja que funciona con las mecánicas de vanilla. El plugin no hace nada en el mundo: su module.note sale en la ficha para explicarla."], ["mob_farm", "Un spawner vanilla que se para al llegar a max-entities mobs a 16 bloques. Con mob: mythic:<Nombre>, genera el mob de MythicMobs cuando hay un jugador cerca."], ["parcel", "Al terminar crea para el dueño un claim de GriefPrevention o una región de WorldGuard sobre la caja (claim: griefprevention, worldguard o none). Al borrar la construcción se borra ese terreno."]] as [string, string][],
+  cAdminCheck: "validate revisa las estructuras sin cargarlas; integrations dice qué integraciones están activas y por qué no; debug <obra|jugador> enseña el estado de una obra; delete <id> borra el registro de una construcción (los bloques se quedan).",
+  pBuild: "Construir estructuras con la mesa.",
+  pBuildOne: "Construir cualquier estructura (o build.<id>, una sola).",
+  pPreview: "Ver la vista previa.",
+  pCategory: "Ver cualquier categoría del catálogo (o category.<cat>, una sola).",
+  pValidate: "Usar /structuresadmin validate.",
+  kBlocksPerTick: "Bloques por tick entre todas las obras (en performance.yml).",
+  kMaxProjects: "Obras a la vez por servidor, por mundo y por jugador (en performance.yml).",
+  kPreview: "Vista previa: bloques falsos como máximo, distancia y duración (en performance.yml).",
+  kRefund: "% de los materiales no gastados que vuelve al cancelar (en performance.yml).",
+  kRecheck: "Cada cuántos segundos una obra en marcha vuelve a mirar la protección de la zona (en performance.yml).",
+  kIntegrations: "Apagar una integración aunque su plugin esté (en integrations.yml).",
+  fCategories: "Las categorías del catálogo: icono y orden.",
+  fPerformance: "Ritmo de las obras, límites, vista previa, devolución al cancelar y comprobación de la protección.",
+  fIntegrations: "Encender o apagar WorldGuard, GriefPrevention, Vault, floodgate y MythicMobs.",
+  fStructures: "Un YAML por estructura (y README.txt con todas las claves).",
+  fSchematics: "Los esquemáticos .nbt o .schem.",
 };
 
 export type StructuresCopy = typeof es;
 
 const en: StructuresCopy = {
   title: "Structures (RPGRoll-Structures)",
-  intro:
-    "Building tables for your players: one table with three levels (Builder, Engineer and Architect) that is crafted, placed, upgraded in place and shared with trusted players. This first version, in early access, ships the table and its menus; the structure catalog comes later.",
+  intro: "Building tables for your players: a three-tier table (Builder, Engineer and Architect) that raises structures block by block from a catalog. Pick the structure, place it with a preview, deposit the materials and the build rises on its own. Builds can be repaired and upgraded to bigger ones.",
 
   soonTitle: "Early access: what there is today and what is coming",
-  soonBody:
-    "Today: the table, its three levels, the recipe, the Center, Upgrades, Access and Help menus, protection and storage. In the Center, the buttons for the structure catalog, builds, materials and project are marked “Coming soon”: they do nothing yet. There is no date for them; the versions that bring them are included in the purchase.",
+  soonBody: "Today: the table with its three tiers, the catalog, the preview, materials, building, repairs, upgrades, zone protection and the farm and plot modules. What it does not ship yet is built-in structures: you fill the catalog with your own schematics (see “Your structures”). The plugin's own structures will arrive in upcoming versions, included in the purchase.",
   storeBody: "Buy it in the store for 6 USD (120 MXN), one-time payment: {link}.",
 
   reqTitle: "Requirements",
-  reqBody:
-    "Paper 26.1.1 and {lib}. Everything else is optional ({soft}). Only two are used today: Vault, to charge money when upgrading the table, and SackResourcePack, for the table models and the drawn menu backgrounds. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention and floodgate are declared for the features to come and change nothing now.",
+  reqBody: "Paper 26.1.1 and {lib}. The rest are optional ({soft}): WorldEdit or FastAsyncWorldEdit to read .schem schematics; WorldGuard and GriefPrevention to respect claims and create plots; Vault to charge money; MythicMobs for farms of its mobs; SackResourcePack for the table models and the menus' backgrounds.",
 
   tiersTitle: "The three levels",
   tiersLead:
@@ -214,8 +240,7 @@ const en: StructuresCopy = {
     ["Breaking", "Only its owner (or anyone with {bypass}) can break it. It drops the table item with the same level and the same serial, so placing it elsewhere leaves it just as it was. In survival it breaks with left click, even though the block is a barrier."],
     ["Upgrading", "From the Upgrades menu: the block or model changes in place, nothing to move."],
   ] as [string, string][],
-  breakPolicy:
-    "{key} decides what happens if the table has an active project: {block} (it cannot be broken), {pause} or {cancel}. There are no projects yet, so today it changes nothing; the setting is already read for when they arrive.",
+  breakPolicy: "{key} decides what happens if the table has an active build: {block} (it cannot be broken), {pause} (the build waits until you place the table again) or {cancel} (it is cancelled and the unspent materials come back).",
 
   protectTitle: "Protection",
   protectBody:
@@ -226,8 +251,7 @@ const en: StructuresCopy = {
   thMenu: "Menu",
   thWhat: "What it does",
   mCenter: "Building Center",
-  mCenterP:
-    "The main menu (6 rows): the table's level, and the buttons to Upgrades, Access and Help. Only the owner opens Upgrades and Access; a trusted player is told they belong to the owner. Catalog, builds, materials and project show as “Coming soon”.",
+  mCenterP: "The main menu (6 rows): the table's tier and the buttons to Catalog, My builds, Materials, Build, Upgrades, Access and Help. Only the owner opens Upgrades and Access; a trusted player is told they belong to the owner.",
   mUpgrade: "Upgrades",
   mUpgradeP:
     "Shows the next level and each requirement in green (✔, you have it) or red (✘, and how many you are missing). With everything in hand, the Upgrade button asks for confirmation and takes the materials (and the money, if the cost has any). At the top level it only says there is nothing further.",
@@ -294,7 +318,7 @@ const en: StructuresCopy = {
   thCommand: "Command",
   thDesc: "What it does",
   thAliases: "Names per language",
-  cHelp: "Opens the help (three pages). {open} does the same.",
+  cHelp: "With no arguments or {open}: opens the catalog. Also: help, list (the catalog by category in chat), info <id>, status (your builds) and cancel.",
   cGive:
     "Gives tables to an online player: level and an amount from 1 to 64 (1 if omitted). What does not fit in the inventory drops on the ground. Each one comes with its own serial.",
   cReload: "Reloads the configuration, the recipe and the texts.",
@@ -338,21 +362,52 @@ const en: StructuresCopy = {
   fGui: "The menu titles (a language key or text with & colors).",
   fLang: "All the texts, in es, en and pt_BR.",
   fWords: "The command and subcommand names in each language.",
+
+  buildTitle: "Building a structure",
+  buildSteps: ["Catalog: pick a category and a structure. The ones you cannot build show why (table tier, permission or Vault).", "Detail page: materials, money, size and estimated time. “Choose” opens the preview.", "Preview: fake blocks in the world in front of the table. It moves in X, Y and Z, rotates by 90 degrees and can show only the outline. “Confirm” checks the spot and charges the money, if any.", "Materials: each material with what is deposited and what is missing. “Deposit” puts in what you carry; clicking a material deposits or takes back one. With everything in, “Build” appears.", "Build: it rises by itself in batches, with its progress in the Build menu and in chat. It can be paused or cancelled; cancelling returns the unspent materials (by cancel-refund).", "When it finishes it shows in My builds, with its place and date."] as string[],
+  buildNote: "If the server restarts, the build carries on where it was. If the table is broken, {key} decides. A build never writes over anything not in its {replace} list (grass by default): those blocks count as skipped.",
+  shotBuilt: "A hut raised from the table and later upgraded to “Hut with greenhouse”.",
+  altBuilt: "A wooden house with a glass extension, built by the Builder table",
+  ownTitle: "Your structures",
+  ownBody: "Each structure is a YAML in {dir} and its schematic goes in {schem}: a Minecraft structure-block .nbt or a WorldEdit .schem (.schem needs WorldEdit or FastAsyncWorldEdit). The file name is the id. Categories live in {cats}. After a change, {validate} checks without applying and {reload} loads the catalog. A file with errors stays out and the reason shows in the console.",
+  ownNote: "Required: name, category, tier, schematic and materials. The plugin leaves a README.txt with every key in the structures/ folder.",
+  repairTitle: "Repair and upgrade",
+  repairBody: "In My builds, click a finished build: the table checks what is missing and asks for confirmation with the price of those blocks (the matching share of materials and money). It only fills gaps: anything a player changed by hand is left alone.",
+  upgradeBody: "With {key} in the YAML, a structure is the upgrade of another. Right-clicking the old build lists its upgrades. You pay the full price of the new one and it rises in the same place and with the same rotation: if the new one is bigger, it grows from the old one's corner. It only changes the blocks that still belong to the old build: chests with their contents, signs and anything you placed by hand stay. When it finishes, My builds shows only the new one.",
+  zoneTitle: "Zone protection",
+  zoneBody: "Before charging, the table checks that the owner can build in the whole box: with WorldGuard (their build permissions in the regions) and with GriefPrevention (build permission in the claim). If not, it says so and charges nothing. A running build checks again every {secs} seconds and pauses if it no longer can. It also refuses to build on top of another finished build or another build in progress. Anyone with {bypass} (ops by default) skips the check.",
+  modulesTitle: "Modules",
+  modulesLead: "A structure can carry a {key} that does something when the build finishes:",
+  modules: [["farm", "A farm that works with vanilla mechanics. The plugin does nothing in the world: its module.note shows on the detail page to explain it."], ["mob_farm", "A vanilla spawner that stops at max-entities mobs within 16 blocks. With mob: mythic:<Name>, it spawns the MythicMobs mob when a player is nearby."], ["parcel", "When it finishes it creates a GriefPrevention claim or a WorldGuard region over the box for the owner (claim: griefprevention, worldguard or none). Deleting the build deletes that claim."]] as [string, string][],
+  cAdminCheck: "validate checks the structures without loading them; integrations says which integrations are active and why not; debug <build|player> shows a build's state; delete <id> removes a build's record (the blocks stay).",
+  pBuild: "Build structures with the table.",
+  pBuildOne: "Build any structure (or build.<id>, a single one).",
+  pPreview: "See the preview.",
+  pCategory: "See any catalog category (or category.<cat>, a single one).",
+  pValidate: "Use /structuresadmin validate.",
+  kBlocksPerTick: "Blocks per tick across all builds (in performance.yml).",
+  kMaxProjects: "Builds at once per server, per world and per player (in performance.yml).",
+  kPreview: "Preview: max fake blocks, distance and duration (in performance.yml).",
+  kRefund: "% of unspent materials returned when cancelling (in performance.yml).",
+  kRecheck: "How often, in seconds, a running build rechecks zone protection (in performance.yml).",
+  kIntegrations: "Turn an integration off even if its plugin is there (in integrations.yml).",
+  fCategories: "The catalog categories: icon and order.",
+  fPerformance: "Build pace, limits, preview, refund on cancel and protection recheck.",
+  fIntegrations: "Turn WorldGuard, GriefPrevention, Vault, floodgate and MythicMobs on or off.",
+  fStructures: "One YAML per structure (and README.txt with every key).",
+  fSchematics: "The .nbt or .schem schematics.",
 };
 
 const pt: StructuresCopy = {
   title: "Estruturas (RPGRoll-Structures)",
-  intro:
-    "Mesas de construção para os seus jogadores: uma mesa com três níveis (Construtor, Engenheiro e Arquiteto) que se fabrica, se coloca, se melhora no lugar e se compartilha com jogadores de confiança. Esta primeira versão, em acesso antecipado, traz a mesa e os menus; o catálogo de estruturas vem depois.",
+  intro: "Mesas de construção para seus jogadores: uma mesa de três níveis (Construtor, Engenheiro e Arquiteto) que ergue estruturas bloco a bloco a partir de um catálogo. Você escolhe a estrutura, posiciona com uma pré-visualização, deposita os materiais e a obra se constrói sozinha. As construções podem ser reparadas e melhoradas para outras maiores.",
 
   soonTitle: "Acesso antecipado: o que há hoje e o que vem",
-  soonBody:
-    "Hoje: a mesa, os três níveis, a receita, os menus de Centro, Melhorias, Acesso e Ajuda, a proteção e o armazenamento. No Centro, os botões de catálogo de estruturas, construções, materiais e obra aparecem como «Em breve»: ainda não fazem nada. Não há data para eles; as versões que os trouxerem estão incluídas na compra.",
+  soonBody: "Hoje: a mesa com seus três níveis, o catálogo, a pré-visualização, os materiais, a obra, reparar, melhorar, a proteção da área e os módulos de fazenda e lote. O que ainda não traz são estruturas de fábrica: o catálogo é seu, com seus esquemáticos (veja “Suas estruturas”). As estruturas próprias do plugin chegarão nas próximas versões, incluídas na compra.",
   storeBody: "Compre na loja por 6 USD (120 MXN), pagamento único: {link}.",
 
   reqTitle: "Requisitos",
-  reqBody:
-    "Paper 26.1.1 e {lib}. Os demais são opcionais ({soft}). Hoje só dois são usados: Vault, para cobrar dinheiro ao melhorar a mesa, e SackResourcePack, para os modelos das mesas e os fundos desenhados dos menus. WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention e floodgate estão declarados para as funções que vêm e agora não mudam nada.",
+  reqBody: "Paper 26.1.1 e {lib}. Os demais são opcionais ({soft}): WorldEdit ou FastAsyncWorldEdit para ler esquemáticos .schem; WorldGuard e GriefPrevention para respeitar terrenos e criar lotes; Vault para cobrar dinheiro; MythicMobs para fazendas dos seus mobs; SackResourcePack para os modelos das mesas e os fundos dos menus.",
 
   tiersTitle: "Os três níveis",
   tiersLead:
@@ -382,8 +437,7 @@ const pt: StructuresCopy = {
     ["Quebrá-la", "Só o dono (ou quem tem {bypass}) a quebra. Solta o item da mesa com o mesmo nível e a mesma série, então colocá-la em outro lugar a deixa como estava. No survival se quebra com o clique esquerdo, mesmo que o bloco seja uma barreira."],
     ["Melhorá-la", "Pelo menu Melhorias: o bloco ou o modelo muda no lugar, sem recolocar nada."],
   ] as [string, string][],
-  breakPolicy:
-    "{key} decide o que acontece se a mesa tiver uma obra ativa: {block} (não deixa quebrar), {pause} ou {cancel}. Ainda não há obras, então hoje não muda nada; o ajuste já é lido para quando chegarem.",
+  breakPolicy: "{key} decide o que acontece se a mesa tem uma obra ativa: {block} (não deixa quebrar), {pause} (a obra espera até você recolocar a mesa) ou {cancel} (é cancelada e devolve os materiais não gastos).",
 
   protectTitle: "Proteção",
   protectBody:
@@ -394,8 +448,7 @@ const pt: StructuresCopy = {
   thMenu: "Menu",
   thWhat: "O que faz",
   mCenter: "Centro de construção",
-  mCenterP:
-    "O menu principal (6 fileiras): o nível da mesa e os botões para Melhorias, Acesso e Ajuda. Melhorias e Acesso só o dono abre; a um jogador de confiança diz que são do dono. Catálogo, construções, materiais e obra aparecem como «Em breve».",
+  mCenterP: "O menu principal (6 linhas): o nível da mesa e os botões para Catálogo, Minhas construções, Materiais, Obra, Melhorias, Acesso e Ajuda. Só o dono abre Melhorias e Acesso; a um jogador de confiança diz que são do dono.",
   mUpgrade: "Melhorias",
   mUpgradeP:
     "Mostra o nível seguinte e cada requisito em verde (✔, você tem) ou vermelho (✘, e quantos faltam). Com tudo em mãos, o botão Melhorar pede confirmação e cobra os materiais (e o dinheiro, se o custo tiver). No nível máximo só avisa que não há mais.",
@@ -462,7 +515,7 @@ const pt: StructuresCopy = {
   thCommand: "Comando",
   thDesc: "O que faz",
   thAliases: "Nomes por idioma",
-  cHelp: "Abre a ajuda (três páginas). {open} faz o mesmo.",
+  cHelp: "Sem argumentos ou com {open}: abre o catálogo. Também: ajuda, lista (o catálogo por categorias no chat), info <id>, estado (suas obras) e cancelar.",
   cGive:
     "Dá mesas a um jogador conectado: nível e quantidade de 1 a 64 (1 se não indicar). O que não couber no inventário cai no chão. Cada uma sai com a sua série.",
   cReload: "Recarrega a configuração, a receita e os textos.",
@@ -506,6 +559,40 @@ const pt: StructuresCopy = {
   fGui: "Os títulos dos menus (uma chave do idioma ou um texto com cores &).",
   fLang: "Todos os textos, em es, en e pt_BR.",
   fWords: "Os nomes dos comandos e subcomandos em cada idioma.",
+
+  buildTitle: "Construir uma estrutura",
+  buildSteps: ["Catálogo: escolha uma categoria e uma estrutura. As que você não pode construir mostram o motivo (nível da mesa, permissão ou Vault).", "Ficha: materiais, dinheiro, tamanho e tempo estimado. “Escolher” abre a pré-visualização.", "Pré-visualização: blocos falsos no mundo na frente da mesa. Move em X, Y e Z, gira de 90 em 90 graus e pode mostrar só o contorno. “Confirmar” verifica o lugar e cobra o dinheiro, se houver.", "Materiais: cada material com o depositado e o que falta. “Depositar” coloca o que você carrega; clique num material deposita ou retira um. Com tudo, aparece “Construir”.", "Obra: ergue-se sozinha por etapas, com o progresso no menu Obra e no chat. Pode ser pausada ou cancelada; ao cancelar voltam os materiais não gastos (conforme cancel-refund).", "Ao terminar aparece em Minhas construções, com o lugar e a data."] as string[],
+  buildNote: "Se o servidor reiniciar, a obra continua de onde parou. Se a mesa for quebrada, manda {key}. Uma obra não escreve em cima do que não estiver na sua lista {replace} (de fábrica, a grama): esses blocos contam como pulados.",
+  shotBuilt: "Uma casinha erguida pela mesa e depois melhorada para “Casinha com estufa”.",
+  altBuilt: "Uma casa de madeira com uma ampliação de vidro, construída pela mesa Construtor",
+  ownTitle: "Suas estruturas",
+  ownBody: "Cada estrutura é um YAML em {dir} e seu esquemático vai em {schem}: um .nbt de bloco de estrutura do Minecraft ou um .schem do WorldEdit (para .schem é preciso WorldEdit ou FastAsyncWorldEdit). O nome do arquivo é o id. As categorias ficam em {cats}. Depois de mudar algo, {validate} revisa sem aplicar e {reload} carrega o catálogo. Um arquivo com erros fica de fora e o motivo aparece no console.",
+  ownNote: "Obrigatórias: name, category, tier, schematic e materials. O plugin deixa um README.txt com todas as chaves na pasta structures/.",
+  repairTitle: "Reparar e melhorar",
+  repairBody: "Em Minhas construções, clique numa construção terminada: a mesa vê o que falta e pede confirmação com o preço desses blocos (a parte proporcional dos materiais e do dinheiro). Só repõe buracos: o que um jogador mudou à mão não é sobrescrito.",
+  upgradeBody: "Com {key} no YAML, uma estrutura é a melhoria de outra. Clique direito na construção antiga mostra suas melhorias. Paga-se o preço inteiro da nova e a obra se ergue no mesmo lugar e com o mesmo giro: se a nova for maior, cresce a partir do canto da antiga. Só muda os blocos que ainda são da construção antiga: os baús com o conteúdo, as placas e o que você colocou à mão ficam. Ao terminar, Minhas construções mostra só a nova.",
+  zoneTitle: "Proteção da área",
+  zoneBody: "Antes de cobrar, a mesa verifica se o dono pode construir em toda a caixa da obra: com o WorldGuard (as permissões de construir nas regiões) e com o GriefPrevention (permissão de construir no terreno). Se não puder, avisa e não cobra. Uma obra em andamento verifica de novo a cada {secs} segundos e pausa se já não puder. Também não deixa construir em cima de outra construção terminada nem de outra obra. Quem tiver {bypass} (de fábrica, os op) pula a verificação.",
+  modulesTitle: "Módulos",
+  modulesLead: "Uma estrutura pode levar um {key} que faz algo ao terminar a obra:",
+  modules: [["farm", "Fazenda que funciona com as mecânicas vanilla. O plugin não faz nada no mundo: o module.note aparece na ficha para explicá-la."], ["mob_farm", "Um spawner vanilla que para ao chegar a max-entities mobs a 16 blocos. Com mob: mythic:<Nome>, gera o mob do MythicMobs quando há um jogador perto."], ["parcel", "Ao terminar cria para o dono um terreno do GriefPrevention ou uma região do WorldGuard sobre a caixa (claim: griefprevention, worldguard ou none). Ao apagar a construção, esse terreno é apagado."]] as [string, string][],
+  cAdminCheck: "validate revisa as estruturas sem carregá-las; integrations diz quais integrações estão ativas e por que não; debug <obra|jogador> mostra o estado de uma obra; delete <id> apaga o registro de uma construção (os blocos ficam).",
+  pBuild: "Construir estruturas com a mesa.",
+  pBuildOne: "Construir qualquer estrutura (ou build.<id>, uma só).",
+  pPreview: "Ver a pré-visualização.",
+  pCategory: "Ver qualquer categoria do catálogo (ou category.<cat>, uma só).",
+  pValidate: "Usar /structuresadmin validate.",
+  kBlocksPerTick: "Blocos por tick entre todas as obras (em performance.yml).",
+  kMaxProjects: "Obras ao mesmo tempo por servidor, por mundo e por jogador (em performance.yml).",
+  kPreview: "Pré-visualização: máximo de blocos falsos, distância e duração (em performance.yml).",
+  kRefund: "% dos materiais não gastos que volta ao cancelar (em performance.yml).",
+  kRecheck: "A cada quantos segundos uma obra em andamento verifica de novo a proteção da área (em performance.yml).",
+  kIntegrations: "Desligar uma integração mesmo com o plugin instalado (em integrations.yml).",
+  fCategories: "As categorias do catálogo: ícone e ordem.",
+  fPerformance: "Ritmo das obras, limites, pré-visualização, devolução ao cancelar e verificação da proteção.",
+  fIntegrations: "Ligar ou desligar WorldGuard, GriefPrevention, Vault, floodgate e MythicMobs.",
+  fStructures: "Um YAML por estrutura (e README.txt com todas as chaves).",
+  fSchematics: "Os esquemáticos .nbt ou .schem.",
 };
 
 export const STRUCTURES_COPY: Record<Locale, StructuresCopy> = { es, en, pt };

@@ -38,6 +38,8 @@ const TIERS_YAML =
   '    model: ""                        # item_model del pack; vacío = fallback-block\n' +
   "    fallback-block: SMITHING_TABLE\n";
 
+const STRUCTURE_YAML = "name: {es: \"Caseta\", en: \"Hut\"}   # es es obligatorio\ncategory: casas                   # id de categories.yml\ntier: 1                           # nivel de mesa mínimo: 1 Constructor, 2 Ingeniero, 3 Arquitecto\nschematic: caseta.nbt             # archivo dentro de schematics/\nicon: minecraft:oak_door          # opcional\nmoney: 0                          # opcional; con Vault se cobra entero al confirmar (sin Vault no se puede confirmar)\npermission: rpgrollstructures.build.caseta   # opcional; por defecto build.<id>\nmaterials:\n  - {item: oak_planks, amount: 40}              # vanilla o de otro módulo (rpgroll:...)\n  - {any_of: [cobblestone, stone], amount: 20}  # cualquiera de la lista\n  - {item: glass_pane, amount: 4, optional: true}\nbuild:\n  mode: progressive      # progressive (por ciclos) o instant\n  order: bottom_up       # bottom_up, layers, center_out, stages o custom\n  custom: [OAK_PLANKS]   # solo con order: custom\n  blocks-per-cycle: 16\n  ticks-per-cycle: 20\nplacement:\n  ground: true           # exige suelo firme\n  liquids: false         # permite construir sobre líquidos\n  worlds: []             # vacío = todos\n  biomes: []             # vacío = todos\n  replace: [GRASS_BLOCK] # bloques que la obra puede reemplazar\n";
+
 const STORAGE_YAML =
   "type: sqlite                         # o mysql\n" +
   "sqlite:\n" +
@@ -68,9 +70,10 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
   ];
 
   const commands: [string, ReactNode, string][] = [
-    ["/structures [help|open]", fill(c.cHelp, { open: <code>open</code> }), "es: /estructuras [ayuda|abrir] · pt: /estruturas [ajuda|abrir]"],
+    ["/structures [help|open|list|info <id>|status|cancel]", fill(c.cHelp, { open: <code>open</code> }), "es: /estructuras [ayuda|abrir|lista|info|estado|cancelar] · pt: /estruturas [ajuda|abrir|lista|info|estado|cancelar]"],
     ["/structuresadmin give <jugador> <constructor|ingeniero|arquitecto> [1-64]", c.cGive, ""],
     ["/structuresadmin reload", c.cReload, ""],
+    ["/structuresadmin validate | integrations | debug <obra|jugador> | delete <id>", c.cAdminCheck, ""],
   ];
 
   const permissions: [string, string, string][] = [
@@ -81,9 +84,14 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
     ["rpgrollstructures.tier.1", "true", c.pTier1],
     ["rpgrollstructures.tier.2", "true", c.pTier2],
     ["rpgrollstructures.tier.3", "true", c.pTier3],
+    ["rpgrollstructures.build", "true", c.pBuild],
+    ["rpgrollstructures.build.*", "true", c.pBuildOne],
+    ["rpgrollstructures.preview", "true", c.pPreview],
+    ["rpgrollstructures.category.*", "true", c.pCategory],
     ["rpgrollstructures.bypass", "op", c.pBypass],
     ["rpgrollstructures.admin.give", "op", c.pGive],
     ["rpgrollstructures.admin.reload", "op", c.pReload],
+    ["rpgrollstructures.admin.validate", "op", c.pValidate],
     ["rpgrollstructures.admin", "op", c.pAdmin],
   ];
 
@@ -97,12 +105,23 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
     ["workbench.yml · tiers.<nivel>.upgrade-money", "0", c.kMoney],
     ["workbench.yml · tiers.<nivel>.model", '""', c.kModel],
     ["workbench.yml · tiers.<nivel>.fallback-block", "CRAFTING_TABLE", c.kFallback],
+    ["performance.yml · blocks-per-tick", "256", c.kBlocksPerTick],
+    ["performance.yml · max-projects", "10 / 5 / 2", c.kMaxProjects],
+    ["performance.yml · preview", "4096 / 64 / 300", c.kPreview],
+    ["performance.yml · cancel-refund", "100", c.kRefund],
+    ["performance.yml · protection-recheck-seconds", "60", c.kRecheck],
+    ["integrations.yml · <plugin>.enabled", "true", c.kIntegrations],
   ];
 
   const files: [string, string][] = [
     ["config.yml", c.fConfig],
     ["workbench.yml", c.fWorkbench],
     ["storage.yml", c.fStorage],
+    ["categories.yml", c.fCategories],
+    ["performance.yml", c.fPerformance],
+    ["integrations.yml", c.fIntegrations],
+    ["structures/<id>.yml", c.fStructures],
+    ["schematics/", c.fSchematics],
     ["gui.yml", c.fGui],
     ["lang/<es|en|pt_BR>.yml", c.fLang],
     ["command-words.yml", c.fWords],
@@ -127,10 +146,10 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
       <CodeBlock
         language="yaml"
         code={
-          "depend: [RPGRoll-Lib]\nsoftdepend: [SackResourcePack, WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention, Vault, floodgate]"
+          "depend: [RPGRoll-Lib]\nsoftdepend: [SackResourcePack, WorldEdit, FastAsyncWorldEdit, WorldGuard, GriefPrevention, Vault, floodgate, RPGRoll-Items, RPGRoll-Furniture, MythicMobs]"
         }
       />
-      <p>{fill(c.reqBody, { lib: <strong>RPGRoll-Lib 1.1.13</strong>, soft: <code>softdepend</code> })}</p>
+      <p>{fill(c.reqBody, { lib: <strong>RPGRoll-Lib 1.1.14</strong>, soft: <code>softdepend</code> })}</p>
 
       <SectionHeading id="niveles">{c.tiersTitle}</SectionHeading>
       <p>{c.tiersLead}</p>
@@ -185,6 +204,53 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
 
       <SectionHeading id="proteccion">{c.protectTitle}</SectionHeading>
       <p>{c.protectBody}</p>
+
+      <SectionHeading id="construir">{c.buildTitle}</SectionHeading>
+      <ol className="list-decimal space-y-1 pl-6">
+        {c.buildSteps.map((step) => (
+          <li key={step}>{step}</li>
+        ))}
+      </ol>
+      <p>{fill(c.buildNote, { key: <code>break-policy</code>, replace: <code>placement.replace</code> })}</p>
+      <Screenshot src="/capturas/structures/obra.webp" alt={c.altBuilt} caption={c.shotBuilt} />
+
+      <SectionHeading id="estructuras">{c.ownTitle}</SectionHeading>
+      <p>
+        {fill(c.ownBody, {
+          dir: <code>plugins/RPGRoll-Structures/structures/</code>,
+          schem: <code>schematics/</code>,
+          cats: <code>categories.yml</code>,
+          validate: <Kbd>/structuresadmin validate</Kbd>,
+          reload: <Kbd>/structuresadmin reload</Kbd>,
+        })}
+      </p>
+      <CodeBlock language="yaml" filename="structures/caseta.yml" code={STRUCTURE_YAML} />
+      <p>{c.ownNote}</p>
+
+      <SectionHeading id="reparar-mejorar">{c.repairTitle}</SectionHeading>
+      <p>{c.repairBody}</p>
+      <p>{fill(c.upgradeBody, { key: <code>upgrade_from: &lt;id&gt;</code> })}</p>
+
+      <SectionHeading id="zona">{c.zoneTitle}</SectionHeading>
+      <p>
+        {fill(c.zoneBody, {
+          secs: <code>protection-recheck-seconds</code>,
+          bypass: <code>rpgrollstructures.bypass</code>,
+        })}
+      </p>
+
+      <SectionHeading id="modulos">{c.modulesTitle}</SectionHeading>
+      <p>{fill(c.modulesLead, { key: <code>module.type</code> })}</p>
+      <Table>
+        <tbody>
+          {c.modules.map(([type, text]) => (
+            <Tr key={type}>
+              <Td className="font-mono text-xs">{type}</Td>
+              <Td>{text}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
 
       <SectionHeading id="menus">{c.menusTitle}</SectionHeading>
       <p>{c.menusLead}</p>

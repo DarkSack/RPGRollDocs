@@ -51,7 +51,7 @@ const notesEn: Map_ = {
   "vault:dungeons": "Money rewards from dungeons.",
   "vault:pass": "money: rewards from the pass, the daily reward and votes. Without an economy those rewards are skipped with a console warning.",
   "vault:furniture": "Carpenter recipes that cost money. Without an economy those recipes cannot be crafted.",
-  "vault:structures": "Optional money when upgrading the table (upgrade-money). Without an economy no money is charged and a console warning is logged.",
+  "vault:structures": "Optional money when upgrading the table (upgrade-money) and when building (each structure's money:, charged in full on confirm). Without an economy the table charges no money and a structure with money: cannot be confirmed.",
   "vault:crates": "MONEY action of lucky blocks. Without an economy that action pays nothing.",
   "votifier:pass": "Rewards, streak and pass points for voting. Without Votifier, /votar still shows the links and /passadmin vote simulates a vote.",
 
@@ -113,7 +113,7 @@ const notesPt: Map_ = {
   "vault:dungeons": "Recompensas em dinheiro das masmorras.",
   "vault:pass": "Recompensas money: do passe, do diário e dos votos. Sem economia, essas recompensas são puladas com um aviso no console.",
   "vault:furniture": "Receitas do carpinteiro que cobram dinheiro. Sem economia, essas receitas não podem ser fabricadas.",
-  "vault:structures": "Dinheiro opcional ao melhorar a mesa (upgrade-money). Sem economia não se cobra dinheiro e avisa no console.",
+  "vault:structures": "Dinheiro opcional ao melhorar a mesa (upgrade-money) e ao construir (money: de cada estrutura, cobrado inteiro ao confirmar). Sem economia, a mesa não cobra dinheiro e uma estrutura com money: não pode ser confirmada.",
   "vault:crates": "Ação MONEY dos lucky blocks. Sem economia, essa ação não paga nada.",
   "votifier:pass": "Recompensas, sequência e pontos de passe por votar. Sem Votifier, /votar continua mostrando os links e /passadmin vote simula um voto.",
 
