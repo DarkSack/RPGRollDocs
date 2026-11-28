@@ -92,6 +92,7 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
     ["rpgrollstructures.admin.give", "op", c.pGive],
     ["rpgrollstructures.admin.reload", "op", c.pReload],
     ["rpgrollstructures.admin.validate", "op", c.pValidate],
+    ["rpgrollstructures.admin.create", "op", c.pCreate],
     ["rpgrollstructures.admin", "op", c.pAdmin],
   ];
 
@@ -133,14 +134,11 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
         {c.intro}
       </PageHeader>
 
-      <Callout tone="info" title={c.soonTitle}>
-        {c.soonBody}
-      </Callout>
-      <p>
+      <Callout tone="info" title={c.storeTitle}>
         {fill(c.storeBody, {
           link: <a href="https://shop.sackito.online/producto/structures">shop.sackito.online/producto/structures</a>,
         })}
-      </p>
+      </Callout>
 
       <SectionHeading id="requisitos">{c.reqTitle}</SectionHeading>
       <CodeBlock
@@ -213,6 +211,33 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
       </ol>
       <p>{fill(c.buildNote, { key: <code>break-policy</code>, replace: <code>placement.replace</code> })}</p>
       <Screenshot src="/capturas/structures/obra.webp" alt={c.altBuilt} caption={c.shotBuilt} />
+
+      <SectionHeading id="de-fabrica">{c.factoryTitle}</SectionHeading>
+      <p>
+        {fill(c.factoryLead, {
+          dir: <code>structures/</code>,
+          schem: <code>schematics/</code>,
+          marker: <code>structures/.fabrica.txt</code>,
+        })}
+      </p>
+      <Table>
+        <Thead>
+          <Th>id</Th>
+          <Th>{c.thStructure}</Th>
+          <Th>{c.thTier}</Th>
+          <Th>{c.thFactoryWhat}</Th>
+        </Thead>
+        <tbody>
+          {c.factoryRows.map(([id, name, tier, what]) => (
+            <Tr key={id}>
+              <Td className="font-mono text-xs">{id}</Td>
+              <Td>{name}</Td>
+              <Td>{tier}</Td>
+              <Td>{what}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
 
       <SectionHeading id="estructuras">{c.ownTitle}</SectionHeading>
       <p>
@@ -287,7 +312,7 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
       </div>
       <p>{c.shotTips}</p>
       <div className="grid max-w-3xl gap-x-6 sm:grid-cols-2">
-        <Screenshot src="/capturas/structures/centro-catalogo.png" alt={c.altCatalog} caption={c.shotCatalog} />
+        <Screenshot src="/capturas/structures/catalogo.png" alt={c.altCatalog} caption={c.shotCatalog} />
         <Screenshot src="/capturas/structures/ayuda-texto.png" alt={c.altHelpText} caption={c.shotHelpText} />
         <Screenshot src="/capturas/structures/mejoras-falta.png" alt={c.altMissing} caption={c.shotMissing} />
         <Screenshot src="/capturas/structures/mejoras-tiene.png" alt={c.altHave} caption={c.shotHave} />
@@ -308,6 +333,27 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
       </div>
       <Screenshot src="/capturas/structures/modelo-item.png" alt={c.altModelItem} caption={c.shotModelItem} />
 
+      <SectionHeading id="piloto">{c.pilotTitle}</SectionHeading>
+      <p>{c.pilotBody}</p>
+      <Table>
+        <Thead>
+          <Th>{c.thState}</Th>
+          <Th>{c.thColor}</Th>
+          <Th>{c.thWhat}</Th>
+        </Thead>
+        <tbody>
+          {c.pilotRows.map(([state, color, what]) => (
+            <Tr key={state}>
+              <Td>{state}</Td>
+              <Td>{color}</Td>
+              <Td>{what}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
+      <p>{fill(c.pilotNote, { file: <code>workbench.yml</code> })}</p>
+      <Screenshot src="/capturas/structures/pilotos-7-estados.jpg" alt={c.altPilots} caption={c.shotPilots} />
+
       <SectionHeading id="almacenamiento">{c.storageTitle}</SectionHeading>
       <p>
         {fill(c.storageBody, {
@@ -318,6 +364,73 @@ export function Structures({ onNavigate }: { onNavigate: (slug: string) => void 
         })}
       </p>
       <CodeBlock language="yaml" filename="storage.yml" code={STORAGE_YAML} />
+
+      <SectionHeading id="editor">{c.adminTitle}</SectionHeading>
+      <p>{fill(c.adminLead, { perm: <code>rpgrollstructures.admin.create</code> })}</p>
+      <Table>
+        <Thead>
+          <Th>{c.thCommand}</Th>
+          <Th>{c.thDesc}</Th>
+        </Thead>
+        <tbody>
+          {c.adminRows.map(([cmd, text]) => (
+            <Tr key={cmd}>
+              <Td className="font-mono text-xs">{cmd}</Td>
+              <Td>{text}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
+      <p>{c.adminDraft}</p>
+      <p>{c.adminEdit}</p>
+
+      <SectionHeading id="api">{c.apiTitle}</SectionHeading>
+      <p>{fill(c.apiBody, { version: <strong>1.0.0</strong> })}</p>
+      <CodeBlock language="java" code="StructuresApi api = Bukkit.getServicesManager().load(StructuresApi.class);" />
+      <Table>
+        <Thead>
+          <Th>{c.thMethod}</Th>
+          <Th>{c.thDesc}</Th>
+        </Thead>
+        <tbody>
+          {c.apiMethods.map(([method, text]) => (
+            <Tr key={method}>
+              <Td className="font-mono text-xs">{method}</Td>
+              <Td>{text}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
+      <p>{c.apiEventsLead}</p>
+      <Table>
+        <Thead>
+          <Th>{c.thEvent}</Th>
+          <Th>{c.thCancel}</Th>
+          <Th>{c.thThread}</Th>
+          <Th>{c.thDesc}</Th>
+        </Thead>
+        <tbody>
+          {c.apiEvents.map(([event, cancel, text]) => (
+            <Tr key={event}>
+              <Td className="font-mono text-xs">{event}</Td>
+              <Td>{cancel === "yes" ? c.yes : c.no}</Td>
+              <Td>{c.thread}</Td>
+              <Td>{text}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
+      <p>{c.apiCancelNote}</p>
+
+      <SectionHeading id="compatibilidad">{c.compatTitle}</SectionHeading>
+      <p>{c.compatBody}</p>
+
+      <SectionHeading id="limites">{c.limitsTitle}</SectionHeading>
+      <ul className="list-disc space-y-1 pl-6">
+        {c.limits.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
 
       <SectionHeading id="comandos">{c.commandsTitle}</SectionHeading>
       <Table>

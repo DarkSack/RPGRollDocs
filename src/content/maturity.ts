@@ -19,9 +19,7 @@ import type { ReleaseStatus } from "./site";
  * `PageHeader` lo lee solo y muestra el indicador en las páginas que figuren
  * acá; el resto queda sin badge, que es lo correcto mientras no haya dato.
  */
-export const pageStatus: Record<string, ReleaseStatus> = {
-  structures: "early",
-};
+export const pageStatus: Record<string, ReleaseStatus> = {};
 
 /**
  * Páginas cuyo propio texto declara funciones verificadas solo por
